@@ -1,0 +1,8 @@
+{{- $entry := (keepassxc "Università/Hyperion - VANDAL") -}}
+Host hyperion
+  HostName {{ $entry.UserName | splitList "@" | last }}
+  User {{ $entry.UserName | splitList "@" | first }}
+  ServerAliveInterval 60
+  ServerAliveCountMax 5
+  ForwardAgent yes
+
