@@ -1,0 +1,47 @@
+# --- NOCTALIA GENERATED OUTPUTS ---
+.config/btop/**
+.config/gtk-3.0/**
+.config/gtk-4.0/**
+.config/qt5ct/**
+.config/qt6ct/**
+.config/ghostty/themes/**
+
+# --- NOCTALIA PLUGINS ---
+.config/noctalia/plugins/**
+
+# --- NEOVIM GENERATED OUTPUTS ---
+.config/nvim/lua/matugen.lua
+
+# --- FISH/SHELL STATE ---
+.config/fish/private_fish_variables
+
+# --- SYSTEM NOISE & CACHES ---
+.config/dconf/**
+.config/pulse/**
+.config/session/**
+.config/trashrc
+.config/baloofileinformationrc
+
+# --- KDE NOISE ---
+.config/baloofileinformationrc
+.config/trashrc
+.config/cachyos-hello.json
+.config/QtProject.conf
+.config/user-dirs.locale
+.config/kiorc
+.config/filetypesrc
+
+# --- APP TOKENS & SENSITIVE DATA ---
+.config/discord/**
+.config/Equicord/**
+.config/Element/**
+.config/zen/**
+.config/mozilla/**
+
+# --- SYSTEMD SAFETY ---
+.config/systemd/user/*
+!.config/systemd/user/mega-cmd-server.service
+
+# --- SSH SAFETY ---
+.ssh/*
+!.ssh/config
