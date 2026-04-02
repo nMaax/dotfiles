@@ -1,10 +1,12 @@
 # --- NOCTALIA GENERATED OUTPUTS ---
 .config/btop/**
+.config/ghostty/themes/**
 .config/gtk-3.0/**
 .config/gtk-4.0/**
-.config/qt5ct/**
-.config/qt6ct/**
-.config/ghostty/themes/**
+.config/qt5ct/*
+.config/qt6ct/*
+!.config/qt6ct/qt6ct.conf
+!.config/qt5ct/qt5ct.conf
 
 # --- NOCTALIA PLUGINS ---
 .config/noctalia/plugins/**
