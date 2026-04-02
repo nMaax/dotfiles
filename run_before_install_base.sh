@@ -15,7 +15,9 @@ success() { echo -e "${GREEN}==>${NC} $1"; }
 warn() { echo -e "${YELLOW}==>${NC} $1"; }
 error() { echo -e "${RED}==>${NC} $1"; }
 
+echo ""
 info "📦 [Stage 1] Installing prerequisites..."
+echo ""
 
 info "🤓 Installing Nerd Fonts..."
 sudo pacman -S --needed --noconfirm ttf-jetbrains-mono-nerd ttf-iosevka-nerd ttf-cascadia-code-nerd
@@ -60,4 +62,6 @@ kbuildsycoca6 --noincremental
 info "🦉 Installing Noctalia..."
 paru -S --needed --noconfirm noctalia-shell
 
-success "✅ [Stage 0] Prerequisites installed."
+echo ""
+success "✅ [Stage 1] Prerequisites installed."
+echo ""
