@@ -48,11 +48,14 @@ fi
 info "🌙 Installing Noctalia dependencies..."
 paru -S --needed --noconfirm cliphist wlsunset xdg-desktop-portal evolution-data-server hyprshot
 
-echo "🖥️ Installing KDE suite and utility apps..."
+echo "🖥️ Installing KDE suite, Qt, GTK and utility apps..."
 sudo pacman -S --needed --noconfirm \
-  qt6ct qt5ct adw-gtk-theme \
+  qt6ct-kde qt5ct adw-gtk-theme nwg-look \
   archlinux-xdg-menu ark dolphin-plugins filelight \
   okular haruna kwrite gwenview
+
+echo "Syncing GTK with Noctalia..."
+gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3'
 
 echo "🐬 Fixing Dolphin 'Open With' amnesia..."
 sudo ln -sf /etc/xdg/menus/arch-applications.menu /etc/xdg/menus/applications.menu
