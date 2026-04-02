@@ -10,16 +10,27 @@ if ! grep -qi 'CachyOS' /etc/os-release; then
   exit 1
 fi
 
+read -rp "Did you tweak CachyOS already? [Y/n] " answer
+if [[ "${answer,,}" != "y" && -n "$answer" ]]; then
+  echo "Go back and tune whatever you lik. Closing, come back later."
+  exit 1
+fi
+
+read -rp "Did you place the chezmoi.toml and the KeePass keyfile? [Y/n] " answer
+if [[ "${answer,,}" != "y" && -n "$answer" ]]; then
+  echo "Please place the chezmoi.toml and KeePass keyfile in their proper locations before proceeding. Closing, come back later."
+  exit 1
+fi
+
 echo "==> Checking for cachy-update..."
 if sudo pacman -Q cachy-update &>/dev/null; then
   echo "Running cachy-update..."
   cachy-update
 else
   echo "Warning: 'cachy-update' is not installed."
+  echo "Did you really listen to me before??"
   echo "Please open 'CachyOS Hello' to enable cachy-update, and remind to tweak your system!"
 fi
-
-read -rp "Did you already tweak you system? Press Enter to proceed when ready..."
 
 echo "==> Checking for base packages..."
 BASE_PACKAGES=(binutils base-devel git vim appmenu-gtk-module libdbusmenu-glib hyperland xdg-desktop-portal-hyprland chezmoi)
