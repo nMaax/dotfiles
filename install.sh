@@ -5,7 +5,8 @@
 set -euo pipefail
 
 if ! grep -qi 'CachyOS' /etc/os-release; then
-  echo "This script is intended to run on CachyOS. Exiting."
+  echo "This script is intended to run on CachyOS."
+  echo "Did nothing, will close now."
   exit 1
 fi
 
@@ -15,8 +16,10 @@ if sudo pacman -Q cachy-update &>/dev/null; then
   cachy-update
 else
   echo "Warning: 'cachy-update' is not installed."
-  echo "Please open 'CachyOS Hello' to enable cach-update, and remind to tweak your system!"
+  echo "Please open 'CachyOS Hello' to enable cachy-update, and remind to tweak your system!"
 fi
+
+read -rp "Did you already tweak you system? Press Enter to proceed when ready..."
 
 echo "==> Checking for base packages..."
 BASE_PACKAGES=(binutils base-devel git vim appmenu-gtk-module libdbusmenu-glib hyperland xdg-desktop-portal-hyprland chezmoi)
@@ -30,9 +33,6 @@ done
 echo "==> Installing other utilities..."
 sudo pacman -S --needed --noconfirm smartmontools ffmpeg glow dust bat ripgrep fd btop trash-cli ghostscript pandoc poppler qpdf
 paru -S --needed --noconfirm caligula-bin pdfcpu-bin ocrmypdf tesseract-data-eng tesseract-data-ita
-# tesseract-data-nld tesseract-data-fra tesseract-data-deu tesseract-data-spa tesseract-data-por \
-# tesseract-data-jpn tesseract-data-jpn_vert tesseract-data-kor tesseract-data-kor_vert \
-# tesseract-data-chi_sim tesseract-data-chi_sim_vert tesseract-data-chi_tra tesseract-data-chi_tra_vert
 
 echo "==> Setting Wireless Regdom to Italy"
 sudo sed -i 's/^WIRELESS_REGDOM=/#&/' /etc/conf.d/wireless-regdom && sudo sed -i '/WIRELESS_REGDOM="IT"/s/^#//' /etc/conf.d/wireless-regdom
@@ -50,27 +50,37 @@ echo "==> Installing MEGAcmd and KeePassXC"
 paru -S --needed --noconfirm megacmd-bin
 sudo pacman -S --needed --noconfirm keepassxc
 
-echo "==> Starting MEGAcmd server..."
-mega-cmd-server &>/dev/null &
-sleep 3 # Give the server a few seconds to initialize
-
 echo "==> Enabling MEGA"
-read -rp "   Enter MEGA Email: " email
-mega-login "$email"
+if ! mega-whoami >/dev/null 2>&1; then
+  echo "You are not logged in to MEGA."
+  read -rp "   Enter MEGA Email: " email
+  mega-login "$email"
+else
+  echo "Already logged in to MEGA."
+fi
 
-echo "==> Synching local MEGA/ with cloud..."
-mkdirp -p ~/MEGA
-mega-sync ~/MEGA/ /
-echo "Checking for the MEGA session to be ready..."
+echo "==> Checking MEGA is synced with cloud..."
+if ! mega-sync | grep "Synced"; then
+  echo "Mega is not synced. Syncing now."
+  mkdir -p ~/MEGA
+  mega-sync ~/MEGA/ /
+  while ! mega-sync | grep -q "Synced"; do
+    echo "Still syncing... please wait."
+    sleep 3
+  done
+else
+  echo "Mega is already synced."
+fi
 
-while ! mega-sync | grep -q "Synced"; do
-  echo "Still syncing... please wait."
-  sleep 5
-done
-echo "MEGA folder is now fully Synced!"
+echo "Mega synced with specifications:"
+mega-sync
+
+echo "Issues with MEGA:"
+mega-sync-issues
 
 if ! ls ~/MEGA/KeePassXC/Password.kdbx &>/dev/null; then
   echo "Couldn't find the KeePassXC database, maybe MEGA didn't download it."
+  echo "Can't proceed, will close now. This script is idempotent so you can run it again and resume where left."
   exit 1
 fi
 
