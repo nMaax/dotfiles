@@ -42,7 +42,7 @@ for pkg in "${BASE_PACKAGES[@]}"; do
 done
 
 echo "==> Installing other utilities..."
-sudo pacman -S --needed --noconfirm smartmontools ffmpeg glow dust bat ripgrep fd btop trash-cli ghostscript pandoc poppler qpdf
+sudo pacman -S --needed --noconfirm smartmontools ffmpeg imagemagick glow dust bat ripgrep fd btop trash-cli ghostscript pandoc poppler qpdf
 paru -S --needed --noconfirm caligula-bin pdfcpu-bin ocrmypdf tesseract-data-eng tesseract-data-ita
 
 echo "==> Setting Wireless Regdom to Italy"
@@ -56,6 +56,9 @@ sudo systemctl enable --now smartd
 
 echo "==> Setup Uncomplicated Firewall"
 sudo ufw enable
+
+echo "==> Enable SSH daemon"
+sudo systemctl enable --now sshd
 
 echo "==> Installing MEGAcmd and KeePassXC"
 paru -S --needed --noconfirm megacmd-bin
