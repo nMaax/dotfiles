@@ -23,6 +23,8 @@ add_note() {
   POST_INSTALL_NOTES+="$1\n\n"
 }
 
+# TODO: use the color coded echos
+
 echo ""
 echo "🎨 [Stage 2] Apps and QoL tweaks..."
 echo ""
@@ -63,7 +65,7 @@ paru -S --needed --noconfirm discord equicord-installer-bin
 sudo Equilotl -install -location /opt/discord
 sudo Equilotl -install-openasar -location /opt/discord
 
-paru -Rns --noconfirm equicord-installer-bin
+paru -Rns --noconfirm equicord-installer-bin || true
 
 echo "☁️ Starting MEGA daemon..."
 systemctl --user enable --now mega-cmd-server.service
