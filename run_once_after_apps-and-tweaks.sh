@@ -67,6 +67,7 @@ paru -Rns --noconfirm equicord-installer-bin
 
 echo "☁️ Starting MEGA daemon..."
 systemctl --user enable --now mega-cmd-server.service
+sleep 2
 
 info "🖱️ Setting up MCHOSE udev rules..."
 UDEV_RULE_PATH="/etc/udev/rules.d/99-mchose.rules"

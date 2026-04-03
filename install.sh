@@ -53,12 +53,14 @@ tldr --update
 
 echo "==> Enable smartmontools to check for SSD health"
 sudo systemctl enable --now smartd
+sleep 2
 
 echo "==> Setup Uncomplicated Firewall"
 sudo ufw enable
 
 echo "==> Enable SSH daemon"
 sudo systemctl enable --now sshd
+sleep 2
 
 echo "==> Installing MEGAcmd and KeePassXC"
 paru -S --needed --noconfirm megacmd-bin
