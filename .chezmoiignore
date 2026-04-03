@@ -10,6 +10,7 @@
 
 # --- NOCTALIA PLUGINS ---
 .config/noctalia/plugins/**
+.config/noctalia/colors.json
 
 # --- NEOVIM GENERATED OUTPUTS ---
 .config/nvim/lua/matugen.lua
