@@ -19,6 +19,13 @@ echo ""
 info "📦 [Stage 1] Installing prerequisites..."
 echo ""
 
+info "🐙 Setting Git identity..."
+read -rp "    Enter your Git username: " git_username
+read -rp "    Enter your Git email: " git_email
+git config --global user.name "$git_username"
+git config --global user.email "$git_email"
+info "Git identity set: $git_username <$git_email>"
+
 info "🤓 Installing Nerd Fonts..."
 sudo pacman -S --needed --noconfirm ttf-jetbrains-mono-nerd ttf-iosevka-nerd ttf-cascadia-code-nerd
 info "🍎 Installing Apple Fonts..."

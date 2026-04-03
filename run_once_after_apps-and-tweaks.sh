@@ -1,0 +1,210 @@
+#!/bin/bash
+
+set -euo pipefail
+
+# --- Color Definitions ---
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+
+# --- Helper Logging Functions ---
+info() { echo -e "${BLUE}==>${NC} $1"; }
+success() { echo -e "${GREEN}==>${NC} $1"; }
+warn() { echo -e "${YELLOW}==>${NC} $1"; }
+error() { echo -e "${RED}==>${NC} $1"; }
+
+# --- Post-Install Summary Collector ---
+POST_INSTALL_NOTES=""
+
+# Helper to easily add notes
+add_note() {
+  POST_INSTALL_NOTES+="$1\n\n"
+}
+
+echo ""
+echo "🎨 [Stage 2] Apps and QoL tweaks..."
+echo ""
+
+echo "🏮 Installing browsers..."
+sudo pacman -S --needed --noconfirm chromium
+paru -S --needed --noconfirm zen-browser-bin
+
+echo "📰 Installing Telegram"
+sudo pacman -S --needed --noconfirm telegram-desktop
+
+echo "🐍 Installing apps for coding.."
+sudo pacman -S --needed --noconfirm uv lazygit neovim nodejs jdk-openjdk
+
+echo "🪐 Installing Starship..."
+sudo pacman -S --needed --noconfirm starship
+
+echo "🎧 Installing Spotify (spicetify) from AUR..."
+paru -S --needed --noconfirm spotify spicetify-cli
+
+echo "Setting up Spicetify..."
+sudo chmod a+wr /opt/spotify
+sudo chmod a+wr /opt/spotify/Apps -R
+spicetify backup apply || spicetify apply
+
+echo "Installing Spicetify Marketplace...  (⚠️ not really the Arch way, but it doesnt touch anything outside home/)"
+SPICETIFY_CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/spicetify"
+MARKETPLACE_DIR="$SPICETIFY_CONFIG_DIR/CustomApps/marketplace"
+if [ ! -d "$MARKETPLACE_DIR" ] || [ -z "$(ls -A "$MARKETPLACE_DIR")" ]; then
+  curl -fsSL https://raw.githubusercontent.com/spicetify/marketplace/main/resources/install.sh | sh
+else
+  echo "Spicetify Marketplace already installed, skipping."
+fi
+
+echo "👾 Installing discord (Equicord + OpenAsar) from AUR..."
+paru -S --needed --noconfirm discord equicord-installer-bin
+
+sudo Equilotl -install -location /opt/discord
+sudo Equilotl -install-openasar -location /opt/discord
+
+paru -Rns --noconfirm equicord-installer-bin
+
+echo "☁️ Starting MEGA daemon..."
+systemctl --user enable --now mega-cmd-server.service
+
+info "🖱️ Setting up MCHOSE udev rules..."
+UDEV_RULE_PATH="/etc/udev/rules.d/99-mchose.rules"
+UDEV_RULE_TMP="$(mktemp)"
+
+cat >"$UDEV_RULE_TMP" <<'EOF'
+# MCHOSE Ace 68 Turbo 16K (Keyboard)
+KERNEL=="hidraw*", ATTRS{idVendor}=="3837", ATTRS{idProduct}=="3026", MODE="0666"
+SUBSYSTEM=="usb", ATTRS{idVendor}=="3837", ATTRS{idProduct}=="3026", MODE="0666"
+
+# MCHOSE L7 Pro+ (Mouse Wired)
+KERNEL=="hidraw*", ATTRS{idVendor}=="3837", ATTRS{idProduct}=="4015", MODE="0666"
+SUBSYSTEM=="usb", ATTRS{idVendor}=="3837", ATTRS{idProduct}=="4015", MODE="0666"
+
+# MCHOSE L7 Pro+ (Mouse Wireless Receiver)
+KERNEL=="hidraw*", ATTRS{idVendor}=="5253", ATTRS{idProduct}=="1020", MODE="0666"
+SUBSYSTEM=="usb", ATTRS{idVendor}=="5253", ATTRS{idProduct}=="1020", MODE="0666"
+EOF
+
+if [ ! -f "$UDEV_RULE_PATH" ] || ! cmp -s "$UDEV_RULE_TMP" "$UDEV_RULE_PATH"; then
+  sudo cp "$UDEV_RULE_TMP" "$UDEV_RULE_PATH"
+  sudo chmod 644 "$UDEV_RULE_PATH"
+  sudo udevadm control --reload-rules
+  sudo udevadm trigger
+  success "MCHOSE udev rules installed"
+else
+  info "MCHOSE udev rules already present"
+fi
+
+rm -f "$UDEV_RULE_TMP"
+
+echo "🎵 Installing EasyEffects..."
+sudo pacman -S --needed --noconfirm easyeffects lsp-plugins
+
+echo "Downloading EasyEffects Community Presets... (⚠️ not really the Arch way, but it doesnt touch anything outside home/)"
+EASYEFFECTS_PRESETS_DIR="$HOME/.config/easyeffects/output"
+if [ ! -f "$EASYEFFECTS_PRESETS_DIR/Perfect EQ.json" ]; then
+  # Run the EasyEffects Presets install script as before
+  bash <(curl -fsSL https://raw.githubusercontent.com/JackHack96/EasyEffects-Presets/master/install.sh)
+else
+  echo "EasyEffects Presets already installed, skipping."
+fi
+
+echo ""
+success "✅ [Stage 2] Apps and tweaks applied."
+echo ""
+
+echo ""
+info "🎮 [Stage 3] CachyOS Gaming Optimizations..."
+echo ""
+
+if pacman -Q cachyos-gaming-applications cachyos-gaming-meta >/dev/null 2>&1; then
+  success "Gaming packages detected! Applying optimizations..."
+
+  info "Installing Minecraft (Prism-launcher and Java dependencies)"
+  sudo pacman -S prismlauncher
+  sudo pacman -S jdk8-openjdk jdk17-openjdk jdk21-openjdk
+
+  info "🥭 Installing mango and mangojuice..."
+  sudo pacman -S --needed --noconfirm mangohud
+  paru -S --needed --noconfirm mangojuice
+
+  info "🖱️ Configuring Hyprland mouse settings..."
+  HYPR_CONF="$HOME/.config/hypr/hyprland.conf"
+
+  if [ -f "$HYPR_CONF" ]; then
+    # Set sensitivity to 0
+    sed -i 's/^[[:space:]]*sensitivity[[:space:]]*=.*/    sensitivity = 0/' "$HYPR_CONF"
+
+    # Disable mouse acceleration (handles both legacy and modern Hyprland syntax)
+    sed -i 's/^[[:space:]]*force_no_accel[[:space:]]*=.*/    force_no_accel = true/' "$HYPR_CONF"
+    sed -i 's/^[[:space:]]*accel_profile[[:space:]]*=.*/    accel_profile = flat/' "$HYPR_CONF"
+
+    success "Hyprland mouse acceleration disabled and sensitivity set to 0."
+  else
+    info "Hyprland config not found at $HYPR_CONF. Skipping mouse tweak."
+  fi
+
+  if pacman -Q gamemode >/dev/null 2>&1; then
+    info "Feral's gamemode detected. Checking for ananicy-cpp conflicts..."
+    if systemctl is-enabled --quiet ananicy-cpp 2>/dev/null || systemctl is-active --quiet ananicy-cpp 2>/dev/null; then
+      warn "Conflict detected: Disabling ananicy-cpp to prevent GameMode scheduling issues..."
+      sudo systemctl disable --now ananicy-cpp
+    else
+      info "ananicy-cpp is not active. No conflicts."
+    fi
+  else
+    info "Feral's gamemode not installed. Skipping ananicy-cpp conflict check."
+  fi
+
+  info "Detecting GPU and configuring 12GB Shader Cache..."
+  mkdir -p "$HOME/.config/environment.d"
+  GAMING_CONF="$HOME/.config/environment.d/gaming.conf"
+
+  if lspci | grep -iE 'vga|3d' | grep -iq 'nvidia'; then
+    echo "__GL_SHADER_DISK_CACHE_SIZE=12000000000" >"$GAMING_CONF"
+    info "NVIDIA GPU detected. Shader cache set to 12GB in $GAMING_CONF."
+  elif lspci | grep -iE 'vga|3d' | grep -iq 'amd\|radeon'; then
+    echo "MESA_SHADER_CACHE_MAX_SIZE=12G" >"$GAMING_CONF"
+    info "AMD GPU detected. Shader cache set to 12GB in $GAMING_CONF."
+  else
+    warn "Could not reliably detect NVIDIA or AMD GPU. Skipping shader cache tweak."
+  fi
+
+  echo ""
+  success "✅ Gaming Optimizations Complete! Here are your Launch Reminders:"
+
+  # Inside your gaming if-statement:
+  add_note "🎮 GAMING REMINDERS:
+  🚀 STEAM LAUNCH OPTIONS
+      game-performance %command%
+
+  ⚙️  PROTON / STEAM SETTINGS
+  - Compatibility: Set \`proton-cachyos-slr\` as your default Proton layer.
+  - Pre-caching: If using Proton-CachyOS, go to Steam -> Settings -> Downloads and UNCHECK 
+    \"Enable Shader Pre-caching\" and \"Allow background processing of Vulkan shaders\".
+
+  🍷 LUTRIS / HEROIC SETTINGS
+  - Under System Options, enable \"Disable Lutris Runtime\" and \"Prefer system libraries\".
+  - Make sure the compatibility layer is set to \`proton-cachyos\`.
+  - Set launch options similarly as done in steam (see documentation)
+
+  For more information, check https://wiki.cachyos.org/configuration/gaming"
+
+else
+  info "No gaming packages detected. Skipping gaming tweaks."
+fi
+
+add_note "🎨 THEMING:\nEnable theming in your favorite apps for a consistent look.\nSee https://docs.noctalia.dev/theming/basic-app-theming/ for detailed guides.\nMore inspiration: Zen-Zero (https://sameerasw.com/zen)"
+
+# ==========================================
+# FINAL SUMMARY
+# ==========================================
+if [ -n "$POST_INSTALL_NOTES" ]; then
+  echo ""
+  echo -e "${GREEN}=================================================================${NC}"
+  echo -e "${GREEN}🎉 INSTALLATION COMPLETE! PLEASE READ THESE POST-INSTALL STEPS:${NC}"
+  echo -e "${GREEN}=================================================================${NC}"
+  echo ""
+  echo -e "$POST_INSTALL_NOTES"
+fi
