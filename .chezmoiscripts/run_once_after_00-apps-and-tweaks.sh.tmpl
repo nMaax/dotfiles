@@ -26,40 +26,57 @@ add_note() {
 # TODO: use the color coded echos
 
 echo ""
-echo "🎨 [Stage 2] Apps and QoL tweaks..."
+info "🎨 [Stage 2] Apps and QoL tweaks..."
 echo ""
 
-echo "🏮 Installing browsers..."
+info "🏮 Installing browsers..."
 sudo pacman -S --needed --noconfirm chromium
 paru -S --needed --noconfirm zen-browser-bin
 
-echo "📰 Installing Telegram"
+info "📰 Installing Telegram"
 sudo pacman -S --needed --noconfirm telegram-desktop
 
-echo "🐍 Installing apps for coding.."
+info "🐍 Installing apps for coding.."
 sudo pacman -S --needed --noconfirm uv lazygit neovim nodejs jdk-openjdk
 
-echo "🪐 Installing Starship..."
+info "🪐 Installing Starship..."
 sudo pacman -S --needed --noconfirm starship
 
-echo "🎧 Installing Spotify (spicetify) from AUR..."
+info "🎧 Installing Spotify (spicetify) from AUR..."
 paru -S --needed --noconfirm spotify spicetify-cli
 
-echo "Setting up Spicetify..."
+info "Setting up Spicetify..."
 sudo chmod a+wr /opt/spotify
 sudo chmod a+wr /opt/spotify/Apps -R
 spicetify backup apply || spicetify apply
 
-echo "Installing Spicetify Marketplace...  (⚠️ not really the Arch way, but it doesnt touch anything outside home/)"
-SPICETIFY_CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/spicetify"
+SPICETIFY_CONFIG_DIR="$HOME/.config/spicetify"
+SPICETIFY_THEMES_DIR="$SPICETIFY_CONFIG_DIR/Themes"
+COMFY_DIR="$SPICETIFY_THEMES_DIR/Comfy"
 MARKETPLACE_DIR="$SPICETIFY_CONFIG_DIR/CustomApps/marketplace"
+
+if [ ! -d "$COMFY_DIR" ]; then
+  info "Installing Comfy theme for Spicetify..."
+  cd "$SPICETIFY_THEMES_DIR"
+  git clone https://github.com/Comfy-Themes/Spicetify.git ComfyRepo
+  mv ./ComfyRepo/Comfy/ ./
+  rm -rf ./ComfyRepo/
+  spicetify config current_theme Comfy color_scheme Comfy
+  spicetify config inject_css 1 replace_colors 1 overwrite_assets 1 inject_theme_js 1
+  spicetify apply
+  success "Comfy theme installed and applied."
+else
+  info "Comfy theme already present, skipping."
+fi
+
+info "Installing Spicetify Marketplace...  (⚠️ not really the Arch way, but it doesnt touch anything outside home/)"
 if [ ! -d "$MARKETPLACE_DIR" ] || [ -z "$(ls -A "$MARKETPLACE_DIR")" ]; then
   curl -fsSL https://raw.githubusercontent.com/spicetify/marketplace/main/resources/install.sh | sh
 else
-  echo "Spicetify Marketplace already installed, skipping."
+  success "Spicetify Marketplace already installed, skipping."
 fi
 
-echo "👾 Installing discord (Equicord + OpenAsar) from AUR..."
+info "👾 Installing discord (Equicord + OpenAsar) from AUR..."
 paru -S --needed --noconfirm discord equicord-installer-bin
 
 sudo Equilotl -install -location /opt/discord
@@ -67,7 +84,7 @@ sudo Equilotl -install-openasar -location /opt/discord
 
 paru -Rns --noconfirm equicord-installer-bin || true
 
-echo "☁️ Starting MEGA daemon..."
+info "☁️ Starting MEGA daemon..."
 systemctl --user enable --now mega-cmd-server.service
 sleep 2
 
@@ -101,16 +118,16 @@ fi
 
 rm -f "$UDEV_RULE_TMP"
 
-echo "🎵 Installing EasyEffects..."
+info "🎵 Installing EasyEffects..."
 sudo pacman -S --needed --noconfirm easyeffects lsp-plugins
 
-echo "Downloading EasyEffects Community Presets... (⚠️ not really the Arch way, but it doesnt touch anything outside home/)"
+info "Downloading EasyEffects Community Presets... (⚠️ not really the Arch way, but it doesnt touch anything outside home/)"
 EASYEFFECTS_PRESETS_DIR="$HOME/.config/easyeffects/output"
 if [ ! -f "$EASYEFFECTS_PRESETS_DIR/Perfect EQ.json" ]; then
   # Run the EasyEffects Presets install script as before
   bash <(curl -fsSL https://raw.githubusercontent.com/JackHack96/EasyEffects-Presets/master/install.sh)
 else
-  echo "EasyEffects Presets already installed, skipping."
+  success "EasyEffects Presets already installed, skipping."
 fi
 
 echo ""
@@ -198,7 +215,7 @@ else
   info "No gaming packages detected. Skipping gaming tweaks."
 fi
 
-add_note "🎨 THEMING:\nEnable theming in your favorite apps for a consistent look.\nSee https://docs.noctalia.dev/theming/basic-app-theming/ for detailed guides.\nMore inspiration: Zen-Zero (https://sameerasw.com/zen)"
+add_note "🎨 THEMING:\nEnable theming in your favorite apps for a consistent look.\nSee https://docs.noctalia.dev/theming/basic-app-theming/ for detailed guides.\nMore inspiration:\n\t Zen Browser with the looks ==> Zen-Zero (https://sameerasw.com/zen)"
 
 # ==========================================
 # FINAL SUMMARY

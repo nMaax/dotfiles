@@ -19,12 +19,13 @@ echo ""
 info "📦 [Stage 1] Installing prerequisites..."
 echo ""
 
-info "🐙 Setting Git identity..."
-read -rp "    Enter your Git username: " git_username
-read -rp "    Enter your Git email: " git_email
-git config --global user.name "$git_username"
-git config --global user.email "$git_email"
-info "Git identity set: $git_username <$git_email>"
+GIT_NAME={{ .name | quote }}
+GIT_EMAIL={{ .email | quote }}
+
+info "🐙 Setting Git identity from config..."
+git config --global user.name "$GIT_NAME"
+git config --global user.email "$GIT_EMAIL"
+info "Git identity set: $GIT_NAME <$GIT_EMAIL>"
 
 info "🤓 Installing Nerd Fonts..."
 sudo pacman -S --needed --noconfirm ttf-jetbrains-mono-nerd ttf-iosevka-nerd ttf-cascadia-code-nerd
@@ -40,7 +41,7 @@ if ! pacman -Qs ttf-apple-emoji >/dev/null; then
   info "📥 Downloading verified Apple Emoji package..."
   curl -L "$EMOJI_URL" -o "$EMOJI_FILE"
 
-  # Verify hash before installing
+  # Verify hash before installing, since this is not taken from pacman repo or AUR
   if echo "$EXPECTED_SHA  $EMOJI_FILE" | sha256sum -c -; then
     sudo pacman -U --noconfirm "$EMOJI_FILE"
     success "Apple Emoji installed successfully."
