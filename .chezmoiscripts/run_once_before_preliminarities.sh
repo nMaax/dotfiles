@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # For the future: move to shelly when it becomes default in CachyOS
+# TODO: use color coded messages
 
 set -euo pipefail
 
@@ -109,8 +110,3 @@ fi
 
 echo -e "Please ensure your KeePass database is available and place your keyfile in the correct location.\nPress [Enter] to continue once you are ready..."
 read -r
-
-echo "==> Initializing chezmoi..."
-chezmoi init --apply
-
-echo "==> Done!"
