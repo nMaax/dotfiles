@@ -1,3 +1,4 @@
 - [ ] Do not use shell interactions but chezmoi ones via templates
+- [ ] Re-organize prints for final notes and [STAGE] and other info to be coherent overall
 - [ ] Remind to convert all possible to chezmoi templates to automate logins (e.g. git login, mega login etc.)
 - [ ] Complete silentSSDM ricing script
