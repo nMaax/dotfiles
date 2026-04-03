@@ -32,6 +32,13 @@ else
   echo "Please open 'CachyOS Hello' to enable cachy-update, and remind to tweak your system!"
 fi
 
+if [ -f /etc/default/grub ] && command -v grub-mkconfig >/dev/null; then
+  echo "==> Sanitizing GRUB to plain console..."
+  sudo sed -i "s|^GRUB_THEME=|#GRUB_THEME=|g" /etc/default/grub
+  sudo sed -i "s|^#GRUB_TERMINAL_OUTPUT=console|GRUB_TERMINAL_OUTPUT=console|g" /etc/default/grub
+  sudo grub-mkconfig -o /boot/grub/grub.cfg
+fi
+
 echo "==> Checking for base packages..."
 BASE_PACKAGES=(binutils base-devel git vim appmenu-gtk-module libdbusmenu-glib hyperland xdg-desktop-portal-hyprland chezmoi)
 for pkg in "${BASE_PACKAGES[@]}"; do
