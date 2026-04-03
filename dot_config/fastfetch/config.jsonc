@@ -10,12 +10,7 @@
     }
   },
   "display": {
-    "separator": "  ",
-    "color": "white",
-    "constants": [
-      "\u001b[0m", // {$1} Reset
-      "\u001b[38;5;255m", // {$2} Pure White (Text)
-    ]
+    "separator": "  "
   },
   "modules": [
     "break",
@@ -26,68 +21,68 @@
     },
     {
       "type": "os",
-      "key": "│ {$2}󰻀{$1}  distro",
-      "format": "{$2}{pretty-name>30}{$1} │"
+      "key": "│ 󰻀  {#35}distro{#}",
+      "format": "{pretty-name>30} │"
     },
     {
       "type": "kernel",
-      "key": "│ {$2}{$1}  kernel",
-      "format": "{$2}{release>30}{$1} │"
+      "key": "│   {#35}kernel{#}",
+      "format": "{release>30} │"
     },
     {
       "type": "command",
-      "key": "│ {$2}{$1}  uptime",
+      "key": "│   {#35}uptime{#}",
       "text": "uptime -p | cut -d ' ' -f 2-",
-      "format": "{$2}{>30}{$1} │"
+      "format": "{1>30} │"
     },
     {
       "type": "shell",
-      "key": "│ {$2}{$1}  shell ",
-      "format": "{$2}{pretty-name>30}{$1} │"
+      "key": "│   {#35}shell {#}",
+      "format": "{pretty-name>30} │"
     },
     {
       "type": "terminal",
-      "key": "│ {$2}{$1}  term  ",
-      "format": "{$2}{pretty-name>30}{$1} │"
+      "key": "│   {#35}term  {#}",
+      "format": "{pretty-name>30} │"
     },
     {
       "type": "wm",
-      "key": "│ {$2}{$1}  wm    ",
-      "format": "{$2}{pretty-name>30}{$1} │"
+      "key": "│   {#35}wm    {#}",
+      "format": "{pretty-name>30} │"
     },
     {
       "type": "cpu",
-      "key": "│ {$2}{$1}  cpu   ",
-      "format": "{$2}{name>30}{$1} │"
+      "key": "│   {#35}cpu   {#}",
+      "format": "{name>30} │"
     },
     {
       "type": "gpu",
-      "key": "│ {$2}󰢮{$1}  gpu   ",
+      "key": "│ 󰢮  {#35}gpu   {#}",
       "hideType": "integrated",
-      "format": "{$2}{name>30}{$1} │"
+      "format": "{name>30} │"
     },
     {
       "type": "command",
-      "key": "│ {$2}{$1}  mem   ",
+      "key": "│   {#35}mem   {#}",
       "text": "free -m | awk 'NR==2{printf \"%.2f GiB / %.2f GiB\",$3/1024,$2/1024}'",
-      "format": "{$2}{>30}{$1} │"
+      "format": "{1>30} │"
     },
     {
       "type": "packages",
-      "key": "│ {$2}{$1}  pkgs  ",
-      "format": "{$2}{all>30}{$1} │"
+      "key": "│   {#35}pkgs  {#}",
+      "format": "{all>30} │"
     },
     {
       "type": "command",
-      "key": "│ {$2}{$1}  user  ",
+      "key": "│   {#35}user  {#}",
       "text": "echo $USER",
-      "format": "{$2}{>30}{$1} │"
+      "format": "{1>30} │"
     },
     {
       "type": "command",
-      "key": "│ {$2}{$1}  hname ",
+      "key": "│   {#35}hname {#}",
       "text": "hostnamectl hostname",
-      "format": "{$2}{>30}{$1} │"
+      "format": "{1>30} │"
     },
     {
       "type": "custom",
@@ -96,7 +91,7 @@
     "break",
     {
       "type": "colors",
-      "symbol": "circle",
+      "symbol": "circle"
     },
     "break"
   ]
