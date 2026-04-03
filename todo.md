@@ -1,2 +1,3 @@
 - [ ] Do not use shell interactions but chezmoi ones via templates
 - [ ] Remind to convert all possible to chezmoi templates to automate logins (e.g. git login, mega login etc.)
+- [ ] Complete silentSSDM ricing script
