@@ -7,6 +7,12 @@ function fish_greeting
     end
 end
 
+set -gx TERMINAL ghostty
+set -gx EDITOR vim
+set -gx SUDO_EDITOR vim
+set -gx BROWSER zen-browser
+set -gx PAGER bat
+
 if status is-interactive
     # Start the ssh agent and add your key
     keychain --eval --quiet .ssh/id_ed25519 | source
