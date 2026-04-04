@@ -1,3 +1,6 @@
+# --- CACHY-OS AUTOSTART ---
+.config/autostart/arch-update-tray.desktop
+
 # --- GTK AND QT ---
 .config/gtk-3.0/**
 .config/gtk-4.0/**
