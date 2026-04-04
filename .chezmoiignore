@@ -1,6 +1,4 @@
-# --- NOCTALIA GENERATED OUTPUTS ---
-.config/btop/**
-.config/ghostty/themes/**
+# --- GTK AND QT ---
 .config/gtk-3.0/**
 .config/gtk-4.0/**
 .config/qt5ct/*
@@ -8,15 +6,29 @@
 !.config/qt6ct/qt6ct.conf
 !.config/qt5ct/qt5ct.conf
 
-# --- NOCTALIA PLUGINS ---
+# --- NOCTALIA ---
 .config/noctalia/plugins/**
 .config/noctalia/colors.json
+.config/noctalia/colorschemes/*
+!.config/noctalia/colorschemes/Rosey\ AMOLED
+!.config/noctalia/colorschemes/Lilac\ AMOLED
 
-# --- NEOVIM GENERATED OUTPUTS ---
+# --- HYPERLAND NOCTALIA THEME ---
+.config/hypr/noctalia/**
+
+# --- BTOP NOCTALIA THEME ---
+.config/btop/themes/noctalia.theme
+
+# --- GHOSTTY NOCTALIA THEME ---
+.config/ghostty/themes/noctalia/**
+.config/ghostty/shaders/*
+!.config/ghostty/shaders/cursor_warp.glsl
+
+# --- NEOVIM NOCTALIA THEME ---
 .config/nvim/lua/matugen.lua
 
 # --- FISH/SHELL STATE ---
-.config/fish/private_fish_variables
+.config/fish/fish_variables
 
 # --- SYSTEM NOISE & CACHES ---
 .config/dconf/**

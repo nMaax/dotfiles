@@ -1,4 +1,4 @@
-- [ ] Do not use shell interactions but chezmoi ones via templates
+- [ ] Do not use shell interactions (e.g. `read``) but chezmoi ones via templates
 - [ ] Re-organize prints for final notes and [STAGE] and other info to be coherent overall
 - [ ] Add color and emojis to preliminarities > [!CAUTION]
 - [ ] Pass tailscale, nordvpn tokens via toml

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # TODO: Is this correct?
 info "🖥️ Configuring SDDM Silent Theme..."
 paru -S sddm-silent-theme

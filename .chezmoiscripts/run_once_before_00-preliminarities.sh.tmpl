@@ -66,7 +66,7 @@ for pkg in "${BASE_PACKAGES[@]}"; do
 done
 
 info "==> Installing other utilities..."
-sudo pacman -S --needed --noconfirm smartmontools ffmpeg imagemagick glow dust bat ripgrep fd btop trash-cli ghostscript pandoc poppler qpdf
+sudo pacman -S --needed --noconfirm smartmontools ffmpeg imagemagick glow dust bat ripgrep fd btop nvtop trash-cli ghostscript pandoc poppler qpdf
 paru -S --needed --noconfirm caligula-bin pdfcpu-bin ocrmypdf tesseract-data-eng tesseract-data-ita
 
 info "==> Setting Wireless Regdom to Italy"
