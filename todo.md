@@ -12,3 +12,4 @@
 - [ ] Maybe a script to generalize monitor registration?
 - [ ] What about those interesting programs to handle monitors and keybinds for Hyprland, also handles wifi, bluetooth and stuff?
 - [ ] Remove decorations in GTK and Qt apps(?) > See <https://gemini.google.com/share/c8a1eda7ec71>
+- [ ] Use git filter-repo to scrub away binaries and easyeffects .config files (remind about irs files)
