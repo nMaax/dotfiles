@@ -121,15 +121,6 @@ rm -f "$UDEV_RULE_TMP"
 info "🎵 Installing EasyEffects..."
 sudo pacman -S --needed --noconfirm easyeffects lsp-plugins
 
-info "Downloading EasyEffects Community Presets... (⚠️ not really the Arch way, but it doesnt touch anything outside home/)"
-EASYEFFECTS_PRESETS_DIR="$HOME/.config/easyeffects/output"
-if [ ! -f "$EASYEFFECTS_PRESETS_DIR/Perfect EQ.json" ]; then
-  # Run the EasyEffects Presets install script as before
-  bash <(curl -fsSL https://raw.githubusercontent.com/JackHack96/EasyEffects-Presets/master/install.sh)
-else
-  success "EasyEffects Presets already installed, skipping."
-fi
-
 echo ""
 success "✅ [Stage 2] Apps and tweaks applied."
 echo ""
