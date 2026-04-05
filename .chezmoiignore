@@ -2,6 +2,7 @@
 .config/psd/**
 .config/btop/**
 .config/cava/**
+.config/micro/**
 .config/discord/**
 .config/Equicord/**
 .config/telegram-desktop/**
