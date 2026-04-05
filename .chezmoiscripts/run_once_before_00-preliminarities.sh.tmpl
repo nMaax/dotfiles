@@ -40,7 +40,7 @@ if [[ "${answer,,}" != "y" && -n "$answer" ]]; then
   exit 1
 fi
 
-info "==> Checking for cachy-update..."
+info "🔄 Checking for cachy-update..."
 if sudo pacman -Q cachy-update &>/dev/null; then
   cachy-update
 else
