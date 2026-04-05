@@ -1,5 +1,16 @@
-# --- CACHY-OS AUTOSTART ---
-.config/autostart/arch-update-tray.desktop
+# --- APPS ---
+.config/psd/**
+.config/btop/**
+.config/cava/**
+.config/discord/**
+.config/Equicord/**
+.config/telegram-desktop/**
+.config/mozzila/**
+.config/zen/**
+.config/Element/**
+.config/Kvantum/**
+.config/spotify/**
+.config/spicetify/**
 
 # --- GTK AND QT ---
 .config/gtk-3.0/**
@@ -19,9 +30,6 @@
 # --- HYPERLAND NOCTALIA THEME ---
 .config/hypr/noctalia/**
 
-# --- BTOP NOCTALIA THEME ---
-.config/btop/themes/noctalia.theme
-
 # --- GHOSTTY NOCTALIA THEME ---
 .config/ghostty/themes/noctalia/**
 .config/ghostty/shaders/*
@@ -39,22 +47,30 @@
 .config/session/**
 .config/trashrc
 .config/baloofileinformationrc
+.config/pavucontrol.ini
+.config/xsettingsd/**
+.config/pdfcpu/**
+.config/qvirtualkeyboard/**
+
+# --- CACHY-OS NOISE ---
+.config/autostart/arch-update-tray.desktop
+.config/cachyos-hello.json
 
 # --- KDE NOISE ---
 .config/baloofileinformationrc
 .config/trashrc
-.config/cachyos-hello.json
+.config/QtProject/**
 .config/QtProject.conf
 .config/user-dirs.locale
 .config/kiorc
 .config/filetypesrc
-
-# --- APP TOKENS & SENSITIVE DATA ---
-.config/discord/**
-.config/Equicord/**
-.config/Element/**
-.config/zen/**
-.config/mozilla/**
+.config/kdeglobals
+.config/gwenviewrc
+.config/okularrc
+.config/okularpartrc
+.config/dolphinrc
+.config/katevirc
+.config/kwriterc
 
 # --- SYSTEMD SAFETY ---
 .config/systemd/user/*
