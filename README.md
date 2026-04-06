@@ -21,6 +21,4 @@ chezmoi init --apply nMaax
 ## 📝 TODOs
 
 - [ ] Double check SSDM and keyring PAM signal with kwallet
-- [ ] Generalize hyprland.conf in different files (and update the chezmoi script accordingly)
-- [ ] Remove decorations in GTK and Qt apps(?) > See <https://gemini.google.com/share/c8a1eda7ec71>
 - [ ] Use git filter-repo to scrub away binaries and easyeffects .config files (remind about irs files)
