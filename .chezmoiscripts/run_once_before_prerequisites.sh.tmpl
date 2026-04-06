@@ -104,8 +104,6 @@ echo ""
 success "✅ [Stage 1] Prerequisites installed."
 echo ""
 
-# ---------------------------------------
-
 echo ""
 success "🥮 [Stage 2] Installing apps and Noctalia..."
 echo ""
@@ -216,7 +214,10 @@ echo "🖥️ Installing KDE suite, Qt, GTK and utility apps..."
 sudo pacman -S --needed --noconfirm \
   qt6ct-kde qt5ct adw-gtk-theme nwg-look \
   qt6-multimedia archlinux-xdg-menu ark dolphin-plugins filelight \
-  okular haruna kwrite gwenview
+  okular haruna kwrite gwenview \
+  kwallet kwallet-pam
+
+add_note "[KWALLET]:  Make a new wallet using kwalletmanager with the same password as the user to enable automatic keyring login.\n See https://wiki.archlinux.org/title/KDE_Wallet for more information.\n Look at https://www.electronjs.org/docs/latest/api/safe-storage for Electron-specific information"
 
 echo "Syncing GTK with Noctalia..."
 gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3'
@@ -229,10 +230,9 @@ kbuildsycoca6 --noincremental
 info "🦉 Installing Noctalia..."
 paru -S --needed --noconfirm noctalia-shell
 
-add_note "🗝️ KWALLET:  Make a new wallet using kwalletmanager with the same password as the user to enable automatic keyring login. See https://wiki.archlinux.org/title/KDE_Wallet for more informations."
-add_note "🦉 NOCTALIA: Check noctalia documentation for further information: "
-add_note "🦉 NOCTALIA: ddcutil was installed by default, which may introduce system instability with certain monitors; remove it eventually with sudo pacman -Rns ddcutil"
-add_note "🦉 NOCTALIA:\nEnable theming in your favorite apps for a consistent look.\nSee https://docs.noctalia.dev/theming/basic-app-theming/ for detailed guides.\n e.g.:\n\t Zen Browser with the looks ==> Zen-Zero (https://sameerasw.com/zen)"
+add_note "[NOCTALIA] Check noctalia documentation for further information: https://docs.noctalia.dev/"
+add_note "[NOCTALIA] ddcutil was installed by default, which may introduce system instability with certain monitors; remove it eventually with sudo pacman -Rns ddcutil"
+add_note "[NOCTALIA] Enable theming in your favorite apps for a consistent look.\nSee https://docs.noctalia.dev/theming/basic-app-theming/ for detailed guides.\n e.g.:\n\t Zen Browser with the looks ==> Zen-Zero (https://sameerasw.com/zen)"
 
 echo ""
 success "✅ [Stage 2] Apps and Noctalia installed."

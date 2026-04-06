@@ -66,8 +66,8 @@ else
   warning "$USER_FACE not found. Skipping avatar change."
 fi
 
-add_note "🤐 SILENT SDDM: Remind to select systemd owned Hyprland at login in SDDM, in order to enable specific autostarts to work."
-add_note "🤐 SILENT SDDM: Remind to run ./test.sh in $SILENT_SDDM_DIR to check SDDM works and you are not kept out of your system at next boot."
+add_note "[SILENT SDDM] Remind to select systemd owned Hyprland at login in SDDM, in order to enable specific autostarts to work."
+add_note "[SILENT SDDM] Remind to run ./test.sh in $SILENT_SDDM_DIR to check SDDM works and you are not kept out of your system at next boot."
 
 info "🖱️ Setting up MCHOSE udev rules..."
 UDEV_RULE_PATH="/etc/udev/rules.d/99-mchose.rules"
@@ -192,7 +192,7 @@ echo "🛡️ Enabling NordVPN daemon..."
 sudo systemctl enable --now nordvpnd
 sudo usermod -aG nordvpn "$USER"
 sleep 2
-add_note "⚠️ NORDVPN: Remind to reboot your system to use NordVPN"
+add_note "[NORDVPN]: Remind to reboot your system to use NordVPN"
 
 {{- if .nordvpn_token }}
 echo "🔑 Logging into NordVPN using provided token..."
@@ -238,5 +238,5 @@ if [ -n "$POST_INSTALL_NOTES" ]; then
   echo -e "${GREEN}🎉 DOTFILES INSTALLATION COMPLETE! PLEASE READ THESE POST-INSTALL STEPS:${NC}"
   echo -e "${GREEN}=================================================================${NC}"
   echo ""
-  echo -e "$POST_INSTALL_NOTES"
+  show_notes()
 fi
