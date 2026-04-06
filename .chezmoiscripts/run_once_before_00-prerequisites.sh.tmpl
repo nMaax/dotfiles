@@ -48,13 +48,6 @@ else
   warning "Please open 'CachyOS Hello' to enable cachy-update, and remind to tweak your system!"
 fi
 
-if [ -f /etc/default/grub ] && command -v grub-mkconfig >/dev/null; then
-  info "==> Sanitizing GRUB to plain console (removing CachyOS theme)..."
-  sudo sed -i "s|^GRUB_THEME=|#GRUB_THEME=|g" /etc/default/grub
-  sudo sed -i "s|^#GRUB_TERMINAL_OUTPUT=console|GRUB_TERMINAL_OUTPUT=console|g" /etc/default/grub
-  sudo grub-mkconfig -o /boot/grub/grub.cfg
-fi
-
 info "📦 Checking for missing base packages..."
 BASE_PACKAGES=(binutils base-devel git vim appmenu-gtk-module libdbusmenu-glib hyperland xdg-desktop-portal-hyprland ddcutil)
 for pkg in "${BASE_PACKAGES[@]}"; do
@@ -171,6 +164,76 @@ else
   success "Apple Emoji is already installed."
 fi
 
+info "🏮 Installing browsers..."
+sudo pacman -S --needed --noconfirm chromium
+paru -S --needed --noconfirm zen-browser-bin
+
+info "📰 Installing Telegram"
+sudo pacman -S --needed --noconfirm telegram-desktop
+
+info "🪐 Installing Starship..."
+sudo pacman -S --needed --noconfirm starship
+
+info "🐍 Installing apps for coding.."
+sudo pacman -S --needed --noconfirm uv lazygit neovim nodejs jdk-openjdk
+
+info "📤 Installing LocalSend"
+sudo paru -S --needed --noconfirm localsend
+
+info "🎧 Installing Spotify (spicetify) from AUR..."
+paru -S --needed --noconfirm spotify spicetify-cli
+
+info "Setting up Spicetify..."
+sudo chmod a+wr /opt/spotify
+sudo chmod a+wr /opt/spotify/Apps -R
+spicetify backup apply || spicetify apply
+
+SPICETIFY_CONFIG_DIR="$HOME/.config/spicetify"
+SPICETIFY_THEMES_DIR="$SPICETIFY_CONFIG_DIR/Themes"
+COMFY_DIR="$SPICETIFY_THEMES_DIR/Comfy"
+MARKETPLACE_DIR="$SPICETIFY_CONFIG_DIR/CustomApps/marketplace"
+
+if [ ! -d "$COMFY_DIR" ]; then
+  info "Installing Comfy theme for Spicetify..."
+  cd "$SPICETIFY_THEMES_DIR"
+  git clone https://github.com/Comfy-Themes/Spicetify.git ComfyRepo
+  mv ./ComfyRepo/Comfy/ ./
+  rm -rf ./ComfyRepo/
+  spicetify config current_theme Comfy color_scheme Comfy
+  spicetify config inject_css 1 replace_colors 1 overwrite_assets 1 inject_theme_js 1
+  spicetify apply
+  success "Comfy theme installed and applied."
+else
+  info "Comfy theme already present, skipping."
+fi
+
+info "Installing Spicetify Marketplace...  (⚠️ not really the Arch way, but it doesnt touch anything outside home/)"
+if [ ! -d "$MARKETPLACE_DIR" ] || [ -z "$(ls -A "$MARKETPLACE_DIR")" ]; then
+  curl -fsSL https://raw.githubusercontent.com/spicetify/marketplace/main/resources/install.sh | sh
+else
+  success "Spicetify Marketplace already installed, skipping."
+fi
+
+info "👾 Installing Discord (Equicord + OpenAsar) from AUR..."
+paru -S --needed --noconfirm discord equicord-installer-bin
+
+sudo Equilotl -install -location /opt/discord
+sudo Equilotl -install-openasar -location /opt/discord
+
+paru -Rns --noconfirm equicord-installer-bin || true
+
+info "🎵 Installing EasyEffects..."
+sudo pacman -S --needed --noconfirm easyeffects lsp-plugins
+
+info "Downloading EasyEffects Community Presets... (⚠️ not really the Arch way, but it doesnt touch anything outside home/)"
+EASYEFFECTS_PRESETS_DIR="$HOME/.config/easyeffects/output"
+if [ ! -f "$EASYEFFECTS_PRESETS_DIR/Perfect EQ.json" ]; then
+  # Run the EasyEffects Presets install script as before
+  bash <(curl -fsSL https://raw.githubusercontent.com/JackHack96/EasyEffects-Presets/master/install.sh)
+else
+  success "EasyEffects Presets already installed, skipping."
+fi
+
 info "🌙 Installing Noctalia dependencies..."
 paru -S --needed --noconfirm cliphist wlsunset xdg-desktop-portal evolution-data-server hyprshot quickshell-overview-git
 
@@ -190,6 +253,11 @@ kbuildsycoca6 --noincremental
 
 info "🦉 Installing Noctalia..."
 paru -S --needed --noconfirm noctalia-shell
+
+add_note "🗝️ KWALLET:  Make a new wallet using kwalletmanager with the same password as the user to enable automatic keyring login."
+add_note "🦉 NOCTALIA: Check noctalia documentation for further information: "
+add_note "🦉 NOCTALIA: ddcutil was installed by default, which may introduce system instability with certain monitors; remove it eventually with sudo pacman -Rns ddcutil"
+add_note "🦉 NOCTALIA:\nEnable theming in your favorite apps for a consistent look.\nSee https://docs.noctalia.dev/theming/basic-app-theming/ for detailed guides.\nMore inspiration:\n\t Zen Browser with the looks ==> Zen-Zero (https://sameerasw.com/zen)"
 
 echo ""
 success "✅ [Stage 1] Prerequisites installed."
