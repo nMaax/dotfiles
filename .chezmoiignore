@@ -4,6 +4,7 @@
 !.local/
 
 # --- CHEZMOI ITSELF ---
+README.md
 .config/chezmoi/**
 
 # --- APPS ---
