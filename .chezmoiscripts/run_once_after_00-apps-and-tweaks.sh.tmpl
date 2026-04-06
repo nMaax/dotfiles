@@ -77,7 +77,7 @@ else
   success "Spicetify Marketplace already installed, skipping."
 fi
 
-info "👾 Installing discord (Equicord + OpenAsar) from AUR..."
+info "👾 Installing Discord (Equicord + OpenAsar) from AUR..."
 paru -S --needed --noconfirm discord equicord-installer-bin
 
 sudo Equilotl -install -location /opt/discord
@@ -161,18 +161,19 @@ USER_FACE="$HOME/.face"
 
 if [ -f "$USER_FACE" ]; then
   sudo chmod +x "$AVATAR_SCRIPT"
-  sudo "$AVATAR_SCRIPT" "$USER_FACE"
+  sudo "$AVATAR_SCRIPT" "$(whoami)" "$USER_FACE"
   success "Avatar updated successfully."
 else
   warning "$USER_FACE not found. Skipping avatar change."
 fi
 
+add_note "⚠️ SILENT SDDM: Remind to select systemd owned Hyprland at login in SDDM, in order to enable specific autostarts to work."
 add_note "⚠️ SILENT SDDM: Remind to run ./test.sh in $SILENT_SDDM_DIR to check SDDM works and you are not kept out of your system at next boot."
 
 if pacman -Q cachyos-gaming-applications cachyos-gaming-meta >/dev/null 2>&1; then
   success "🕹️ Gaming packages detected! Applying optimizations..."
 
-  info "Installing Minecraft (Prism-launcher and Java dependencies)"
+  info "⛏️ Installing Minecraft (Prism-launcher and Java dependencies)"
   sudo pacman -S prismlauncher
   sudo pacman -S jdk8-openjdk jdk17-openjdk jdk21-openjdk
 
@@ -228,7 +229,10 @@ if pacman -Q cachyos-gaming-applications cachyos-gaming-meta >/dev/null 2>&1; th
   # Inside your gaming if-statement:
   add_note "🎮 GAMING REMINDERS:
   🚀 STEAM LAUNCH OPTIONS
-      game-performance %command%
+  For NVIDIA:
+      TODO
+  For AMD:
+      PROTON_USE_NTSYNC=1 ENABLE_LAYER_MESA_ANTI_LAG=1 PROTON_FSR4_UPGRADE=1 game-performance %command%
 
   ⚙️  PROTON / STEAM SETTINGS
   - Compatibility: Set \`proton-cachyos-slr\` as your default Proton layer.
