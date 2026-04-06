@@ -56,8 +56,8 @@ if [ -f /etc/default/grub ] && command -v grub-mkconfig >/dev/null; then
   sudo grub-mkconfig -o /boot/grub/grub.cfg
 fi
 
-info "==> Checking for missing base packages..."
-BASE_PACKAGES=(binutils base-devel git vim appmenu-gtk-module libdbusmenu-glib hyperland xdg-desktop-portal-hyprland chezmoi)
+info "📦 Checking for missing base packages..."
+BASE_PACKAGES=(binutils base-devel git vim appmenu-gtk-module libdbusmenu-glib hyperland xdg-desktop-portal-hyprland)
 for pkg in "${BASE_PACKAGES[@]}"; do
   if ! pacman -Qi "$pkg" &>/dev/null; then
     info "    Installing missing package: $pkg"
@@ -65,31 +65,30 @@ for pkg in "${BASE_PACKAGES[@]}"; do
   fi
 done
 
-info "==> Installing other utilities..."
+info "🔧 Installing other utilities..."
 sudo pacman -S --needed --noconfirm smartmontools ffmpeg imagemagick glow dust bat ripgrep fd btop nvtop trash-cli transmission-cli ghostscript pandoc poppler qpdf
 paru -S --needed --noconfirm caligula-bin pdfcpu-bin ocrmypdf tesseract-data-eng tesseract-data-ita
 
-info "==> Setting Wireless Regdom to Italy"
+info "🛜 Setting Wireless Regdom to Italy"
 sudo sed -i 's/^WIRELESS_REGDOM=/#&/' /etc/conf.d/wireless-regdom && sudo sed -i '/WIRELESS_REGDOM="IT"/s/^#//' /etc/conf.d/wireless-regdom
 
-info "==> Update TLDR;"
+info "📝 Update TLDR;"
 tldr --update
 
-info "==> Enable smartmontools to check for SSD health"
+info "💾 Enable smartmontools to check for SSD health"
 sudo systemctl enable --now smartd
 sleep 2
 
-info "==> Setup Uncomplicated Firewall"
+info "🧱 Setup Uncomplicated Firewall"
 sudo ufw enable
 sleep 2
 
-info "==> Enable SSH daemon"
+info "🔐 Enable SSH daemon"
 sudo systemctl enable --now sshd
 sleep 2
 
-info "==> Installing MEGAcmd and KeePassXC"
+info "☁️ Installing MEGAcmd"
 paru -S --needed --noconfirm megacmd-bin
-sudo pacman -S --needed --noconfirm keepassxc
 
 info "==> Enabling MEGA"
 if ! mega-whoami >/dev/null 2>&1; then
@@ -118,6 +117,9 @@ mega-sync
 
 info "Issues with MEGA:"
 mega-sync-issues
+
+info "🔑 Installing KeePassXC"
+sudo pacman -S --needed --noconfirm keepassxc
 
 if ! ls ~/MEGA/KeePassXC/Password.kdbx &>/dev/null; then
   error "Couldn't find the KeePassXC database, maybe MEGA didn't download it."
