@@ -1,3 +1,8 @@
+# --- ROOT ---
+*
+!.config/
+!.local/
+
 # --- CHEZMOI ITSELF ---
 README.md
 .config/chezmoi/**
@@ -96,10 +101,14 @@ README.md
 .config/kwalletrc
 .config/kcalcrc
 
-# --- SYSTEMD SAFETY ---
+# --- SYSTEMD ---
 .config/systemd/user/*
 !.config/systemd/user/mega-cmd-server.service
 
-# --- SSH SAFETY ---
+# --- LOCAL ---
+.local/*
+!.local/bin/*
+
+# --- SSH ---
 .ssh/*
 !.ssh/config
