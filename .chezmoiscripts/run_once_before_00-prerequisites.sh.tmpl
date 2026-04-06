@@ -16,7 +16,6 @@ warn() { echo -e "${YELLOW}==>${NC} $1"; }
 error() { echo -e "${RED}==>${NC} $1"; }
 
 # For the future: move to shelly when it becomes default in CachyOS
-# TODO: use color coded messages
 
 {{- if ne .chezmoi.osRelease.id "cachyos" }}
 echo "This script is intended to run on CachyOS."
@@ -90,7 +89,7 @@ sleep 2
 info "☁️ Installing MEGAcmd"
 paru -S --needed --noconfirm megacmd-bin
 
-info "==> Enabling MEGA"
+info "Enabling MEGA"
 if ! mega-whoami >/dev/null 2>&1; then
   info "You are not logged into MEGA. Loggin in now..."
   mega-login
@@ -98,7 +97,7 @@ else
   success "Already logged in to MEGA."
 fi
 
-info "==> Checking MEGA is synced with cloud..."
+info "Checking MEGA is synced with cloud..."
 if ! mega-sync | grep "Synced"; then
   info "Mega is not synced. Syncing now."
   mkdir -p ~/MEGA
