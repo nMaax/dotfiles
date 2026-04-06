@@ -56,7 +56,7 @@ if [ -f /etc/default/grub ] && command -v grub-mkconfig >/dev/null; then
 fi
 
 info "📦 Checking for missing base packages..."
-BASE_PACKAGES=(binutils base-devel git vim appmenu-gtk-module libdbusmenu-glib hyperland xdg-desktop-portal-hyprland)
+BASE_PACKAGES=(binutils base-devel git vim appmenu-gtk-module libdbusmenu-glib hyperland xdg-desktop-portal-hyprland ddcutil)
 for pkg in "${BASE_PACKAGES[@]}"; do
   if ! pacman -Qi "$pkg" &>/dev/null; then
     info "    Installing missing package: $pkg"
@@ -172,7 +172,7 @@ else
 fi
 
 info "🌙 Installing Noctalia dependencies..."
-paru -S --needed --noconfirm cliphist wlsunset xdg-desktop-portal evolution-data-server hyprshot
+paru -S --needed --noconfirm cliphist wlsunset xdg-desktop-portal evolution-data-server hyprshot quickshell-overview-git
 
 echo "🖥️ Installing KDE suite, Qt, GTK and utility apps..."
 sudo pacman -S --needed --noconfirm \
