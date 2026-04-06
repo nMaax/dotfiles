@@ -281,7 +281,7 @@
         "manualSunrise": "06:30",
         "manualSunset": "18:30",
         "monitorForColors": "",
-        "predefinedScheme": "Cyberpunk",
+        "predefinedScheme": "Tokyo Night Moon",
         "schedulingMode": "off",
         "syncGsettings": true,
         "useWallpaperColors": false
@@ -726,6 +726,10 @@
             {
                 "enabled": true,
                 "id": "gtk"
+            },
+            {
+                "enabled": true,
+                "id": "code"
             }
         ],
         "enableUserTheming": true

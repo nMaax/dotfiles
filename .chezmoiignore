@@ -25,6 +25,10 @@ README.md
 .config/mozilla/**
 .config/zen/**
 .config/Element/**
+.config/.vscode/**
+.config/.vscode-oss/**
+.config/Code/**
+.config/Code - OSS/**
 .config/spotify/**
 .config/spicetify/**
 .config/Kvantum/**
@@ -61,6 +65,7 @@ README.md
 .config/fish/fish_variables
 
 # --- SYSTEM NOISE & CACHES ---
+.config/autostart/**
 .config/systemd/**
 .config/dconf/**
 .config/pulse/**
@@ -76,7 +81,6 @@ README.md
 # --- CACHY-OS NOISE ---
 .config/cachyos/**
 .config/cachyos-hello.json
-.config/autostart/arch-update-tray.desktop
 
 # --- KDE NOISE ---
 .config/KDE/**
@@ -105,6 +109,7 @@ README.md
 # --- LOCAL ---
 .local/*
 !.local/bin/*
+!.local/share/applications/*.desktop
 
 # --- SSH ---
 .ssh/*
