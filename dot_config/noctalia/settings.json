@@ -27,12 +27,12 @@
             "org.keepassxc.KeePassXC",
             "com.github.wwmm.easyeffects"
         ],
-        "position": "center",
+        "position": "bottom_center",
         "screenshotAnnotationTool": "",
         "showCategories": true,
         "showIconBackground": false,
         "sortByMostUsed": true,
-        "terminalCommand": "alacritty -e",
+        "terminalCommand": "ghostty -e",
         "viewMode": "list"
     },
     "audio": {
@@ -64,7 +64,7 @@
         "hideOnOverview": false,
         "marginHorizontal": 6,
         "marginVertical": 6,
-        "middleClickAction": "settings",
+        "middleClickAction": "none",
         "middleClickCommand": "",
         "middleClickFollowMouse": true,
         "monitors": [

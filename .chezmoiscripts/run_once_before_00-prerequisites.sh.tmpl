@@ -1,19 +1,7 @@
 #!/bin/bash
+{{ include "utils.sh" }}
 
 set -euo pipefail
-
-# --- Color Definitions ---
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-YELLOW='\033[1;33m'
-RED='\033[0;31m'
-NC='\033[0m' # No Color
-
-# --- Helper Logging Functions ---
-info() { echo -e "${BLUE}==>${NC} $1"; }
-success() { echo -e "${GREEN}==>${NC} $1"; }
-warn() { echo -e "${YELLOW}==>${NC} $1"; }
-error() { echo -e "${RED}==>${NC} $1"; }
 
 # For the future: move to shelly when it becomes default in CachyOS
 
@@ -24,8 +12,10 @@ exit 1
 {{- end }}
 
 echo ""
-info "🧰 [Stage 0] Checking preliminarities..."
+info "📦 [Stage 1] Installing prerequisites..."
 echo ""
+
+clean_notes
 
 read -rp "Did you tweak CachyOS as you like? [Y/n] " answer
 if [[ "${answer,,}" != "y" && -n "$answer" ]]; then
@@ -61,25 +51,7 @@ info "🔧 Installing other utilities..."
 sudo pacman -S --needed --noconfirm smartmontools ffmpeg imagemagick glow dust bat ripgrep fd btop nvtop trash-cli transmission-cli ghostscript pandoc poppler qpdf
 paru -S --needed --noconfirm caligula-bin pdfcpu-bin ocrmypdf tesseract-data-eng tesseract-data-ita
 
-info "🛜 Setting Wireless Regdom to Italy"
-sudo sed -i 's/^WIRELESS_REGDOM=/#&/' /etc/conf.d/wireless-regdom && sudo sed -i '/WIRELESS_REGDOM="IT"/s/^#//' /etc/conf.d/wireless-regdom
-
-info "📝 Update TLDR;"
-tldr --update
-
-info "💾 Enable smartmontools to check for SSD health"
-sudo systemctl enable --now smartd
-sleep 2
-
-info "🧱 Setup Uncomplicated Firewall"
-sudo ufw enable
-sleep 2
-
-info "🔐 Enable SSH daemon"
-sudo systemctl enable --now sshd
-sleep 2
-
-info "☁️ Installing MEGAcmd"
+info "☁️ Installing MEGA..."
 paru -S --needed --noconfirm megacmd-bin
 
 info "Enabling MEGA"
@@ -113,21 +85,29 @@ mega-sync-issues
 info "🔑 Installing KeePassXC"
 sudo pacman -S --needed --noconfirm keepassxc
 
-if ! ls ~/MEGA/KeePassXC/Password.kdbx &>/dev/null; then
+KEEPASS_DB = "~/{{keepassxc.database}}"
+
+if ! ls $KEEPASS_DB &>/dev/null; then
   error "Couldn't find the KeePassXC database, maybe MEGA didn't download it."
   error "Can't proceed, will close now. This script is idempotent so you can run it again and resume where left."
   exit 1
+else
+  success KeePass database found at $KEEPASS_DB
+fi
+
+read -e "Is your KeePass keyfile available at {{keepassxc.args[2]}}? [Y/n]"
+if [[ "${answer,,}" != "y" && -n "$answer" ]]; then
+  warning -e "Please ensure your KeePass keyfile is available at the correct location.\nPress [Enter] to continue once you are ready..."
 fi
 
 echo ""
-success "✅ [Stage 0] Preliminarities checked and (eventually) fixed."
+success "✅ [Stage 1] Prerequisites installed."
 echo ""
 
-warning -e "Please ensure your KeePass database is available and place your keyfile in the correct location.\nPress [Enter] to continue once you are ready..."
-read -r
+# ---------------------------------------
 
 echo ""
-info "📦 [Stage 1] Installing prerequisites..."
+success "🥮 [Stage 2] Installing apps and Noctalia..."
 echo ""
 
 GIT_NAME={{ .name | quote }}
@@ -225,15 +205,6 @@ paru -Rns --noconfirm equicord-installer-bin || true
 info "🎵 Installing EasyEffects..."
 sudo pacman -S --needed --noconfirm easyeffects lsp-plugins
 
-info "Downloading EasyEffects Community Presets... (⚠️ not really the Arch way, but it doesnt touch anything outside home/)"
-EASYEFFECTS_PRESETS_DIR="$HOME/.config/easyeffects/output"
-if [ ! -f "$EASYEFFECTS_PRESETS_DIR/Perfect EQ.json" ]; then
-  # Run the EasyEffects Presets install script as before
-  bash <(curl -fsSL https://raw.githubusercontent.com/JackHack96/EasyEffects-Presets/master/install.sh)
-else
-  success "EasyEffects Presets already installed, skipping."
-fi
-
 info "🌙 Installing Noctalia dependencies..."
 paru -S --needed --noconfirm cliphist wlsunset xdg-desktop-portal evolution-data-server hyprshot quickshell-overview-git
 
@@ -254,11 +225,11 @@ kbuildsycoca6 --noincremental
 info "🦉 Installing Noctalia..."
 paru -S --needed --noconfirm noctalia-shell
 
-add_note "🗝️ KWALLET:  Make a new wallet using kwalletmanager with the same password as the user to enable automatic keyring login."
+add_note "🗝️ KWALLET:  Make a new wallet using kwalletmanager with the same password as the user to enable automatic keyring login. See https://wiki.archlinux.org/title/KDE_Wallet for more informations."
 add_note "🦉 NOCTALIA: Check noctalia documentation for further information: "
 add_note "🦉 NOCTALIA: ddcutil was installed by default, which may introduce system instability with certain monitors; remove it eventually with sudo pacman -Rns ddcutil"
-add_note "🦉 NOCTALIA:\nEnable theming in your favorite apps for a consistent look.\nSee https://docs.noctalia.dev/theming/basic-app-theming/ for detailed guides.\nMore inspiration:\n\t Zen Browser with the looks ==> Zen-Zero (https://sameerasw.com/zen)"
+add_note "🦉 NOCTALIA:\nEnable theming in your favorite apps for a consistent look.\nSee https://docs.noctalia.dev/theming/basic-app-theming/ for detailed guides.\n e.g.:\n\t Zen Browser with the looks ==> Zen-Zero (https://sameerasw.com/zen)"
 
 echo ""
-success "✅ [Stage 1] Prerequisites installed."
+success "✅ [Stage 2] Apps and Noctalia installed."
 echo ""
