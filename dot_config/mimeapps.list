@@ -1,20 +1,26 @@
 [Added Associations]
+application/pdf=org.kde.okular.desktop;
+image/jpeg=org.kde.gwenview.desktop;
+text/markdown=nvim.desktop;org.kde.kwrite.desktop;
 video/mp4=org.kde.haruna.desktop;
 x-scheme-handler/chrome=zen.desktop;
 x-scheme-handler/http=zen.desktop;
 x-scheme-handler/https=zen.desktop;
 
 [Default Applications]
+application/pdf=org.kde.okular.desktop;
 application/x-extension-htm=zen.desktop
 application/x-extension-html=zen.desktop
 application/x-extension-shtml=zen.desktop
 application/x-extension-xht=zen.desktop
 application/x-extension-xhtml=zen.desktop
 application/xhtml+xml=zen.desktop
+image/jpeg=org.kde.gwenview.desktop;
 image/png=gwenview-4.desktop;
 text/html=zen.desktop
+text/markdown=nvim.desktop;
 video/mp4=org.kde.haruna.desktop;
 x-scheme-handler/chrome=zen.desktop
+x-scheme-handler/discord=equibop.desktop
 x-scheme-handler/http=zen.desktop
 x-scheme-handler/https=zen.desktop
-x-scheme-handler/discord=equibop.desktop
