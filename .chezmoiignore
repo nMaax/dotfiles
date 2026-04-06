@@ -1,17 +1,27 @@
+# --- CHEZMOI ITSELF ---
+.config/chezmoi/**
+
 # --- APPS ---
 .config/psd/**
 .config/btop/**
 .config/cava/**
 .config/micro/**
+.config/mpv/**
+.config/kitty/**
+.config/github-copilot/**
+.config/easyeffects/**
+.config/easyeffectsrc/**
+.config/keepassxc/**
 .config/discord/**
 .config/Equicord/**
+.config/equibop/**
 .config/telegram-desktop/**
-.config/mozzila/**
+.config/mozilla/**
 .config/zen/**
 .config/Element/**
-.config/Kvantum/**
 .config/spotify/**
 .config/spicetify/**
+.config/Kvantum/**
 
 # --- GTK AND QT ---
 .config/gtk-3.0/**
@@ -20,6 +30,8 @@
 .config/qt6ct/*
 !.config/qt6ct/qt6ct.conf
 !.config/qt5ct/qt5ct.conf
+.config/qtvirtualkeyboard/**
+.config/nwg-look/**
 
 # --- NOCTALIA ---
 .config/noctalia/plugins/**
@@ -52,26 +64,36 @@
 .config/xsettingsd/**
 .config/pdfcpu/**
 .config/qvirtualkeyboard/**
+.config/go
 
 # --- CACHY-OS NOISE ---
-.config/autostart/arch-update-tray.desktop
+.config/cachyos/**
 .config/cachyos-hello.json
+.config/autostart/arch-update-tray.desktop
 
 # --- KDE NOISE ---
+.config/KDE/**
 .config/baloofileinformationrc
 .config/trashrc
 .config/QtProject/**
 .config/QtProject.conf
 .config/user-dirs.locale
+.config/user-dirs.dirs
 .config/kiorc
 .config/filetypesrc
+.config/arkrc
 .config/kdeglobals
 .config/gwenviewrc
 .config/okularrc
 .config/okularpartrc
+.config/haruna/**
+.config/harunarc
 .config/dolphinrc
 .config/katevirc
 .config/kwriterc
+.config/kwalletmanagerrc
+.config/kwalletrc
+.config/kcalcrc
 
 # --- SYSTEMD SAFETY ---
 .config/systemd/user/*
