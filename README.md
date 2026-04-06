@@ -65,5 +65,5 @@ chezmoi init --apply nMaax
 ## 📝 TODOs
 
 - [ ] Double check SSDM and keyring PAM signal with kwallet
-- [ ] Use git filter-repo to scrub away binaries and easyeffects .config files (remind about irs files)
+- [ ] Use git filter-repo to scrub away binaries and easyeffects .config files (remind about irs files) --> Maybe send Wallpapers, Gifs and Binaries to another repo and symlink here?
 - [ ] Prepare some default wallpapers and colorschemes
