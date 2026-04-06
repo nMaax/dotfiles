@@ -24,7 +24,8 @@
             "org.telegram.desktop",
             "spotify",
             "discord",
-            "org.keepassxc.KeePassXC"
+            "org.keepassxc.KeePassXC",
+            "com.github.wwmm.easyeffects"
         ],
         "position": "center",
         "screenshotAnnotationTool": "",
