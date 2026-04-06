@@ -108,6 +108,10 @@ else
   success "EasyEffects Presets already installed, skipping."
 fi
 
+info "🍚 Installing ricing commands..."
+sudo pacman -S cowsay lolcat cmatrix cava fastfetch btop figlet lsd fortune-mod
+paru -S nyancat pipes.sh tty-clock cbonsai unimatrix
+
 if pacman -Q cachyos-gaming-applications cachyos-gaming-meta >/dev/null 2>&1; then
   success "🕹️ Gaming packages detected! Applying optimizations..."
 
