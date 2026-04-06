@@ -53,7 +53,7 @@
         "backgroundOpacity": 0.93,
         "barType": "floating",
         "capsuleColorKey": "none",
-        "capsuleOpacity": 0.5,
+        "capsuleOpacity": 1,
         "contentPadding": 2,
         "density": "default",
         "displayMode": "always_visible",
@@ -64,9 +64,9 @@
         "hideOnOverview": false,
         "marginHorizontal": 6,
         "marginVertical": 6,
-        "middleClickAction": "none",
+        "middleClickAction": "settings",
         "middleClickCommand": "",
-        "middleClickFollowMouse": false,
+        "middleClickFollowMouse": true,
         "monitors": [
         ],
         "mouseWheelAction": "none",
@@ -742,7 +742,7 @@
         "settingsPanelMode": "attached",
         "settingsPanelSideBarCardStyle": false,
         "tooltipsEnabled": true,
-        "translucentWidgets": true
+        "translucentWidgets": false
     },
     "wallpaper": {
         "automationEnabled": false,
