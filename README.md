@@ -20,10 +20,7 @@ chezmoi init --apply nMaax
 
 ## 📝 TODOs
 
-- [ ] Add caelestia toggle command here too, fix btop to be re-directed to special workspace
-- [ ] Double check silentSSDM effectively sends cachy-update and keyring PAM signals
+- [ ] Double check SSDM and keyring PAM signal with kwallet
 - [ ] Generalize hyprland.conf in different files (and update the chezmoi script accordingly)
-- [ ] Setup $mainMod variable so it is easy to use this in a Virtual Machine using ALT
-- [ ] And impove keybinds generally: allow to use SUPER + arrow too
 - [ ] Remove decorations in GTK and Qt apps(?) > See <https://gemini.google.com/share/c8a1eda7ec71>
 - [ ] Use git filter-repo to scrub away binaries and easyeffects .config files (remind about irs files)
