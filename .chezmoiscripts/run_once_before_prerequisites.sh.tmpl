@@ -219,8 +219,9 @@ sudo pacman -S --needed --noconfirm \
 
 add_note "[KWALLET]:  Make a new wallet using kwalletmanager with the same password as the user to enable automatic keyring login.\n See https://wiki.archlinux.org/title/KDE_Wallet for more information.\n Look at https://www.electronjs.org/docs/latest/api/safe-storage for Electron-specific information"
 
-echo "Syncing GTK with Noctalia..."
+echo "Syncing GTK with Noctalia and removing decorations..."
 gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3'
+gsettings set org.gnome.desktop.wm.preferences button-layout ':'
 
 echo "🐬 Fixing Dolphin 'Open With' amnesia..."
 sudo ln -sf /etc/xdg/menus/arch-applications.menu /etc/xdg/menus/applications.menu
