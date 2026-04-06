@@ -23,6 +23,9 @@ add_note() {
   POST_INSTALL_NOTES+="$1\n\n"
 }
 
+add_note "🦉 NOCTALIA: Check noctalia documentation for further information: "
+add_note "🦉 NOCTALIA: ddcutil was installed by default, which may introduce system instability with certain monitors; remove it eventually with sudo pacman -Rns ddcutil"
+
 echo ""
 info "🎨 [Stage 2] Apps and QoL tweaks..."
 echo ""
