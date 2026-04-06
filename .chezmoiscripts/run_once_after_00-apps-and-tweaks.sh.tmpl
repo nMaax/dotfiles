@@ -85,6 +85,20 @@ sudo Equilotl -install-openasar -location /opt/discord
 
 paru -Rns --noconfirm equicord-installer-bin || true
 
+info "🎵 Installing EasyEffects..."
+sudo pacman -S --needed --noconfirm easyeffects lsp-plugins
+
+info "Downloading EasyEffects Community Presets... (⚠️ not really the Arch way, but it doesnt touch anything outside home/)"
+EASYEFFECTS_PRESETS_DIR="$HOME/.config/easyeffects/output"
+if [ ! -f "$EASYEFFECTS_PRESETS_DIR/Perfect EQ.json" ]; then
+  # Run the EasyEffects Presets install script as before
+  bash <(curl -fsSL https://raw.githubusercontent.com/JackHack96/EasyEffects-Presets/master/install.sh)
+else
+  success "EasyEffects Presets already installed, skipping."
+fi
+
+add_note "🎨 THEMING:\nEnable theming in your favorite apps for a consistent look.\nSee https://docs.noctalia.dev/theming/basic-app-theming/ for detailed guides.\nMore inspiration:\n\t Zen Browser with the looks ==> Zen-Zero (https://sameerasw.com/zen)"
+
 info "☁️ Starting MEGA daemon..."
 systemctl --user enable --now mega-cmd-server.service
 sleep 2
@@ -119,28 +133,44 @@ fi
 
 rm -f "$UDEV_RULE_TMP"
 
-info "🎵 Installing EasyEffects..."
-sudo pacman -S --needed --noconfirm easyeffects lsp-plugins
+info "🖥️ Setting up Silent SDDM Themes..."
 
-info "Downloading EasyEffects Community Presets... (⚠️ not really the Arch way, but it doesnt touch anything outside home/)"
-EASYEFFECTS_PRESETS_DIR="$HOME/.config/easyeffects/output"
-if [ ! -f "$EASYEFFECTS_PRESETS_DIR/Perfect EQ.json" ]; then
-  # Run the EasyEffects Presets install script as before
-  bash <(curl -fsSL https://raw.githubusercontent.com/JackHack96/EasyEffects-Presets/master/install.sh)
-else
-  success "EasyEffects Presets already installed, skipping."
+if ! pacman -Qs sddm-silent-theme >/dev/null; then
+  info "Installing sddm-silent-theme..."
+  paru -S --needed --noconfirm sddm-silent-theme
 fi
 
-echo ""
-success "✅ [Stage 2] Apps and tweaks applied."
-echo ""
+if grep -q "Current=silent" /etc/sddm.conf 2>/dev/null; then
+  success "/etc/sddm.conf is already configured for the silent theme. Skipping..."
+else
+  info "Appending configuration to /etc/sddm.conf..."
+  sudo tee -a /etc/sddm.conf >/dev/null <<'EOF'
 
-echo ""
-info "🎮 [Stage 3] CachyOS Gaming Optimizations..."
-echo ""
+[General]
+InputMethod=qtvirtualkeyboard
+GreeterEnvironment=QML2_IMPORT_PATH=/usr/share/sddm/themes/silent/components/,QT_IM_MODULE=qtvirtualkeyboard
+
+[Theme]
+Current=silent
+EOF
+fi
+
+SILENT_SDDM_DIR="/usr/share/sddm/themes/silent"
+AVATAR_SCRIPT="$SILENT_SDDM_DIR/change_avatar.sh"
+USER_FACE="$HOME/.face"
+
+if [ -f "$USER_FACE" ]; then
+  sudo chmod +x "$AVATAR_SCRIPT"
+  sudo "$AVATAR_SCRIPT" "$USER_FACE"
+  success "Avatar updated successfully."
+else
+  warning "$USER_FACE not found. Skipping avatar change."
+fi
+
+add_note "⚠️ SILENT SDDM: Remind to run ./test.sh in $SILENT_SDDM_DIR to check SDDM works and you are not kept out of your system at next boot."
 
 if pacman -Q cachyos-gaming-applications cachyos-gaming-meta >/dev/null 2>&1; then
-  success "Gaming packages detected! Applying optimizations..."
+  success "🕹️ Gaming packages detected! Applying optimizations..."
 
   info "Installing Minecraft (Prism-launcher and Java dependencies)"
   sudo pacman -S prismlauncher
@@ -216,7 +246,50 @@ else
   info "No gaming packages detected. Skipping gaming tweaks."
 fi
 
-add_note "🎨 THEMING:\nEnable theming in your favorite apps for a consistent look.\nSee https://docs.noctalia.dev/theming/basic-app-theming/ for detailed guides.\nMore inspiration:\n\t Zen Browser with the looks ==> Zen-Zero (https://sameerasw.com/zen)"
+echo "🏔️ Installing NordVPN from AUR..."
+paru -S --noconfirm --needed nordvpn-bin
+
+echo "🛡️ Enabling NordVPN daemon..."
+sudo systemctl enable --now nordvpnd
+sudo usermod -aG nordvpn "$USER"
+sleep 2
+
+{{- if .nordvpn_token }}
+echo "🔑 Logging into NordVPN using provided token..."
+sg nordvpn -c "nordvpn login --token {{ .nordvpn_token }}"
+
+# Proceed with settings configuration
+if sg nordvpn -c "nordvpn status" | grep -E -q "Status: (Connected|Disconnected)"; then
+  sg nordvpn -c "nordvpn set dns off"
+  sg nordvpn -c "nordvpn set threatprotection off"
+  sg nordvpn -c "nordvpn set post-quantum on"
+  sg nordvpn -c "nordvpn set firewall on"
+  echo "✅ NordVPN configured successfully."
+fi
+{{- else }}
+echo "⚠️ No 'nordvpn_token' found in chezmoi.toml. Skipping auto-login."
+{{- end }}
+
+add_note "⚠️ NORDVPN: Remind to reboot your system to use NordVPN"
+
+echo "🌐 Installing Tailscale..."
+sudo pacman -S --noconfirm --needed tailscale
+
+echo "🌐 Enabling Tailscale daemon..."
+sudo systemctl enable --now tailscaled
+sleep 2
+
+{{- if .tailscale_authkey }}
+echo "🔑 Authenticating Tailscale using provided authkey..."
+sudo tailscale up --ssh --authkey="{{ .tailscale_authkey }}"
+echo "✅ Tailscale connected successfully."
+{{- else }}
+echo "⚠️ No 'tailscale_authkey' found in chezmoi.toml. Skipping auto-login."
+{{- end }}
+
+echo ""
+success "✅ [Stage 2] Apps and tweaks applied."
+echo ""
 
 # ==========================================
 # FINAL SUMMARY
@@ -224,7 +297,7 @@ add_note "🎨 THEMING:\nEnable theming in your favorite apps for a consistent l
 if [ -n "$POST_INSTALL_NOTES" ]; then
   echo ""
   echo -e "${GREEN}=================================================================${NC}"
-  echo -e "${GREEN}🎉 INSTALLATION COMPLETE! PLEASE READ THESE POST-INSTALL STEPS:${NC}"
+  echo -e "${GREEN}🎉 DOTFILES INSTALLATION COMPLETE! PLEASE READ THESE POST-INSTALL STEPS:${NC}"
   echo -e "${GREEN}=================================================================${NC}"
   echo ""
   echo -e "$POST_INSTALL_NOTES"
