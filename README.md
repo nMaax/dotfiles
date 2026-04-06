@@ -1,19 +1,16 @@
-# 🌌 Dotfiles
+# 🥮 Mooncake dotfiles
 
 My personal dotfiles and system configurations, managed using [chezmoi](https://www.chezmoi.io/).
-These dotfiles are heavily based on the assumtpion to run on **CachyOS** (not just Arch), and various packages that Cachy ships are installed. More specifically, these will run only on a fresh-install of CachyOS, eventually with or without the installation of the hyprland's package via Calamers install process.
 
-## Pre-Installation Steps
-
-1. Tweak CachyOS: Open the CachyOS Hello app and apply your preferred baseline system tweaks (including enabling cachy-update).
-2. KeePass & Secrets: Ensure your KeePass database is synced/available and place your KeePass keyfile in the correct location.
-3. chezmoi.toml: Prepare your chezmoi.toml configuration file with your specific variables (e.g., nordvpn_token, tailscale_authkey, name, email).
+These dotfiles are heavily based on **CachyOS** (not just Arch), specifically the various packages that Cachy ships as default (fish, varuous KDE bloat etc.). Ideally you should have installed CachyOS selecting for hyprland in Calamares.
 
 ## 🚀 Installation
 
-To install chezmoi, initialize the repository, and apply the dotfiles all in a single command, open your terminal and run:
+1. Tweak CachyOS via the CachyOS Hello app and apply your preferred baseline system tweaks, remind to enable cachy-update;
+2. chezmoi.toml: Prepare your chezmoi.toml configuration file with your specific variables, use another device with it to find the format.
+3. Finay install chezmoi and apply the dotfiles:
 
-```bash
+```fish
 pacman -S chezmoi
 chezmoi init --apply nMaax
 ```
