@@ -48,8 +48,8 @@ for pkg in "${BASE_PACKAGES[@]}"; do
 done
 
 info "🔧 Installing other utilities..."
-sudo pacman -S --needed --noconfirm smartmontools ffmpeg imagemagick glow dust bat ripgrep fd btop nvtop trash-cli transmission-cli ghostscript pandoc poppler qpdf
-paru -S --needed --noconfirm caligula-bin pdfcpu-bin ocrmypdf tesseract-data-eng tesseract-data-ita
+sudo pacman -S --needed --noconfirm smartmontools ffmpeg imagemagick texlive-latex glow dust bat ripgrep fd btop nvtop trash-cli transmission-cli ghostscript pandoc poppler qpdf
+paru -S --needed --noconfirm caligula-bin pandoc-bin pdfcpu-bin ocrmypdf tesseract-data-eng tesseract-data-ita
 
 info "☁️ Installing MEGA..."
 paru -S --needed --noconfirm megacmd-bin
