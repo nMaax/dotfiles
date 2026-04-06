@@ -34,11 +34,14 @@ paru -S --needed --noconfirm zen-browser-bin
 info "📰 Installing Telegram"
 sudo pacman -S --needed --noconfirm telegram-desktop
 
+info "🪐 Installing Starship..."
+sudo pacman -S --needed --noconfirm starship
+
 info "🐍 Installing apps for coding.."
 sudo pacman -S --needed --noconfirm uv lazygit neovim nodejs jdk-openjdk
 
-info "🪐 Installing Starship..."
-sudo pacman -S --needed --noconfirm starship
+info "📤 Installing LocalSend"
+sudo paru -S --needed --noconfirm localsend
 
 info "🎧 Installing Spotify (spicetify) from AUR..."
 paru -S --needed --noconfirm spotify spicetify-cli
