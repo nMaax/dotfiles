@@ -2,114 +2,54 @@
 *
 !.config/
 !.local/
+!.ssh/
 
-# --- CHEZMOI ITSELF ---
-README.md
-.config/chezmoi/**
+# --- CONFIG ---
+.config/*
+!.config/fastfetch/
+!.config/fish/
+!.config/fontconfig/
+!.config/ghostty/
+!.config/hypr/
+!.config/mimeapps.list
+!.config/noctalia/
+!.config/nvim/
+!.config/nvtop/
+!.config/pipewire/
+!.config/qt5ct/
+!.config/qt6ct/
+!.config/starship.toml
 
-# --- APPS ---
-.config/psd/**
-.config/btop/**
-.config/cava/**
-.config/micro/**
-.config/mpv/**
-.config/kitty/**
-.config/github-copilot/**
-.config/easyeffects/**
-.config/easyeffectsrc/**
-.config/keepassxc/**
-.config/discord/**
-.config/Equicord/**
-.config/equibop/**
-.config/telegram-desktop/**
-.config/mozilla/**
-.config/zen/**
-.config/Element/**
-.config/.vscode/**
-.config/.vscode-oss/**
-.config/Code/**
-.config/Code - OSS/**
-.config/spotify/**
-.config/spicetify/**
-.config/Kvantum/**
+# --- FISH: Exclude shell state ---
+.config/fish/fish_variables
 
-# --- GTK AND QT ---
-.config/gtk-3.0/**
-.config/gtk-4.0/**
-.config/qt5ct/*
-.config/qt6ct/*
-!.config/qt6ct/qt6ct.conf
-!.config/qt5ct/qt5ct.conf
-.config/qtvirtualkeyboard/**
-.config/nwg-look/**
+# --- GHOSTTY: Exclude noctalia-managed theme and unused shaders ---
+.config/ghostty/themes/noctalia/**
+.config/ghostty/shaders/*
+!.config/ghostty/shaders/cursor_warp.glsl
 
-# --- NOCTALIA ---
+# --- HYPR: Exclude noctalia-managed theme ---
+.config/hypr/noctalia/**
+
+# --- NOCTALIA: Exclude generated files, include only used colorschemes ---
 .config/noctalia/plugins/**
 .config/noctalia/colors.json
 .config/noctalia/colorschemes/*
 !.config/noctalia/colorschemes/Rosey\ AMOLED
 !.config/noctalia/colorschemes/Lilac\ AMOLED
 
-# --- HYPERLAND NOCTALIA THEME ---
-.config/hypr/noctalia/**
-
-# --- GHOSTTY NOCTALIA THEME ---
-.config/ghostty/themes/noctalia/**
-.config/ghostty/shaders/*
-!.config/ghostty/shaders/cursor_warp.glsl
-
-# --- NEOVIM NOCTALIA THEME ---
+# --- NVIM: Exclude matugen-generated theme ---
 .config/nvim/lua/matugen.lua
 
-# --- FISH/SHELL STATE ---
-.config/fish/fish_variables
-
-# --- SYSTEM NOISE & CACHES ---
-.config/autostart/**
-.config/systemd/**
-.config/dconf/**
-.config/pulse/**
-.config/session/**
-.config/trashrc
-.config/baloofileinformationrc
-.config/pavucontrol.ini
-.config/xsettingsd/**
-.config/pdfcpu/**
-.config/qvirtualkeyboard/**
-.config/go/**
-
-# --- CACHY-OS NOISE ---
-.config/cachyos/**
-.config/cachyos-hello.json
-
-# --- KDE NOISE ---
-.config/KDE/**
-.config/baloofileinformationrc
-.config/trashrc
-.config/QtProject/**
-.config/QtProject.conf
-.config/user-dirs.locale
-.config/user-dirs.dirs
-.config/kiorc
-.config/filetypesrc
-.config/arkrc
-.config/kdeglobals
-.config/gwenviewrc
-.config/okularrc
-.config/okularpartrc
-.config/haruna/**
-.config/harunarc
-.config/dolphinrc
-.config/katevirc
-.config/kwriterc
-.config/kwalletmanagerrc
-.config/kwalletrc
-.config/kcalcrc
+# --- QT: Include only main config files ---
+.config/qt5ct/*
+!.config/qt5ct/qt5ct.conf
+.config/qt6ct/*
+!.config/qt6ct/qt6ct.conf
 
 # --- LOCAL ---
 .local/*
-!.local/bin/*
-!.local/share/applications/*.desktop
+!.local/bin/
 
 # --- SSH ---
 .ssh/*
