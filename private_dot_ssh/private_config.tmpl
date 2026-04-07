@@ -1,4 +1,8 @@
 {{- $entry := (keepassxc "Università/Hyperion - VANDAL") -}}
+Host github.com
+  AddKeysToAgent yes
+  IdentityFile ~/.ssh/id_ed25519
+
 Host hyperion
   HostName {{ $entry.UserName | splitList "@" | last }}
   User {{ $entry.UserName | splitList "@" | first }}
