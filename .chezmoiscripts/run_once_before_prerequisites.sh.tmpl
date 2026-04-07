@@ -51,40 +51,6 @@ info "🔧 Installing other utilities..."
 sudo pacman -S --needed --noconfirm smartmontools ffmpeg imagemagick texlive-latex glow dust bat ripgrep fd btop nvtop trash-cli transmission-cli ghostscript pandoc poppler qpdf ufw tldr ksshaskpass
 paru -S --needed --noconfirm caligula-bin pandoc-bin pdfcpu-bin ocrmypdf tesseract-data-eng tesseract-data-ita
 
-info "☁️ Installing MEGA..."
-paru -S --needed --noconfirm megacmd-bin
-
-info "Enabling MEGA"
-if ! mega-whoami >/dev/null 2>&1; then
-  info "You are not logged into MEGA. Logging in now..."
-  mega-login
-else
-  success "Already logged in to MEGA."
-fi
-
-info "Checking MEGA is synced with cloud..."
-if ! mega-sync | grep -q "Synced"; then
-  info "Mega is not synced. Syncing now."
-  mkdir -p ~/MEGA
-  mega-sync ~/MEGA/ /
-  while ! mega-sync | grep -q "Synced"; do
-    info "Still syncing... please wait."
-    sleep 3
-  done
-  success "MEGA successfully synced."
-else
-  success "Mega is already synced."
-fi
-
-info "Mega synced with specifications:"
-mega-sync
-
-info "Issues with MEGA:"
-mega-sync-issues
-
-info "🔑 Installing KeePassXC"
-sudo pacman -S --needed --noconfirm keepassxc
-
 KEEPASS_DB="$HOME/{{ .chezmoi.config.keepassxc.database }}"
 
 if ! ls "$KEEPASS_DB" &>/dev/null; then
