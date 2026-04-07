@@ -15,7 +15,7 @@ set -gx PAGER bat
 
 if status is-interactive
     # Start the ssh agent and add your key
-    keychain --eval --quiet .ssh/id_ed25519 | source
+    keychain --eval --quiet id_ed25519 | source
     # Start starship for a eye-candy terminal interaction
     starship init fish | source
 end
