@@ -3,10 +3,12 @@ set -euo pipefail
 
 {{ include "utils.sh.tmpl" }}
 
-{{- if ne .chezmoi.osRelease.id "cachyos" }}
-echo "This script is intended to run on CachyOS."
-echo "Did nothing, will close now."
-exit 1
+IS_CACHYOS=false
+{{- if eq .chezmoi.osRelease.id "cachyos" }}
+IS_CACHYOS=true
+{{- else }}
+warn "⚠️  This script was designed for CachyOS but is running on a different Arch-based system."
+warn "CachyOS-specific tweaks will be skipped."
 {{- end }}
 
 echo ""
@@ -31,7 +33,7 @@ info "🔐 Enable SSH daemon"
 sudo systemctl enable --now sshd
 sleep 2
 
-if [ -f /etc/default/grub ] && command -v grub-mkconfig >/dev/null; then
+if $IS_CACHYOS && [ -f /etc/default/grub ] && command -v grub-mkconfig >/dev/null; then
   info "Sanitizing GRUB to plain console (removing CachyOS theme)..."
   sudo sed -i "s|^GRUB_THEME=|#GRUB_THEME=|g" /etc/default/grub
   sudo sed -i "s|^#GRUB_TERMINAL_OUTPUT=console|GRUB_TERMINAL_OUTPUT=console|g" /etc/default/grub

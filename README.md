@@ -2,17 +2,30 @@
 
 Personal dotfiles and system configurations, just the way I like it.
 
-These dotfiles are heavily based on **CachyOS** (not just Arch), specifically the various packages that Cachy ships (fish, varuous KDE bloat etc.). Ideally you should have installed CachyOS selecting for hyprland during the Calamares installation.
+These dotfiles target **CachyOS** (Hyprland profile) as the primary platform, but the install scripts are designed to also work on a **pure Arch Linux** installation out of the box. When run on Arch, the scripts will bootstrap any missing CachyOS defaults (paru, fish, sddm, PipeWire, Dolphin, Qt Wayland layers, etc.) before proceeding with the rest of the setup.
 
 Managed using [chezmoi](https://www.chezmoi.io/).
 
 ## 🚀 Installation
+
+### CachyOS (recommended)
 
 1. Tweak CachyOS via the CachyOS Hello app and apply your preferred baseline system tweaks, remind to enable cachy-update;
 2. Prepare your chezmoi.toml configuration file with your specific variables, use another device with it to find the format;
 3. Finally install chezmoi and apply the dotfiles:
 
 ```fish
+pacman -S chezmoi
+chezmoi init --apply nMaax
+```
+
+### Pure Arch Linux
+
+1. Boot into a fresh Arch install with `base`, `base-devel`, `git`, and `networkmanager` available;
+2. Prepare your `chezmoi.toml` (see a CachyOS device for the expected format);
+3. Install chezmoi and apply — the prerequisite script will detect the non-CachyOS environment, bootstrap `paru`, and install all required base packages automatically:
+
+```bash
 pacman -S chezmoi
 chezmoi init --apply nMaax
 ```

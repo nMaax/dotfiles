@@ -5,10 +5,12 @@ set -euo pipefail
 
 # For the future: move to shelly when it becomes default in CachyOS
 
-{{- if ne .chezmoi.osRelease.id "cachyos" }}
-echo "This script is intended to run on CachyOS."
-echo "Did nothing, will close now."
-exit 1
+IS_CACHYOS=false
+{{- if eq .chezmoi.osRelease.id "cachyos" }}
+IS_CACHYOS=true
+{{- else }}
+warn "⚠️  This script was designed for CachyOS but is running on a different Arch-based system."
+warn "CachyOS-specific features will be skipped, and extra base packages will be installed."
 {{- end }}
 
 echo ""
@@ -17,10 +19,12 @@ echo ""
 
 clean_notes
 
-read -rp "Did you tweak CachyOS as you like? [Y/n] " answer
-if [[ "${answer,,}" != "y" && -n "$answer" ]]; then
-  error "Go back and tune whatever you like using Cachy Hello. Closing, come back later."
-  exit 1
+if $IS_CACHYOS; then
+  read -rp "Did you tweak CachyOS as you like? [Y/n] " answer
+  if [[ "${answer,,}" != "y" && -n "$answer" ]]; then
+    error "Go back and tune whatever you like using Cachy Hello. Closing, come back later."
+    exit 1
+  fi
 fi
 
 read -rp "Did you place the chezmoi.toml and the KeePass keyfile? [Y/n] " answer
@@ -29,13 +33,15 @@ if [[ "${answer,,}" != "y" && -n "$answer" ]]; then
   exit 1
 fi
 
-info "🔄 Checking for cachy-update..."
-if sudo pacman -Q cachy-update &>/dev/null; then
-  cachy-update
-else
-  warn "cachy-update is not installed."
-  warn "Did you really listen to me before??"
-  warn "Please open 'CachyOS Hello' to enable cachy-update, and remind to tweak your system!"
+if $IS_CACHYOS; then
+  info "🔄 Checking for cachy-update..."
+  if sudo pacman -Q cachy-update &>/dev/null; then
+    cachy-update
+  else
+    warn "cachy-update is not installed."
+    warn "Did you really listen to me before??"
+    warn "Please open 'CachyOS Hello' to enable cachy-update, and remind to tweak your system!"
+  fi
 fi
 
 info "📦 Checking for missing base packages..."
@@ -46,6 +52,39 @@ for pkg in "${BASE_PACKAGES[@]}"; do
     sudo pacman -S --needed --noconfirm "$pkg"
   fi
 done
+
+info "🔧 Bootstrapping paru (AUR helper)..."
+if ! command -v paru &>/dev/null; then
+  info "    paru not found — building from AUR..."
+  # git and base-devel are also listed in BASE_PACKAGES above; the --needed flag makes this a safe no-op if already present
+  sudo pacman -S --needed --noconfirm git base-devel
+  git clone https://aur.archlinux.org/paru.git /tmp/paru-bootstrap
+  (cd /tmp/paru-bootstrap && makepkg -si --noconfirm)
+  rm -rf /tmp/paru-bootstrap
+  success "paru installed."
+else
+  success "paru already installed."
+fi
+
+if ! $IS_CACHYOS; then
+  info "🐚 Installing Fish shell..."
+  sudo pacman -S --needed --noconfirm fish
+
+  info "🖥️ Installing SDDM display manager..."
+  sudo pacman -S --needed --noconfirm sddm
+  sudo systemctl enable sddm
+
+  info "🔊 Installing PipeWire audio stack..."
+  sudo pacman -S --needed --noconfirm \
+    pipewire wireplumber pipewire-audio pipewire-pulse pipewire-alsa pipewire-jack
+
+  info "🪟 Installing Wayland & Qt integration packages..."
+  sudo pacman -S --needed --noconfirm \
+    qt5-wayland qt6-wayland wl-clipboard polkit-kde-agent xdg-user-dirs
+
+  info "📂 Setting up XDG user directories..."
+  xdg-user-dirs-update
+fi
 
 info "🔧 Installing other utilities..."
 sudo pacman -S --needed --noconfirm smartmontools ffmpeg imagemagick texlive-latex glow dust bat ripgrep fd btop nvtop trash-cli transmission-cli ghostscript pandoc poppler qpdf ufw tldr keychain
@@ -155,7 +194,7 @@ sudo pacman -S --needed --noconfirm starship
 
 info "🐍 Installing tools for coding.."
 sudo pacman -S --needed --noconfirm uv lazygit neovim nodejs jdk-openjdk
-paru -S --needed --noconfirm visual-studio-code-bin
+paru -S --needed --noconfirm visual-studio-code-bin ghostty-bin
 
 info "📤 Installing LocalSend..."
 paru -S --needed --noconfirm localsend
@@ -214,7 +253,7 @@ paru -S --needed --noconfirm cliphist wlsunset xdg-desktop-portal evolution-data
 echo "🖥️ Installing KDE suite, Qt, GTK and utility apps..."
 sudo pacman -S --needed --noconfirm \
   qt6ct-kde qt5ct adw-gtk-theme nwg-look \
-  qt6-multimedia archlinux-xdg-menu ark dolphin-plugins filelight \
+  qt6-multimedia archlinux-xdg-menu ark dolphin dolphin-plugins filelight \
   okular haruna kwrite gwenview \
   kwallet kwallet-pam
 
