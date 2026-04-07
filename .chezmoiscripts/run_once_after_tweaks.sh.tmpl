@@ -109,15 +109,15 @@ else
 fi
 
 info "🍚 Installing ricing commands..."
-sudo pacman -S cowsay lolcat cmatrix cava fastfetch btop figlet fortune-mod
-paru -S nyancat pipes.sh tty-clock cbonsai
+sudo pacman -S --needed --noconfirm cowsay lolcat cmatrix cava fastfetch btop figlet fortune-mod
+paru -S --needed --noconfirm nyancat pipes.sh tty-clock cbonsai
 
 if pacman -Q cachyos-gaming-applications cachyos-gaming-meta >/dev/null 2>&1; then
   success "🕹️ Gaming packages detected! Applying optimizations..."
 
   info "⛏️ Installing Minecraft (Prism-launcher and Java dependencies)"
-  sudo pacman -S prismlauncher
-  sudo pacman -S jdk8-openjdk jdk17-openjdk jdk21-openjdk
+  sudo pacman -S --needed --noconfirm prismlauncher
+  sudo pacman -S --needed --noconfirm jdk8-openjdk jdk17-openjdk jdk21-openjdk
 
   info "🥭 Installing mango and mangojuice..."
   sudo pacman -S --needed --noconfirm mangohud
@@ -230,17 +230,15 @@ echo "⚠️ No 'tailscale_authkey' found in chezmoi.toml. Skipping auto-login."
 {{- end }}
 
 echo ""
-success "✅ [Stage 2] Apps and tweaks applied."
+success "✅ [Stage 3] Apps and tweaks applied."
 echo ""
 
 # ==========================================
 # FINAL SUMMARY
 # ==========================================
-if [ -n "$POST_INSTALL_NOTES" ]; then
-  echo ""
-  echo -e "${GREEN}=================================================================${NC}"
-  echo -e "${GREEN}🎉 DOTFILES INSTALLATION COMPLETE! PLEASE READ THESE POST-INSTALL STEPS:${NC}"
-  echo -e "${GREEN}=================================================================${NC}"
-  echo ""
-  show_notes()
-fi
+echo ""
+echo -e "${GREEN}=================================================================${NC}"
+echo -e "${GREEN}🎉 DOTFILES INSTALLATION COMPLETE! PLEASE READ THESE POST-INSTALL STEPS:${NC}"
+echo -e "${GREEN}=================================================================${NC}"
+echo ""
+show_notes
