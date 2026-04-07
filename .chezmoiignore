@@ -2,8 +2,6 @@
 *
 !.config/
 !.local/
-!.face
-!.logo
 
 # --- CHEZMOI ITSELF ---
 README.md
@@ -44,7 +42,6 @@ README.md
 !.config/qt5ct/qt5ct.conf
 .config/qtvirtualkeyboard/**
 .config/nwg-look/**
-!.config/nwg-look/config
 
 # --- NOCTALIA ---
 .config/noctalia/plugins/**
@@ -87,6 +84,8 @@ README.md
 
 # --- KDE NOISE ---
 .config/KDE/**
+.config/baloofileinformationrc
+.config/trashrc
 .config/QtProject/**
 .config/QtProject.conf
 .config/user-dirs.locale
