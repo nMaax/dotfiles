@@ -31,6 +31,10 @@ info "🔐 Enable SSH daemon"
 sudo systemctl enable --now sshd
 sleep 2
 
+info "🔑 Enable ssh-agent systemd user service"
+systemctl --user enable --now ssh-agent
+sleep 2
+
 if [ -f /etc/default/grub ] && command -v grub-mkconfig >/dev/null; then
   info "Sanitizing GRUB to plain console (removing CachyOS theme)..."
   sudo sed -i "s|^GRUB_THEME=|#GRUB_THEME=|g" /etc/default/grub
