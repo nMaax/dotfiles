@@ -1,7 +1,13 @@
 #!/bin/bash
+set -euo pipefail
+
 {{ include "utils.sh.tmpl" }}
 
-set -euo pipefail
+{{- if ne .chezmoi.osRelease.id "cachyos" }}
+echo "This script is intended to run on CachyOS."
+echo "Did nothing, will close now."
+exit 1
+{{- end }}
 
 echo ""
 info "🎨 [Stage 3] QoL tweaks..."
@@ -63,7 +69,7 @@ if [ -f "$USER_FACE" ]; then
   sudo "$AVATAR_SCRIPT" "$(whoami)" "$USER_FACE"
   success "Avatar updated successfully."
 else
-  warning "$USER_FACE not found. Skipping avatar change."
+  warn "$USER_FACE not found. Skipping avatar change."
 fi
 
 add_note "[SILENT SDDM] Remind to select systemd owned Hyprland at login in SDDM, in order to enable specific autostarts to work."
