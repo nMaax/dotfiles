@@ -31,11 +31,30 @@ info "🔐 Enable SSH daemon"
 sudo systemctl enable --now sshd
 sleep 2
 
+info "🔑 Enable ssh-agent systemd user service"
+systemctl --user enable --now ssh-agent
+sleep 2
+
 if [ -f /etc/default/grub ] && command -v grub-mkconfig >/dev/null; then
   info "Sanitizing GRUB to plain console (removing CachyOS theme)..."
   sudo sed -i "s|^GRUB_THEME=|#GRUB_THEME=|g" /etc/default/grub
   sudo sed -i "s|^#GRUB_TERMINAL_OUTPUT=console|GRUB_TERMINAL_OUTPUT=console|g" /etc/default/grub
   sudo grub-mkconfig -o /boot/grub/grub.cfg
+fi
+
+info "🔐 Patching SDDM PAM for KWallet Plasma 6 (KF6) auto-unlock..."
+# Arch's sddm package ships pam_kwallet5.so without the kwalletd= parameter.
+# On KF6 / Plasma 6 (CachyOS default) the session module must point to ksecretd,
+# otherwise pam_kwallet5.so falls back to the absent kwallet5 daemon and wallet
+# auto-unlock silently fails at login.
+# See: https://wiki.archlinux.org/title/KDE_Wallet#Configure_PAM_on_Plasma_6_(KF6)
+if [ ! -f /etc/pam.d/sddm ]; then
+  warn "/etc/pam.d/sddm not found. Skipping KWallet PAM patch."
+elif grep -q "kwalletd=/usr/bin/ksecretd" /etc/pam.d/sddm; then
+  success "/etc/pam.d/sddm already contains kwalletd parameter. Skipping."
+else
+  sudo sed -i 's/\(pam_kwallet5\.so auto_start\)\($\| \)/\1 kwalletd=\/usr\/bin\/ksecretd\2/' /etc/pam.d/sddm
+  success "Added kwalletd=/usr/bin/ksecretd to /etc/pam.d/sddm"
 fi
 
 info "🖥️ Setting up Silent SDDM Themes..."
