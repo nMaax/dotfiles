@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-{{ include "utils.sh.tmpl" }}
+{{ template "utils.sh.tmpl" . }}
 
 # For the future: move to shelly when it becomes default in CachyOS
 
@@ -87,7 +87,7 @@ if ! $IS_CACHYOS; then
 fi
 
 info "🔧 Installing other utilities..."
-sudo pacman -S --needed --noconfirm smartmontools ffmpeg imagemagick texlive-latex glow dust bat ripgrep fd btop nvtop trash-cli transmission-cli ghostscript pandoc poppler qpdf ufw tldr keychain
+sudo pacman -S --needed --noconfirm smartmontools ffmpeg imagemagick texlive-latex glow dust bat ripgrep fd btop nvtop trash-cli transmission-cli ghostscript pandoc poppler qpdf ufw tldr ksshaskpass
 paru -S --needed --noconfirm caligula-bin pandoc-bin pdfcpu-bin ocrmypdf tesseract-data-eng tesseract-data-ita
 
 info "☁️ Installing MEGA..."
@@ -124,7 +124,7 @@ mega-sync-issues
 info "🔑 Installing KeePassXC"
 sudo pacman -S --needed --noconfirm keepassxc
 
-KEEPASS_DB="$HOME/{{ .keepassxc.database }}"
+KEEPASS_DB="$HOME/{{ .chezmoi.config.keepassxc.database }}"
 
 if ! ls "$KEEPASS_DB" &>/dev/null; then
   error "Couldn't find the KeePassXC database, maybe MEGA didn't download it."
@@ -134,7 +134,7 @@ else
   success "KeePass database found at $KEEPASS_DB"
 fi
 
-read -rp "Is your KeePass keyfile available at {{ index .keepassxc.args 2 }}? [Y/n] " answer
+read -rp "Is your KeePass keyfile available at {{ index .chezmoi.config.keepassxc.args 1 }}? [Y/n] " answer
 if [[ "${answer,,}" != "y" && -n "$answer" ]]; then
   warn "Please ensure your KeePass keyfile is available at the correct location."
   read -rp "Press [Enter] to continue once you are ready..."

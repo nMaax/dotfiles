@@ -47,6 +47,17 @@
 .config/qt6ct/*
 !.config/qt6ct/qt6ct.conf
 
+# --- ELECTRON APPS ---
+!.config/Element
+.config/Element/*
+!.config/Element/electron-config.json
+
+!.config/Code
+.config/Code/*
+!.config/Code/argv.json
+
+!.config/chromium-flags.conf
+
 # --- LOCAL ---
 .local/*
 !.local/bin/
