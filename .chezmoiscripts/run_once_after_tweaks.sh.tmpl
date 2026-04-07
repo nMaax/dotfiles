@@ -16,7 +16,11 @@ info "🎨 [Stage 3] QoL tweaks..."
 echo ""
 
 info "🛜 Setting Wireless Regdom to Italy"
-sudo sed -i 's/^WIRELESS_REGDOM=/#&/' /etc/conf.d/wireless-regdom && sudo sed -i '/WIRELESS_REGDOM="IT"/s/^#//' /etc/conf.d/wireless-regdom
+if [ -f /etc/conf.d/wireless-regdom ]; then
+  sudo sed -i 's/^WIRELESS_REGDOM=/#&/' /etc/conf.d/wireless-regdom && sudo sed -i '/WIRELESS_REGDOM="IT"/s/^#//' /etc/conf.d/wireless-regdom
+else
+  warn "/etc/conf.d/wireless-regdom not found — skipping regdom configuration."
+fi
 
 info "📝 Update TLDR;"
 tldr --update

@@ -84,6 +84,36 @@ if ! $IS_CACHYOS; then
 
   info "📂 Setting up XDG user directories..."
   xdg-user-dirs-update
+
+  info "🌐 Installing NetworkManager..."
+  sudo pacman -S --needed --noconfirm networkmanager
+  sudo systemctl enable --now NetworkManager
+
+  info "🦷 Installing Bluetooth tools..."
+  sudo pacman -S --needed --noconfirm bluez bluez-utils blueman
+  sudo systemctl enable --now bluetooth
+
+  info "🎮 Detecting GPU and installing appropriate drivers..."
+  GPU_INFO="$(lspci 2>/dev/null | grep -iE 'vga|3d|display')"
+  if echo "$GPU_INFO" | grep -iq 'nvidia'; then
+    info "  NVIDIA GPU detected — installing proprietary drivers..."
+    sudo pacman -S --needed --noconfirm nvidia nvidia-utils nvidia-settings lib32-nvidia-utils
+    add_note "[GPU/NVIDIA] Proprietary NVIDIA drivers installed.\n  - If using a kernel that supports the open module (>= Turing/RTX 20xx), you may switch to nvidia-open.\n  - Remember to add 'nvidia_drm.modeset=1' to your kernel parameters and reboot.\n  - See: https://wiki.archlinux.org/title/NVIDIA"
+  elif echo "$GPU_INFO" | grep -iq 'amd\|radeon\|advanced micro'; then
+    info "  AMD GPU detected — installing Mesa/AMDGPU drivers..."
+    sudo pacman -S --needed --noconfirm \
+      mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon \
+      libva-mesa-driver mesa-vdpau
+    add_note "[GPU/AMD] Mesa AMDGPU drivers installed.\n  - For Vulkan ray-tracing support also install vulkan-mesa-layers.\n  - See: https://wiki.archlinux.org/title/AMDGPU"
+  elif echo "$GPU_INFO" | grep -iq 'intel'; then
+    info "  Intel GPU detected — installing Mesa/Intel drivers..."
+    sudo pacman -S --needed --noconfirm \
+      mesa lib32-mesa vulkan-intel lib32-vulkan-intel \
+      intel-media-driver
+    add_note "[GPU/Intel] Mesa Intel drivers installed.\n  - For older GPUs (pre-Broadwell) use libva-intel-driver instead of intel-media-driver.\n  - See: https://wiki.archlinux.org/title/Intel_graphics"
+  else
+    warn "  No discrete GPU detected (or lspci output was empty). Skipping driver installation."
+  fi
 fi
 
 info "🔧 Installing other utilities..."
