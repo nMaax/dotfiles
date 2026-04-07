@@ -44,11 +44,13 @@ info "🔐 Patching SDDM PAM for KWallet Plasma 6 (KF6) auto-unlock..."
 # otherwise pam_kwallet5.so falls back to the absent kwallet5 daemon and wallet
 # auto-unlock silently fails at login.
 # See: https://wiki.archlinux.org/title/KDE_Wallet#Configure_PAM_on_Plasma_6_(KF6)
-if [ -f /etc/pam.d/sddm ] && ! grep -q "kwalletd=/usr/bin/ksecretd" /etc/pam.d/sddm; then
-  sudo sed -i 's/pam_kwallet5\.so auto_start\b/pam_kwallet5.so auto_start kwalletd=\/usr\/bin\/ksecretd/' /etc/pam.d/sddm
-  success "Added kwalletd=/usr/bin/ksecretd to /etc/pam.d/sddm"
+if [ ! -f /etc/pam.d/sddm ]; then
+  warn "/etc/pam.d/sddm not found. Skipping KWallet PAM patch."
+elif grep -q "kwalletd=/usr/bin/ksecretd" /etc/pam.d/sddm; then
+  success "/etc/pam.d/sddm already contains kwalletd parameter. Skipping."
 else
-  success "/etc/pam.d/sddm already contains kwalletd parameter or does not exist. Skipping."
+  sudo sed -i 's/\(pam_kwallet5\.so auto_start\)\($\| \)/\1 kwalletd=\/usr\/bin\/ksecretd\2/' /etc/pam.d/sddm
+  success "Added kwalletd=/usr/bin/ksecretd to /etc/pam.d/sddm"
 fi
 
 info "🖥️ Setting up Silent SDDM Themes..."
