@@ -61,6 +61,12 @@
 # --- LOCAL ---
 .local/*
 !.local/bin/
+!.local/share
+.local/share/*
+!.local/share/applications
+.local/share/applications/*
+!.local/share/applications/code.desktop
+!.local/share/applications/io.element.Element.desktop
 
 # --- SSH ---
 .ssh/*
