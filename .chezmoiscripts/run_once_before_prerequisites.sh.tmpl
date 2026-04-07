@@ -33,9 +33,9 @@ info "🔄 Checking for cachy-update..."
 if sudo pacman -Q cachy-update &>/dev/null; then
   cachy-update
 else
-  warning "cachy-update is not installed."
-  warning "Did you really listen to me before??"
-  warning "Please open 'CachyOS Hello' to enable cachy-update, and remind to tweak your system!"
+  warn "cachy-update is not installed."
+  warn "Did you really listen to me before??"
+  warn "Please open 'CachyOS Hello' to enable cachy-update, and remind to tweak your system!"
 fi
 
 info "📦 Checking for missing base packages..."
@@ -85,19 +85,20 @@ mega-sync-issues
 info "🔑 Installing KeePassXC"
 sudo pacman -S --needed --noconfirm keepassxc
 
-KEEPASS_DB = "~/{{keepassxc.database}}"
+KEEPASS_DB="$HOME/{{keepassxc.database}}"
 
-if ! ls $KEEPASS_DB &>/dev/null; then
+if ! ls "$KEEPASS_DB" &>/dev/null; then
   error "Couldn't find the KeePassXC database, maybe MEGA didn't download it."
   error "Can't proceed, will close now. This script is idempotent so you can run it again and resume where left."
   exit 1
 else
-  success KeePass database found at $KEEPASS_DB
+  success "KeePass database found at $KEEPASS_DB"
 fi
 
-read -e "Is your KeePass keyfile available at {{keepassxc.args[2]}}? [Y/n]"
+read -rp "Is your KeePass keyfile available at {{keepassxc.args[2]}}? [Y/n] " answer
 if [[ "${answer,,}" != "y" && -n "$answer" ]]; then
-  warning -e "Please ensure your KeePass keyfile is available at the correct location.\nPress [Enter] to continue once you are ready..."
+  warn "Please ensure your KeePass keyfile is available at the correct location."
+  read -rp "Press [Enter] to continue once you are ready..."
 fi
 
 echo ""
