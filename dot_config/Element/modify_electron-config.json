@@ -1,0 +1,13 @@
+#!/usr/bin/env python3
+# chezmoi modify script: merges safeStorage settings into Element's electron-config.json
+# without overwriting other user preferences already present in the file.
+import json
+import sys
+
+content = sys.stdin.read().strip()
+data = json.loads(content) if content else {}
+
+data["safeStorageBackend"] = "kwallet6"
+data["safeStorageBackendOverride"] = True
+
+print(json.dumps(data, indent="\t"))
