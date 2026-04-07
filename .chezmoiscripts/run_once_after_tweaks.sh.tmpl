@@ -125,8 +125,7 @@ fi
 rm -f "$UDEV_RULE_TMP"
 
 info "Downloading EasyEffects Community Presets... (⚠️ not really the Arch way, but it doesnt touch anything outside home/)"
-EASYEFFECTS_PRESETS_DIR="$HOME/.config/easyeffects/output"
-if [ ! -f "$EASYEFFECTS_PRESETS_DIR/Perfect EQ.json" ]; then
+if [ -z "$(ls -A "$HOME/.config/easyeffects/db/" 2>/dev/null)" ]; then
   # Run the EasyEffects Presets install script as before
   bash <(curl -fsSL https://raw.githubusercontent.com/JackHack96/EasyEffects-Presets/master/install.sh)
 else
