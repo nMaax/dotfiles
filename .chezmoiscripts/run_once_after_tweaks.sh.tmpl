@@ -37,9 +37,20 @@ sleep 2
 
 if [ -f /etc/default/grub ] && command -v grub-mkconfig >/dev/null; then
   info "Sanitizing GRUB to plain console (removing CachyOS theme)..."
-  sudo sed -i "s|^GRUB_THEME=|#GRUB_THEME=|g" /etc/default/grub
-  sudo sed -i "s|^#GRUB_TERMINAL_OUTPUT=console|GRUB_TERMINAL_OUTPUT=console|g" /etc/default/grub
-  sudo grub-mkconfig -o /boot/grub/grub.cfg
+  grub_changed=0
+  if grep -q "^GRUB_THEME=" /etc/default/grub; then
+    sudo sed -i "s|^GRUB_THEME=|#GRUB_THEME=|g" /etc/default/grub
+    grub_changed=1
+  fi
+  if grep -q "^#GRUB_TERMINAL_OUTPUT=console" /etc/default/grub; then
+    sudo sed -i "s|^#GRUB_TERMINAL_OUTPUT=console|GRUB_TERMINAL_OUTPUT=console|g" /etc/default/grub
+    grub_changed=1
+  fi
+  if [ "$grub_changed" -eq 1 ]; then
+    sudo grub-mkconfig -o /boot/grub/grub.cfg
+  else
+    success "GRUB already sanitized. Skipping grub-mkconfig."
+  fi
 fi
 
 info "🔐 Patching SDDM PAM for KWallet Plasma 6 (KF6) auto-unlock..."
@@ -180,11 +191,19 @@ if pacman -Q cachyos-gaming-applications cachyos-gaming-meta >/dev/null 2>&1; th
   GAMING_CONF="$HOME/.config/environment.d/gaming.conf"
 
   if lspci | grep -iE 'vga|3d' | grep -iq 'nvidia'; then
-    echo "__GL_SHADER_DISK_CACHE_SIZE=12000000000" >"$GAMING_CONF"
-    info "NVIDIA GPU detected. Shader cache set to 12GB in $GAMING_CONF."
+    if ! grep -q "^__GL_SHADER_DISK_CACHE_SIZE=" "$GAMING_CONF" 2>/dev/null; then
+      echo "__GL_SHADER_DISK_CACHE_SIZE=12000000000" >>"$GAMING_CONF"
+      info "NVIDIA GPU detected. Shader cache set to 12GB in $GAMING_CONF."
+    else
+      success "NVIDIA shader cache already configured in $GAMING_CONF. Skipping."
+    fi
   elif lspci | grep -iE 'vga|3d' | grep -iq 'amd\|radeon'; then
-    echo "MESA_SHADER_CACHE_MAX_SIZE=12G" >"$GAMING_CONF"
-    info "AMD GPU detected. Shader cache set to 12GB in $GAMING_CONF."
+    if ! grep -q "^MESA_SHADER_CACHE_MAX_SIZE=" "$GAMING_CONF" 2>/dev/null; then
+      echo "MESA_SHADER_CACHE_MAX_SIZE=12G" >>"$GAMING_CONF"
+      info "AMD GPU detected. Shader cache set to 12GB in $GAMING_CONF."
+    else
+      success "AMD shader cache already configured in $GAMING_CONF. Skipping."
+    fi
   else
     warn "Could not reliably detect NVIDIA or AMD GPU. Skipping shader cache tweak."
   fi
@@ -224,7 +243,11 @@ add_note "[NORDVPN]: Remind to reboot your system to use NordVPN"
 
 {{- if .nordvpn_token }}
 echo "🔑 Logging into NordVPN using provided token..."
-sg nordvpn -c "nordvpn login --token {{ .nordvpn_token }}"
+if ! sg nordvpn -c "nordvpn account" &>/dev/null; then
+  sg nordvpn -c "nordvpn login --token {{ .nordvpn_token }}"
+else
+  echo "✅ Already logged into NordVPN. Skipping login."
+fi
 
 # Proceed with settings configuration
 if sg nordvpn -c "nordvpn status" | grep -E -q "Status: (Connected|Disconnected)"; then
@@ -247,8 +270,12 @@ sleep 2
 
 {{- if .tailscale_authkey }}
 echo "🔑 Authenticating Tailscale using provided authkey..."
-sudo tailscale up --ssh --authkey="{{ .tailscale_authkey }}"
-echo "✅ Tailscale connected successfully."
+if sudo tailscale status 2>/dev/null | grep -qE "^[0-9]+\.[0-9]"; then
+  echo "✅ Tailscale already connected. Skipping."
+else
+  sudo tailscale up --ssh --authkey="{{ .tailscale_authkey }}"
+  echo "✅ Tailscale connected successfully."
+fi
 {{- else }}
 echo "⚠️ No 'tailscale_authkey' found in chezmoi.toml. Skipping auto-login."
 {{- end }}
