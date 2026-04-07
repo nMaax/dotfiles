@@ -117,6 +117,14 @@ class Command:
                     "move": True,
                 },
             },
+            "audio": {
+                "easyeffects": {
+                    "enable": True,
+                    "match": [{"class": "com.github.wwmm.easyeffects"}],
+                    "command": ["easyeffects"],
+                    "move": True,
+                },
+            },
         }
 
         user_config_path = Path.home() / ".config" / "hypr-toggle" / "config.json"
