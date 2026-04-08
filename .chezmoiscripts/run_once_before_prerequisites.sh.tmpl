@@ -188,6 +188,7 @@ add_note "[KWALLET]:  Make a new wallet using kwalletmanager with the same passw
 
 echo "Syncing GTK with Noctalia and removing decorations..."
 gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3'
+gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 gsettings set org.gnome.desktop.wm.preferences button-layout ':'
 
 echo "🐬 Fixing Dolphin 'Open With' amnesia..."
@@ -198,9 +199,63 @@ kbuildsycoca6 --noincremental
 info "🦉 Installing Noctalia..."
 paru -S --needed --noconfirm noctalia-shell
 
-add_note "[NOCTALIA] Check noctalia documentation for further information: https://docs.noctalia.dev/"
-add_note "[NOCTALIA] ddcutil was installed by default, which may introduce system instability with certain monitors; remove it eventually with sudo pacman -Rns ddcutil"
-add_note "[NOCTALIA] Enable theming in your favorite apps for a consistent look.\nSee https://docs.noctalia.dev/theming/basic-app-theming/ for detailed guides.\n e.g.:\n\t Zen Browser with the looks ==> Zen-Zero (https://sameerasw.com/zen)"
+info "🌐 Setting up Zen Browser theming..."
+ZEN_PROFILE_DIR=""
+if [ -f "$HOME/.zen/profiles.ini" ]; then
+  ZEN_PROFILE_DIR=$(awk -F= '/^Path=/ { print $2; exit }' "$HOME/.zen/profiles.ini")
+  [ -n "$ZEN_PROFILE_DIR" ] && ZEN_PROFILE_DIR="$HOME/.zen/$ZEN_PROFILE_DIR"
+fi
+
+if [ -d "$ZEN_PROFILE_DIR" ]; then
+  info "Zen profile found at $ZEN_PROFILE_DIR. Configuring userChrome theming..."
+  mkdir -p "$ZEN_PROFILE_DIR/chrome"
+
+  # Enable legacy userChrome.css support via user.js
+  USER_JS="$ZEN_PROFILE_DIR/user.js"
+  if ! grep -q "toolkit.legacyUserProfileCustomizations.stylesheets" "$USER_JS" 2>/dev/null; then
+    echo 'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);' >> "$USER_JS"
+  fi
+
+  # Inject noctalia import into userChrome.css (idempotent)
+  CHROME_CSS="$ZEN_PROFILE_DIR/chrome/userChrome.css"
+  CHROME_IMPORT="@import \"${HOME}/.cache/noctalia/zen-browser/zen-userChrome.css\";"
+  if ! grep -qF "$CHROME_IMPORT" "$CHROME_CSS" 2>/dev/null; then
+    echo "$CHROME_IMPORT" >> "$CHROME_CSS"
+  fi
+
+  # Inject noctalia import into userContent.css (idempotent)
+  CONTENT_CSS="$ZEN_PROFILE_DIR/chrome/userContent.css"
+  CONTENT_IMPORT="@import \"${HOME}/.cache/noctalia/zen-browser/zen-userContent.css\";"
+  if ! grep -qF "$CONTENT_IMPORT" "$CONTENT_CSS" 2>/dev/null; then
+    echo "$CONTENT_IMPORT" >> "$CONTENT_CSS"
+  fi
+
+  success "Zen Browser userChrome theming configured. Restart Zen to apply colors."
+else
+  warn "Zen Browser profile not found (Zen hasn't been launched yet). Theming will be configured on first login."
+  add_note "[ZEN BROWSER] Launch Zen Browser once to create your profile, then re-run:
+  chezmoi apply
+  This will automatically configure Noctalia theming in userChrome.css.
+  Alternatively, run manually inside your Zen profile's chrome/ directory:
+    echo '@import \"$HOME/.cache/noctalia/zen-browser/zen-userChrome.css\";' >> userChrome.css
+    echo '@import \"$HOME/.cache/noctalia/zen-browser/zen-userContent.css\";' >> userContent.css
+  And enable stylesheets in about:config:
+    toolkit.legacyUserProfileCustomizations.stylesheets = true
+  Then restart Zen Browser.
+  Also set Website Appearance to 'Auto' in Settings → General."
+fi
+
+add_note "[NOCTALIA] All built-in templates are pre-enabled (GTK, Qt, KColorScheme, Ghostty, Hyprland, btop, Spicetify, Telegram, Zen Browser, cava, Discord, VSCode).
+  Remaining MANUAL steps (require user interaction in-app):
+  • DISCORD: Open Equibop → Settings → Themes → enable one of the two Noctalia themes.
+  • VSCODE: Install the 'NoctaliaTheme' extension from the marketplace, then select it via Ctrl+Shift+P → 'Preferences: Color Theme'.
+  • STEAM (optional): Install Millennium + Material-Theme, select 'Matugen' in the theme color dropdown.
+    See https://docs.noctalia.dev/theming/program-specific/steam/ for full steps.
+  • FLATPAK GTK apps: Run:
+      flatpak install org.gtk.Gtk3theme.adw-gtk3-dark
+      flatpak install org.gtk.Gtk3theme.adw-gtk3
+  Documentation: https://docs.noctalia.dev/theming/basic-app-theming/"
+add_note "[NOCTALIA] ddcutil was installed by default, which may introduce system instability with certain monitors; remove it eventually with: sudo pacman -Rns ddcutil"
 
 echo ""
 success "✅ [Stage 2] Apps and Noctalia installed."
