@@ -53,21 +53,83 @@ if [ -f /etc/default/grub ] && command -v grub-mkconfig >/dev/null; then
   fi
 fi
 
-info "🔐 Patching SDDM PAM for KWallet Plasma 6 (KF6) auto-unlock..."
-# On Plasma 6 (KF6, CachyOS default) the session pam_kwallet5.so entry must
-# reference ksecretd, otherwise wallet auto-unlock silently fails at login.
-# The auth line takes no extra parameters.
-# See: https://wiki.archlinux.org/title/KDE_Wallet#Configure_PAM_on_Plasma_6_(KF6)
-if [ ! -f /etc/pam.d/sddm ]; then
-  warn "/etc/pam.d/sddm not found. Skipping KWallet PAM patch."
-else
-  # Patch session line (has auto_start): add kwalletd=/usr/bin/ksecretd if missing
-  if grep -qE "pam_kwallet5\.so.*auto_start" /etc/pam.d/sddm && \
-     ! grep -qE "pam_kwallet5\.so.*auto_start.*kwalletd=" /etc/pam.d/sddm; then
-    sudo sed -i 's/\(pam_kwallet5\.so.*auto_start\)/\1 kwalletd=\/usr\/bin\/ksecretd/' /etc/pam.d/sddm
-    success "Added kwalletd=/usr/bin/ksecretd to session line in /etc/pam.d/sddm"
+info "🔐 Patching SDDM PAM for KWallet KF6 auto-unlock (all login scenarios)..."
+# Arch Wiki: https://wiki.archlinux.org/title/KDE_Wallet#Configure_PAM_on_Plasma_6_(KF6)
+# Arch Wiki: https://wiki.archlinux.org/title/KDE_Wallet#Unlocking_KWallet_automatically_in_a_window_manager
+
+# Detect LUKS encryption: any block device with dm-crypt type
+_is_luks=false
+if lsblk -o TYPE 2>/dev/null | grep -q "^crypt$"; then
+  _is_luks=true
+fi
+
+# Detect SDDM autologin: User= set under [Autologin] in any sddm config file
+_is_autologin=false
+for _sddm_conf in /etc/sddm.conf /etc/sddm.conf.d/*.conf; do
+  [ -f "$_sddm_conf" ] || continue
+  _auser=$(awk '/^\[Autologin\]/{f=1} f && /^[[:space:]]*User[[:space:]]*=/{sub(/.*=[[:space:]]*/,""); print; exit}' "$_sddm_conf")
+  [ -n "$_auser" ] && { _is_autologin=true; break; }
+done
+
+info "  Detected: LUKS=$_is_luks | SDDM Autologin=$_is_autologin"
+
+# Ensures the session pam_kwallet5.so line in a PAM file has the kwalletd= parameter.
+# Appends a new session line if absent; patches in-place if kwalletd= is missing.
+_pam_patch_session_kwallet() {
+  local _f="$1"
+  if ! grep -qE "^-?session.*pam_kwallet5\.so.*auto_start" "$_f"; then
+    printf 'session     optional    pam_kwallet5.so auto_start kwalletd=/usr/bin/ksecretd\n' \
+      | sudo tee -a "$_f" >/dev/null
+    success "  Added session pam_kwallet5.so to $_f"
+  elif ! grep -qE "^-?session.*pam_kwallet5\.so.*auto_start.*kwalletd=" "$_f"; then
+    sudo sed -i 's|\(pam_kwallet5\.so.*auto_start\)|\1 kwalletd=/usr/bin/ksecretd|' "$_f"
+    success "  Patched session pam_kwallet5.so in $_f (added kwalletd=)"
   else
-    success "/etc/pam.d/sddm session line already patched. Skipping."
+    success "  $_f: session pam_kwallet5.so already correct. Skipping."
+  fi
+}
+
+# Ensures an optional PAM auth line for the given module exists in a file.
+_pam_ensure_auth() {
+  local _f="$1" _mod="$2"
+  if ! grep -qE "^-?auth.*${_mod}" "$_f"; then
+    printf 'auth        optional    %s\n' "$_mod" | sudo tee -a "$_f" >/dev/null
+    success "  Added auth $_mod to $_f"
+  else
+    success "  $_f: auth $_mod already present. Skipping."
+  fi
+}
+
+# Case 1 & 3 – SDDM normal login (with or without LUKS): patch /etc/pam.d/sddm session line
+if [ ! -f /etc/pam.d/sddm ]; then
+  warn "/etc/pam.d/sddm not found. Skipping."
+else
+  _pam_patch_session_kwallet /etc/pam.d/sddm
+fi
+
+# Case 2 & 4 – SDDM autologin: also patch /etc/pam.d/sddm-autologin
+if $_is_autologin; then
+  if [ ! -f /etc/pam.d/sddm-autologin ]; then
+    warn "/etc/pam.d/sddm-autologin not found. Skipping autologin PAM patch."
+  else
+    # Case 4 only – LUKS + autologin: pam_systemd_loadkey.so passes the LUKS key through PAM
+    # Note: Arch Wiki marks this section as "out of date" but it remains the recommended approach.
+    # See: https://wiki.archlinux.org/title/KDE_Wallet#Using_SDDM_autologin_and_LUKS_encryption
+    if $_is_luks; then
+      _pam_ensure_auth /etc/pam.d/sddm-autologin pam_systemd_loadkey.so
+      # KeyringMode=inherit is required so SDDM inherits the LUKS keyring from systemd
+      _km_conf=/etc/systemd/system/sddm.service.d/keyringmode.conf
+      if [ ! -f "$_km_conf" ]; then
+        sudo mkdir -p "$(dirname "$_km_conf")"
+        printf '[Service]\nKeyringMode=inherit\n' | sudo tee "$_km_conf" >/dev/null
+        sudo systemctl daemon-reload
+        success "  Created $_km_conf (KeyringMode=inherit for LUKS autologin)"
+      else
+        success "  $_km_conf already exists. Skipping."
+      fi
+    fi
+    _pam_ensure_auth /etc/pam.d/sddm-autologin pam_kwallet5.so
+    _pam_patch_session_kwallet /etc/pam.d/sddm-autologin
   fi
 fi
 
