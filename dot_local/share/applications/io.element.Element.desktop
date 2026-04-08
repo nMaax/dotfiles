@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Element
 Comment=Feature-rich client for Matrix
-Exec=/usr/bin/element-desktop --password-store=kwallet5 %u
+Exec=/usr/bin/element-desktop --password-store=kwallet6 %u
 Terminal=false
 Type=Application
 Icon=io.element.Element
