@@ -68,6 +68,43 @@ else
   success "Added kwalletd=/usr/bin/ksecretd to /etc/pam.d/sddm"
 fi
 
+info "🔐 Checking for LUKS encryption + SDDM autologin KWallet setup..."
+# When the system disk is encrypted with LUKS and SDDM autologin is configured,
+# pam_systemd_loadkey passes the LUKS passphrase from the kernel keyring so that
+# pam_kwallet5 can unlock the wallet without an extra password prompt.
+# See: https://wiki.archlinux.org/title/KDE_Wallet#Using_SDDM_autologin_and_LUKS_encryption
+if lsblk -rno TYPE 2>/dev/null | grep -q "^crypt$" || [ -s /etc/crypttab ]; then
+  info "LUKS encryption detected."
+
+  if [ ! -f /etc/pam.d/sddm-autologin ]; then
+    warn "/etc/pam.d/sddm-autologin not found. SDDM autologin may not be configured. Skipping LUKS KWallet patch."
+  elif grep -q "pam_kwallet5\.so.*kwalletd=/usr/bin/ksecretd" /etc/pam.d/sddm-autologin; then
+    success "/etc/pam.d/sddm-autologin already patched for KWallet. Skipping."
+  else
+    sudo tee -a /etc/pam.d/sddm-autologin >/dev/null <<'PAM_EOF'
+-auth       optional    pam_systemd_loadkey.so
+-auth       optional    pam_kwallet5.so
+-session    optional    pam_kwallet5.so auto_start kwalletd=/usr/bin/ksecretd
+PAM_EOF
+    success "Added KWallet PAM lines to /etc/pam.d/sddm-autologin"
+  fi
+
+  SDDM_DROP_IN="/etc/systemd/system/sddm.service.d/keyringmode.conf"
+  if [ -f "$SDDM_DROP_IN" ] && grep -q "KeyringMode=inherit" "$SDDM_DROP_IN"; then
+    success "SDDM KeyringMode drop-in already present. Skipping."
+  else
+    sudo mkdir -p "$(dirname "$SDDM_DROP_IN")"
+    sudo tee "$SDDM_DROP_IN" >/dev/null <<'DROPIN_EOF'
+[Service]
+KeyringMode=inherit
+DROPIN_EOF
+    sudo systemctl daemon-reload
+    success "Created SDDM KeyringMode=inherit drop-in at $SDDM_DROP_IN"
+  fi
+else
+  info "No LUKS encryption detected. Skipping LUKS+SDDM autologin KWallet setup."
+fi
+
 info "🖥️ Setting up Silent SDDM Themes..."
 
 if ! pacman -Qs sddm-silent-theme >/dev/null; then
