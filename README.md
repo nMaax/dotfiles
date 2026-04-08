@@ -100,4 +100,4 @@ chezmoi init --apply nMaax
 - [ ] Prepare some default wallpapers x colorschemes combinations
 - [ ] Review theming via Noctalia is well managed in install scripts (try also to pass documentation to a GitHub Agent)
 - [ ] Explore better scrolling options and make MCHOSE devices specific configs (or just distinguish between touchpad and mouse)
-- [ ]
+- [ ] Fix ksshaskpass Qt::font empty error
