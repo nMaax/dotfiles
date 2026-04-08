@@ -122,3 +122,5 @@ Qt theming is **not** managed by chezmoi — configure it manually via the GUIs 
 - [ ] Explore better scrolling options and make MCHOSE devices specific configs (or just distinguish between touchpad and mouse)
 - [ ] Fix ksshaskpass Qt::font empty error
 - [x] Make add_note calls conditioned on the related modifications and patches to be applied (if they got skipped, notes should not be added), while in this README we put everything
+- [ ] Use a SVG-based cursor to have high quality cursor shake: <https://gemini.google.com/share/6d186e39cd13>
+- [ ] Add a new command in local/bin to switch between scrolling and dwindle in hyprland: <https://gemini.google.com/share/fec387e287c4>
