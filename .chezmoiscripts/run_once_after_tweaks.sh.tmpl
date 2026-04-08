@@ -72,7 +72,8 @@ else
   # Patch auth line (no auto_start): add kwalletd=/usr/bin/ksecretd if missing
   auth_kwallet_line=$(grep "pam_kwallet5\.so" /etc/pam.d/sddm | grep -v "auto_start" || true)
   if [ -n "$auth_kwallet_line" ] && ! echo "$auth_kwallet_line" | grep -q "kwalletd="; then
-    sudo sed -i '/pam_kwallet5\.so/{/auto_start/! {/kwalletd=/! s/pam_kwallet5\.so[[:space:]]*$/pam_kwallet5.so kwalletd=\/usr\/bin\/ksecretd/}}' /etc/pam.d/sddm
+    # The auth line ends with pam_kwallet5.so (no arguments); append the kwalletd parameter
+    sudo sed -i '/pam_kwallet5\.so[[:space:]]*$/s/$/ kwalletd=\/usr\/bin\/ksecretd/' /etc/pam.d/sddm
     success "Added kwalletd=/usr/bin/ksecretd to auth line in /etc/pam.d/sddm"
   else
     success "/etc/pam.d/sddm auth line already patched or not present. Skipping."

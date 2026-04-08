@@ -92,7 +92,7 @@ chezmoi init --apply nMaax
 
 ## 📝 TODOs
 
-- [x] Double check SSDM and keyring PAM signal with kwallet
+- [x] Double check SDDM and keyring PAM signal with kwallet
 - [ ] Use git filter-repo to scrub away binaries and easyeffects .config files (remind about irs files)
   - [ ] Maybe send Wallpapers, Gifs and Binaries to another repo and symlink here? I could use a git submodule
   - [ ] Also SilentSDDM Themese could be put in a different repo, and then linked via submodules or something
