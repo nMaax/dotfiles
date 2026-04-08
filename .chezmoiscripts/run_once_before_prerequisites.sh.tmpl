@@ -231,10 +231,35 @@ if [ "$noctalia_fresh" -eq 1 ]; then
   add_note "[NOCTALIA] ddcutil was installed by default, which may introduce system instability with certain monitors; remove it eventually with: sudo pacman -Rns ddcutil"
 fi
 
+info "💅 Setting Hyprcursor..."
+
+CURSOR_TMP="/tmp/hypr_Bibata-Modern-Classic"
+CURSOR_ARCHIVE="$CURSOR_TMP.tar.gz"
+CURSOR_DEST="$HOME/.local/share/icons/Bibata-Modern-Classic"
+
+if [ ! -d "$CURSOR_DEST" ]; then
+  cd /tmp
+  curl -LO "https://github.com/LOSEARDES77/Bibata-Cursor-hyprcursor/releases/download/1.0/hypr_Bibata-Modern-Classic.tar.gz"
+  tar -xzf hypr_Bibata-Modern-Classic.tar.gz
+  if [ -d Bibata-Modern-Classic ]; then
+    rm -rf "$CURSOR_DEST"
+    mv Bibata-Modern-Classic "$CURSOR_DEST"
+  fi
+  rm -f hypr_Bibata-Modern-Classic.tar.gz
+  hyprctl setcursor Bibata-Modern-Classic 24 # Enable now
+else
+  success "Hyprcursor already installed, skipping."
+fi
+
 info "💧 Setting hyprland plugins..."
-hyprpm update
-hyprpm add https://github.com/VirtCode/hypr-dynamic-cursors
-hyprpm enable dynamic-cursors
+
+if ! hyprpm list | grep -q dynamic-cursors; then
+  hyprpm update
+  hyprpm add https://github.com/VirtCode/hypr-dynamic-cursors
+  hyprpm enable dynamic-cursors
+else
+  success "hypr-dynamic-cursors plugin already installed and enabled, skipping."
+fi
 
 echo ""
 success "✅ [Stage 2] Apps and Noctalia installed."
