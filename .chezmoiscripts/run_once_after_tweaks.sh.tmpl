@@ -54,18 +54,29 @@ if [ -f /etc/default/grub ] && command -v grub-mkconfig >/dev/null; then
 fi
 
 info "🔐 Patching SDDM PAM for KWallet Plasma 6 (KF6) auto-unlock..."
-# Arch's sddm package ships pam_kwallet5.so without the kwalletd= parameter.
-# On KF6 / Plasma 6 (CachyOS default) the session module must point to ksecretd,
-# otherwise pam_kwallet5.so falls back to the absent kwallet5 daemon and wallet
-# auto-unlock silently fails at login.
+# On Plasma 6 (KF6, CachyOS default) BOTH the auth and session pam_kwallet5.so
+# entries must reference ksecretd, otherwise wallet auto-unlock silently fails.
 # See: https://wiki.archlinux.org/title/KDE_Wallet#Configure_PAM_on_Plasma_6_(KF6)
 if [ ! -f /etc/pam.d/sddm ]; then
   warn "/etc/pam.d/sddm not found. Skipping KWallet PAM patch."
-elif grep -q "kwalletd=/usr/bin/ksecretd" /etc/pam.d/sddm; then
-  success "/etc/pam.d/sddm already contains kwalletd parameter. Skipping."
 else
-  sudo sed -i 's/\(pam_kwallet5\.so auto_start\)\($\| \)/\1 kwalletd=\/usr\/bin\/ksecretd\2/' /etc/pam.d/sddm
-  success "Added kwalletd=/usr/bin/ksecretd to /etc/pam.d/sddm"
+  # Patch session line (has auto_start): add kwalletd=/usr/bin/ksecretd if missing
+  if grep -qE "pam_kwallet5\.so.*auto_start" /etc/pam.d/sddm && \
+     ! grep -qE "pam_kwallet5\.so.*auto_start.*kwalletd=" /etc/pam.d/sddm; then
+    sudo sed -i 's/\(pam_kwallet5\.so.*auto_start\)/\1 kwalletd=\/usr\/bin\/ksecretd/' /etc/pam.d/sddm
+    success "Added kwalletd=/usr/bin/ksecretd to session line in /etc/pam.d/sddm"
+  else
+    success "/etc/pam.d/sddm session line already patched. Skipping."
+  fi
+
+  # Patch auth line (no auto_start): add kwalletd=/usr/bin/ksecretd if missing
+  auth_kwallet_line=$(grep "pam_kwallet5\.so" /etc/pam.d/sddm | grep -v "auto_start" || true)
+  if [ -n "$auth_kwallet_line" ] && ! echo "$auth_kwallet_line" | grep -q "kwalletd="; then
+    sudo sed -i '/pam_kwallet5\.so/{/auto_start/! {/kwalletd=/! s/pam_kwallet5\.so[[:space:]]*$/pam_kwallet5.so kwalletd=\/usr\/bin\/ksecretd/}}' /etc/pam.d/sddm
+    success "Added kwalletd=/usr/bin/ksecretd to auth line in /etc/pam.d/sddm"
+  else
+    success "/etc/pam.d/sddm auth line already patched or not present. Skipping."
+  fi
 fi
 
 info "🖥️ Setting up Silent SDDM Themes..."
