@@ -54,8 +54,12 @@ if [ -f /etc/default/grub ] && command -v grub-mkconfig >/dev/null; then
 fi
 
 info "🔐 Patching PAM for KWallet auto-unlock at login (all configurations)..."
-# On KF6/Plasma 6 (CachyOS default), pam_kwallet5.so must explicitly point to ksecretd;
-# otherwise it falls back to the absent kwallet5 daemon and auto-unlock silently fails.
+# On CachyOS/Arch, installing any KDE6 app (KWallet, Dolphin, …) brings in kf6-kwallet
+# which ships ksecretd instead of the old kwalletd5. pam_kwallet5.so must therefore
+# explicitly point to ksecretd — this applies regardless of whether you run full Plasma
+# or individual KDE apps inside Hyprland (or any other WM).
+# Without the kwalletd= parameter, pam_kwallet5.so tries to start the absent kwalletd5
+# daemon and auto-unlock silently fails.
 # We handle every combination of LUKS encryption and SDDM autologin:
 #
 #   Standard login (no autologin), ±LUKS  → patch /etc/pam.d/sddm
@@ -115,16 +119,14 @@ PAM_EOF
 fi
 
 info "🔑 Creating KDE Wallet 'kdewallet'..."
-# Trigger wallet creation now so the user is immediately prompted with the correct
-# settings rather than being surprised the first time an application requests it.
-# Wallet files live in ~/.local/share/kwalletd/; if the file already exists we skip.
-# Requires a running graphical session (Wayland or X11) to show the creation dialog.
+# Uses the kwalletd6 D-Bus interface to trigger the wallet creation dialog.
+# Note: a fully silent/non-interactive creation (pre-setting the Blowfish encryption
+# and password without user input) is not supported by the kwalletd6 D-Bus API.
+# The dialog is intentionally minimal — the user only needs to confirm the name,
+# choose Blowfish encryption, and enter their login password once.
 KWALLET_FILE="$HOME/.local/share/kwalletd/kdewallet.kwl"
 if [ -f "$KWALLET_FILE" ]; then
   success "KWallet 'kdewallet' already exists ($KWALLET_FILE). Skipping creation."
-elif [ -z "${WAYLAND_DISPLAY:-}" ] && [ -z "${DISPLAY:-}" ]; then
-  warn "No graphical session detected. KWallet will be created automatically the first time an application requests it."
-  add_note "[KWALLET] When prompted to create a wallet: Name=kdewallet | Encryption=Blowfish | Password=your login password"
 else
   info "A wallet creation dialog will appear — use these settings:"
   info "  Name       : kdewallet  (leave as default)"
@@ -133,7 +135,7 @@ else
   dbus-send --session --dest=org.kde.kwalletd6 --type=method_call --print-reply \
     /modules/kwalletd6 org.kde.KWallet.open \
     string:"kdewallet" int64:0 string:"chezmoi-setup" || \
-    warn "Could not trigger wallet creation via D-Bus. Create it manually with kwalletmanager using the settings above."
+    warn "Could not open KWallet dialog. Create it manually with kwalletmanager using the settings above."
 fi
 
 info "🖥️ Setting up Silent SDDM Themes..."
