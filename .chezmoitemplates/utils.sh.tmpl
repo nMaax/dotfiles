@@ -25,6 +25,33 @@ show_notes() {
   if [[ -f "$NOTES_FILE" ]]; then
     info "Post-Install Summary:"
     cat "$NOTES_FILE"
+    echo ""
+
+    read -rp "💾 Save these notes as Markdown to your Documents folder? [Y/n] " save_answer
+    if [[ "${save_answer,,}" != "n" ]]; then
+      local docs_dir
+      if command -v xdg-user-dir >/dev/null 2>&1; then
+        docs_dir="$(xdg-user-dir DOCUMENTS)"
+      elif [[ -f "$HOME/.config/user-dirs.dirs" ]]; then
+        docs_dir="$(. "$HOME/.config/user-dirs.dirs" 2>/dev/null; echo "${XDG_DOCUMENTS_DIR:-$HOME/Documents}")"
+      else
+        docs_dir="$HOME/Documents"
+      fi
+
+      local timestamp out_file
+      timestamp=$(date +"%Y%m%d_%H%M%S")
+      out_file="${docs_dir}/dotfiles_install_notes_${timestamp}.md"
+      mkdir -p "$docs_dir"
+      {
+        echo "# Dotfiles Install Notes"
+        echo ""
+        echo "_Generated: $(date)_"
+        echo ""
+        cat "$NOTES_FILE"
+      } >"$out_file"
+      success "Notes saved to $out_file"
+    fi
+
     rm -f "$NOTES_FILE"
   fi
 }
