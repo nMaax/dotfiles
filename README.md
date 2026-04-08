@@ -66,6 +66,13 @@ chezmoi init --apply nMaax
       2. **Set the Zen theme to Auto:** Open **Settings → General** → set **Website Appearance** to **Auto** so Zen applies the colors from the Noctalia CSS
       3. **Reload colors after changes:** Restart Zen Browser to load the updated color scheme from Noctalia
 
+### 🎨 Qt Theming (qt5ct / qt6ct)
+
+Qt theming is **not** managed by chezmoi — configure it manually via the GUIs after installation:
+
+- **qt5ct** (`qt5ct` command): Set **Color scheme** to `noctalia`, **General font** to `SF Pro`, **Fixed-width font** to `CaskaydiaCove Nerd Font Mono`
+- **qt6ct** (`qt6ct` command): Same settings as above
+
 ### 🔑 Keyring & Security
 
 - **KWallet:** The install script patches PAM for all configurations (standard login, autologin, with or without LUKS encryption) and triggers the wallet creation dialog automatically. **When you are prompted to create a wallet** (either during install or the first time an application requests one), use **exactly** these settings:
