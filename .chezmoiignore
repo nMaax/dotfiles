@@ -16,8 +16,6 @@
 !.config/nvim/
 !.config/nvtop/
 !.config/pipewire/
-!.config/qt5ct/
-!.config/qt6ct/
 !.config/starship.toml
 
 # --- FISH: Exclude shell state ---
@@ -40,12 +38,6 @@
 
 # --- NVIM: Exclude matugen-generated theme ---
 .config/nvim/lua/matugen.lua
-
-# --- QT: Include only main config files ---
-.config/qt5ct/*
-!.config/qt5ct/qt5ct.conf
-.config/qt6ct/*
-!.config/qt6ct/qt6ct.conf
 
 # --- ELECTRON APPS ---
 !.config/Element
