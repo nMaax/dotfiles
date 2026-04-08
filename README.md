@@ -56,7 +56,7 @@ chezmoi init --apply nMaax
   - All Noctalia templates pre-enabled: GTK, Qt, KColorScheme, Ghostty, Hyprland, btop, Spicetify, Telegram, Zen Browser, cava, Discord, VSCode.
   - GTK dark mode (`adw-gtk3` + `prefer-dark`) applied via `gsettings`.
   - Qt theming via `qt6ct` with `QT_QPA_PLATFORMTHEME` set in Hyprland env.
-  - Zen Browser `userChrome.css` configured automatically if Zen has been launched at least once before `chezmoi apply` runs (otherwise, re-run `chezmoi apply` after first Zen launch).
+  - Zen Browser `userChrome.css` setup is **manual** (profile path is user-specific and requires steps inside `about:config`; see note at end of install).
   - **Remaining manual steps** (require in-app interaction):
     - **Discord:** Open Equibop → Settings → Themes → enable one of the two Noctalia themes.
     - **VSCode:** Install the `NoctaliaTheme` extension from the marketplace, then select it via `Ctrl+Shift+P` → *Preferences: Color Theme*.
