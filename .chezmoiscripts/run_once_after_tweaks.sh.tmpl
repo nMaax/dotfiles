@@ -54,8 +54,9 @@ if [ -f /etc/default/grub ] && command -v grub-mkconfig >/dev/null; then
 fi
 
 info "🔐 Patching SDDM PAM for KWallet Plasma 6 (KF6) auto-unlock..."
-# On Plasma 6 (KF6, CachyOS default) BOTH the auth and session pam_kwallet5.so
-# entries must reference ksecretd, otherwise wallet auto-unlock silently fails.
+# On Plasma 6 (KF6, CachyOS default) the session pam_kwallet5.so entry must
+# reference ksecretd, otherwise wallet auto-unlock silently fails at login.
+# The auth line takes no extra parameters.
 # See: https://wiki.archlinux.org/title/KDE_Wallet#Configure_PAM_on_Plasma_6_(KF6)
 if [ ! -f /etc/pam.d/sddm ]; then
   warn "/etc/pam.d/sddm not found. Skipping KWallet PAM patch."
@@ -67,16 +68,6 @@ else
     success "Added kwalletd=/usr/bin/ksecretd to session line in /etc/pam.d/sddm"
   else
     success "/etc/pam.d/sddm session line already patched. Skipping."
-  fi
-
-  # Patch auth line (no auto_start): add kwalletd=/usr/bin/ksecretd if missing
-  auth_kwallet_line=$(grep "pam_kwallet5\.so" /etc/pam.d/sddm | grep -v "auto_start" || true)
-  if [ -n "$auth_kwallet_line" ] && ! echo "$auth_kwallet_line" | grep -q "kwalletd="; then
-    # The auth line ends with pam_kwallet5.so (no arguments); append the kwalletd parameter
-    sudo sed -i '/pam_kwallet5\.so[[:space:]]*$/s/$/ kwalletd=\/usr\/bin\/ksecretd/' /etc/pam.d/sddm
-    success "Added kwalletd=/usr/bin/ksecretd to auth line in /etc/pam.d/sddm"
-  else
-    success "/etc/pam.d/sddm auth line already patched or not present. Skipping."
   fi
 fi
 
