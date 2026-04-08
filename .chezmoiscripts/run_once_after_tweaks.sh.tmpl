@@ -130,9 +130,12 @@ fi
 
 info "🖥️ Setting up Silent SDDM Themes..."
 
+sddm_configured=0
+
 if ! pacman -Qs sddm-silent-theme >/dev/null; then
   info "Installing sddm-silent-theme..."
   paru -S --needed --noconfirm sddm-silent-theme
+  sddm_configured=1
 fi
 
 if grep -q "Current=silent" /etc/sddm.conf 2>/dev/null; then
@@ -148,6 +151,7 @@ GreeterEnvironment=QML2_IMPORT_PATH=/usr/share/sddm/themes/silent/components/,QT
 [Theme]
 Current=silent
 EOF
+  sddm_configured=1
 fi
 
 SILENT_SDDM_DIR="/usr/share/sddm/themes/silent"
@@ -162,8 +166,10 @@ else
   warn "$USER_FACE not found. Skipping avatar change."
 fi
 
-add_note "[SILENT SDDM] Remind to select systemd owned Hyprland at login in SDDM, in order to enable specific autostarts to work."
-add_note "[SILENT SDDM] Remind to run ./test.sh in $SILENT_SDDM_DIR to check SDDM works and you are not kept out of your system at next boot."
+if [ "$sddm_configured" -eq 1 ]; then
+  add_note "[SILENT SDDM] Remind to select systemd owned Hyprland at login in SDDM, in order to enable specific autostarts to work."
+  add_note "[SILENT SDDM] Remind to run ./test.sh in $SILENT_SDDM_DIR to check SDDM works and you are not kept out of your system at next boot."
+fi
 
 info "🖱️ Setting up MCHOSE udev rules..."
 UDEV_RULE_PATH="/etc/udev/rules.d/99-mchose.rules"
