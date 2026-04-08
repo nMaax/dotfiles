@@ -177,6 +177,11 @@ sudo pacman -S --needed --noconfirm easyeffects lsp-plugins
 info "🌙 Installing Noctalia dependencies..."
 paru -S --needed --noconfirm cliphist wlsunset xdg-desktop-portal evolution-data-server hyprshot quickshell-overview-git
 
+kwallet_fresh=0
+if ! pacman -Qs kwallet &>/dev/null; then
+  kwallet_fresh=1
+fi
+
 echo "🖥️ Installing KDE suite, Qt, GTK and utility apps..."
 sudo pacman -S --needed --noconfirm \
   qt6ct-kde qt5ct adw-gtk-theme nwg-look \
@@ -184,7 +189,9 @@ sudo pacman -S --needed --noconfirm \
   okular haruna kwrite gwenview \
   kwallet kwallet-pam
 
-add_note "[KWALLET]:  Make a new wallet using kwalletmanager with the same password as the user to enable automatic keyring login.\n See https://wiki.archlinux.org/title/KDE_Wallet for more information.\n Look at https://www.electronjs.org/docs/latest/api/safe-storage for Electron-specific information"
+if [ "$kwallet_fresh" -eq 1 ]; then
+  add_note "[KWALLET]:  Make a new wallet using kwalletmanager with the same password as the user to enable automatic keyring login.\n See https://wiki.archlinux.org/title/KDE_Wallet for more information.\n Look at https://www.electronjs.org/docs/latest/api/safe-storage for Electron-specific information"
+fi
 
 echo "Syncing GTK with Noctalia and removing decorations..."
 gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3'
@@ -196,11 +203,16 @@ sudo ln -sf /etc/xdg/menus/arch-applications.menu /etc/xdg/menus/applications.me
 rm -rf ~/.cache/ksycoca6*
 kbuildsycoca6 --noincremental
 
+noctalia_fresh=0
+if ! pacman -Qs noctalia-shell &>/dev/null; then
+  noctalia_fresh=1
+fi
+
 info "🦉 Installing Noctalia..."
 paru -S --needed --noconfirm noctalia-shell
 
-
-add_note "[NOCTALIA] All built-in templates are pre-enabled (GTK, Qt, KColorScheme, Ghostty, Hyprland, btop, Spicetify, Telegram, Zen Browser, cava, Discord, VSCode).
+if [ "$noctalia_fresh" -eq 1 ]; then
+  add_note "[NOCTALIA] All built-in templates are pre-enabled (GTK, Qt, KColorScheme, Ghostty, Hyprland, btop, Spicetify, Telegram, Zen Browser, cava, Discord, VSCode).
   Remaining MANUAL steps (require user interaction in-app):
   • ZEN BROWSER: Noctalia generates the CSS automatically once its Zen template runs.
     You still need to wire it up manually (one-time):
@@ -216,7 +228,8 @@ add_note "[NOCTALIA] All built-in templates are pre-enabled (GTK, Qt, KColorSche
   • STEAM (optional): Install Millennium + Material-Theme, select 'Matugen' in the theme color dropdown.
     See https://docs.noctalia.dev/theming/program-specific/steam/ for full steps.
   Documentation: https://docs.noctalia.dev/theming/basic-app-theming/"
-add_note "[NOCTALIA] ddcutil was installed by default, which may introduce system instability with certain monitors; remove it eventually with: sudo pacman -Rns ddcutil"
+  add_note "[NOCTALIA] ddcutil was installed by default, which may introduce system instability with certain monitors; remove it eventually with: sudo pacman -Rns ddcutil"
+fi
 
 echo ""
 success "✅ [Stage 2] Apps and Noctalia installed."
