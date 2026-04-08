@@ -114,4 +114,4 @@ chezmoi init --apply nMaax
 - [x] Review theming via Noctalia is well managed in install scripts (try also to pass documentation to a GitHub Agent)
 - [ ] Explore better scrolling options and make MCHOSE devices specific configs (or just distinguish between touchpad and mouse)
 - [ ] Fix ksshaskpass Qt::font empty error
-- [ ] Make add_note calls conditioned on the related modifications and patches to be applied (if they got skipped, notes should not be added), while in this README we put everything
+- [x] Make add_note calls conditioned on the related modifications and patches to be applied (if they got skipped, notes should not be added), while in this README we put everything
