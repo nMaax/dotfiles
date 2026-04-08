@@ -10,3 +10,19 @@ Host hyperion
   ServerAliveCountMax 5
   ForwardAgent yes
 
+Host cubone
+  HostName cubone
+  User {{ .chezmoi.username }}
+  IdentityFile ~/.ssh/id_ed25519
+  AddKeysToAgent yes
+  ServerAliveInterval 60
+  ServerAliveCountMax 5
+
+Host paras
+  HostName paras
+  User {{ .chezmoi.username }}
+  IdentityFile ~/.ssh/id_ed25519
+  AddKeysToAgent yes
+  ServerAliveInterval 60
+  ServerAliveCountMax 5
+
