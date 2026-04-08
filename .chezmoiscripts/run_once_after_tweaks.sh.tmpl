@@ -53,14 +53,22 @@ if [ -f /etc/default/grub ] && command -v grub-mkconfig >/dev/null; then
   fi
 fi
 
-info "🔐 Patching SDDM PAM for KWallet Plasma 6 (KF6) auto-unlock..."
-# Arch's sddm package ships pam_kwallet5.so without the kwalletd= parameter.
-# On KF6 / Plasma 6 (CachyOS default) the session module must point to ksecretd,
-# otherwise pam_kwallet5.so falls back to the absent kwallet5 daemon and wallet
-# auto-unlock silently fails at login.
+info "🔐 Patching PAM for KWallet auto-unlock at login (all configurations)..."
+# On KF6/Plasma 6 (CachyOS default), pam_kwallet5.so must explicitly point to ksecretd;
+# otherwise it falls back to the absent kwallet5 daemon and auto-unlock silently fails.
+# We handle every combination of LUKS encryption and SDDM autologin:
+#
+#   Standard login (no autologin), ±LUKS  → patch /etc/pam.d/sddm
+#   Autologin without LUKS                → patch /etc/pam.d/sddm-autologin (kwallet5 only)
+#   Autologin with LUKS                   → patch /etc/pam.d/sddm-autologin (loadkey + kwallet5)
+#                                           + create KeyringMode=inherit systemd drop-in
+#
 # See: https://wiki.archlinux.org/title/KDE_Wallet#Configure_PAM_on_Plasma_6_(KF6)
+# See: https://wiki.archlinux.org/title/KDE_Wallet#Using_SDDM_autologin_and_LUKS_encryption
+
+# --- Standard SDDM login (covers ±LUKS, no autologin) ---
 if [ ! -f /etc/pam.d/sddm ]; then
-  warn "/etc/pam.d/sddm not found. Skipping KWallet PAM patch."
+  warn "/etc/pam.d/sddm not found. Skipping KWallet SDDM PAM patch."
 elif grep -q "kwalletd=/usr/bin/ksecretd" /etc/pam.d/sddm; then
   success "/etc/pam.d/sddm already contains kwalletd parameter. Skipping."
 else
@@ -68,41 +76,64 @@ else
   success "Added kwalletd=/usr/bin/ksecretd to /etc/pam.d/sddm"
 fi
 
-info "🔐 Checking for LUKS encryption + SDDM autologin KWallet setup..."
-# When the system disk is encrypted with LUKS and SDDM autologin is configured,
-# pam_systemd_loadkey passes the LUKS passphrase from the kernel keyring so that
-# pam_kwallet5 can unlock the wallet without an extra password prompt.
-# See: https://wiki.archlinux.org/title/KDE_Wallet#Using_SDDM_autologin_and_LUKS_encryption
-if lsblk -rno TYPE 2>/dev/null | grep -q "^crypt$" || [ -s /etc/crypttab ]; then
-  info "LUKS encryption detected."
-
-  if [ ! -f /etc/pam.d/sddm-autologin ]; then
-    warn "/etc/pam.d/sddm-autologin not found. SDDM autologin may not be configured. Skipping LUKS KWallet patch."
-  elif grep -q "pam_kwallet5\.so.*kwalletd=/usr/bin/ksecretd" /etc/pam.d/sddm-autologin; then
-    success "/etc/pam.d/sddm-autologin already patched for KWallet. Skipping."
-  else
+# --- SDDM autologin (present only when the user enabled autologin) ---
+if [ ! -f /etc/pam.d/sddm-autologin ]; then
+  info "No /etc/pam.d/sddm-autologin found — SDDM autologin not configured. Skipping autologin KWallet patch."
+elif grep -q "pam_kwallet5\.so.*kwalletd=/usr/bin/ksecretd" /etc/pam.d/sddm-autologin; then
+  success "/etc/pam.d/sddm-autologin already patched for KWallet. Skipping."
+else
+  if lsblk -rno TYPE 2>/dev/null | grep -q "^crypt$" || [ -s /etc/crypttab ]; then
+    info "Autologin + LUKS detected — adding pam_systemd_loadkey + pam_kwallet5 to sddm-autologin..."
+    # pam_systemd_loadkey passes the LUKS passphrase from the kernel keyring so that
+    # pam_kwallet5 can unlock the wallet without a second interactive prompt.
     sudo tee -a /etc/pam.d/sddm-autologin >/dev/null <<'PAM_EOF'
 -auth       optional    pam_systemd_loadkey.so
 -auth       optional    pam_kwallet5.so
 -session    optional    pam_kwallet5.so auto_start kwalletd=/usr/bin/ksecretd
 PAM_EOF
-    success "Added KWallet PAM lines to /etc/pam.d/sddm-autologin"
-  fi
-
-  SDDM_DROP_IN="/etc/systemd/system/sddm.service.d/keyringmode.conf"
-  if [ -f "$SDDM_DROP_IN" ] && grep -q "KeyringMode=inherit" "$SDDM_DROP_IN"; then
-    success "SDDM KeyringMode drop-in already present. Skipping."
-  else
-    sudo mkdir -p "$(dirname "$SDDM_DROP_IN")"
-    sudo tee "$SDDM_DROP_IN" >/dev/null <<'DROPIN_EOF'
+    # SDDM must inherit the kernel keyring populated by the bootloader at LUKS unlock time.
+    SDDM_DROP_IN="/etc/systemd/system/sddm.service.d/keyringmode.conf"
+    if [ -f "$SDDM_DROP_IN" ] && grep -q "KeyringMode=inherit" "$SDDM_DROP_IN"; then
+      success "SDDM KeyringMode drop-in already present. Skipping."
+    else
+      sudo mkdir -p "$(dirname "$SDDM_DROP_IN")"
+      sudo tee "$SDDM_DROP_IN" >/dev/null <<'DROPIN_EOF'
 [Service]
 KeyringMode=inherit
 DROPIN_EOF
-    sudo systemctl daemon-reload
-    success "Created SDDM KeyringMode=inherit drop-in at $SDDM_DROP_IN"
+      sudo systemctl daemon-reload
+      success "Created SDDM KeyringMode=inherit drop-in at $SDDM_DROP_IN"
+    fi
+  else
+    info "Autologin without LUKS detected — adding pam_kwallet5 to sddm-autologin..."
+    sudo tee -a /etc/pam.d/sddm-autologin >/dev/null <<'PAM_EOF'
+-auth       optional    pam_kwallet5.so
+-session    optional    pam_kwallet5.so auto_start kwalletd=/usr/bin/ksecretd
+PAM_EOF
   fi
+  success "KWallet PAM entries added to /etc/pam.d/sddm-autologin"
+fi
+
+info "🔑 Creating KDE Wallet 'kdewallet'..."
+# Trigger wallet creation now so the user is immediately prompted with the correct
+# settings rather than being surprised the first time an application requests it.
+# Wallet files live in ~/.local/share/kwalletd/; if the file already exists we skip.
+# Requires a running graphical session (Wayland or X11) to show the creation dialog.
+KWALLET_FILE="$HOME/.local/share/kwalletd/kdewallet.kwl"
+if [ -f "$KWALLET_FILE" ]; then
+  success "KWallet 'kdewallet' already exists ($KWALLET_FILE). Skipping creation."
+elif [ -z "${WAYLAND_DISPLAY:-}" ] && [ -z "${DISPLAY:-}" ]; then
+  warn "No graphical session detected. KWallet will be created automatically the first time an application requests it."
+  add_note "[KWALLET] When prompted to create a wallet: Name=kdewallet | Encryption=Blowfish | Password=your login password"
 else
-  info "No LUKS encryption detected. Skipping LUKS+SDDM autologin KWallet setup."
+  info "A wallet creation dialog will appear — use these settings:"
+  info "  Name       : kdewallet  (leave as default)"
+  info "  Encryption : Blowfish   (NOT GnuPG — required for kwallet-pam auto-unlock)"
+  info "  Password   : your current user login password"
+  dbus-send --session --dest=org.kde.kwalletd6 --type=method_call --print-reply \
+    /modules/kwalletd6 org.kde.KWallet.open \
+    string:"kdewallet" int64:0 string:"chezmoi-setup" || \
+    warn "Could not trigger wallet creation via D-Bus. Create it manually with kwalletmanager using the settings above."
 fi
 
 info "🖥️ Setting up Silent SDDM Themes..."

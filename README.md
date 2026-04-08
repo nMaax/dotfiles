@@ -58,10 +58,10 @@ chezmoi init --apply nMaax
 
 ### 🔑 Keyring & Security
 
-- **KWallet:** The install script automatically patches PAM for KWallet auto-unlock at login (including LUKS-encrypted systems with SDDM autologin). After the first boot, open `kwalletmanager` and create a new wallet with **exactly** these settings:
-  - **Name:** `kdewallet` (the default; any other name will not be unlocked automatically)
+- **KWallet:** The install script patches PAM for all configurations (standard login, autologin, with or without LUKS encryption) and triggers the wallet creation dialog automatically. **When you are prompted to create a wallet** (either during install or the first time an application requests one), use **exactly** these settings:
+  - **Name:** `kdewallet` (the default; any other name will not be unlocked automatically by PAM)
   - **Encryption:** `Blowfish` (required for `kwallet-pam` auto-unlock; GnuPG encryption is incompatible)
-  - **Password:** your current **user login password** (PAM matches the wallet password against the login password)
+  - **Password:** your current **user login password** (PAM unlocks the wallet by matching it against the login password)
   - [Arch Wiki: KDE Wallet](https://wiki.archlinux.org/title/KDE_Wallet)
   - [Electron Safe Storage Info](https://www.electronjs.org/docs/latest/api/safe-storage)
 
