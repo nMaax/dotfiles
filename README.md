@@ -119,7 +119,7 @@ Qt theming is **not** managed by chezmoi — configure it manually via the GUIs 
   - [ ] Also SilentSDDM Themese could be put in a different repo, and then linked via submodules or something
 - [ ] Prepare some default wallpapers x colorschemes combinations
 - [x] Review theming via Noctalia is well managed in install scripts (try also to pass documentation to a GitHub Agent)
-- [ ] Explore better scrolling options and make MCHOSE devices specific configs (or just distinguish between touchpad and mouse)
+- [x] Explore better scrolling options and make MCHOSE devices specific configs (or just distinguish between touchpad and mouse)
 - [ ] Fix ksshaskpass Qt::font empty error
 - [x] Make add_note calls conditioned on the related modifications and patches to be applied (if they got skipped, notes should not be added), while in this README we put everything
-- [ ] Use a SVG-based cursor to have high quality cursor shake: <https://gemini.google.com/share/6d186e39cd13>
+- [x] Use a SVG-based cursor to have high quality cursor shake
