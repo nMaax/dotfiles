@@ -199,33 +199,6 @@ kbuildsycoca6 --noincremental
 info "🦉 Installing Noctalia..."
 paru -S --needed --noconfirm noctalia-shell
 
-# Create a bootstrap noctalia-colors.conf so Hyprland can start before Noctalia
-# has been launched for the first time. Noctalia will overwrite this file with
-# the real generated colors once it runs. We only create it if it is absent so
-# we never clobber Noctalia's own output.
-NOCTALIA_COLORS_FILE="$HOME/.config/hypr/noctalia/noctalia-colors.conf"
-if [ ! -f "$NOCTALIA_COLORS_FILE" ]; then
-  mkdir -p "$(dirname "$NOCTALIA_COLORS_FILE")"
-  cat > "$NOCTALIA_COLORS_FILE" <<'EOF'
-# Bootstrap fallback — Noctalia will replace this on first launch.
-$primary            = rgba(ff8cb3ff)
-$onPrimary          = rgba(000000ff)
-$secondary          = rgba(ffb3ccff)
-$onSecondary        = rgba(000000ff)
-$tertiary           = rgba(ffcce0ff)
-$onTertiary         = rgba(000000ff)
-$error              = rgba(ff99b8ff)
-$onError            = rgba(000000ff)
-$surface            = rgba(000000ff)
-$onSurface          = rgba(ffe0ebff)
-$surface_container  = rgba(1a0f16ff)
-$surface_lowest     = rgba(1a0f16ff)
-$onSurfaceVariant   = rgba(ff8cb3ff)
-$outline            = rgba(5a3f4dff)
-$shadow             = rgba(000000ff)
-EOF
-  success "Created bootstrap noctalia-colors.conf (Noctalia will overwrite this on first launch)."
-fi
 
 add_note "[NOCTALIA] All built-in templates are pre-enabled (GTK, Qt, KColorScheme, Ghostty, Hyprland, btop, Spicetify, Telegram, Zen Browser, cava, Discord, VSCode).
   Remaining MANUAL steps (require user interaction in-app):
@@ -242,9 +215,6 @@ add_note "[NOCTALIA] All built-in templates are pre-enabled (GTK, Qt, KColorSche
   • VSCODE: Install the 'NoctaliaTheme' extension from the marketplace, then select it via Ctrl+Shift+P → 'Preferences: Color Theme'.
   • STEAM (optional): Install Millennium + Material-Theme, select 'Matugen' in the theme color dropdown.
     See https://docs.noctalia.dev/theming/program-specific/steam/ for full steps.
-  • FLATPAK GTK apps: Run:
-      flatpak install org.gtk.Gtk3theme.adw-gtk3-dark
-      flatpak install org.gtk.Gtk3theme.adw-gtk3
   Documentation: https://docs.noctalia.dev/theming/basic-app-theming/"
 add_note "[NOCTALIA] ddcutil was installed by default, which may introduce system instability with certain monitors; remove it eventually with: sudo pacman -Rns ddcutil"
 
