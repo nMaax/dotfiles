@@ -39,7 +39,7 @@ else
 fi
 
 info "📦 Checking for missing base packages..."
-BASE_PACKAGES=(binutils base-devel git vim appmenu-gtk-module libdbusmenu-glib hyprland xdg-desktop-portal-hyprland ddcutil)
+BASE_PACKAGES=(binutils base-devel git vim cmake cpio appmenu-gtk-module libdbusmenu-glib hyprland xdg-desktop-portal-hyprland ddcutil)
 for pkg in "${BASE_PACKAGES[@]}"; do
   if ! pacman -Qi "$pkg" &>/dev/null; then
     info "    Installing missing package: $pkg"
@@ -230,6 +230,11 @@ if [ "$noctalia_fresh" -eq 1 ]; then
   Documentation: https://docs.noctalia.dev/theming/basic-app-theming/"
   add_note "[NOCTALIA] ddcutil was installed by default, which may introduce system instability with certain monitors; remove it eventually with: sudo pacman -Rns ddcutil"
 fi
+
+info "💧 Setting hyprland plugins..."
+hyprpm update
+hyprpm add https://github.com/VirtCode/hypr-dynamic-cursors
+hyprpm enable dynamic-cursors
 
 echo ""
 success "✅ [Stage 2] Apps and Noctalia installed."
