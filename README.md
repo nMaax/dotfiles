@@ -58,7 +58,10 @@ chezmoi init --apply nMaax
 
 ### 🔑 Keyring & Security
 
-- **KWallet:** Create a new wallet via `kwalletmanager` using your **user password** to enable automatic login. Have a look at offical documentation to set up keyring autologin and linking with Electrong apps.
+- **KWallet:** The install script patches PAM for all configurations (standard login, autologin, with or without LUKS encryption) and triggers the wallet creation dialog automatically. **When you are prompted to create a wallet** (either during install or the first time an application requests one), use **exactly** these settings:
+  - **Name:** `kdewallet` (the default; any other name will not be unlocked automatically by PAM)
+  - **Encryption:** `Blowfish` (required for `kwallet-pam` auto-unlock; GnuPG encryption is incompatible)
+  - **Password:** your current **user login password** (PAM unlocks the wallet by matching it against the login password)
   - [Arch Wiki: KDE Wallet](https://wiki.archlinux.org/title/KDE_Wallet)
   - [Electron Safe Storage Info](https://www.electronjs.org/docs/latest/api/safe-storage)
 
@@ -92,8 +95,8 @@ chezmoi init --apply nMaax
 
 ## 📝 TODOs
 
-- [ ] Generalize dotfiles keyring also for LUKS and SDDM auto-login
-- [ ] Add note in README about how to setup the new wallet when prompted (encryption: bowfish, name: kdewallet, password: same as user)
+- [x] Generalize dotfiles keyring also for LUKS and SDDM auto-login
+- [x] Add note in README about how to setup the new wallet when prompted (encryption: bowfish, name: kdewallet, password: same as user)
 - [ ] Use git filter-repo to scrub away binaries and easyeffects .config files (remind about irs files)
   - [ ] Maybe send Wallpapers, Gifs and Binaries to another repo and symlink here? I could use a git submodule
   - [ ] Also SilentSDDM Themese could be put in a different repo, and then linked via submodules or something
