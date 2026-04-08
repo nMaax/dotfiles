@@ -218,16 +218,16 @@ if [ -d "$ZEN_PROFILE_DIR" ]; then
 
   # Inject noctalia import into userChrome.css (idempotent)
   CHROME_CSS="$ZEN_PROFILE_DIR/chrome/userChrome.css"
-  CHROME_IMPORT="@import \"${HOME}/.cache/noctalia/zen-browser/zen-userChrome.css\";"
+  CHROME_IMPORT="@import \"$HOME/.cache/noctalia/zen-browser/zen-userChrome.css\";"
   if ! grep -qF "$CHROME_IMPORT" "$CHROME_CSS" 2>/dev/null; then
-    echo "$CHROME_IMPORT" >> "$CHROME_CSS"
+    printf '%s\n' "$CHROME_IMPORT" >> "$CHROME_CSS"
   fi
 
   # Inject noctalia import into userContent.css (idempotent)
   CONTENT_CSS="$ZEN_PROFILE_DIR/chrome/userContent.css"
-  CONTENT_IMPORT="@import \"${HOME}/.cache/noctalia/zen-browser/zen-userContent.css\";"
+  CONTENT_IMPORT="@import \"$HOME/.cache/noctalia/zen-browser/zen-userContent.css\";"
   if ! grep -qF "$CONTENT_IMPORT" "$CONTENT_CSS" 2>/dev/null; then
-    echo "$CONTENT_IMPORT" >> "$CONTENT_CSS"
+    printf '%s\n' "$CONTENT_IMPORT" >> "$CONTENT_CSS"
   fi
 
   success "Zen Browser userChrome theming configured. Restart Zen to apply colors."
