@@ -199,54 +199,45 @@ kbuildsycoca6 --noincremental
 info "🦉 Installing Noctalia..."
 paru -S --needed --noconfirm noctalia-shell
 
-info "🌐 Setting up Zen Browser theming..."
-ZEN_PROFILE_DIR=""
-if [ -f "$HOME/.zen/profiles.ini" ]; then
-  ZEN_PROFILE_DIR=$(awk -F= '/^Path=/ { print $2; exit }' "$HOME/.zen/profiles.ini")
-  [ -n "$ZEN_PROFILE_DIR" ] && ZEN_PROFILE_DIR="$HOME/.zen/$ZEN_PROFILE_DIR"
-fi
-
-if [ -d "$ZEN_PROFILE_DIR" ]; then
-  info "Zen profile found at $ZEN_PROFILE_DIR. Configuring userChrome theming..."
-  mkdir -p "$ZEN_PROFILE_DIR/chrome"
-
-  # Enable legacy userChrome.css support via user.js
-  USER_JS="$ZEN_PROFILE_DIR/user.js"
-  if ! grep -q "toolkit.legacyUserProfileCustomizations.stylesheets" "$USER_JS" 2>/dev/null; then
-    echo 'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);' >> "$USER_JS"
-  fi
-
-  # Inject noctalia import into userChrome.css (idempotent)
-  CHROME_CSS="$ZEN_PROFILE_DIR/chrome/userChrome.css"
-  CHROME_IMPORT="@import \"$HOME/.cache/noctalia/zen-browser/zen-userChrome.css\";"
-  if ! grep -qF "$CHROME_IMPORT" "$CHROME_CSS" 2>/dev/null; then
-    printf '%s\n' "$CHROME_IMPORT" >> "$CHROME_CSS"
-  fi
-
-  # Inject noctalia import into userContent.css (idempotent)
-  CONTENT_CSS="$ZEN_PROFILE_DIR/chrome/userContent.css"
-  CONTENT_IMPORT="@import \"$HOME/.cache/noctalia/zen-browser/zen-userContent.css\";"
-  if ! grep -qF "$CONTENT_IMPORT" "$CONTENT_CSS" 2>/dev/null; then
-    printf '%s\n' "$CONTENT_IMPORT" >> "$CONTENT_CSS"
-  fi
-
-  success "Zen Browser userChrome theming configured. Restart Zen to apply colors."
-else
-  warn "Zen Browser profile not found (Zen hasn't been launched yet). Theming will be configured on first login."
-  add_note "[ZEN BROWSER] Launch Zen Browser once to create your profile, then re-run:
-  chezmoi apply
-  This will automatically configure Noctalia theming in userChrome.css.
-  Alternatively, run manually inside your Zen profile's chrome/ directory:
-    echo '@import \"$HOME/.cache/noctalia/zen-browser/zen-userChrome.css\";' >> userChrome.css
-    echo '@import \"$HOME/.cache/noctalia/zen-browser/zen-userContent.css\";' >> userContent.css
-  And enable stylesheets in about:config:
-    toolkit.legacyUserProfileCustomizations.stylesheets = true
-  Then restart Zen Browser.
-  Also set Website Appearance to 'Auto' in Settings → General."
+# Create a bootstrap noctalia-colors.conf so Hyprland can start before Noctalia
+# has been launched for the first time. Noctalia will overwrite this file with
+# the real generated colors once it runs. We only create it if it is absent so
+# we never clobber Noctalia's own output.
+NOCTALIA_COLORS_FILE="$HOME/.config/hypr/noctalia/noctalia-colors.conf"
+if [ ! -f "$NOCTALIA_COLORS_FILE" ]; then
+  mkdir -p "$(dirname "$NOCTALIA_COLORS_FILE")"
+  cat > "$NOCTALIA_COLORS_FILE" <<'EOF'
+# Bootstrap fallback — Noctalia will replace this on first launch.
+$primary            = rgba(ff8cb3ff)
+$onPrimary          = rgba(000000ff)
+$secondary          = rgba(ffb3ccff)
+$onSecondary        = rgba(000000ff)
+$tertiary           = rgba(ffcce0ff)
+$onTertiary         = rgba(000000ff)
+$error              = rgba(ff99b8ff)
+$onError            = rgba(000000ff)
+$surface            = rgba(000000ff)
+$onSurface          = rgba(ffe0ebff)
+$surface_container  = rgba(1a0f16ff)
+$surface_lowest     = rgba(1a0f16ff)
+$onSurfaceVariant   = rgba(ff8cb3ff)
+$outline            = rgba(5a3f4dff)
+$shadow             = rgba(000000ff)
+EOF
+  success "Created bootstrap noctalia-colors.conf (Noctalia will overwrite this on first launch)."
 fi
 
 add_note "[NOCTALIA] All built-in templates are pre-enabled (GTK, Qt, KColorScheme, Ghostty, Hyprland, btop, Spicetify, Telegram, Zen Browser, cava, Discord, VSCode).
   Remaining MANUAL steps (require user interaction in-app):
+  • ZEN BROWSER: Noctalia generates the CSS automatically once its Zen template runs.
+    You still need to wire it up manually (one-time):
+      1. Open about:config → set toolkit.legacyUserProfileCustomizations.stylesheets = true
+      2. Open Settings → General → set Website Appearance to Auto
+      3. Add these two lines to <profile>/chrome/userChrome.css and userContent.css:
+           @import \"/home/$(whoami)/.cache/noctalia/zen-browser/zen-userChrome.css\";
+           @import \"/home/$(whoami)/.cache/noctalia/zen-browser/zen-userContent.css\";
+      4. Restart Zen Browser.
+    See https://docs.noctalia.dev/theming/program-specific/zen-browser/
   • DISCORD: Open Equibop → Settings → Themes → enable one of the two Noctalia themes.
   • VSCODE: Install the 'NoctaliaTheme' extension from the marketplace, then select it via Ctrl+Shift+P → 'Preferences: Color Theme'.
   • STEAM (optional): Install Millennium + Material-Theme, select 'Matugen' in the theme color dropdown.
