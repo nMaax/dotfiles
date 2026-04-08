@@ -52,9 +52,21 @@ chezmoi init --apply nMaax
 - **Documentation:** View further information at [docs.noctalia.dev](https://docs.noctalia.dev/).
 - **Stability Warning:** `ddcutil` is installed by default but may cause instability with certain monitors. You can remove it via:
     `sudo pacman -Rns ddcutil`
-- **Theming:** Enable consistent looks across your apps.
-  - [App Theming Guide](https://docs.noctalia.dev/theming/basic-app-theming/)
-  - **Zen Browser:** Try the [Zen-Zero theme](https://sameerasw.com/zen).
+- **Theming:** The following is automated by the install script (out-of-the-box):
+  - All Noctalia templates pre-enabled: GTK, Qt, KColorScheme, Ghostty, Hyprland, btop, Spicetify, Telegram, Zen Browser, cava, Discord, VSCode.
+  - GTK dark mode (`adw-gtk3` + `prefer-dark`) applied via `gsettings`.
+  - Qt theming via `qt6ct` with `QT_QPA_PLATFORMTHEME` set in Hyprland env.
+  - Zen Browser `userChrome.css` configured automatically if Zen has been launched at least once before `chezmoi apply` runs (otherwise, re-run `chezmoi apply` after first Zen launch).
+  - **Remaining manual steps** (require in-app interaction):
+    - **Discord:** Open Equibop → Settings → Themes → enable one of the two Noctalia themes.
+    - **VSCode:** Install the `NoctaliaTheme` extension from the marketplace, then select it via `Ctrl+Shift+P` → *Preferences: Color Theme*.
+    - **Steam (optional):** Install [Millennium](https://docs.steambrew.app/users/getting-started/installation) + [Material-Theme](https://steambrew.app/theme?id=ipYjqODds05KMcvh7QJn), select *Matugen* in the theme color dropdown. See the [Steam theming guide](https://docs.noctalia.dev/theming/program-specific/steam/).
+    - **Flatpak GTK apps:** Install sandbox theme variants:
+      ```sh
+      flatpak install org.gtk.Gtk3theme.adw-gtk3-dark
+      flatpak install org.gtk.Gtk3theme.adw-gtk3
+      ```
+  - **Zen Browser appearance:** Try the [Zen-Zero theme](https://sameerasw.com/zen).
 
 ### 🔑 Keyring & Security
 
@@ -97,4 +109,4 @@ chezmoi init --apply nMaax
   - [ ] Maybe send Wallpapers, Gifs and Binaries to another repo and symlink here? I could use a git submodule
   - [ ] Also SilentSDDM Themese could be put in a different repo, and then linked via submodules or something
 - [ ] Prepare some default wallpapers x colorschemes combinations
-- [ ] Review theming via Noctalia is well managed in install scripts (try also to pass documentation to a GitHub Agent)
+- [x] Review theming via Noctalia is well managed in install scripts (try also to pass documentation to a GitHub Agent)
