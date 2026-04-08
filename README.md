@@ -90,11 +90,98 @@ chezmoi init --apply nMaax
 
 > For more details, visit the [CachyOS Gaming Wiki](https://wiki.cachyos.org/configuration/gaming).
 
+## 🗂️ Asset Submodules
+
+Binary assets (wallpapers, avatar, logo) and custom SDDM theme files are **not** stored in this
+repository. They live in dedicated repos referenced as git submodules:
+
+| Submodule path | Repository | Contents |
+|---|---|---|
+| `assets/` | [`nMaax/dotfiles-assets`](https://github.com/nMaax/dotfiles-assets) | `.face`, `.logo`, `wallpapers/` |
+| `sddm-silent-custom/` | [`nMaax/sddm-silent-custom`](https://github.com/nMaax/sddm-silent-custom) | Custom Silent SDDM theme overrides |
+
+The chezmoi `run_once_before_00_submodules.sh.tmpl` script automatically initialises these
+submodules and copies the assets to the correct home-directory paths before the rest of the
+install runs.
+
+### Fresh clone / after adding the remote repos
+
+```bash
+git submodule update --init --recursive
+```
+
+### Migrating existing binary files into the assets repo
+
+```bash
+# 1. Create & populate the assets repo
+git clone https://github.com/nMaax/dotfiles-assets /tmp/dotfiles-assets
+cp ~/.face /tmp/dotfiles-assets/.face
+cp ~/.logo /tmp/dotfiles-assets/.logo
+mkdir -p /tmp/dotfiles-assets/wallpapers
+cp ~/Pictures/Wallpapers/* /tmp/dotfiles-assets/wallpapers/
+cd /tmp/dotfiles-assets && git add . && git commit -m "chore: initial assets" && git push
+
+# 2. Register the submodule in this repo (if not already done)
+cd ~/dotfiles   # or wherever chezmoi source lives
+git submodule add https://github.com/nMaax/dotfiles-assets.git assets
+git commit -m "chore: add dotfiles-assets submodule"
+```
+
+## 🧹 Scrubbing Binary History
+
+Use [`git filter-repo`](https://github.com/newren/git-filter-repo) to permanently remove
+binary files (images, video, audio, EasyEffects `.irs` impulse-response files) from the entire
+git history. **This rewrites history – coordinate with any collaborators first.**
+
+```bash
+# Install git-filter-repo
+sudo pacman -S git-filter-repo   # or: paru -S git-filter-repo
+
+# Remove all image / video / audio / binary artefacts from history
+git filter-repo --invert-paths \
+  --path-glob '*.jpg'  \
+  --path-glob '*.jpeg' \
+  --path-glob '*.png'  \
+  --path-glob '*.gif'  \
+  --path-glob '*.webp' \
+  --path-glob '*.webm' \
+  --path-glob '*.mp4'  \
+  --path-glob '*.mkv'  \
+  --path-glob '*.avi'  \
+  --path-glob '*.mov'  \
+  --path-glob '*.mp3'  \
+  --path-glob '*.ogg'  \
+  --path-glob '*.flac' \
+  --path-glob '*.wav'  \
+  --path-glob '*.ttf'  \
+  --path-glob '*.otf'  \
+  --path-glob '*.woff' \
+  --path-glob '*.woff2'\
+  --path-glob '*.ico'  \
+  --path-glob '*.bmp'  \
+  --path-glob '*.tiff' \
+  --path-glob '*.bin'  \
+  --path-glob '*.irs'  \
+  --path 'dot_face'    \
+  --path 'dot_logo'    \
+  --path 'Pictures/'
+
+# Also scrub any EasyEffects config files that were accidentally tracked
+git filter-repo --invert-paths \
+  --path 'dot_config/easyeffects/'
+
+# Force-push the rewritten history
+git push origin --force --all
+git push origin --force --tags
+```
+
+> **After the scrub:** run `git gc --prune=now --aggressive` to reclaim disk space.
+
 ## 📝 TODOs
 
-- [ ] Double check SSDM and keyring PAM signal with kwallet
-- [ ] Use git filter-repo to scrub away binaries and easyeffects .config files (remind about irs files)
-  - [ ] Maybe send Wallpapers, Gifs and Binaries to another repo and symlink here? I could use a git submodule
-  - [ ] Also SilentSDDM Themese could be put in a different repo, and then linked via submodules or something
-- [ ] Prepare some default wallpapers x colorschemes combinations
+- [ ] Double check SDDM and keyring PAM signal with kwallet
+- [x] Move wallpapers, .face and .logo to `dotfiles-assets` submodule *(see `assets/README.md`)*
+- [x] Move Silent SDDM custom theme files to `sddm-silent-custom` submodule *(see `sddm-silent-custom/README.md`)*
+- [x] Add `git filter-repo` commands to scrub binary history *(see above)*
+- [ ] Prepare some default wallpapers × colorschemes combinations
 - [ ] Review theming via Noctalia is well managed in install scripts (try also to pass documentation to a GitHub Agent)

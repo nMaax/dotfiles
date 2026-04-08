@@ -4,6 +4,44 @@
 !.local/
 !.ssh/
 
+# --- ASSETS (managed via git submodule + run script, not chezmoi source mapping) ---
+# .face and .logo are copied by run_once_before_00_submodules.sh.tmpl
+assets
+assets/**
+sddm-silent-custom
+sddm-silent-custom/**
+.face
+.logo
+Pictures
+Pictures/**
+
+# --- BINARY FILE TYPES (never map images/video/audio through chezmoi source) ---
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webp
+*.webm
+*.mp4
+*.mkv
+*.avi
+*.mov
+*.ico
+*.bmp
+*.tiff
+*.svg
+*.ttf
+*.otf
+*.woff
+*.woff2
+*.eot
+*.irs
+*.wav
+*.flac
+*.mp3
+*.ogg
+*.bin
+
 # --- CONFIG ---
 .config/*
 !.config/fastfetch/

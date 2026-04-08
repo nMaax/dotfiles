@@ -1,0 +1,44 @@
+# ---------------------------------------------------------------------------
+# dotfiles – .gitattributes
+# ---------------------------------------------------------------------------
+# Mark binary file types so that git treats them correctly and so that
+# reviewers / CI can flag accidental binary commits early.
+# ---------------------------------------------------------------------------
+
+# Images
+*.jpg      binary
+*.jpeg     binary
+*.png      binary
+*.gif      binary
+*.webp     binary
+*.webm     binary
+*.bmp      binary
+*.ico      binary
+*.tiff     binary
+*.tif      binary
+
+# Video / Audio
+*.mp4      binary
+*.mkv      binary
+*.avi      binary
+*.mov      binary
+*.mp3      binary
+*.ogg      binary
+*.flac     binary
+*.wav      binary
+
+# Fonts
+*.ttf      binary
+*.otf      binary
+*.woff     binary
+*.woff2    binary
+*.eot      binary
+
+# EasyEffects / audio impulse-response files (were previously mis-tracked)
+*.irs      binary
+
+# Generic compiled/binary artefacts
+*.bin      binary
+*.so       binary
+*.a        binary
+*.o        binary

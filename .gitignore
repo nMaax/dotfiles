@@ -1,0 +1,56 @@
+# ---------------------------------------------------------------------------
+# dotfiles root .gitignore
+# ---------------------------------------------------------------------------
+# Prevent binary assets from ever being committed directly to this repo.
+# Wallpapers, avatars, logos etc. belong in the dotfiles-assets submodule.
+# EasyEffects and other binary artefacts should stay out of version control.
+# ---------------------------------------------------------------------------
+
+# --- Avatar / logo (managed via assets/ submodule) ---
+dot_face
+dot_logo
+.face
+.logo
+
+# --- Wallpapers / Pictures (managed via assets/ submodule) ---
+Pictures/
+
+# --- Binary image / video / audio types ---
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webp
+*.webm
+*.mp4
+*.mkv
+*.avi
+*.mov
+*.bmp
+*.ico
+*.tiff
+*.tif
+*.svg
+
+# --- Font binaries ---
+*.ttf
+*.otf
+*.woff
+*.woff2
+*.eot
+
+# --- Audio / Impulse Response files (EasyEffects etc.) ---
+*.irs
+*.wav
+*.flac
+*.mp3
+*.ogg
+
+# --- Compiled / generic binary artefacts ---
+*.bin
+*.so
+*.a
+*.o
+
+# --- EasyEffects config (was accidentally tracked) ---
+dot_config/easyeffects/

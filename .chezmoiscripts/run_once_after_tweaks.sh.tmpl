@@ -100,6 +100,20 @@ if [ -f "$USER_FACE" ]; then
   success "Avatar updated successfully."
 else
   warn "$USER_FACE not found. Skipping avatar change."
+  warn "Ensure the assets submodule is initialised (see assets/README.md)."
+fi
+
+# Apply custom Silent SDDM theme overlays from the sddm-silent-custom submodule (if present).
+# This is an *additive* overlay: files in the AUR theme that are NOT in the submodule are kept.
+# Only files present in sddm-silent-custom/ are copied / updated.
+SDDM_CUSTOM_DIR="{{ .chezmoi.sourceDir }}/sddm-silent-custom"
+if [ -d "$SDDM_CUSTOM_DIR" ] && [ -n "$(ls -A "$SDDM_CUSTOM_DIR" 2>/dev/null | grep -v README)" ]; then
+  info "🎨 Applying custom Silent SDDM theme overlay from submodule..."
+  sudo cp -r "$SDDM_CUSTOM_DIR/." "$SILENT_SDDM_DIR/"
+  success "Custom SDDM theme overlay applied from $SDDM_CUSTOM_DIR."
+else
+  info "sddm-silent-custom/ is empty or not initialised – using stock AUR theme."
+  info "To add custom theme files, see sddm-silent-custom/README.md."
 fi
 
 add_note "[SILENT SDDM] Remind to select systemd owned Hyprland at login in SDDM, in order to enable specific autostarts to work."

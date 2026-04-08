@@ -1,0 +1,9 @@
+[submodule "assets"]
+	path = assets
+	url = https://github.com/nMaax/dotfiles-assets.git
+	ignore = untracked
+
+[submodule "sddm-silent-custom"]
+	path = sddm-silent-custom
+	url = https://github.com/nMaax/sddm-silent-custom.git
+	ignore = untracked

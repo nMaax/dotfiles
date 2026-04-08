@@ -1,0 +1,71 @@
+#!/bin/bash
+set -euo pipefail
+
+{{ template "utils.sh.tmpl" . }}
+
+{{- if ne .chezmoi.osRelease.id "cachyos" }}
+echo "This script is intended to run on CachyOS."
+echo "Did nothing, will close now."
+exit 1
+{{- end }}
+
+echo ""
+info "🔗 [Stage 0] Initialising git submodules (assets + sddm-silent-custom)..."
+echo ""
+
+DOTFILES_SOURCE="{{ .chezmoi.sourceDir }}"
+
+# ---------------------------------------------------------------------------
+# Initialise submodules
+# ---------------------------------------------------------------------------
+if [ -f "$DOTFILES_SOURCE/.gitmodules" ]; then
+  info "Running git submodule update --init --recursive..."
+  git -C "$DOTFILES_SOURCE" submodule update --init --recursive 2>&1 || \
+    warn "Could not initialise all submodules – the remote repos may not exist yet. Continuing without them."
+else
+  info "No .gitmodules found; skipping submodule init."
+fi
+
+# ---------------------------------------------------------------------------
+# Install assets: .face, .logo, wallpapers
+# ---------------------------------------------------------------------------
+ASSETS_DIR="$DOTFILES_SOURCE/assets"
+
+if [ -d "$ASSETS_DIR" ] && [ -n "$(ls -A "$ASSETS_DIR" 2>/dev/null | grep -v README)" ]; then
+  info "📦 Installing assets from submodule..."
+
+  # .face  → ~/.face
+  if [ -f "$ASSETS_DIR/.face" ]; then
+    cp -f "$ASSETS_DIR/.face" "$HOME/.face"
+    success "Installed ~/.face"
+  else
+    warn "$ASSETS_DIR/.face not found – skipping."
+  fi
+
+  # .logo  → ~/.logo
+  if [ -f "$ASSETS_DIR/.logo" ]; then
+    cp -f "$ASSETS_DIR/.logo" "$HOME/.logo"
+    success "Installed ~/.logo"
+  else
+    warn "$ASSETS_DIR/.logo not found – skipping."
+  fi
+
+  # wallpapers/ → ~/Pictures/Wallpapers/
+  # cp -rf overwrites existing managed wallpapers so updates from the submodule are always applied.
+  # Files already in ~/Pictures/Wallpapers/ that are NOT in the submodule are left untouched.
+  if [ -d "$ASSETS_DIR/wallpapers" ] && [ -n "$(ls -A "$ASSETS_DIR/wallpapers" 2>/dev/null)" ]; then
+    mkdir -p "$HOME/Pictures/Wallpapers"
+    cp -rf "$ASSETS_DIR/wallpapers/." "$HOME/Pictures/Wallpapers/"
+    success "Installed wallpapers to ~/Pictures/Wallpapers/"
+  else
+    warn "$ASSETS_DIR/wallpapers/ empty or missing – skipping."
+  fi
+else
+  warn "assets/ submodule is empty or not initialised. Run:"
+  warn "  git -C \"$DOTFILES_SOURCE\" submodule update --init assets"
+  warn "after creating https://github.com/nMaax/dotfiles-assets"
+fi
+
+echo ""
+success "✅ [Stage 0] Submodule setup complete."
+echo ""
