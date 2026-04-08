@@ -119,12 +119,12 @@ PAM_EOF
 fi
 
 info "🔑 Checking KDE Wallet 'kdewallet'..."
-# Fully silent/non-interactive wallet creation is not supported by the kwalletd6 D-Bus API.
-# We leave a note so the user creates it manually with the correct settings.
 KWALLET_FILE="$HOME/.local/share/kwalletd/kdewallet.kwl"
 if [ -f "$KWALLET_FILE" ]; then
   success "KWallet 'kdewallet' already exists ($KWALLET_FILE). Skipping."
 else
+  # Fully silent/non-interactive wallet creation is not supported by the kwalletd6 D-Bus API.
+  # We leave a note so the user creates it manually with the correct settings.
   add_note "[KWALLET] Create the wallet manually via kwalletmanager (or the first app that asks for it) using: Name=kdewallet | Encryption=Blowfish (NOT GnuPG — required for kwallet-pam auto-unlock) | Password=your login password"
 fi
 
