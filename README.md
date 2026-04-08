@@ -11,17 +11,20 @@ Managed using [chezmoi](https://www.chezmoi.io/).
 Due to a dependency loop during fresh installation (Chezmoi evaluates templates — including the SSH config that calls `keepassxc-cli` — *before* running any install scripts), the following steps **must be performed manually** before running `chezmoi init --apply`:
 
 1. **Install MEGA CMD and KeePassXC:**
+
    ```fish
    sudo pacman -S keepassxc
    paru -S megacmd-bin
    ```
 
 2. **Log into MEGA:**
+
    ```fish
    mega-login
    ```
 
 3. **Set up the MEGA sync for the root folder containing the KeePass database:**
+
    ```fish
    mkdir -p ~/MEGA
    mega-sync ~/MEGA/ /
@@ -94,5 +97,4 @@ chezmoi init --apply nMaax
   - [ ] Maybe send Wallpapers, Gifs and Binaries to another repo and symlink here? I could use a git submodule
   - [ ] Also SilentSDDM Themese could be put in a different repo, and then linked via submodules or something
 - [ ] Prepare some default wallpapers x colorschemes combinations
-- [ ] Review keybindings and cleanup cheatsheet to be readable
 - [ ] Review theming via Noctalia is well managed in install scripts (try also to pass documentation to a GitHub Agent)
