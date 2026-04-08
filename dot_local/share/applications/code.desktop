@@ -2,7 +2,7 @@
 Name=Visual Studio Code
 Comment=Code Editing. Redefined.
 GenericName=Text Editor
-Exec=/usr/bin/code --password-store=kwallet6 %F
+Exec=/usr/bin/code --password-store=kwallet5 %F
 Icon=visual-studio-code
 Type=Application
 StartupNotify=false
@@ -24,5 +24,5 @@ Name[ko]=새 빈 창
 Name[ru]=Новое пустое окно
 Name[zh_CN]=新建空窗口
 Name[zh_TW]=開新空視窗
-Exec=/usr/bin/code --new-window --password-store=kwallet6 %F
+Exec=/usr/bin/code --new-window --password-store=kwallet5 %F
 Icon=visual-studio-code
