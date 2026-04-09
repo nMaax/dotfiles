@@ -348,7 +348,7 @@
     },
     "desktopWidgets": {
         "enabled": true,
-        "gridSnap": false,
+        "gridSnap": true,
         "gridSnapScale": false,
         "monitorWidgets": [
             {
@@ -370,6 +370,19 @@
                         "showBackground": true,
                         "useCustomFont": false,
                         "x": 100,
+                        "y": 100
+                    },
+                    {
+                        "hideMode": "visible",
+                        "id": "MediaPlayer",
+                        "roundedCorners": true,
+                        "scale": 1.1454172461205772,
+                        "showAlbumArt": true,
+                        "showBackground": true,
+                        "showButtons": false,
+                        "showVisualizer": false,
+                        "visualizerType": "linear",
+                        "x": 1420,
                         "y": 100
                     }
                 ]
