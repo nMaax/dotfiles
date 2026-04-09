@@ -117,6 +117,7 @@ Qt theming is **not** managed by chezmoi — configure it manually via the GUIs 
 - [ ] Use git filter-repo to scrub away binaries and easyeffects .config files (remind about irs files)
   - [ ] Maybe send Wallpapers, Gifs and Binaries to another repo and symlink here? I could use a git submodule
   - [ ] Also SilentSDDM Themese could be put in a different repo, and then linked via submodules or something
+  - [ ] Find wallpapers also from wallpaper engine store on steam, look for Wallhack
 - [ ] Prepare some default wallpapers x colorschemes combinations
 - [x] Review theming via Noctalia is well managed in install scripts (try also to pass documentation to a GitHub Agent)
 - [x] Explore better scrolling options and make MCHOSE devices specific configs (or just distinguish between touchpad and mouse)
