@@ -689,10 +689,6 @@
             },
             {
                 "enabled": true,
-                "id": "kcolorscheme"
-            },
-            {
-                "enabled": true,
                 "id": "hyprland"
             },
             {
@@ -730,6 +726,10 @@
             {
                 "enabled": true,
                 "id": "code"
+            },
+            {
+                "enabled": true,
+                "id": "kcolorscheme"
             }
         ],
         "enableUserTheming": true
