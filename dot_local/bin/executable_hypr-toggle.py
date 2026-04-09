@@ -66,7 +66,7 @@ class Command:
             "sysmon": {
                 "btop": {
                     "enable": True,
-                    "match": [{"title": "btop"}],
+                    "match": [{"title": "btop"}, {"title": "nvtop"}],
                     "command": ["ghostty", "-e", "btop"],
                     "move": True,
                 },
