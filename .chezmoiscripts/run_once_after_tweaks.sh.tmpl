@@ -36,7 +36,7 @@ systemctl --user enable --now ssh-agent
 sleep 2
 
 if [ -f /etc/default/grub ] && command -v grub-mkconfig >/dev/null; then
-  info "Sanitizing GRUB to plain console (removing CachyOS theme)..."
+  info "📄 Sanitizing GRUB to plain console (removing CachyOS theme)..."
   grub_changed=0
   if grep -q "^GRUB_THEME=" /etc/default/grub; then
     sudo sed -i "s|^GRUB_THEME=|#GRUB_THEME=|g" /etc/default/grub
@@ -58,8 +58,10 @@ info "🔐 Patching PAM for KWallet auto-unlock at login (all configurations)...
 # which ships ksecretd instead of the old kwalletd5. pam_kwallet5.so must therefore
 # explicitly point to ksecretd — this applies regardless of whether you run full Plasma
 # or individual KDE apps inside Hyprland (or any other WM).
+#
 # Without the kwalletd= parameter, pam_kwallet5.so tries to start the absent kwalletd5
 # daemon and auto-unlock silently fails.
+#
 # We handle every combination of LUKS encryption and SDDM autologin:
 #
 #   Standard login (no autologin), ±LUKS  → patch /etc/pam.d/sddm
@@ -70,7 +72,7 @@ info "🔐 Patching PAM for KWallet auto-unlock at login (all configurations)...
 # See: https://wiki.archlinux.org/title/KDE_Wallet#Configure_PAM_on_Plasma_6_(KF6)
 # See: https://wiki.archlinux.org/title/KDE_Wallet#Using_SDDM_autologin_and_LUKS_encryption
 
-# --- Standard SDDM login (covers ±LUKS, no autologin) ---
+# --- SDDM login (covers ±LUKS) ---
 if [ ! -f /etc/pam.d/sddm ]; then
   warn "/etc/pam.d/sddm not found. Skipping KWallet SDDM PAM patch."
 elif grep -q "kwalletd=/usr/bin/ksecretd" /etc/pam.d/sddm; then
@@ -82,12 +84,14 @@ fi
 
 # --- SDDM autologin (present only when the user enabled autologin) ---
 if [ ! -f /etc/pam.d/sddm-autologin ]; then
-  info "No /etc/pam.d/sddm-autologin found — SDDM autologin not configured. Skipping autologin KWallet patch."
+  warn "No /etc/pam.d/sddm-autologin found — SDDM autologin not configured. Skipping autologin KWallet patch."
 elif grep -q "pam_kwallet5\.so.*kwalletd=/usr/bin/ksecretd" /etc/pam.d/sddm-autologin; then
   success "/etc/pam.d/sddm-autologin already patched for KWallet. Skipping."
 else
   if lsblk -rno TYPE 2>/dev/null | grep -q "^crypt$" || [ -s /etc/crypttab ]; then
+    # --- Autologin with LUKS ---
     info "Autologin + LUKS detected — adding pam_systemd_loadkey + pam_kwallet5 to sddm-autologin..."
+
     # pam_systemd_loadkey passes the LUKS passphrase from the kernel keyring so that
     # pam_kwallet5 can unlock the wallet without a second interactive prompt.
     sudo tee -a /etc/pam.d/sddm-autologin >/dev/null <<'PAM_EOF'
@@ -95,6 +99,7 @@ else
 -auth       optional    pam_kwallet5.so
 -session    optional    pam_kwallet5.so auto_start kwalletd=/usr/bin/ksecretd
 PAM_EOF
+
     # SDDM must inherit the kernel keyring populated by the bootloader at LUKS unlock time.
     SDDM_DROP_IN="/etc/systemd/system/sddm.service.d/keyringmode.conf"
     if [ -f "$SDDM_DROP_IN" ] && grep -q "KeyringMode=inherit" "$SDDM_DROP_IN"; then
@@ -109,6 +114,7 @@ DROPIN_EOF
       success "Created SDDM KeyringMode=inherit drop-in at $SDDM_DROP_IN"
     fi
   else
+    # --- Autologin without LUKS ---
     info "Autologin without LUKS detected — adding pam_kwallet5 to sddm-autologin..."
     sudo tee -a /etc/pam.d/sddm-autologin >/dev/null <<'PAM_EOF'
 -auth       optional    pam_kwallet5.so
@@ -125,6 +131,7 @@ if [ -f "$KWALLET_FILE" ]; then
 else
   # Fully silent/non-interactive wallet creation is not supported by the kwalletd6 D-Bus API.
   # We leave a note so the user creates it manually with the correct settings.
+  info "KWallet not found, noting it for later..."
   add_note "[KWALLET] Create the wallet manually via kwalletmanager (or the first app that asks for it) using: Name=kdewallet | Encryption=Blowfish (NOT GnuPG — required for kwallet-pam auto-unlock) | Password=your login password"
 fi
 
@@ -223,22 +230,6 @@ if pacman -Q cachyos-gaming-applications cachyos-gaming-meta >/dev/null 2>&1; th
   sudo pacman -S --needed --noconfirm mangohud
   paru -S --needed --noconfirm mangojuice
 
-  info "🖱️ Configuring Hyprland mouse settings..."
-  HYPR_CONF="$HOME/.config/hypr/hyprland.conf"
-
-  if [ -f "$HYPR_CONF" ]; then
-    # Set sensitivity to 0
-    sed -i 's/^[[:space:]]*sensitivity[[:space:]]*=.*/    sensitivity = 0/' "$HYPR_CONF"
-
-    # Disable mouse acceleration (handles both legacy and modern Hyprland syntax)
-    sed -i 's/^[[:space:]]*force_no_accel[[:space:]]*=.*/    force_no_accel = true/' "$HYPR_CONF"
-    sed -i 's/^[[:space:]]*accel_profile[[:space:]]*=.*/    accel_profile = flat/' "$HYPR_CONF"
-
-    success "Hyprland mouse acceleration disabled and sensitivity set to 0."
-  else
-    info "Hyprland config not found at $HYPR_CONF. Skipping mouse tweak."
-  fi
-
   if pacman -Q gamemode >/dev/null 2>&1; then
     info "Feral's gamemode detected. Checking for ananicy-cpp conflicts..."
     if systemctl is-enabled --quiet ananicy-cpp 2>/dev/null || systemctl is-active --quiet ananicy-cpp 2>/dev/null; then
@@ -297,6 +288,25 @@ else
   info "No gaming packages detected. Skipping gaming tweaks."
 fi
 
+echo "🌐 Installing Tailscale..."
+sudo pacman -S --noconfirm --needed tailscale
+
+echo "🌐 Enabling Tailscale daemon..."
+sudo systemctl enable --now tailscaled
+sleep 2
+
+{{- if .tailscale_authkey }}
+echo "🔑 Authenticating Tailscale using provided authkey..."
+if sudo tailscale status 2>/dev/null | grep -qE "^[0-9]+\.[0-9]"; then
+  echo "✅ Tailscale already connected. Skipping."
+else
+  sudo tailscale up --ssh --authkey="{{ .tailscale_authkey }}"
+  echo "✅ Tailscale connected successfully."
+fi
+{{- else }}
+echo "⚠️ No 'tailscale_authkey' found in chezmoi.toml. Skipping auto-login."
+{{- end }}
+
 echo "🏔️ Installing NordVPN from AUR..."
 paru -S --noconfirm --needed nordvpn-bin
 
@@ -324,25 +334,6 @@ if sg nordvpn -c "nordvpn status" | grep -E -q "Status: (Connected|Disconnected)
 fi
 {{- else }}
 echo "⚠️ No 'nordvpn_token' found in chezmoi.toml. Skipping auto-login."
-{{- end }}
-
-echo "🌐 Installing Tailscale..."
-sudo pacman -S --noconfirm --needed tailscale
-
-echo "🌐 Enabling Tailscale daemon..."
-sudo systemctl enable --now tailscaled
-sleep 2
-
-{{- if .tailscale_authkey }}
-echo "🔑 Authenticating Tailscale using provided authkey..."
-if sudo tailscale status 2>/dev/null | grep -qE "^[0-9]+\.[0-9]"; then
-  echo "✅ Tailscale already connected. Skipping."
-else
-  sudo tailscale up --ssh --authkey="{{ .tailscale_authkey }}"
-  echo "✅ Tailscale connected successfully."
-fi
-{{- else }}
-echo "⚠️ No 'tailscale_authkey' found in chezmoi.toml. Skipping auto-login."
 {{- end }}
 
 echo ""
