@@ -129,3 +129,4 @@ Remaining manual steps (require in-app interaction):
   - Idea: this README contains everything, in any case, as a fallback. But maybe I should rely more on outsourcing to the main sources when possible to not fall out-of date; then I make the add_notes() and related document tailored on the user specifications
 - [x] Make add_note calls conditioned on the related modifications and patches to be applied (if they got skipped, notes should not be added), while in this README we put everything
 - [x] Use a SVG-based cursor to have high quality cursor shake
+- [ ] Once everything is finished, add screenshoots and videos in this README
