@@ -4,41 +4,36 @@ Personal dotfiles and system configurations, just the way I like it.
 
 These dotfiles are heavily based on **CachyOS** (not just Arch), specifically the various packages that Cachy ships (fish, varuous KDE bloat etc.). Ideally you should have installed CachyOS selecting for hyprland during the Calamares installation.
 
-Managed using [chezmoi](https://www.chezmoi.io/).
+> Managed using [chezmoi](https://www.chezmoi.io/).
 
-## ⚠️ Manual Prerequisites
+## 🧁 Installation
 
-Due to a dependency loop during fresh installation (Chezmoi evaluates templates — including the SSH config that calls `keepassxc-cli` — *before* running any install scripts), the following steps **must be performed manually** before running `chezmoi init --apply`:
-
-1. **Install MEGA CMD and KeePassXC:**
+1. Tweak CachyOS via the CachyOS Hello app and apply your preferred baseline system tweaks, remind to enable cachy-update;
+2. Prepare your chezmoi.toml configuration file with your specific variables, use another device with it to find the format;
+3. Install MEGA CMD and KeePassXC
 
    ```fish
    sudo pacman -S keepassxc
    paru -S megacmd-bin
    ```
 
-2. **Log into MEGA:**
+4. Log into MEGA
 
    ```fish
    mega-login
    ```
 
-3. **Set up the MEGA sync for the root folder containing the KeePass database:**
+5. Set up the MEGA sync for the root folder containing the KeePass database
 
    ```fish
    mkdir -p ~/MEGA
    mega-sync ~/MEGA/ /
    ```
 
-4. **Wait for the sync to complete**, then verify that both the KeePass database (`.kdbx` file) and the keyfile are present locally.
-
-5. **Create `~/.config/chezmoi/chezmoi.toml`** with the correct KeePassXC database path and keyfile path. Use an existing device to copy the correct format and values.
-
-## 🧁 Installation
-
-1. Tweak CachyOS via the CachyOS Hello app and apply your preferred baseline system tweaks, remind to enable cachy-update;
-2. Prepare your chezmoi.toml configuration file with your specific variables, use another device with it to find the format;
-3. Finally install chezmoi and apply the dotfiles:
+6. Wait for the sync to complete**, then verify that the KeePass database (`.kdbx` file) is present locally;
+7. Add the keyfile manually from another device;
+8. Create `~/.config/chezmoi/chezmoi.toml` with the correct data (use another device as template);
+9. Finally install chezmoi and apply the dotfiles
 
 ```fish
 pacman -S chezmoi
