@@ -2,6 +2,7 @@
 set -euo pipefail
 
 {{ template "utils.sh.tmpl" . }}
+{{ template "external_links.sh.tmpl" . }}
 
 {{- if ne .chezmoi.osRelease.id "cachyos" }}
 echo "This script is intended to run on CachyOS."
@@ -210,7 +211,7 @@ rm -f "$UDEV_RULE_TMP"
 
 info "Downloading EasyEffects Community Presets... (⚠️ not really the Arch way, but it doesnt touch anything outside home/)"
 if [ -z "$(ls -A "$HOME/.config/easyeffects/db/" 2>/dev/null)" ]; then
-  bash <(curl -fsSL https://raw.githubusercontent.com/JackHack96/EasyEffects-Presets/master/install.sh)
+  bash <(curl -fsSL "$EASYEFFECTS_PRESETS_INSTALL_URL")
 else
   success "EasyEffects Presets already installed, skipping."
 fi

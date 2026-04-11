@@ -2,6 +2,7 @@
 set -euo pipefail
 
 {{ template "utils.sh.tmpl" . }}
+{{ template "external_links.sh.tmpl" . }}
 
 # For the future: move to shelly when it becomes default in CachyOS
 
@@ -89,16 +90,14 @@ info "🍎 Installing Apple Fonts..."
 paru -S --needed --noconfirm apple-fonts
 
 # Install Apple Emoji
-EMOJI_URL="https://github.com/samuelngs/apple-emoji-ttf/releases/download/macos-26-20260219-2aa12422/ttf-apple-emoji.pkg.tar.zst"
 EMOJI_FILE="/tmp/ttf-apple-emoji.pkg.tar.zst"
-EXPECTED_SHA="6ca3fcda54437675e8ea55cdc1ad06d4c33b485b04eadd0e74763f040bf9c021" # Last Update: 19 Feb 2026
 
 if ! pacman -Qs ttf-apple-emoji >/dev/null; then
   info "📥 Downloading verified Apple Emoji package..."
-  curl -L "$EMOJI_URL" -o "$EMOJI_FILE"
+  curl -L "$APPLE_EMOJI_URL" -o "$EMOJI_FILE"
 
   # Verify hash before installing, since this is not taken from pacman repo or AUR
-  if echo "$EXPECTED_SHA  $EMOJI_FILE" | sha256sum -c -; then
+  if echo "$APPLE_EMOJI_SHA256  $EMOJI_FILE" | sha256sum -c -; then
     sudo pacman -U --noconfirm "$EMOJI_FILE"
     success "Apple Emoji installed successfully."
   else
@@ -145,7 +144,7 @@ MARKETPLACE_DIR="$SPICETIFY_CONFIG_DIR/CustomApps/marketplace"
 if [ ! -d "$COMFY_DIR" ]; then
   info "Installing Comfy theme for Spicetify..."
   cd "$SPICETIFY_THEMES_DIR"
-  git clone https://github.com/Comfy-Themes/Spicetify.git ComfyRepo
+  git clone "$SPICETIFY_COMFY_REPO" ComfyRepo
   mv ./ComfyRepo/Comfy/ ./
   rm -rf ./ComfyRepo/
   spicetify config current_theme Comfy color_scheme Comfy
@@ -158,7 +157,7 @@ fi
 
 info "Installing Spicetify Marketplace...  (⚠️ not really the Arch way, but it doesnt touch anything outside home/)"
 if [ ! -d "$MARKETPLACE_DIR" ] || [ -z "$(ls -A "$MARKETPLACE_DIR")" ]; then
-  curl -fsSL https://raw.githubusercontent.com/spicetify/marketplace/main/resources/install.sh | sh
+  curl -fsSL "$SPICETIFY_MARKETPLACE_INSTALL_URL" | sh
 else
   success "Spicetify Marketplace already installed, skipping."
 fi
@@ -239,7 +238,7 @@ CURSOR_DEST="$HOME/.local/share/icons/Bibata-Modern-Classic"
 
 if [ ! -d "$CURSOR_DEST" ]; then
   cd /tmp
-  curl -LO "https://github.com/LOSEARDES77/Bibata-Cursor-hyprcursor/releases/download/1.0/hypr_Bibata-Modern-Classic.tar.gz"
+  curl -LO "$BIBATA_CURSOR_URL"
   tar -xzf hypr_Bibata-Modern-Classic.tar.gz
   if [ -d Bibata-Modern-Classic ]; then
     rm -rf "$CURSOR_DEST"
@@ -255,7 +254,7 @@ info "💧 Setting hyprland plugins..."
 
 if ! hyprpm list | grep -q dynamic-cursors; then
   hyprpm update
-  hyprpm add https://github.com/VirtCode/hypr-dynamic-cursors
+  hyprpm add "$HYPR_DYNAMIC_CURSORS_REPO"
   hyprpm enable dynamic-cursors
 else
   success "hypr-dynamic-cursors plugin already installed and enabled, skipping."
