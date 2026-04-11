@@ -125,17 +125,6 @@ PAM_EOF
   success "KWallet PAM entries added to /etc/pam.d/sddm-autologin"
 fi
 
-info "🔑 Checking KDE Wallet 'kdewallet'..."
-KWALLET_FILE="$HOME/.local/share/kwalletd/kdewallet.kwl"
-if [ -f "$KWALLET_FILE" ]; then
-  success "KWallet 'kdewallet' already exists ($KWALLET_FILE). Skipping."
-else
-  # Fully silent/non-interactive wallet creation is not supported by the kwalletd6 D-Bus API.
-  # We leave a note so the user creates it manually with the correct settings.
-  info "KWallet not found, noting it for later..."
-  add_note "[KWALLET] Create the wallet manually via kwalletmanager (or the first app that asks for it) using: Name=kdewallet | Encryption=Blowfish (NOT GnuPG — required for kwallet-pam auto-unlock) | Password=your login password"
-fi
-
 info "🖥️ Setting up Silent SDDM Themes..."
 
 sddm_configured=0
@@ -175,8 +164,8 @@ else
 fi
 
 if [ "$sddm_configured" -eq 1 ]; then
-  add_note "[SILENT SDDM] Remind to select systemd owned Hyprland at login in SDDM, in order to enable specific autostarts to work."
-  add_note "[SILENT SDDM] Remind to run ./test.sh in $SILENT_SDDM_DIR to check SDDM works and you are not kept out of your system at next boot."
+  add_note "[SDDM] Remind to select systemd owned Hyprland at login in SDDM, in order to enable specific autostarts to work."
+  add_note "[SDDM] Remind to run ./test.sh in $SILENT_SDDM_DIR to check SDDM works and you are not kept out of your system at next boot."
 fi
 
 info "🖱️ Setting up MCHOSE udev rules..."
@@ -266,7 +255,8 @@ if pacman -Q cachyos-gaming-applications cachyos-gaming-meta >/dev/null 2>&1; th
   fi
 
   # Inside your gaming if-statement:
-  add_note "🎮 GAMING REMINDERS:
+  add_note "[GAMING]:
+
   🚀 STEAM LAUNCH OPTIONS
   For NVIDIA:
       TODO
