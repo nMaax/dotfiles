@@ -62,3 +62,19 @@ clean_notes() {
     : >"$NOTES_FILE"
   fi
 }
+
+# --- GPU Detection ---
+# Sets GPU_VENDOR to "nvidia", "amd", or "" (unknown).
+# Runs lspci once and caches the result.
+GPU_VENDOR=""
+detect_gpu_vendor() {
+  local gpu_info
+  gpu_info="$(lspci | grep -iE 'vga|3d|display')"
+  if echo "$gpu_info" | grep -iq 'nvidia'; then
+    GPU_VENDOR="nvidia"
+  elif echo "$gpu_info" | grep -iqE 'amd|radeon'; then
+    GPU_VENDOR="amd"
+  else
+    GPU_VENDOR=""
+  fi
+}

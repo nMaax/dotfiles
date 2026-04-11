@@ -103,8 +103,43 @@ info "🪐 Installing Starship..."
 sudo pacman -S --needed --noconfirm starship
 
 info "🐍 Installing tools for coding.."
-sudo pacman -S --needed --noconfirm uv lazygit neovim nodejs jdk-openjdk gemini-cli
+sudo pacman -S --needed --noconfirm uv lazygit neovim nodejs jdk-openjdk
 paru -S --needed --noconfirm visual-studio-code-bin
+
+# ── AI TOOLS ──────────────────────────────────────────────────────────────────
+info "🤖 Installing AI tools..."
+
+# Detect GPU manufacturer
+detect_gpu_vendor
+if [ -z "$GPU_VENDOR" ]; then
+  warn "Could not detect NVIDIA or AMD GPU. AI tools will run in CPU-only mode."
+fi
+
+# Install GPU-specific compute libraries / drivers
+if [ "$GPU_VENDOR" = "nvidia" ]; then
+  info "🟢 NVIDIA GPU detected. Installing CUDA toolkit for AI acceleration..."
+  sudo pacman -S --needed --noconfirm cuda cudnn
+elif [ "$GPU_VENDOR" = "amd" ]; then
+  info "🔴 AMD GPU detected. Installing ROCm/HIP for AI acceleration..."
+  sudo pacman -S --needed --noconfirm rocm-opencl-runtime rocm-hip-sdk hip-runtime-amd
+fi
+
+# Always install Gemini CLI
+info "💎 Installing Gemini CLI..."
+sudo pacman -S --needed --noconfirm gemini-cli
+
+# Install llama.cpp with the right GPU backend
+info "🦙 Installing llama.cpp..."
+if [ "$GPU_VENDOR" = "nvidia" ]; then
+  paru -S --needed --noconfirm llama-cpp-cuda
+elif [ "$GPU_VENDOR" = "amd" ]; then
+  paru -S --needed --noconfirm llama-cpp-hipblas
+else
+  paru -S --needed --noconfirm llama-cpp
+fi
+
+success "AI tools installed."
+# ── END AI TOOLS ──────────────────────────────────────────────────────────────
 
 info "📤 Installing LocalSend..."
 paru -S --needed --noconfirm localsend
