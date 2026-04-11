@@ -179,7 +179,7 @@ sudo pacman -S --needed --noconfirm \
   kwallet kwallet-pam
 
 if [ "$kwallet_fresh" -eq 1 ]; then
-  add_note "[KWALLET]:  Make a new wallet using kwalletmanager with the same password as the user to enable automatic keyring login.\n See https://wiki.archlinux.org/title/KDE_Wallet for more information.\n Look at https://www.electronjs.org/docs/latest/api/safe-storage for Electron-specific information"
+  add_note "[KWALLET]: When prompted by an app, make a new wallet using kwalletmanager with the same password as the user to enable automatic keyring login.\n See https://wiki.archlinux.org/title/KDE_Wallet for more information.\n Look at https://www.electronjs.org/docs/latest/api/safe-storage for Electron-specific information"
 fi
 
 echo "Syncing GTK with Noctalia and removing decorations..."
@@ -201,23 +201,8 @@ info "🦉 Installing Noctalia..."
 paru -S --needed --noconfirm noctalia-shell
 
 if [ "$noctalia_fresh" -eq 1 ]; then
-  add_note "[NOCTALIA] All built-in templates are pre-enabled (GTK, Qt, KColorScheme, Ghostty, Hyprland, btop, Spicetify, Telegram, Zen Browser, cava, Discord, VSCode).
-  Remaining MANUAL steps (require user interaction in-app):
-  • ZEN BROWSER: Noctalia generates the CSS automatically once its Zen template runs.
-    You still need to wire it up manually (one-time):
-      1. Open about:config → set toolkit.legacyUserProfileCustomizations.stylesheets = true
-      2. Open Settings → General → set Website Appearance to Auto
-      3. Add these two lines to <profile>/chrome/userChrome.css and userContent.css:
-           @import \"/home/$(whoami)/.cache/noctalia/zen-browser/zen-userChrome.css\";
-           @import \"/home/$(whoami)/.cache/noctalia/zen-browser/zen-userContent.css\";
-      4. Restart Zen Browser.
-    See https://docs.noctalia.dev/theming/program-specific/zen-browser/
-  • DISCORD: Open Equibop → Settings → Themes → enable one of the two Noctalia themes.
-  • VSCODE: Install the 'NoctaliaTheme' extension from the marketplace, then select it via Ctrl+Shift+P → 'Preferences: Color Theme'.
-  • STEAM (optional): Install Millennium + Material-Theme, select 'Matugen' in the theme color dropdown.
-    See https://docs.noctalia.dev/theming/program-specific/steam/ for full steps.
-  Documentation: https://docs.noctalia.dev/theming/basic-app-theming/"
   add_note "[NOCTALIA] ddcutil was installed by default, which may introduce system instability with certain monitors; remove it eventually with: sudo pacman -Rns ddcutil"
+  add_note "[NOCTALIA] All built-in templates are pre-enabled (GTK, Qt, KColorScheme, Ghostty, Hyprland, btop, Spicetify, Telegram, Zen Browser, cava, Discord, VSCode). Remaining steps require manual in-app user interaction, view official noctalia documentation: https://docs.noctalia.dev/theming/basic-app-theming/"
 fi
 
 info "💅 Setting Hyprcursor..."
