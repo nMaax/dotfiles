@@ -9,14 +9,7 @@ These dotfiles are heavily based on **CachyOS** (not just Arch), specifically th
 ## 🧁 Installation
 
 1. Tweak CachyOS via the CachyOS Hello app and apply your preferred baseline system tweaks, remind to enable cachy-update;
-2. Prepare your `~/.config/chezmoi/chezmoi.toml` configuration file with your specific variables (use another device as a template). Make sure to include your SSH host variables for the `hyperion` entry:
-
-   ```toml
-   [data]
-   hyperion_host = "your.server.hostname"
-   hyperion_user = "youruser"
-   ```
-
+2. Prepare your `~/.config/chezmoi/chezmoi.toml` configuration file with your specific variables (use another device as a template).
 3. Install chezmoi and apply the dotfiles
 
 ```fish
@@ -38,7 +31,7 @@ Both `megacmd-bin` and `keepassxc` are installed by the script as regular packag
    mega-sync ~/MEGA/ /
    ```
 
-2. **Open KeePassXC** and point it at your database once the MEGA sync completes.
+2. **Open KeePassXC** and point it at your database once the MEGA sync completes. Remind to place the key-file as well.
 
 ### 🦉 Noctalia
 
