@@ -107,7 +107,7 @@ Remaining manual steps (require in-app interaction):
 - [x] Generalize dotfiles keyring also for LUKS and SDDM auto-login
 - [x] Add note in README about how to setup the new wallet when prompted (encryption: bowfish, name: kdewallet, password: same as user)
 - [x] Use git filter-repo to scrub away binaries and easyeffects .config files (remind about irs files)
-  - [ ] Maybe send Wallpapers, Gifs and Binaries to another repo and symlink here? I could use a git submodule
+  - [x] Maybe send Wallpapers, Gifs and Binaries to another repo and symlink here? I could use a git submodule
   - [ ] Also SilentSDDM Themese could be put in a different repo, and then linked via submodules or something
   - [ ] Find wallpapers also from wallpaper engine store on steam, look for Wallhack
 - [ ] Prepare some default wallpapers x colorschemes combinations
