@@ -754,6 +754,20 @@
         "enableMultiMonitorDirectories": false,
         "enabled": true,
         "favorites": [
+            {
+                "appearance": "dark",
+                "colorScheme": "Rosey AMOLED",
+                "darkMode": true,
+                "generationMethod": "faithful",
+                "paletteColors": [
+                    "#ff8cb3",
+                    "#ffb3cc",
+                    "#ffcce0",
+                    "#ff99b8"
+                ],
+                "path": "/home/massimiliano/Pictures/Wallpapers/evelyn.jpg",
+                "useWallpaperColors": false
+            }
         ],
         "fillColor": "#000000",
         "fillMode": "crop",
