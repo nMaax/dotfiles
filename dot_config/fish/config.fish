@@ -7,13 +7,15 @@ function fish_greeting
     end
 end
 
+# Some useful variables
 set -gx TERMINAL ghostty
 set -gx EDITOR vim
 set -gx SUDO_EDITOR vim
 set -gx BROWSER zen-browser
 set -gx PAGER bat
 
+# Initialize starship and zoxide for better experience
 if status is-interactive
-    # Start starship for a eye-candy terminal interaction
     starship init fish | source
+    zoxide init fish | source
 end
