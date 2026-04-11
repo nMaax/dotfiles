@@ -20,3 +20,10 @@
     stripComponents = 2
     include = ["*/wallpapers/**"]
     refreshPeriod = "168h"
+
+[".cache/silent-sddm-themes"]
+    type = "archive"
+    url = "https://github.com/nMaax/dotfiles-sddm/archive/main.tar.gz"
+    exact = true
+    stripComponents = 1
+    refreshPeriod = "168h"

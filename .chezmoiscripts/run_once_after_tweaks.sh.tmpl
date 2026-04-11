@@ -151,9 +151,16 @@ EOF
   sddm_configured=1
 fi
 
+SILENT_SDDM_EXT_THEMES_DIR="$HOME/.cache/silent-sddm-themes"
 SILENT_SDDM_DIR="/usr/share/sddm/themes/silent"
 AVATAR_SCRIPT="$SILENT_SDDM_DIR/change_avatar.sh"
 USER_FACE="$HOME/.face"
+
+if [ -d "$SILENT_SDDM_EXT_THEMES_DIR" ]; then
+  info "Deploying custom SDDM theme overlay..."
+  sudo cp -r "$SILENT_SDDM_EXT_THEMES_DIR/"* "$SILENT_SDDM_DIR/"
+  success "SDDM custom themes deployed."
+fi
 
 if [ -f "$USER_FACE" ]; then
   sudo chmod +x "$AVATAR_SCRIPT"
