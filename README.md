@@ -114,7 +114,6 @@ Remaining manual steps (require in-app interaction):
 - [x] Review theming via Noctalia is well managed in install scripts (try also to pass documentation to a GitHub Agent)
 - [x] Explore better scrolling options and make MCHOSE devices specific configs (or just distinguish between touchpad and mouse)
 - [ ] Fix ksshaskpass Qt::font empty error
-- [ ] Automate part of the Steam theming (e.g. install Millennium, which I think also brings other advantages): see TODO
 - [ ] Add the NVIDIA launch options for games, both here (TODO) and in the add_notes
 - [ ] Maybe consider automate to unify the add_notes() system, the automated document generated, and the content of this README
   - Idea: this README contains everything, in any case, as a fallback. But maybe I should rely more on outsourcing to the main sources when possible to not fall out-of date; then I make the add_notes() and related document tailored on the user specifications

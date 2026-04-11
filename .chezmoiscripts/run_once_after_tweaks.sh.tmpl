@@ -219,7 +219,10 @@ paru -S --needed --noconfirm nyancat pipes.sh tty-clock cbonsai
 if pacman -Q cachyos-gaming-applications cachyos-gaming-meta >/dev/null 2>&1; then
   success "🕹️ Gaming packages detected! Applying optimizations..."
 
-  info "⛏️ Installing Minecraft (Prism-launcher and Java dependencies)"
+  info "🛸 Installing Millennium..."
+  paru -S --needed --noconfirm millennium
+
+  info "⛏️ Installing Minecraft (Prism-launcher and Java dependencies)..."
   sudo pacman -S --needed --noconfirm prismlauncher
   sudo pacman -S --needed --noconfirm jdk8-openjdk jdk17-openjdk jdk21-openjdk
 
