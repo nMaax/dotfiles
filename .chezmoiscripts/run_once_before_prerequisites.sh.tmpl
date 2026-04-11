@@ -49,8 +49,8 @@ for pkg in "${BASE_PACKAGES[@]}"; do
 done
 
 info "🔧 Installing other utilities..."
-sudo pacman -S --needed --noconfirm smartmontools ffmpeg imagemagick jq texlive-latex glow dust bat ripgrep fd btop nvtop trash-cli transmission-cli ghostscript pandoc poppler qpdf ufw tldr ksshaskpass keepassxc
-paru -S --needed --noconfirm caligula-bin pandoc-bin pdfcpu-bin ocrmypdf tesseract-data-eng tesseract-data-ita megacmd-bin
+sudo pacman -S --needed --noconfirm smartmontools ffmpeg imagemagick jq texlive-latex glow dust bat ripgrep fd btop nvtop trash-cli transmission-cli ghostscript pandoc poppler qpdf ufw tldr ksshaskpass
+paru -S --needed --noconfirm caligula-bin pandoc-bin pdfcpu-bin ocrmypdf tesseract-data-eng tesseract-data-ita
 
 echo ""
 success "✅ [Stage 1] Prerequisites installed."
@@ -108,6 +108,12 @@ paru -S --needed --noconfirm visual-studio-code-bin
 
 info "📤 Installing LocalSend..."
 paru -S --needed --noconfirm localsend
+
+info "🔑 Installing KeePassXC..."
+sudo pacman -S --needed --noconfirm keepassxc
+
+info "☁️ Installing MEGA CMD..."
+paru -S --needed --noconfirm megacmd-bin
 
 info "🔬 Installing Element..."
 sudo pacman -S --needed --noconfirm element-desktop
