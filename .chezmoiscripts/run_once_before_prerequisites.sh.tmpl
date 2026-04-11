@@ -111,9 +111,10 @@ info "🤖 Installing AI tools..."
 
 # Detect GPU manufacturer
 AI_GPU_VENDOR=""
-if lspci | grep -iE 'vga|3d|display' | grep -iq 'nvidia'; then
+GPU_INFO="$(lspci | grep -iE 'vga|3d|display')"
+if echo "$GPU_INFO" | grep -iq 'nvidia'; then
   AI_GPU_VENDOR="nvidia"
-elif lspci | grep -iE 'vga|3d|display' | grep -iq 'amd\|radeon'; then
+elif echo "$GPU_INFO" | grep -iqE 'amd|radeon'; then
   AI_GPU_VENDOR="amd"
 else
   warn "Could not detect NVIDIA or AMD GPU. AI tools will run in CPU-only mode."
