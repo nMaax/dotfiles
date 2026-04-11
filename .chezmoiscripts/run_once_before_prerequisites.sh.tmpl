@@ -214,7 +214,7 @@ sudo pacman -S --needed --noconfirm \
   kwallet kwallet-pam
 
 if [ "$kwallet_fresh" -eq 1 ]; then
-  add_note "[KWALLET]: When prompted by an app, make a new wallet using kwalletmanager with the same password as the user to enable automatic keyring login.\n See https://wiki.archlinux.org/title/KDE_Wallet for more information.\n Look at https://www.electronjs.org/docs/latest/api/safe-storage for Electron-specific information"
+  add_note "[KWALLET]: When prompted by an app, make a new wallet named kdewallet and bowfish encryption, using the same password as the user to enable automatic keyring login.\n See https://wiki.archlinux.org/title/KDE_Wallet for more information.\n Look at https://www.electronjs.org/docs/latest/api/safe-storage for Electron-specific information"
 fi
 
 echo "Syncing GTK with Noctalia and removing decorations..."
@@ -237,7 +237,7 @@ paru -S --needed --noconfirm noctalia-shell
 
 if [ "$noctalia_fresh" -eq 1 ]; then
   add_note "[NOCTALIA] ddcutil was installed by default, which may introduce system instability with certain monitors; remove it eventually with: sudo pacman -Rns ddcutil"
-  add_note "[NOCTALIA] All built-in templates are pre-enabled (GTK, Qt, KColorScheme, Ghostty, Hyprland, btop, Spicetify, Telegram, Zen Browser, cava, Discord, VSCode). Remaining steps require manual in-app user interaction, view official noctalia documentation: https://docs.noctalia.dev/theming/basic-app-theming/"
+  add_note "[NOCTALIA] All built-in app-theming you commonly use are pre-enabled by default (GTK, Qt, KColorScheme, Ghostty, Hyprland, btop, Spicetify, Telegram, Zen Browser, cava, Discord, VSCode). Remaining steps require manual in-app user interaction, view official noctalia documentation for your specific needs: https://docs.noctalia.dev/theming/basic-app-theming/"
 fi
 
 info "💅 Setting Hyprcursor..."
