@@ -110,21 +110,16 @@ paru -S --needed --noconfirm visual-studio-code-bin
 info "🤖 Installing AI tools..."
 
 # Detect GPU manufacturer
-AI_GPU_VENDOR=""
-GPU_INFO="$(lspci | grep -iE 'vga|3d|display')"
-if echo "$GPU_INFO" | grep -iq 'nvidia'; then
-  AI_GPU_VENDOR="nvidia"
-elif echo "$GPU_INFO" | grep -iqE 'amd|radeon'; then
-  AI_GPU_VENDOR="amd"
-else
+detect_gpu_vendor
+if [ -z "$GPU_VENDOR" ]; then
   warn "Could not detect NVIDIA or AMD GPU. AI tools will run in CPU-only mode."
 fi
 
 # Install GPU-specific compute libraries / drivers
-if [ "$AI_GPU_VENDOR" = "nvidia" ]; then
+if [ "$GPU_VENDOR" = "nvidia" ]; then
   info "🟢 NVIDIA GPU detected. Installing CUDA toolkit for AI acceleration..."
   sudo pacman -S --needed --noconfirm cuda cudnn
-elif [ "$AI_GPU_VENDOR" = "amd" ]; then
+elif [ "$GPU_VENDOR" = "amd" ]; then
   info "🔴 AMD GPU detected. Installing ROCm/HIP for AI acceleration..."
   sudo pacman -S --needed --noconfirm rocm-opencl-runtime rocm-hip-sdk hip-runtime-amd
 fi
@@ -135,9 +130,9 @@ sudo pacman -S --needed --noconfirm gemini-cli
 
 # Install llama.cpp with the right GPU backend
 info "🦙 Installing llama.cpp..."
-if [ "$AI_GPU_VENDOR" = "nvidia" ]; then
+if [ "$GPU_VENDOR" = "nvidia" ]; then
   paru -S --needed --noconfirm llama-cpp-cuda
-elif [ "$AI_GPU_VENDOR" = "amd" ]; then
+elif [ "$GPU_VENDOR" = "amd" ]; then
   paru -S --needed --noconfirm llama-cpp-hipblas
 else
   paru -S --needed --noconfirm llama-cpp
