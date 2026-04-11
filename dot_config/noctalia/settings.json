@@ -371,19 +371,6 @@
                         "useCustomFont": false,
                         "x": 100,
                         "y": 100
-                    },
-                    {
-                        "hideMode": "visible",
-                        "id": "MediaPlayer",
-                        "roundedCorners": true,
-                        "scale": 1.1454172461205772,
-                        "showAlbumArt": true,
-                        "showBackground": true,
-                        "showButtons": false,
-                        "showVisualizer": false,
-                        "visualizerType": "linear",
-                        "x": 1420,
-                        "y": 100
                     }
                 ]
             }
@@ -473,7 +460,7 @@
         "lockScreenMonitors": [
         ],
         "lockScreenTint": 0,
-        "passwordChars": true,
+        "passwordChars": false,
         "radiusRatio": 1,
         "reverseScroll": false,
         "scaleRatio": 1,
