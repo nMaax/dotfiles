@@ -9,31 +9,8 @@ These dotfiles are heavily based on **CachyOS** (not just Arch), specifically th
 ## 🧁 Installation
 
 1. Tweak CachyOS via the CachyOS Hello app and apply your preferred baseline system tweaks, remind to enable cachy-update;
-2. Prepare your chezmoi.toml configuration file with your specific variables, use another device with it to find the format;
-3. Install MEGA CMD and KeePassXC
-
-   ```fish
-   sudo pacman -S keepassxc
-   paru -S megacmd-bin
-   ```
-
-4. Log into MEGA
-
-   ```fish
-   mega-login
-   ```
-
-5. Set up the MEGA sync for the root folder containing the KeePass database
-
-   ```fish
-   mkdir -p ~/MEGA
-   mega-sync ~/MEGA/ /
-   ```
-
-6. Wait for the sync to complete**, then verify that the KeePass database (`.kdbx` file) is present locally;
-7. Add the keyfile manually from another device;
-8. Create `~/.config/chezmoi/chezmoi.toml` with the correct data (use another device as template);
-9. Finally install chezmoi and apply the dotfiles
+2. Prepare your `~/.config/chezmoi/chezmoi.toml` configuration file with your specific variables (use another device as a template).
+3. Install chezmoi and apply the dotfiles
 
 ```fish
 pacman -S chezmoi
@@ -41,6 +18,20 @@ chezmoi init --apply nMaax
 ```
 
 ## 🥞 Post-Installation Notes
+
+### 🔒 MEGA & KeePassXC
+
+Both `megacmd-bin` and `keepassxc` are installed by the script as regular packages. Set them up manually after installation:
+
+1. **Log into MEGA** and configure your sync:
+
+   ```fish
+   mega-login
+   mkdir -p ~/MEGA
+   mega-sync ~/MEGA/ /
+   ```
+
+2. **Open KeePassXC** and point it at your database once the MEGA sync completes. Remind to place the key-file as well.
 
 ### 🦉 Noctalia
 

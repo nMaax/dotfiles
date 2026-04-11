@@ -24,9 +24,9 @@ if [[ "${answer,,}" != "y" && -n "$answer" ]]; then
   exit 1
 fi
 
-read -rp "Did you place the chezmoi.toml and the KeePass keyfile? [Y/n] " answer
+read -rp "Did you place the chezmoi.toml? [Y/n] " answer
 if [[ "${answer,,}" != "y" && -n "$answer" ]]; then
-  error "Please place the chezmoi.toml and KeePass keyfile in their proper locations before proceeding. Closing, come back later."
+  error "Please place the chezmoi.toml in its proper location before proceeding. Closing, come back later."
   exit 1
 fi
 
@@ -51,22 +51,6 @@ done
 info "🔧 Installing other utilities..."
 sudo pacman -S --needed --noconfirm smartmontools ffmpeg imagemagick jq texlive-latex glow dust bat ripgrep fd btop nvtop trash-cli transmission-cli ghostscript pandoc poppler qpdf ufw tldr ksshaskpass
 paru -S --needed --noconfirm caligula-bin pandoc-bin pdfcpu-bin ocrmypdf tesseract-data-eng tesseract-data-ita
-
-KEEPASS_DB="$HOME/{{ .chezmoi.config.keepassxc.database }}"
-
-if ! ls "$KEEPASS_DB" &>/dev/null; then
-  error "Couldn't find the KeePassXC database, maybe MEGA didn't download it."
-  error "Can't proceed, will close now. This script is idempotent so you can run it again and resume where left."
-  exit 1
-else
-  success "KeePass database found at $KEEPASS_DB"
-fi
-
-read -rp "Is your KeePass keyfile available at {{ index .chezmoi.config.keepassxc.args 1 }}? [Y/n] " answer
-if [[ "${answer,,}" != "y" && -n "$answer" ]]; then
-  warn "Please ensure your KeePass keyfile is available at the correct location."
-  read -rp "Press [Enter] to continue once you are ready..."
-fi
 
 echo ""
 success "✅ [Stage 1] Prerequisites installed."
@@ -124,6 +108,12 @@ paru -S --needed --noconfirm visual-studio-code-bin
 
 info "📤 Installing LocalSend..."
 paru -S --needed --noconfirm localsend
+
+info "🔑 Installing KeePassXC..."
+sudo pacman -S --needed --noconfirm keepassxc
+
+info "☁️ Installing MEGA CMD..."
+paru -S --needed --noconfirm megacmd-bin
 
 info "🔬 Installing Element..."
 sudo pacman -S --needed --noconfirm element-desktop
