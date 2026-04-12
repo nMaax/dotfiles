@@ -30,6 +30,14 @@ if [[ "${answer,,}" != "y" && -n "$answer" ]]; then
   exit 1
 fi
 
+{{ if .gaming -}}
+if ! pacman -Q cachyos-gaming-applications cachyos-gaming-meta >/dev/null 2>&1; then
+  error "gaming = true is set but CachyOS gaming packages are not installed. Install them first (e.g. via CachyOS Hello or: sudo pacman -S cachyos-gaming-meta cachyos-gaming-applications), then re-run. Closing."
+  exit 1
+fi
+success "✅ Gaming packages detected."
+{{- end }}
+
 info "🔄 Checking for cachy-update..."
 if sudo pacman -Q cachy-update &>/dev/null; then
   cachy-update
