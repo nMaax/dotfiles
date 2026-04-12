@@ -20,7 +20,7 @@ bind = SUPER, F11, exec, hyprctl dispatch monitor ,preferred,auto,1 #"Reload mon
 
 # Dwindle only
 bind = SUPER, Y, layoutmsg, togglesplit #"Switch split orientation (dwindle only)"
-bind = SUPER, U, pseudo, #"Make active window to pseudo (dwinde only)"
+bind = SUPER, U, pseudo, #"Make active window to pseudo (dwindle only)"
 
 # Noctalia binds
 bind = ALT, RETURN, exec, $ipc launcher toggle #"Search for apps"
@@ -45,7 +45,9 @@ bind = SUPER, P, exec, keepassxc #"Open KeePassXC"
 bind = SUPER, Delete, exec, ~/.local/bin/hypr-toggle.py sysmon #"Toggle system monitors workspace (btop)"
 bind = SUPER, C, exec, ~/.local/bin/hypr-toggle.py communication #"Toggle communication workspace (Discord)"
 bind = SUPER, M, exec, ~/.local/bin/hypr-toggle.py music #"Toggle music workspace (Spotify)"
+{{ if default false .has_gaming -}}
 bind = SUPER, G, exec, ~/.local/bin/hypr-toggle.py games #"Toggle game launchers workspace (Steam)"
+{{ end -}}
 bind = SUPER, A, exec, ~/.local/bin/hypr-toggle.py audio #"Toggle audio workspace (EasyEffects)"
 bind = SUPER, S, togglespecialworkspace, magic #"Toggle scratchpad"
 

@@ -1,0 +1,12 @@
+{{- if and (default false .has_gaming) (ne (default "" .gpu_vendor) "") -}}
+# Gaming shader-cache configuration — managed by chezmoi.
+# Regenerate with: chezmoi apply
+
+{{- if eq .gpu_vendor "nvidia" }}
+# NVIDIA: increase the GPU shader disk-cache to 12 GB
+__GL_SHADER_DISK_CACHE_SIZE=12000000000
+{{- else if eq .gpu_vendor "amd" }}
+# AMD/Mesa: increase the shader cache to 12 GB
+MESA_SHADER_CACHE_MAX_SIZE=12G
+{{- end }}
+{{- end }}
