@@ -40,9 +40,9 @@ info "🔄 Checking for cachy-update..."
 if sudo pacman -Q cachy-update &>/dev/null; then
   cachy-update
 else
-  warn "cachy-update is not installed."
-  warn "Did you really listen to me before??"
-  warn "Please open 'CachyOS Hello' to enable cachy-update, and remind to tweak your system!"
+  error "cachy-update is not installed. Did you really listen to me before??"
+  error "Please open 'CachyOS Hello' to enable cachy-update, and remind to tweak your system!"
+  exit 1
 fi
 
 info "📦 Checking for missing base packages..."
