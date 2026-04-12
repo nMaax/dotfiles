@@ -106,7 +106,6 @@ info "🐍 Installing tools for coding.."
 sudo pacman -S --needed --noconfirm uv lazygit neovim nodejs jdk-openjdk
 paru -S --needed --noconfirm visual-studio-code-bin
 
-# ── AI TOOLS ──────────────────────────────────────────────────────────────────
 info "🤖 Installing AI tools..."
 
 GPU_VENDOR="{{ default "" .gpu_vendor }}"
@@ -139,7 +138,6 @@ else
 fi
 
 success "AI tools installed."
-# ── END AI TOOLS ──────────────────────────────────────────────────────────────
 
 info "📤 Installing LocalSend..."
 paru -S --needed --noconfirm localsend
