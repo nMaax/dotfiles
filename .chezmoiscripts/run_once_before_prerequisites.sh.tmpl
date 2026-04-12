@@ -18,14 +18,12 @@ echo ""
 
 clean_notes
 
-read -rp "Did you tweak CachyOS as you like? [Y/n] " answer
-if [[ "${answer,,}" != "y" && -n "$answer" ]]; then
+if ! ask "Did you tweak CachyOS as you like?"; then
   error "Go back and tune whatever you like using Cachy Hello. Closing, come back later."
   exit 1
 fi
 
-read -rp "Did you place the chezmoi.toml? [Y/n] " answer
-if [[ "${answer,,}" != "y" && -n "$answer" ]]; then
+if ! ask "Did you place the chezmoi.toml?"; then
   error "Please place the chezmoi.toml in its proper location before proceeding. Closing, come back later."
   exit 1
 fi
