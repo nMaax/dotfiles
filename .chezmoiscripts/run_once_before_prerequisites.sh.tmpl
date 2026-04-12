@@ -207,8 +207,8 @@ paru -Rns --noconfirm equicord-installer-bin || true
 info "🎬 Installing KDenlive and OBS Studio..."
 sudo pacman -S --needed --noconfirm kdenlive obs-studio-browser
 
-info "🎵 Installing EasyEffects..."
-sudo pacman -S --needed --noconfirm easyeffects lsp-plugins
+info "🎵 Installing EasyEffects and audio effect plugins..."
+sudo pacman -S --needed --noconfirm easyeffects lsp-plugins zam-plugins calf mda.lv2
 
 echo ""
 success "✅ [Stage 2] Apps installed."
