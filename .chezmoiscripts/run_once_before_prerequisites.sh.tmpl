@@ -163,9 +163,17 @@ info "🔬 Installing Element..."
 sudo pacman -S --needed --noconfirm element-desktop
 
 info "🎧 Installing Spotify (spicetify) from AUR..."
-paru -S --needed --noconfirm spotify spicetify-cli
+warn "By default we will wipe anything related to spicetify first, to make a clean installation"
 
-info "Setting up Spicetify..."
+# Wipe the old Spicetify configuration and backups completely
+rm -rf "$HOME/.config/spicetify"
+
+# Force reinstall Spotify and Spicetify.
+# Removing '--needed' ensures paru replaces any modified files in /opt/spotify 
+# with fresh ones from your local package cache.
+paru -S --noconfirm spotify spicetify-cli
+
+info "Setting up Spicetify permissions..."
 sudo chmod a+wr /opt/spotify
 sudo chmod a+wr /opt/spotify/Apps -R
 
@@ -173,36 +181,32 @@ sudo chmod a+wr /opt/spotify/Apps -R
 mkdir -p "$HOME/.config/spotify"
 touch "$HOME/.config/spotify/prefs"
 
-# Explicitly tell Spicetify where the prefs file is
+# Initialize Spicetify and point it to the prefs file
 spicetify config prefs_path "$HOME/.config/spotify/prefs"
 
-spicetify backup apply || spicetify apply
+# Backup and apply
+spicetify backup apply
 
 SPICETIFY_CONFIG_DIR="$HOME/.config/spicetify"
 SPICETIFY_THEMES_DIR="$SPICETIFY_CONFIG_DIR/Themes"
-COMFY_DIR="$SPICETIFY_THEMES_DIR/Comfy"
-MARKETPLACE_DIR="$SPICETIFY_CONFIG_DIR/CustomApps/marketplace"
 
-if [ ! -d "$COMFY_DIR" ]; then
-  info "Installing Comfy theme for Spicetify..."
-  cd "$SPICETIFY_THEMES_DIR"
-  git clone "$SPICETIFY_COMFY_REPO" ComfyRepo
-  mv ./ComfyRepo/Comfy/ ./
-  rm -rf ./ComfyRepo/
-  spicetify config current_theme Comfy color_scheme Comfy
-  spicetify config inject_css 1 replace_colors 1 overwrite_assets 1 inject_theme_js 1
-  spicetify apply
-  success "Comfy theme installed and applied."
-else
-  info "Comfy theme already present, skipping."
-fi
+# Install Comfy Theme
+info "Installing Comfy theme for Spicetify..."
+mkdir -p "$SPICETIFY_THEMES_DIR"
+cd "$SPICETIFY_THEMES_DIR"
+git clone "$SPICETIFY_COMFY_REPO" ComfyRepo
+mv ./ComfyRepo/Comfy/ ./
+rm -rf ./ComfyRepo/
 
-info "Installing Spicetify Marketplace...  (⚠️ not really the Arch way, but it doesnt touch anything outside home/)"
-if [ ! -d "$MARKETPLACE_DIR" ] || [ -z "$(ls -A "$MARKETPLACE_DIR")" ]; then
-  curl -fsSL "$SPICETIFY_MARKETPLACE_INSTALL_URL" | sh
-else
-  success "Spicetify Marketplace already installed, skipping."
-fi
+spicetify config current_theme Comfy color_scheme Comfy
+spicetify config inject_css 1 replace_colors 1 overwrite_assets 1 inject_theme_js 1
+spicetify apply
+
+# Install Marketplace (will run apply at the end)
+info "Installing Spicetify Marketplace... (⚠️ not really the Arch way, but it doesnt touch anything outside home/)" 
+curl -fsSL "$SPICETIFY_MARKETPLACE_INSTALL_URL" | sh
+
+success "Spotify, Spicetify, Comfy, and Marketplace cleanly installed!"
 
 info "👾 Installing Discord (Equicord + OpenAsar) from AUR..."
 paru -S --needed --noconfirm discord equicord-installer-bin
