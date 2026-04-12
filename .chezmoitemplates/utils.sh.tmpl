@@ -13,6 +13,16 @@ success() { echo -e "${GREEN}==>${NC} $1"; }
 warn() { echo -e "${YELLOW}==>${NC} $1"; }
 error() { echo -e "${RED}==>${NC} $1"; }
 
+# --- User Prompting ---
+# ask <question>
+# Prints "<question> [Y/n] " and reads user input.
+# Returns 0 (true) for Y / y / <Enter>, non-zero (false) for anything else.
+ask() {
+  local answer
+  read -rp "$1 [Y/n] " answer
+  [[ "${answer,,}" == "y" || -z "$answer" ]]
+}
+
 # --- Persistent Note Handling ---
 # We use a temp file to share notes across different script processes
 NOTES_FILE="/tmp/dotfiles_install_notes.txt"
@@ -27,8 +37,7 @@ show_notes() {
     cat "$NOTES_FILE"
     echo ""
 
-    read -rp "💾 Save these notes as Markdown to your Documents folder? [Y/n] " save_answer
-    if [[ "${save_answer,,}" != "n" ]]; then
+    if ask "💾 Save these notes as Markdown to your Documents folder?"; then
       local docs_dir
       if command -v xdg-user-dir >/dev/null 2>&1; then
         docs_dir="$(xdg-user-dir DOCUMENTS)"
