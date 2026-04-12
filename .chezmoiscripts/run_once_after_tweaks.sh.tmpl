@@ -28,11 +28,9 @@ info "🧱 Setup Uncomplicated Firewall"
 sudo ufw enable
 sleep 2
 
-info "🔐 Enable SSH daemon"
+info "🔐 Enable SSH daemon and agent"
 sudo systemctl enable --now sshd
 sleep 2
-
-info "🔑 Enable ssh-agent systemd user service"
 systemctl --user enable --now ssh-agent
 sleep 2
 
