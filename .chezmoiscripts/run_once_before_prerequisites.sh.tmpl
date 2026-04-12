@@ -168,6 +168,17 @@ paru -S --needed --noconfirm spotify spicetify-cli
 info "Setting up Spicetify..."
 sudo chmod a+wr /opt/spotify
 sudo chmod a+wr /opt/spotify/Apps -R
+
+# Create the Spotify config directory and an empty prefs file
+mkdir -p "$HOME/.config/spotify"
+touch "$HOME/.config/spotify/prefs"
+
+# Run spicetify once to generate the default config-xpui.ini
+spicetify config-dir &> /dev/null
+
+# Explicitly tell Spicetify where the prefs file is
+spicetify config prefs_path "$HOME/.config/spotify/prefs"
+
 spicetify backup apply || spicetify apply
 
 SPICETIFY_CONFIG_DIR="$HOME/.config/spicetify"
