@@ -17,6 +17,23 @@ pacman -S chezmoi
 chezmoi init --apply nMaax
 ```
 
+### Handling missing polkit agent password prompt in CachyOS Hello
+
+It’s likely that polkit-kde-agent isn't running in the background of Hyprland. To fix do the following:
+
+1. Open your hyprland.conf again: nano ~/.config/hypr/hyprland.conf.
+2. Add this line to your "exec-once" section (or anywhere at the bottom):
+
+```conf
+exec-once = /usr/lib/polkit-kde-authentication-agent-1
+```
+
+(Note: If you aren't using KDE, the path might be /usr/lib/lxpolkit or similar. Cachy usually defaults to the KDE agent even on Hyprland).
+
+1. Save and restart Hyprland (Super + M or just log out).
+
+Once that agent is running, the Cachy Hello GUI will be able to "pop up" a password box and actually apply your tweaks.
+
 ### 📋 chezmoi.toml variables
 
 | Variable | Type | Description |
