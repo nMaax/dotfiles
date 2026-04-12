@@ -255,24 +255,8 @@ gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3'
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 gsettings set org.gnome.desktop.wm.preferences button-layout ':'
 
-info "💅 Setting Hyprcursor..."
-CURSOR_TMP="/tmp/hypr_Bibata-Modern-Classic"
-CURSOR_ARCHIVE="$CURSOR_TMP.tar.gz"
-CURSOR_DEST="$HOME/.local/share/icons/Bibata-Modern-Classic"
-
-if [ ! -d "$CURSOR_DEST" ]; then
-  cd /tmp
-  curl -LO "$BIBATA_CURSOR_URL"
-  tar -xzf hypr_Bibata-Modern-Classic.tar.gz
-  if [ -d Bibata-Modern-Classic ]; then
-    rm -rf "$CURSOR_DEST"
-    mv Bibata-Modern-Classic "$CURSOR_DEST"
-  fi
-  rm -f hypr_Bibata-Modern-Classic.tar.gz
-  hyprctl setcursor Bibata-Modern-Classic 24 # Enable now
-else
-  success "Hyprcursor already installed, skipping."
-fi
+echo "💅 Activating Hyprcursor..."
+hyprctl setcursor Bibata-Modern-Classic 24
 
 info "💧 Setting hyprland plugins..."
 if ! hyprpm list | grep -q dynamic-cursors; then

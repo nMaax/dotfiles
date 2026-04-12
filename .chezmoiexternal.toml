@@ -1,29 +1,35 @@
 # Extract face.png and rename it to ~/.face
 [".face"]
-    type = "archive-file"
-    url = "https://github.com/nMaax/dotfiles-assets/archive/main.tar.gz"
-    path = "dotfiles-assets-main/propics/axew.jpg"
-    refreshPeriod = "168h"
+type = "archive-file"
+url = "https://github.com/nMaax/dotfiles-assets/archive/main.tar.gz"
+path = "dotfiles-assets-main/propics/axew.jpg"
+refreshPeriod = "168h"
 
 # Extract logo.png and rename it to ~/.logo
 [".logo"]
-    type = "archive-file"
-    url = "https://github.com/nMaax/dotfiles-assets/archive/main.tar.gz"
-    path = "dotfiles-assets-main/propics/kurose-tendo-fisheye.jpg"
-    refreshPeriod = "168h"
+type = "archive-file"
+url = "https://github.com/nMaax/dotfiles-assets/archive/main.tar.gz"
+path = "dotfiles-assets-main/propics/kurose-tendo-fisheye.jpg"
+refreshPeriod = "168h"
 
 # Extract the wallpapers folder
 ["Pictures/Wallpapers"]
-    type = "archive"
-    url = "https://github.com/nMaax/dotfiles-assets/archive/main.tar.gz"
-    exact = true
-    stripComponents = 2
-    include = ["*/wallpapers/**"]
-    refreshPeriod = "168h"
+type = "archive"
+url = "https://github.com/nMaax/dotfiles-assets/archive/main.tar.gz"
+exact = true
+stripComponents = 2
+include = ["*/wallpapers/**"]
+refreshPeriod = "168h"
 
 [".cache/silent-sddm-themes"]
-    type = "archive"
-    url = "https://github.com/nMaax/dotfiles-sddm/archive/main.tar.gz"
-    exact = true
-    stripComponents = 1
-    refreshPeriod = "168h"
+type = "archive"
+url = "https://github.com/nMaax/dotfiles-sddm/archive/main.tar.gz"
+exact = true
+stripComponents = 1
+refreshPeriod = "168h"
+
+[".local/share/icons/Bibata-Modern-Classic"]
+type = "archive"
+url = "https://example.com/path/to/Bibata-Modern-Classic.tar.gz"
+exact = true
+stripComponents = 1
