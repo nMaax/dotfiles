@@ -228,14 +228,14 @@ sudo Equilotl -install-openasar -location /opt/discord || success "OpenAsar alre
 paru -Rns --noconfirm equicord-installer-bin || true
 
 info "🎬 Installing KDenlive and OBS Studio..."
-if pacman -Qi obs-studio >/dev/null 2>&1
+if pacman -Qs obs-studio > /dev/null; then
     info "Removing conflicting package: obs-studio"
     sudo pacman -Rns --noconfirm obs-studio
-end
-if pacman -Qi vlc-plugin-lua >/dev/null 2>&1
+fi
+if pacman -Qs vlc-plugin-lua > /dev/null; then
     info "Removing conflicting package: vlc-plugin-lua"
     sudo pacman -Rns --noconfirm vlc-plugin-lua
-end
+fi
 sudo pacman -S --needed --noconfirm kdenlive obs-studio-browser
 
 info "🎵 Installing EasyEffects and audio effect plugins..."
