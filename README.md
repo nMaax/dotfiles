@@ -112,7 +112,7 @@ Both `megacmd-bin` and `keepassxc` are installed by the script as regular packag
 
 #### 🚀 Steam Launch Options
 
-- **NVIDIA:** *TODO*
+- **NVIDIA:** `PROTON_ENABLE_WAYLAND=1 PROTON_DLSS_UPGRADE=1 PROTON_NVIDIA_LIBS_NO_32BIT=1 PROTON_USE_NTSYNC=1 PROTON_ENABLE_HDR=1 ENABLE_HDR_WSI=1 game-performance %command%`
 - **AMD:** `PROTON_USE_NTSYNC=1 ENABLE_LAYER_MESA_ANTI_LAG=1 PROTON_FSR4_UPGRADE=1 game-performance %command%`
 
 #### ⚙️ Steam & Proton Settings
@@ -132,7 +132,6 @@ Both `megacmd-bin` and `keepassxc` are installed by the script as regular packag
 
 ## 📝 TODOs
 
-- [ ] Complete the gaming launch options for NVIDIA, both here (TODO) and in the add_notes
 - [ ] Seems like some irs and jpg file is still in history, clean it and remove all branches
 - [ ] Refine WALLHACK Wallpapers
 - [ ] Prepare some default wallpapers x colorschemes combinations

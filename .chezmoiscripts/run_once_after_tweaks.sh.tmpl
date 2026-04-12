@@ -217,40 +217,40 @@ sudo pacman -S --needed --noconfirm cowsay lolcat cmatrix cava fastfetch btop fi
 paru -S --needed --noconfirm nyancat pipes.sh tty-clock cbonsai
 
 {{ if .gaming -}}
-  success "🎮 Gaming flag is set. Applying optimizations..."
+success "🎮 Gaming flag is set. Applying optimizations..."
 
-  info "🛸 Installing Millennium..."
-  paru -S --needed --noconfirm millennium
+info "🛸 Installing Millennium..."
+paru -S --needed --noconfirm millennium
 
-  info "⛏️ Installing Minecraft (Prism-launcher and Java dependencies)..."
-  sudo pacman -S --needed --noconfirm prismlauncher
-  sudo pacman -S --needed --noconfirm jdk8-openjdk jdk17-openjdk jdk21-openjdk
+info "⛏️ Installing Minecraft (Prism-launcher and Java dependencies)..."
+sudo pacman -S --needed --noconfirm prismlauncher
+sudo pacman -S --needed --noconfirm jdk8-openjdk jdk17-openjdk jdk21-openjdk
 
-  info "🥭 Installing mango and mangojuice..."
-  sudo pacman -S --needed --noconfirm mangohud
-  paru -S --needed --noconfirm mangojuice
+info "🥭 Installing mango and mangojuice..."
+sudo pacman -S --needed --noconfirm mangohud
+paru -S --needed --noconfirm mangojuice
 
-  if pacman -Q gamemode >/dev/null 2>&1; then
-    info "Feral's gamemode detected. Checking for ananicy-cpp conflicts..."
-    if systemctl is-enabled --quiet ananicy-cpp 2>/dev/null || systemctl is-active --quiet ananicy-cpp 2>/dev/null; then
-      warn "Conflict detected: Disabling ananicy-cpp to prevent GameMode scheduling issues..."
-      sudo systemctl disable --now ananicy-cpp
-    else
-      info "ananicy-cpp is not active. No conflicts."
-    fi
+if pacman -Q gamemode >/dev/null 2>&1; then
+  info "Feral's gamemode detected. Checking for ananicy-cpp conflicts..."
+  if systemctl is-enabled --quiet ananicy-cpp 2>/dev/null || systemctl is-active --quiet ananicy-cpp 2>/dev/null; then
+    warn "Conflict detected: Disabling ananicy-cpp to prevent GameMode scheduling issues..."
+    sudo systemctl disable --now ananicy-cpp
   else
-    info "Feral's gamemode not installed. Skipping ananicy-cpp conflict check."
+    info "ananicy-cpp is not active. No conflicts."
   fi
+else
+  info "Feral's gamemode not installed. Skipping ananicy-cpp conflict check."
+fi
 
-  add_note "[GAMING] 🖥️ Shader cache is configured via chezmoi (~/.config/environment.d/gaming.conf). Re-run chezmoi apply if you change the gpu_vendor variable."
+add_note "[GAMING] 🖥️ Shader cache is configured via chezmoi (~/.config/environment.d/gaming.conf). Re-run chezmoi apply if you change the gpu_vendor variable."
 
-  add_note "[GAMING] 🖱️ Mouse acceleration profile for gaming is set to 'flat' (no acceleration) via the Hyprland input config (~/.config/hypr/hyprland/input.conf). Update the 'name' field there with the exact device name from \`hyprctl devices\`."
+add_note "[GAMING] 🖱️ Mouse acceleration profile for gaming is set to 'flat' (no acceleration) via the Hyprland input config (~/.config/hypr/hyprland/input.conf). Update the 'name' field there with the exact device name from \`hyprctl devices\`."
 
-  add_note "[GAMING]:
+add_note "[GAMING]:
 
   🚀 STEAM LAUNCH OPTIONS
   For NVIDIA:
-      TODO
+      PROTON_ENABLE_WAYLAND=1 PROTON_DLSS_UPGRADE=1 PROTON_NVIDIA_LIBS_NO_32BIT=1 PROTON_USE_NTSYNC=1 PROTON_ENABLE_HDR=1 ENABLE_HDR_WSI=1 game-performance %command%
   For AMD:
       PROTON_USE_NTSYNC=1 ENABLE_LAYER_MESA_ANTI_LAG=1 PROTON_FSR4_UPGRADE=1 game-performance %command%
 
