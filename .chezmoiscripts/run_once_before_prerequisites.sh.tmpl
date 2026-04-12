@@ -140,14 +140,15 @@ fi
 info "💎 Installing Gemini CLI..."
 sudo pacman -S --needed --noconfirm gemini-cli
 
-info "🦙 Installing llama.cpp..."
+info "🦙 Installing Ollama..."
 if [ "$GPU_VENDOR" = "nvidia" ]; then
-  paru -S --needed --noconfirm llama-cpp-cuda
+  sudo pacman -S --needed --noconfirm ollama-cuda
 elif [ "$GPU_VENDOR" = "amd" ]; then
-  paru -S --needed --noconfirm llama-cpp-hipblas
+  sudo pacman -S --needed --noconfirm ollama-rocm
 else
-  paru -S --needed --noconfirm llama-cpp
+  sudo pacman -S --needed --noconfirm ollama
 fi
+sudo systemctl enable --now ollama.service
 
 info "📤 Installing LocalSend..."
 paru -S --needed --noconfirm localsend
