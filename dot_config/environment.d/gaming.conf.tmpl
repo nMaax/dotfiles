@@ -1,12 +1,16 @@
-{{- if and (default false .gaming) (ne (default "" .gpu_vendor) "") -}}
+{{- $lspci := output "lspci" -}}
+{{- $vendor := "" -}}
+{{- if regexMatch `(?i)nvidia` $lspci -}}{{- $vendor = "nvidia" -}}{{- end -}}
+{{- if regexMatch `(?i)amd|radeon` $lspci -}}{{- $vendor = "amd" -}}{{- end -}}
+{{- if ne $vendor "" -}}
 # Gaming shader-cache configuration — managed by chezmoi.
 # Regenerate with: chezmoi apply
 
-{{- if eq .gpu_vendor "nvidia" }}
+{{ if eq $vendor "nvidia" -}}
 # NVIDIA: increase the GPU shader disk-cache to 12 GB
 __GL_SHADER_DISK_CACHE_SIZE=12000000000
-{{- else if eq .gpu_vendor "amd" }}
+{{- else -}}
 # AMD/Mesa: increase the shader cache to 12 GB
 MESA_SHADER_CACHE_MAX_SIZE=12G
 {{- end }}
-{{- end }}
+{{- end -}}
