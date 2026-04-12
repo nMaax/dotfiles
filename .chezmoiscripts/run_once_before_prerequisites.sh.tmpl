@@ -185,7 +185,7 @@ touch "$HOME/.config/spotify/prefs"
 spicetify config prefs_path "$HOME/.config/spotify/prefs"
 
 # Backup and apply
-spicetify backup apply
+spicetify backup apply --no-restart
 
 SPICETIFY_CONFIG_DIR="$HOME/.config/spicetify"
 SPICETIFY_THEMES_DIR="$SPICETIFY_CONFIG_DIR/Themes"
@@ -200,11 +200,22 @@ rm -rf ./ComfyRepo/
 
 spicetify config current_theme Comfy color_scheme Comfy
 spicetify config inject_css 1 replace_colors 1 overwrite_assets 1 inject_theme_js 1
-spicetify apply
+spicetify apply --no-restart
 
-# Install Marketplace (will run apply at the end)
+# Install Marketplace
 info "Installing Spicetify Marketplace... (⚠️ not really the Arch way, but it doesnt touch anything outside home/)" 
-curl -fsSL "$SPICETIFY_MARKETPLACE_INSTALL_URL" | sh
+
+# Download the script to a temporary file instead of piping it directly to sh
+curl -fsSL "$SPICETIFY_MARKETPLACE_INSTALL_URL" -o /tmp/install_marketplace.sh
+
+# Use 'sed' to find "spicetify apply" and replace it with "spicetify apply --no-restart"
+sed -i 's/spicetify apply/spicetify apply --no-restart/g' /tmp/install_marketplace.sh
+
+# Run our modified, silent version of the script
+sh /tmp/install_marketplace.sh
+
+# Clean up the temporary file
+rm /tmp/install_marketplace.sh
 
 success "Spotify, Spicetify, Comfy, and Marketplace cleanly installed!"
 
