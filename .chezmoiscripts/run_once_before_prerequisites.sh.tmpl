@@ -122,10 +122,10 @@ paru -S --needed --noconfirm visual-studio-code-bin
 
 info "🤖 Installing AI tools..."
 
-GPU_VENDOR="{{ default "" .gpu_vendor }}"
+detect_gpu_vendor
 
 if [ -z "$GPU_VENDOR" ]; then
-  warn "No 'gpu_vendor' set in chezmoi.toml. AI tools will run in CPU-only mode."
+  warn "No GPU detected via lspci. AI tools will run in CPU-only mode."
 fi
 
 # Install GPU-specific compute libraries / drivers
