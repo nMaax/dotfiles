@@ -23,10 +23,10 @@ chezmoi init --apply nMaax
 |---|---|---|
 | `name` | string | Your full name (used for Git identity) |
 | `email` | string | Your email (used for Git identity) |
-| `tailscale_authkey` | string | Tailscale auth key for auto-login (optional) |
-| `nordvpn_token` | string | NordVPN token for auto-login (optional) |
-| `gaming` | bool | `true` to deploy gaming tweaks (window rules, `SUPER+G` keybind, `~/.config/environment.d/gaming.conf`). |
-| `gpu_vendor` | string | `"nvidia"`, `"amd"`, or `"intel"`. Controls GPU-specific packages and the shader-cache variable in `gaming.conf`. |
+| `tailscale_authkey` | string | Tailscale auth key for auto-login |
+| `nordvpn_token` | string | NordVPN token for auto-login |
+| `gaming` | bool | `true` to deploy gaming tweaks|
+| `gpu_vendor` | string | `"nvidia"`, `"amd"`, or `"intel"`. Controls GPU-specific packages. |
 
 Example `chezmoi.toml`:
 
@@ -132,20 +132,10 @@ Both `megacmd-bin` and `keepassxc` are installed by the script as regular packag
 
 ## 📝 TODOs
 
-- [x] Generalize dotfiles keyring also for LUKS and SDDM auto-login
-- [x] Add note in README about how to setup the new wallet when prompted (encryption: bowfish, name: kdewallet, password: same as user)
-- [x] Use git filter-repo to scrub away binaries and easyeffects .config files (remind about irs files)
-  - [x] Maybe send Wallpapers, Gifs and Binaries to another repo and symlink here? I could use a git submodule
-  - [x] Also SilentSDDM Themese could be put in a different repo, and then linked via submodules or something
-- [x] Review theming via Noctalia is well managed in install scripts (try also to pass documentation to a GitHub Agent)
-- [x] Explore better scrolling options and make MCHOSE devices specific configs (or just distinguish between touchpad and mouse)
-- [x] Make add_note calls conditioned on the related modifications and patches to be applied (if they got skipped, notes should not be added), while in this README we put everything
-- [x] Use a SVG-based cursor to have high quality cursor shake
-- [x] Re-organize external links for downloads (e.g. wallpapers, easyeffect presets, silentSDDM themes, emojis, bibata cursor etc.) so that they are in their own file and can be updated better, what about using chezmoi file for external assets?
 - [ ] Complete the gaming launch options for NVIDIA, both here (TODO) and in the add_notes
-- [ ] Fix ksshaskpass Qt::font empty error
 - [ ] Seems like some irs and jpg file is still in history, clean it and remove all branches
-- [ ] Generalize for pure arch: track what Cachy installs, including fundamentals like bluetooth, networkmanager, fish, cachyos fish setup, gpu drivers etc.
 - [ ] Refine WALLHACK Wallpapers
 - [ ] Prepare some default wallpapers x colorschemes combinations
 - [ ] Once everything is finished, add screenshoots and videos in this README
+- [ ] Fix ksshaskpass Qt::font empty error
+- [ ] Generalize for pure arch: track what Cachy installs, including fundamentals like bluetooth, networkmanager, fish, cachyos fish setup, gpu drivers etc.
