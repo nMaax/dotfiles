@@ -1,4 +1,4 @@
-{{- if and (default false .has_gaming) (ne (default "" .gpu_vendor) "") -}}
+{{- if and (default false .gaming) (ne (default "" .gpu_vendor) "") -}}
 # Gaming shader-cache configuration — managed by chezmoi.
 # Regenerate with: chezmoi apply
 

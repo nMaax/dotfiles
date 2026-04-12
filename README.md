@@ -25,21 +25,19 @@ chezmoi init --apply nMaax
 | `email` | string | Your email (used for Git identity) |
 | `tailscale_authkey` | string | Tailscale auth key for auto-login (optional) |
 | `nordvpn_token` | string | NordVPN token for auto-login (optional) |
-| `has_gaming` | bool | `true` when the CachyOS gaming meta-package is installed. Enables gaming window rules, the `SUPER+G` keybind, the gaming mouse device config, and deploys `~/.config/environment.d/gaming.conf`. |
-| `gpu_vendor` | string | `"nvidia"` or `"amd"`. Controls which GPU shader-cache variable is written to `gaming.conf` (only used when `has_gaming = true`). |
-| `gaming_mouse_name` | string | Exact device name shown by `hyprctl devices` for your gaming mouse. Only used when `has_gaming = true`; leave empty to skip the per-device config block. |
+| `gaming` | bool | `true` to deploy gaming tweaks (window rules, `SUPER+G` keybind, `~/.config/environment.d/gaming.conf`). |
+| `gpu_vendor` | string | `"nvidia"`, `"amd"`, or `"intel"`. Controls GPU-specific packages and the shader-cache variable in `gaming.conf` (only effective when `gaming = true`). |
 
 Example `chezmoi.toml`:
 
 ```toml
 [data]
-  name = "Your Name"
+  name = "nMaax"
   email = "you@example.com"
-  tailscale_authkey = ""
-  nordvpn_token = ""
-  has_gaming = true
-  gpu_vendor = "amd"
-  gaming_mouse_name = "mchose-l7-pro+"
+  tailscale_authkey = "tskey-auth-XXXXXXXXXXXXX"
+  nordvpn_token = "nvpnkey-auth-XXXXXXXXXXXXX"
+  gaming = true
+  gpu_vendor = "nvidia"
 ```
 
 ## 🥞 Post-Installation Notes
