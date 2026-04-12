@@ -7,8 +7,8 @@ set -euo pipefail
 # For the future: move to shelly when it becomes default in CachyOS
 
 {{- if ne .chezmoi.osRelease.id "cachyos" }}
-echo "This script is intended to run on CachyOS."
-echo "Did nothing, will close now."
+error "This script is intended to run on CachyOS."
+error "Did nothing, will close now."
 exit 1
 {{- end }}
 
@@ -18,14 +18,12 @@ echo ""
 
 clean_notes
 
-read -rp "Did you tweak CachyOS as you like? [Y/n] " answer
-if [[ "${answer,,}" != "y" && -n "$answer" ]]; then
+if ! ask "Did you tweak CachyOS as you like?"; then
   error "Go back and tune whatever you like using Cachy Hello. Closing, come back later."
   exit 1
 fi
 
-read -rp "Did you place the chezmoi.toml? [Y/n] " answer
-if [[ "${answer,,}" != "y" && -n "$answer" ]]; then
+if ! ask "Did you place the chezmoi.toml?"; then
   error "Please place the chezmoi.toml in its proper location before proceeding. Closing, come back later."
   exit 1
 fi
@@ -60,12 +58,20 @@ info "🔧 Installing other utilities..."
 sudo pacman -S --needed --noconfirm smartmontools ffmpeg imagemagick perl-image-exiftool jq texlive-latex glow dust bat ripgrep fd btop nvtop trash-cli transmission-cli ghostscript pandoc poppler qpdf ufw tldr ksshaskpass fzf zoxide
 paru -S --needed --noconfirm caligula-bin pandoc-bin pdfcpu-bin ocrmypdf tesseract-data-eng tesseract-data-ita
 
+info "🖥️ Installing KDE suite, Qt, GTK and utility apps..."
+sudo pacman -S --needed --noconfirm \
+  qt6ct-kde qt5ct adw-gtk-theme nwg-look \
+  qt6-multimedia archlinux-xdg-menu ark dolphin-plugins filelight \
+  okular haruna kwrite gwenview \
+  kwallet kwallet-pam
+add_note "[KWALLET]: When prompted by an app, make a new wallet named kdewallet and bowfish encryption, using the same password as the user to enable automatic keyring login.\n See https://wiki.archlinux.org/title/KDE_Wallet for more information.\n Look at https://www.electronjs.org/docs/latest/api/safe-storage for Electron-specific information"
+
 echo ""
 success "✅ [Stage 1] Prerequisites installed."
 echo ""
 
 echo ""
-success "💤 [Stage 2] Installing apps and Noctalia..."
+success "💤 [Stage 2] Installing apps..."
 echo ""
 
 GIT_NAME={{ .name | quote }}
@@ -103,11 +109,6 @@ fi
 info "🌊 Installing browsers..."
 sudo pacman -S --needed --noconfirm chromium
 paru -S --needed --noconfirm zen-browser-bin
-add_note "[BROWSERS] Suggested extensions to install in your browsers:
-  - uBlock Origin  – content & ad blocker
-  - ClearURLs      – strips tracking parameters from URLs
-  - Tridactyl      – Vim-style keyboard navigation for Firefox/Zen
-  - MarkDownload   – download pages as Markdown"
 
 info "🔗 Installing Telegram"
 sudo pacman -S --needed --noconfirm telegram-desktop
@@ -129,18 +130,16 @@ fi
 
 # Install GPU-specific compute libraries / drivers
 if [ "$GPU_VENDOR" = "nvidia" ]; then
-  info "🟢 NVIDIA GPU configured. Installing CUDA toolkit for AI acceleration..."
+  info "NVIDIA GPU configured. Installing CUDA toolkit for AI acceleration..."
   sudo pacman -S --needed --noconfirm cuda cudnn
 elif [ "$GPU_VENDOR" = "amd" ]; then
-  info "🔴 AMD GPU configured. Installing ROCm/HIP for AI acceleration..."
+  info "AMD GPU configured. Installing ROCm/HIP for AI acceleration..."
   sudo pacman -S --needed --noconfirm rocm-opencl-runtime rocm-hip-sdk hip-runtime-amd
 fi
 
-# Always install Gemini CLI
 info "💎 Installing Gemini CLI..."
 sudo pacman -S --needed --noconfirm gemini-cli
 
-# Install Ollama with the right GPU backend
 info "🦙 Installing Ollama..."
 if [ "$GPU_VENDOR" = "nvidia" ]; then
   sudo pacman -S --needed --noconfirm ollama-cuda
@@ -150,8 +149,6 @@ else
   sudo pacman -S --needed --noconfirm ollama
 fi
 sudo systemctl enable --now ollama.service
-
-success "AI tools installed."
 
 info "📤 Installing LocalSend..."
 paru -S --needed --noconfirm localsend
@@ -210,50 +207,28 @@ paru -Rns --noconfirm equicord-installer-bin || true
 info "🎵 Installing EasyEffects..."
 sudo pacman -S --needed --noconfirm easyeffects lsp-plugins
 
+echo ""
+success "✅ [Stage 2] Apps installed."
+echo ""
+
+echo ""
+success "💤 [Stage 3] Installing Noctalia and Hyprland Extras..."
+echo ""
+
 info "🌙 Installing Noctalia dependencies..."
 paru -S --needed --noconfirm cliphist wlsunset xdg-desktop-portal evolution-data-server hyprshot quickshell-overview-git
 
-kwallet_fresh=0
-if ! pacman -Qs kwallet &>/dev/null; then
-  kwallet_fresh=1
-fi
+info "🦉 Installing Noctalia..."
+paru -S --needed --noconfirm noctalia-shell
+add_note "[NOCTALIA] ddcutil was installed by default, which may introduce system instability with certain monitors; remove it eventually with: sudo pacman -Rns ddcutil"
+add_note "[NOCTALIA] All built-in app-theming you commonly use are pre-enabled by default (GTK, Qt, KColorScheme, Ghostty, Hyprland, btop, Spicetify, Telegram, Zen Browser, cava, Discord, VSCode). Remaining steps require manual in-app user interaction, view official noctalia documentation for your specific needs: https://docs.noctalia.dev/theming/basic-app-theming/"
 
-echo "🖥️ Installing KDE suite, Qt, GTK and utility apps..."
-sudo pacman -S --needed --noconfirm \
-  qt6ct-kde qt5ct adw-gtk-theme nwg-look \
-  qt6-multimedia archlinux-xdg-menu ark dolphin-plugins filelight \
-  okular haruna kwrite gwenview \
-  kwallet kwallet-pam
-
-if [ "$kwallet_fresh" -eq 1 ]; then
-  add_note "[KWALLET]: When prompted by an app, make a new wallet named kdewallet and bowfish encryption, using the same password as the user to enable automatic keyring login.\n See https://wiki.archlinux.org/title/KDE_Wallet for more information.\n Look at https://www.electronjs.org/docs/latest/api/safe-storage for Electron-specific information"
-fi
-
-echo "Syncing GTK with Noctalia and removing decorations..."
+info "🀄 Syncing GTK with Noctalia and removing decorations..."
 gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3'
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 gsettings set org.gnome.desktop.wm.preferences button-layout ':'
 
-echo "🐬 Fixing Dolphin 'Open With' amnesia..."
-sudo ln -sf /etc/xdg/menus/arch-applications.menu /etc/xdg/menus/applications.menu
-rm -rf ~/.cache/ksycoca6*
-kbuildsycoca6 --noincremental
-
-noctalia_fresh=0
-if ! pacman -Qs noctalia-shell &>/dev/null; then
-  noctalia_fresh=1
-fi
-
-info "🦉 Installing Noctalia..."
-paru -S --needed --noconfirm noctalia-shell
-
-if [ "$noctalia_fresh" -eq 1 ]; then
-  add_note "[NOCTALIA] ddcutil was installed by default, which may introduce system instability with certain monitors; remove it eventually with: sudo pacman -Rns ddcutil"
-  add_note "[NOCTALIA] All built-in app-theming you commonly use are pre-enabled by default (GTK, Qt, KColorScheme, Ghostty, Hyprland, btop, Spicetify, Telegram, Zen Browser, cava, Discord, VSCode). Remaining steps require manual in-app user interaction, view official noctalia documentation for your specific needs: https://docs.noctalia.dev/theming/basic-app-theming/"
-fi
-
 info "💅 Setting Hyprcursor..."
-
 CURSOR_TMP="/tmp/hypr_Bibata-Modern-Classic"
 CURSOR_ARCHIVE="$CURSOR_TMP.tar.gz"
 CURSOR_DEST="$HOME/.local/share/icons/Bibata-Modern-Classic"
@@ -273,7 +248,6 @@ else
 fi
 
 info "💧 Setting hyprland plugins..."
-
 if ! hyprpm list | grep -q dynamic-cursors; then
   hyprpm update
   hyprpm add "$HYPR_DYNAMIC_CURSORS_REPO"
@@ -283,5 +257,5 @@ else
 fi
 
 echo ""
-success "✅ [Stage 2] Apps and Noctalia installed."
+success "✅ [Stage 3] Noctalia and Hyprland extras installed."
 echo ""
