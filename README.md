@@ -156,4 +156,9 @@ Both `megacmd-bin` and `keepassxc` are installed by the script as regular packag
 - [ ] Once everything is finished, add screenshoots and videos in this README
 - [ ] Fix ksshaskpass Qt::font empty error
 - [ ] Fix OBS Browser install to automate substitution that requires the vlc plugin variant from lua to be changed in luajit
+- [ ] Should I do this?
+
+sudo pacman -S --needed ca-certificates ca-certificates-utils ca-certificates-mozilla
+sudo update-ca-trust
+
 - [ ] Generalize for pure arch: track what Cachy installs, including fundamentals like bluetooth, networkmanager, fish, cachyos fish setup, gpu drivers etc.
