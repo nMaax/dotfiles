@@ -279,8 +279,7 @@ info "Enabling Tailscale daemon..."
 sudo systemctl enable --now tailscaled
 sleep 2
 
-{{- $tailscaleKey := .tailscale_authkey | default "" -}}
-{{- if $tailscaleKey }}
+{{- if .tailscale_authkey }}
 info "Authenticating Tailscale using provided authkey..."
 if sudo tailscale status 2>/dev/null | grep -qE "^[0-9]+\.[0-9]"; then
   success "Tailscale already connected. Skipping."
@@ -301,8 +300,7 @@ sudo usermod -aG nordvpn "$USER"
 sleep 2
 add_note "[NORDVPN]: NORDVPN has introduced a new system group, reboot your system to use it"
 
-{{- $nordKey := index . "nordvpn_token" -}}
-{{- if $nordKey }}
+{{- if .nordvpn_token }}
 info "Logging into NordVPN using provided token..."
 if ! sg nordvpn -c "nordvpn account" &>/dev/null; then
   sg nordvpn -c "nordvpn login --token {{ .nordvpn_token }}"
