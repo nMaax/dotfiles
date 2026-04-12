@@ -54,8 +54,9 @@ sudo pacman -S --needed --noconfirm smartmontools ffmpeg imagemagick perl-image-
 paru -S --needed --noconfirm caligula-bin pdfcpu-bin ocrmypdf tesseract-data-eng tesseract-data-ita
 
 info "🖥️ Installing KDE suite, Qt, GTK and utility apps..."
+paru -S --needed --noconfirm qt6ct-kde
 sudo pacman -S --needed --noconfirm \
-  qt6ct-kde qt5ct adw-gtk-theme nwg-look \
+  qt5ct adw-gtk-theme nwg-look \
   qt6-multimedia archlinux-xdg-menu ark dolphin-plugins filelight \
   okular haruna kwrite gwenview \
   kwallet kwallet-pam
