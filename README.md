@@ -30,7 +30,7 @@ To fix do the following:
 exec-once = /usr/lib/polkit-kde-authentication-agent-1
 ```
 
-3. Save and restart Hyprland (Super + M or just log out).
+1. Save and restart Hyprland (Super + M or just log out).
 
 > [!NOTE]
 > If you aren't using KDE, the path might be /usr/lib/lxpolkit or similar. Cachy usually defaults to the KDE agent even on Hyprland.
@@ -63,9 +63,9 @@ Example `chezmoi.toml`:
 The following is automated by the install script (out-of-the-box): GTK, Qt, KColorScheme, Ghostty, Hyprland, btop, Spicetify, Telegram, Zen Browser, cava, Discord, VSCode.
 
 > [!NOTE]
-> 
+>
 > `adw-gtk3` + `prefer-dark` was already applied via `gsettings` during the install script.
-> 
+>
 > Qt theming via `qt6ct` with `QT_QPA_PLATFORMTHEME` has been set in Hyprland env.
 
 Remaining manual steps (require in-app interaction):
@@ -155,4 +155,5 @@ Both `megacmd-bin` and `keepassxc` are installed by the script as regular packag
 - [ ] Prepare some default wallpapers x colorschemes combinations
 - [ ] Once everything is finished, add screenshoots and videos in this README
 - [ ] Fix ksshaskpass Qt::font empty error
+- [ ] Fix OBS Browser install to automate substitution that requires the vlc plugin variant from lua to be changed in luajit
 - [ ] Generalize for pure arch: track what Cachy installs, including fundamentals like bluetooth, networkmanager, fish, cachyos fish setup, gpu drivers etc.
