@@ -30,6 +30,23 @@ if [[ "${answer,,}" != "y" && -n "$answer" ]]; then
   exit 1
 fi
 
+{{ if .gaming -}}
+warn "⚠️  You have 'gaming = true' in chezmoi.toml."
+warn "Gaming tweaks will be applied during Stage 3. Make sure you have installed the CachyOS gaming packages BEFORE proceeding."
+warn "You can install them via CachyOS Hello or with: sudo pacman -S cachyos-gaming-meta cachyos-gaming-applications"
+if ! pacman -Q cachyos-gaming-applications cachyos-gaming-meta >/dev/null 2>&1; then
+  warn "Gaming packages do NOT appear to be installed yet! Stage 3 gaming tweaks may fail without them."
+  read -rp "Continue anyway? [y/N] " answer
+  if [[ "${answer,,}" != "y" ]]; then
+    error "Please install the gaming packages first, then re-run. Closing."
+    exit 1
+  fi
+  warn "Continuing without gaming packages — Stage 3 gaming tweaks may fail."
+else
+  success "✅ Gaming packages detected."
+fi
+{{- end }}
+
 info "🔄 Checking for cachy-update..."
 if sudo pacman -Q cachy-update &>/dev/null; then
   cachy-update
