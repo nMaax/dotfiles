@@ -17,6 +17,31 @@ pacman -S chezmoi
 chezmoi init --apply nMaax
 ```
 
+### 📋 chezmoi.toml variables
+
+| Variable | Type | Description |
+|---|---|---|
+| `name` | string | Your full name (used for Git identity) |
+| `email` | string | Your email (used for Git identity) |
+| `tailscale_authkey` | string | Tailscale auth key for auto-login (optional) |
+| `nordvpn_token` | string | NordVPN token for auto-login (optional) |
+| `has_gaming` | bool | `true` when the CachyOS gaming meta-package is installed. Enables gaming window rules, the `SUPER+G` keybind, the gaming mouse device config, and deploys `~/.config/environment.d/gaming.conf`. |
+| `gpu_vendor` | string | `"nvidia"` or `"amd"`. Controls which GPU shader-cache variable is written to `gaming.conf` (only used when `has_gaming = true`). |
+| `gaming_mouse_name` | string | Exact device name shown by `hyprctl devices` for your gaming mouse. Only used when `has_gaming = true`; leave empty to skip the per-device config block. |
+
+Example `chezmoi.toml`:
+
+```toml
+[data]
+  name = "Your Name"
+  email = "you@example.com"
+  tailscale_authkey = ""
+  nordvpn_token = ""
+  has_gaming = true
+  gpu_vendor = "amd"
+  gaming_mouse_name = "mchose-l7-pro+"
+```
+
 ## 🥞 Post-Installation Notes
 
 ### 🎨 Theming

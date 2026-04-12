@@ -242,28 +242,7 @@ if pacman -Q cachyos-gaming-applications cachyos-gaming-meta >/dev/null 2>&1; th
     info "Feral's gamemode not installed. Skipping ananicy-cpp conflict check."
   fi
 
-  info "Detecting GPU and configuring 12GB Shader Cache..."
-  mkdir -p "$HOME/.config/environment.d"
-  GAMING_CONF="$HOME/.config/environment.d/gaming.conf"
-
-  detect_gpu_vendor
-  if [ "$GPU_VENDOR" = "nvidia" ]; then
-    if ! grep -q "^__GL_SHADER_DISK_CACHE_SIZE=" "$GAMING_CONF" 2>/dev/null; then
-      echo "__GL_SHADER_DISK_CACHE_SIZE=12000000000" >>"$GAMING_CONF"
-      info "NVIDIA GPU detected. Shader cache set to 12GB in $GAMING_CONF."
-    else
-      success "NVIDIA shader cache already configured in $GAMING_CONF. Skipping."
-    fi
-  elif [ "$GPU_VENDOR" = "amd" ]; then
-    if ! grep -q "^MESA_SHADER_CACHE_MAX_SIZE=" "$GAMING_CONF" 2>/dev/null; then
-      echo "MESA_SHADER_CACHE_MAX_SIZE=12G" >>"$GAMING_CONF"
-      info "AMD GPU detected. Shader cache set to 12GB in $GAMING_CONF."
-    else
-      success "AMD shader cache already configured in $GAMING_CONF. Skipping."
-    fi
-  else
-    warn "Could not reliably detect NVIDIA or AMD GPU. Skipping shader cache tweak."
-  fi
+  info "Shader cache — already configured via chezmoi template (~/.config/environment.d/gaming.conf)."
 
   add_note "[GAMING]:
 
