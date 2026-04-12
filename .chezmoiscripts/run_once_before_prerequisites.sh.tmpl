@@ -92,6 +92,10 @@ if ! pacman -Qs ttf-apple-emoji >/dev/null; then
 
   # Verify hash before installing, since this is not taken from pacman repo or AUR
   if echo "$APPLE_EMOJI_SHA256  $EMOJI_FILE" | sha256sum -c -; then
+    if pacman -Qs noto-fonts-emoji >/dev/null; then
+      info "Removing conflicting package: noto-fonts-emoji"
+      sudo pacman -Rns --noconfirm noto-fonts-emoji
+    fi
     sudo pacman -U --noconfirm "$EMOJI_FILE"
     success "Apple Emoji installed successfully."
   else
