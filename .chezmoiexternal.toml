@@ -30,6 +30,6 @@ refreshPeriod = "168h"
 
 [".local/share/icons/Bibata-Modern-Classic"]
 type = "archive"
-url = "https://example.com/path/to/Bibata-Modern-Classic.tar.gz"
+url = "https://github.com/LOSEARDES77/Bibata-Cursor-hyprcursor/releases/download/1.0/hypr_Bibata-Modern-Classic.tar.gz"
 exact = true
 stripComponents = 1
