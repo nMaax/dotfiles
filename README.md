@@ -26,7 +26,6 @@ chezmoi init --apply nMaax
 | `tailscale_authkey` | string | Tailscale auth key for auto-login |
 | `nordvpn_token` | string | NordVPN token for auto-login |
 | `gaming` | bool | `true` to deploy gaming tweaks|
-| `gpu_vendor` | string | `"nvidia"`, `"amd"`, or `"intel"`. Controls GPU-specific packages. |
 
 Example `chezmoi.toml`:
 
@@ -37,7 +36,6 @@ Example `chezmoi.toml`:
   tailscale_authkey = "tskey-auth-XXXXXXXXXXXXX"
   nordvpn_token = "nvpnkey-auth-XXXXXXXXXXXXX"
   gaming = true
-  gpu_vendor = "nvidia"
 ```
 
 ## 🥞 Post-Installation Notes
