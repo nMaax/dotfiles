@@ -36,14 +36,9 @@ fi
 success "✅ Gaming packages detected."
 {{- end }}
 
-info "🔄 Checking for cachy-update..."
-if sudo pacman -Q cachy-update &>/dev/null; then
-  cachy-update
-else
-  error "cachy-update is not installed. Did you really listen to me before??"
-  error "Please open 'CachyOS Hello' to enable cachy-update, and remind to tweak your system!"
-  exit 1
-fi
+info "🔄 Checking for updates..."
+sudo pacman -Syu --noconfirm
+paru -Syu --noconfirm
 
 info "📦 Checking for missing base packages..."
 BASE_PACKAGES=(binutils base-devel git vim cmake cpio appmenu-gtk-module libdbusmenu-glib hyprland xdg-desktop-portal-hyprland ddcutil)
