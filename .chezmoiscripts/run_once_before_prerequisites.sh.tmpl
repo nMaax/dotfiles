@@ -255,9 +255,6 @@ gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3'
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 gsettings set org.gnome.desktop.wm.preferences button-layout ':'
 
-echo "💅 Activating Hyprcursor..."
-hyprctl setcursor Bibata-Modern-Classic 24
-
 info "💧 Setting hyprland plugins..."
 if ! hyprpm list | grep -q dynamic-cursors; then
   hyprpm update
