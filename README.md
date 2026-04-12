@@ -156,4 +156,5 @@ Both `megacmd-bin` and `keepassxc` are installed by the script as regular packag
 - [ ] Once everything is finished, add screenshoots and videos in this README
 - [ ] Fix ksshaskpass Qt::font empty error
 - [ ] Fix OBS Browser install to automate substitution that requires the vlc plugin variant from lua to be changed in luajit
+- [ ] Double check installation of .face and .logo, as well as if tailscale and nordvpn keys work now
 - [ ] Generalize for pure arch: track what Cachy installs, including fundamentals like bluetooth, networkmanager, fish, cachyos fish setup, gpu drivers etc.
