@@ -17,6 +17,29 @@ pacman -S chezmoi
 chezmoi init --apply nMaax
 ```
 
+### 📋 chezmoi.toml variables
+
+| Variable | Type | Description |
+|---|---|---|
+| `name` | string | Your full name (used for Git identity) |
+| `email` | string | Your email (used for Git identity) |
+| `tailscale_authkey` | string | Tailscale auth key for auto-login (optional) |
+| `nordvpn_token` | string | NordVPN token for auto-login (optional) |
+| `gaming` | bool | `true` to deploy gaming tweaks (window rules, `SUPER+G` keybind, `~/.config/environment.d/gaming.conf`). |
+| `gpu_vendor` | string | `"nvidia"`, `"amd"`, or `"intel"`. Controls GPU-specific packages and the shader-cache variable in `gaming.conf`. |
+
+Example `chezmoi.toml`:
+
+```toml
+[data]
+  name = "nMaax"
+  email = "you@example.com"
+  tailscale_authkey = "tskey-auth-XXXXXXXXXXXXX"
+  nordvpn_token = "nvpnkey-auth-XXXXXXXXXXXXX"
+  gaming = true
+  gpu_vendor = "nvidia"
+```
+
 ## 🥞 Post-Installation Notes
 
 ### 🎨 Theming

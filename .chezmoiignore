@@ -5,6 +5,7 @@
 
 # --- CONFIG ---
 .config/*
+!.config/environment.d/
 !.config/fastfetch/
 !.config/fish/
 !.config/fontconfig/
@@ -15,6 +16,9 @@
 !.config/nvim/
 !.config/pipewire/
 !.config/starship.toml
+
+# --- ENVIRONMENT.D: only deploy gaming.conf when gaming is enabled ---
+{{ if not (default false .gaming) }}.config/environment.d/gaming.conf{{ end }}
 
 # --- FISH: Exclude shell state ---
 .config/fish/fish_variables
