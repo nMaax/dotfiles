@@ -45,7 +45,7 @@ bind = SUPER, P, exec, keepassxc #"Open KeePassXC"
 bind = SUPER, Delete, exec, ~/.local/bin/hypr-toggle.py sysmon #"Toggle system monitors workspace (btop)"
 bind = SUPER, C, exec, ~/.local/bin/hypr-toggle.py communication #"Toggle communication workspace (Discord)"
 bind = SUPER, M, exec, ~/.local/bin/hypr-toggle.py music #"Toggle music workspace (Spotify)"
-{{ if default false .has_gaming -}}
+{{ if default false .gaming -}}
 bind = SUPER, G, exec, ~/.local/bin/hypr-toggle.py games #"Toggle game launchers workspace (Steam)"
 {{ end -}}
 bind = SUPER, A, exec, ~/.local/bin/hypr-toggle.py audio #"Toggle audio workspace (EasyEffects)"

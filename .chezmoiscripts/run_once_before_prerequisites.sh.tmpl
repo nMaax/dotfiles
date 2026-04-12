@@ -109,18 +109,18 @@ paru -S --needed --noconfirm visual-studio-code-bin
 # ── AI TOOLS ──────────────────────────────────────────────────────────────────
 info "🤖 Installing AI tools..."
 
-# Detect GPU manufacturer
-detect_gpu_vendor
+GPU_VENDOR="{{ default "" .gpu_vendor }}"
+
 if [ -z "$GPU_VENDOR" ]; then
-  warn "Could not detect NVIDIA or AMD GPU. AI tools will run in CPU-only mode."
+  warn "No 'gpu_vendor' set in chezmoi.toml. AI tools will run in CPU-only mode."
 fi
 
 # Install GPU-specific compute libraries / drivers
 if [ "$GPU_VENDOR" = "nvidia" ]; then
-  info "🟢 NVIDIA GPU detected. Installing CUDA toolkit for AI acceleration..."
+  info "🟢 NVIDIA GPU configured. Installing CUDA toolkit for AI acceleration..."
   sudo pacman -S --needed --noconfirm cuda cudnn
 elif [ "$GPU_VENDOR" = "amd" ]; then
-  info "🔴 AMD GPU detected. Installing ROCm/HIP for AI acceleration..."
+  info "🔴 AMD GPU configured. Installing ROCm/HIP for AI acceleration..."
   sudo pacman -S --needed --noconfirm rocm-opencl-runtime rocm-hip-sdk hip-runtime-amd
 fi
 
