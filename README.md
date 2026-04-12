@@ -26,7 +26,7 @@ chezmoi init --apply nMaax
 | `tailscale_authkey` | string | Tailscale auth key for auto-login (optional) |
 | `nordvpn_token` | string | NordVPN token for auto-login (optional) |
 | `gaming` | bool | `true` to deploy gaming tweaks (window rules, `SUPER+G` keybind, `~/.config/environment.d/gaming.conf`). |
-| `gpu_vendor` | string | `"nvidia"`, `"amd"`, or `"intel"`. Controls GPU-specific packages and the shader-cache variable in `gaming.conf` (only effective when `gaming = true`). |
+| `gpu_vendor` | string | `"nvidia"`, `"amd"`, or `"intel"`. Controls GPU-specific packages and the shader-cache variable in `gaming.conf`. |
 
 Example `chezmoi.toml`:
 
