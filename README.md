@@ -241,15 +241,6 @@ Of course Mooncake is designed with gaming in mind too, they will then apply som
 
 ## 📝 TODOs
 
-- [x] Notify user at start that they will need to interact with the install script, this is not a run and forget
-- [x] How to install quickshell-overview-git without making it conflict with noctalia-qs?
-- [x] What about ssh? What should one do to connect to github or another machine?
-- [x] Add Work/ directory, and add it to XDG_DIRS file too
-- [x] Check if you can move some of the external links as `.externalchezmoi.toml`'s items
-- [x] Re-organize the README
-- [x] Double check SDDM PAM patching for LUKS is ok
-- [x] Review install scripts
-- [x] Review dotfiles themselves
 - [ ] Seems like some irs and jpg file is still in history, clean it and remove all branches
 - [ ] Close all PRs, and delete all branches
 - [ ] Refine WALLHACK Wallpapers (add theme to dotfiles-assets)
