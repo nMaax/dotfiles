@@ -8,9 +8,12 @@ echo ""
 info "🌙 [Hyprland & Noctalia] Starting..."
 echo ""
 
+info "🌙 Installing Hyprland core..."
+sudo pacman -S --needed --noconfirm hyprland xdg-desktop-portal-hyprland ddcutil
+add_note "[HYPRLAND] ddcutil was installed as a Hyprland dependency, which may introduce system instability with certain monitors; remove it eventually with: sudo pacman -Rns ddcutil"
+
 info "🌙 Installing Noctalia dependencies..."
 paru -S --needed --noconfirm cliphist wlsunset xdg-desktop-portal evolution-data-server hyprshot
-add_note "[NOCTALIA] ddcutil was installed by default, which may introduce system instability with certain monitors; remove it eventually with: sudo pacman -Rns ddcutil"
 
 info "🦉 Installing Noctalia..."
 paru -S --needed --noconfirm noctalia-shell
