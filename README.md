@@ -9,7 +9,7 @@ These dotfiles are heavily based on **CachyOS** (not just Arch), specifically th
 ## 🧁 Installation
 
 > [!WARNING]
-> **This is NOT a run-and-forget installation.** The install script will prompt you at several points — to confirm system tweaks, accept package substitutions (e.g. for OBS Studio) and review post-install notes. Keep an eye on the terminal throughout the entire process.
+> **This is NOT a run-and-forget installation.** The install script will prompt you at several points. Keep an eye on the terminal throughout the entire process.
 
 1. Tweak CachyOS via the CachyOS Hello app and apply your preferred baseline system tweaks, remind to enable cachy-update;
 2. Prepare your `~/.config/chezmoi/chezmoi.toml` configuration file with your specific variables (use another device as a template).
@@ -136,7 +136,7 @@ The install script enables and starts both `sshd` and the user-level `ssh-agent`
 #### Generating a key
 
 ```fish
-ssh-keygen -t ed25519 -C "you@example.com"
+ssh-keygen -t ed25519 -C "axew"
 ```
 
 Accept the default path (`~/.ssh/id_ed25519`) and choose a strong passphrase. The new key is picked up automatically by the running `ssh-agent`.
@@ -184,40 +184,6 @@ Host myserver
 ```
 
 Then connect simply with `ssh myserver`.
-
-### 🪄 Quickshell: installing quickshell-overview-git alongside noctalia-qs
-
-`noctalia-qs` bundles its own overview implementation and ships files under
-`/usr/share/quickshell/` (or your user config directory). The AUR package
-`quickshell-overview-git` installs files to the same location, so pacman
-reports a conflict and refuses to install both at the same time.
-
-**Recommended approach — merge manually:**
-
-1. Clone the `quickshell-overview-git` PKGBUILD and build the package without installing it:
-
-   ```fish
-   paru -G quickshell-overview-git
-   cd quickshell-overview-git
-   makepkg -s --noconfirm   # builds but does NOT install
-   ```
-
-2. Extract the built package to a temporary directory:
-
-   ```fish
-   mkdir /tmp/qs-overview
-   bsdtar -xf quickshell-overview-git-*.pkg.tar.zst -C /tmp/qs-overview
-   ```
-
-3. Inspect the extracted files and copy only those that do **not** already exist in your noctalia-qs config directory (usually `~/.config/quickshell/`), taking care not to overwrite noctalia-managed files.
-
-4. Reload Quickshell.
-
-**Alternative — disable noctalia's own overview first:**
-
-If noctalia-qs exposes a toggle for its built-in overview (check `~/.config/quickshell/` for a config or `modules/` directory), disable it before installing `quickshell-overview-git` with `paru -S quickshell-overview-git --overwrite '*'`.
-
-> Keep an eye on noctalia release notes — a future version may officially support this package.
 
 ### 🎮 Gaming Reminders
 
