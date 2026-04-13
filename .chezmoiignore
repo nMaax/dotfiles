@@ -51,6 +51,7 @@
 !.config/Code/argv.json
 
 !.config/chromium-flags.conf
+!.config/user-dirs.dirs
 
 # --- LOCAL ---
 .local/*

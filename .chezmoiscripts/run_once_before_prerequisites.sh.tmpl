@@ -40,6 +40,10 @@ fi
 success "✅ Gaming packages detected."
 {{- end }}
 
+info "📁 Creating home directories..."
+mkdir -p "$HOME/Work"
+xdg-user-dirs-update
+
 info "🔄 Checking for updates..."
 sudo pacman -Syu --noconfirm
 paru -Syu --noconfirm

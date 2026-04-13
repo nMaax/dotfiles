@@ -212,7 +212,7 @@ Then connect simply with `ssh myserver`.
 - [x] Notify user at start that they will need to interact with the install script, this is not a run and forget
 - [x] How to install quickshell-overview-git without making it conflict with noctalia-qs?
 - [x] What about ssh? What should one do to connect to github or another machine?
-- [ ] Add Work/ directory, and add it to XDG_DIRS file too
+- [x] Add Work/ directory, and add it to XDG_DIRS file too
 - [ ] Double check SDDM PAM patching for LUKS is ok
 - [ ] Ultimate dotfiles: review install scripts and what is stored and what not
 - [ ] Seems like some irs and jpg file is still in history, clean it and remove all branches
