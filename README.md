@@ -73,7 +73,7 @@ Both `megacmd-bin` and `keepassxc` are installed by the script as regular packag
 
 ### 🔑 Keyring, SDDM, and stability
 
-KWallet presents some issues in non-Plasma environments, the install scripts tried to address a clean patching of these issues out of the box, however some issues may still be present, especially with Electron apps that rely on safe storage.
+KWallet presents some issues in non-Plasma environments, the install scripts tried to cleanly patch these issues out of the box, however some issues may still be present, especially with Electron apps that rely on safe storage.
 
 Further information can be found at [Arch Wiki: KDE Wallet](https://wiki.archlinux.org/title/KDE_Wallet) and [Electron Safe Storage Info](https://www.electronjs.org/docs/latest/api/safe-storage).
 
