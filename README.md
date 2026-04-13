@@ -150,9 +150,8 @@ Both `megacmd-bin` and `keepassxc` are installed by the script as regular packag
 
 ## 📝 TODOs
 
+- [ ] Notify user at start that they will need to interact with the install script, this is not a run and forget
 - [ ] How to install quickshell-overview-git without making it conflict with noctalia-qs?
-- [ ] Fix ksshaskpass Qt::font empty error
-- [ ] Fix OBS Browser install to automate substitution that requires the vlc plugin variant from lua to be changed in luajit
 - [ ] Double check SDDM PAM patching for LUKS is ok
 - [ ] Ultimate dotfiles: review install scripts and what is stored and what not
 - [ ] Seems like some irs and jpg file is still in history, clean it and remove all branches
@@ -160,4 +159,8 @@ Both `megacmd-bin` and `keepassxc` are installed by the script as regular packag
 - [ ] Refine WALLHACK Wallpapers
 - [ ] Prepare some default wallpapers x colorschemes combinations
 - [ ] Once everything is finished, add screenshoots and videos in this README
+
+### For the future
 - [ ] Generalize for pure arch: track what Cachy installs, including fundamentals like bluetooth, networkmanager, fish, cachyos fish setup, gpu drivers etc.
+- [ ] Fix ksshaskpass Qt::font empty error
+- [ ] Fix OBS Browser install to automate substitution that requires the vlc plugin variant from lua to be changed in luajit
