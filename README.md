@@ -241,7 +241,7 @@ Of course Mooncake is designed with gaming in mind too, they will then apply som
 - [x] Re-organize the README
 - [x] Double check SDDM PAM patching for LUKS is ok
 - [ ] Review install scripts
-- [ ] Review dotfiles themselves
+- [x] Review dotfiles themselves
 - [ ] Seems like some irs and jpg file is still in history, clean it and remove all branches
 - [ ] Close all PRs, and delete all branches
 - [ ] Refine WALLHACK Wallpapers (add theme to dotfiles-assets)
