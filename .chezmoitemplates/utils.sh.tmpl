@@ -37,16 +37,20 @@ show_notes() {
     cat "$NOTES_FILE"
     echo ""
 
-    if ask "💾 Save these notes as Markdown to your Documents folder?"; then
-      local docs_dir
-      if command -v xdg-user-dir >/dev/null 2>&1; then
-        docs_dir="$(xdg-user-dir DOCUMENTS)"
-      elif [[ -f "$HOME/.config/user-dirs.dirs" ]]; then
-        docs_dir="$(. "$HOME/.config/user-dirs.dirs" 2>/dev/null; echo "${XDG_DOCUMENTS_DIR:-$HOME/Documents}")"
-      else
-        docs_dir="$HOME/Documents"
-      fi
+    # Resolve Documents dir once
+    local docs_dir
+    if command -v xdg-user-dir >/dev/null 2>&1; then
+      docs_dir="$(xdg-user-dir DOCUMENTS)"
+    elif [[ -f "$HOME/.config/user-dirs.dirs" ]]; then
+      docs_dir="$(. "$HOME/.config/user-dirs.dirs" 2>/dev/null; echo "${XDG_DOCUMENTS_DIR:-$HOME/Documents}")"
+    else
+      docs_dir="$HOME/Documents"
+    fi
 
+    # If a notes file from a previous install already exists, skip saving
+    if compgen -G "${docs_dir}/dotfiles_install_notes_*.md" >/dev/null 2>&1; then
+      warn "A notes file from a previous install already exists in $docs_dir — skipping save."
+    elif ask "💾 Save these notes as Markdown to your Documents folder?"; then
       local timestamp out_file
       timestamp=$(date +"%Y%m%d_%H%M%S")
       out_file="${docs_dir}/dotfiles_install_notes_${timestamp}.md"
