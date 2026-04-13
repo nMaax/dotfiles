@@ -13,22 +13,6 @@ exit 1
 {{- end }}
 
 echo ""
-success "💤 [Stage 2] Installing apps..."
-echo ""
-
-info "👾 Installing Discord (Equicord + OpenAsar) from AUR..."
-paru -S --needed --noconfirm discord equicord-installer-bin
-
-sudo Equilotl -install -location /opt/discord || success "Equicord already installed, skipping..."
-sudo Equilotl -install-openasar -location /opt/discord || success "OpenAsar already installed, skipping..."
-
-paru -Rns --noconfirm equicord-installer-bin || true
-
-echo ""
-success "✅ [Stage 2] Apps installed."
-echo ""
-
-echo ""
 success "💤 [Stage 3] Installing Noctalia and Hyprland Extras..."
 echo ""
 
