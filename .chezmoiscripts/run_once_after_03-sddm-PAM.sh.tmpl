@@ -34,7 +34,11 @@ elif grep -q "kwalletd=/usr/bin/ksecretd" /etc/pam.d/sddm; then
   success "/etc/pam.d/sddm already contains kwalletd parameter. Skipping."
 else
   sudo sed -i 's/\(pam_kwallet5\.so auto_start\)\($\| \)/\1 kwalletd=\/usr\/bin\/ksecretd\2/' /etc/pam.d/sddm
-  success "Added kwalletd=/usr/bin/ksecretd to /etc/pam.d/sddm"
+  if grep -q "kwalletd=/usr/bin/ksecretd" /etc/pam.d/sddm; then
+    success "Added kwalletd=/usr/bin/ksecretd to /etc/pam.d/sddm"
+  else
+    warn "/etc/pam.d/sddm does not contain a 'pam_kwallet5.so auto_start' line — kwalletd= parameter could not be injected. KWallet may not auto-unlock."
+  fi
 fi
 
 # --- SDDM autologin (present only when the user enabled autologin) ---
