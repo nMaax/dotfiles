@@ -76,6 +76,7 @@ You can retrive the list of apps on which automtic theming is set on the Noctali
 Furthermore, you can install other themes for apps yourself, have a look at:
 - [ZenZero](https://sameerasw.com/zen)
 - [BetterDiscord](https://betterdiscord.app/themes)
+- [Millenium for Steam](https://steambrew.app/themes)
 
 ### 🌐 Broswer(s) setup
 
@@ -90,7 +91,13 @@ The stuff that I usually use during my browsing experience, what do you want wit
 - **Zen Mods**:
   - [Transparent Zen](https://zen-browser.app/mods/642854b5-88b4-4c40-b256-e035532109df) – make zen look transparent, needed for [ZenZero](https://sameerasw.com/zen)
 
-Eventually consider also volume booster, YouTube Improved etc. As well as paywall remover or time machine to consul old snapshots of wepages.
+Eventually consider also [Volume Control](https://github.com/Chaython/volumecontrol), [Web Archives](https://github.com/dessant/web-archives), [YouTube Improved](https://github.com/code-charity/youtube), etc.
+
+Furthermore, here is a list of some good misc websites for common utilities (wallpapers, paywall removal etc).
+- [Pinterest](https://it.pinterest.com/): for propics
+- [Wallheaven](https://wallhaven.cc/): for static backgrounds
+- [MotionBGs](https://motionbgs.com/): for animated wallpapers
+- Guide on how to convert WallpaperEngine backgrounds into video files: from [WallapaperEngine itself](https://help.wallpaperengine.io/en/functionality/export.html), from [Steam community](https://steamcommunity.com/sharedfiles/filedetails/?id=2277828676)
 
 ### 🔥 Spicetify Extension
 
