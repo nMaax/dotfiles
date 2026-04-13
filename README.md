@@ -2,7 +2,7 @@
 
 Personal dotfiles and system configurations, just the way I like it.
 
-These dotfiles are heavily based on **CachyOS** (not just Arch), specifically the various packages that Cachy ships (fish, varuous KDE bloat etc.). Ideally you should have installed CachyOS selecting for hyprland during the Calamares installation.
+These dotfiles are heavily based on **CachyOS** (not just Arch), specifically the various packages that Cachy ships (fish, various KDE bloat etc.). Ideally you should have installed CachyOS selecting for hyprland during the Calamares installation.
 
 > Managed using [chezmoi](https://www.chezmoi.io/).
 
@@ -11,7 +11,7 @@ These dotfiles are heavily based on **CachyOS** (not just Arch), specifically th
 > [!WARNING]
 > **This is NOT a run-and-forget installation.** The install script will prompt you at several points. Keep an eye on the terminal throughout the entire process.
 
-1. Tweak CachyOS via the CachyOS Hello app and apply your preferred baseline system tweaks, remind to enable cachy-update;
+1. Tweak CachyOS via the CachyOS Hello app and apply your preferred baseline system tweaks, remember to enable cachy-update;
 2. Prepare your `~/.config/chezmoi/chezmoi.toml` configuration file with your specific variables
 
 ```toml
@@ -69,11 +69,11 @@ Both `megacmd-bin` and `keepassxc` are installed by the script as regular packag
    mega-sync ~/MEGA/ /
    ```
 
-2. **Open KeePassXC** and point it at your database once the MEGA sync completes. Remind to place the key-file as well.
+2. **Open KeePassXC** and point it at your database once the MEGA sync completes. Remember to place the key-file as well.
 
 ### 🔑 Keyring, SDDM, and stability
 
-KWallet presents some issues in non-Plasma environments, the isntall scripts tried to address a clean patching of these issues out of the box, however some issues may still be present, especially with Electron apps who rely on safe storage.
+KWallet presents some issues in non-Plasma environments, the install scripts tried to cleanly patch these issues out of the box, however some issues may still be present, especially with Electron apps that rely on safe storage.
 
 Further information can be found at [Arch Wiki: KDE Wallet](https://wiki.archlinux.org/title/KDE_Wallet) and [Electron Safe Storage Info](https://www.electronjs.org/docs/latest/api/safe-storage).
 
@@ -146,7 +146,7 @@ Then connect simply with `ssh myserver`.
 
 Noctalia presents a standard approach to sync apps colorschemes with its own theme, each app requires its own procedure, part of it can be automated via code, and some other not. Further information at [docs.noctalia.dev/theming](https://docs.noctalia.dev/theming/basic-app-theming/).
 
-You can retrive the list of apps on which automtic theming is set on the Noctalia settings themeselves. Note however that part of those may still require some in-app manual intervention, here below are some steps you shall take to complete the theming:
+You can retrieve the list of apps on which automatic theming is set on the Noctalia settings themselves. Note however that part of those may still require some in-app manual intervention, here below are some steps you shall take to complete the theming:
 
 #### GTK and Qt
 
@@ -164,10 +164,10 @@ You can retrive the list of apps on which automtic theming is set on the Noctali
 - **VSCode:** Install the `NoctaliaTheme` extension from the marketplace, then select it via `Ctrl+Shift+P` → *Preferences: Color Theme*.
 - **Telegram:** Open Settings → Chat Settings → scroll to the bottom and enable the custom color theme.
 - **Steam**: Install [Material-Theme](https://steambrew.app/theme?id=ipYjqODds05KMcvh7QJn) and add it in the Millenium Theme Settings, select *Matugen* in the theme color dropdown.
-- All others apps should not require any intervention (e.g. neovim, btop etc.), hopefuly.
+- All others apps should not require any intervention (e.g. neovim, btop etc.), hopefully.
 
 > [!NOTE]
-> If some apps do not properly fetch the color scheme even after having followed the noctalia guidelines, try to diasable and re-enable them, as well as chaning color-scheme as a whole.\
+> If some apps do not properly fetch the color scheme even after having followed the noctalia guidelines, try to disable and re-enable them, as well as changing color-scheme as a whole.\
 
 Furthermore, you can install other themes for apps yourself, have a look at:
 
@@ -175,7 +175,7 @@ Furthermore, you can install other themes for apps yourself, have a look at:
 - [BetterDiscord](https://betterdiscord.app/themes)
 - [Millenium for Steam](https://steambrew.app/themes)
 
-### 🌐 Broswer(s) setup
+### 🌐 Browser(s) setup
 
 The stuff that I usually use during my browsing experience, what do you want with this:
 
@@ -194,7 +194,7 @@ Eventually consider also [Volume Control](https://github.com/Chaython/volumecont
 Furthermore, here is a list of some good misc websites for assets:
 
 - [Pinterest](https://it.pinterest.com/): for propics
-- [Wallheaven](https://wallhaven.cc/): for static backgrounds
+- [Wallhaven](https://wallhaven.cc/): for static backgrounds
 - [MotionBGs](https://motionbgs.com/): for animated wallpapers
 - Guide on how to convert WallpaperEngine backgrounds into video files: from [WallapaperEngine itself](https://help.wallpaperengine.io/en/functionality/export.html), from [Steam community](https://steamcommunity.com/sharedfiles/filedetails/?id=2277828676)
 
@@ -203,7 +203,7 @@ Furthermore, here is a list of some good misc websites for assets:
 Other stuff I use on Spicetify, my advice is to use the marketplace as much as possible
 
 - Spicy Lyrics (instead of Beautiful Lyrics, which seem to be deprecated)
-- Gloabal Stats for songs, to fetch info on different song.
+- Global Stats for songs, to fetch info on different songs.
 - Lucid Theme (instead of the Confy default one)
 
 > [!WARNING]
@@ -217,7 +217,7 @@ Other stuff I use on Spicetify, my advice is to use the marketplace as much as p
 
 ### 🎮 Gaming
 
-Of course Mooncake is designed with gaming in mind too, they will then apply some minor common installations and tweaks if cachyos gaming packages are detected. For more details, visit the [CachyOS Gaming Wiki](https://wiki.cachyos.org/configuration/gaming). Here are some handy notes at your disposal to complete your gaming experience:
+Of course Mooncake is designed with gaming in mind too, it will then apply some minor common installations and tweaks if cachyos gaming packages are detected. For more details, visit the [CachyOS Gaming Wiki](https://wiki.cachyos.org/configuration/gaming). Here are some handy notes at your disposal to complete your gaming experience:
 
 #### 🚀 Steam Launch Options
 
@@ -235,7 +235,7 @@ Of course Mooncake is designed with gaming in mind too, they will then apply som
 
 - **System Options:** Enable **"Disable Lutris Runtime"** and **"Prefer system libraries"**.
 - **Compatibility:** Ensure the layer is set to `proton-cachyos (slr)`. Just as in Steam.
-- **Launch Options:** Mirror the launch options used in Steam, each launcher has its own way to do that, which usually do not differ much from Steam anywya, refer to documentation. (e.g. Heroic will provide some form entries for variables and values)
+- **Launch Options:** Mirror the launch options used in Steam, each launcher has its own way to do that, which usually do not differ much from Steam anyway, refer to documentation. (e.g. Heroic will provide some form entries for variables and values)
 
 ---
 
@@ -245,7 +245,7 @@ Of course Mooncake is designed with gaming in mind too, they will then apply som
 - [ ] Close all PRs, and delete all branches
 - [ ] Refine WALLHACK Wallpapers (add theme to dotfiles-assets)
 - [ ] Prepare some default wallpapers x colorschemes combinations
-- [ ] Once everything is finished, add screenshoots and videos in this README
+- [ ] Once everything is finished, add screenshots and videos in this README
 
 ### For the future
 
