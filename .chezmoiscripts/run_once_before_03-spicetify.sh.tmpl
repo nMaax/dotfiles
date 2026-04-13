@@ -1,0 +1,71 @@
+	
+#!/bin/bash
+set -euo pipefail
+
+{{ template "utils.sh.tmpl" . }}
+{{ template "external_links.sh.tmpl" . }}
+
+echo ""
+info "🎧 [Spotify & Spicetify] Starting..."
+echo ""
+
+info "🎧 Installing Spotify (spicetify) from AUR..."
+warn "By default we will wipe anything related to spicetify first, to make a clean installation"
+
+# Wipe the old Spicetify configuration and backups completely
+rm -rf "$HOME/.config/spicetify"
+
+# Force reinstall Spotify and Spicetify.
+# Removing '--needed' ensures paru replaces any modified files in /opt/spotify 
+# with fresh ones from your local package cache.
+paru -S --noconfirm spotify spicetify-cli
+
+info "Setting up Spicetify permissions..."
+sudo chmod a+wr /opt/spotify
+sudo chmod a+wr /opt/spotify/Apps -R
+
+# Create the Spotify config directory and an empty prefs file
+mkdir -p "$HOME/.config/spotify"
+touch "$HOME/.config/spotify/prefs"
+
+# Initialize Spicetify and point it to the prefs file
+spicetify config prefs_path "$HOME/.config/spotify/prefs"
+
+# Backup and apply
+spicetify backup apply --no-restart
+
+SPICETIFY_CONFIG_DIR="$HOME/.config/spicetify"
+SPICETIFY_THEMES_DIR="$SPICETIFY_CONFIG_DIR/Themes"
+
+# Install Comfy Theme
+info "Installing Comfy theme for Spicetify..."
+mkdir -p "$SPICETIFY_THEMES_DIR"
+cd "$SPICETIFY_THEMES_DIR"
+git clone "$SPICETIFY_COMFY_REPO" ComfyRepo
+mv ./ComfyRepo/Comfy/ ./
+rm -rf ./ComfyRepo/
+
+spicetify config current_theme Comfy color_scheme Comfy
+spicetify config inject_css 1 replace_colors 1 overwrite_assets 1 inject_theme_js 1
+spicetify apply --no-restart
+
+# Install Marketplace
+info "Installing Spicetify Marketplace... (⚠️ not really the Arch way, but it doesnt touch anything outside home/)" 
+
+# Download the script to a temporary file instead of piping it directly to sh
+curl -fsSL "$SPICETIFY_MARKETPLACE_INSTALL_URL" -o /tmp/install_marketplace.sh
+
+# Use 'sed' to find "spicetify apply" and replace it with "spicetify apply --no-restart"
+sed -i 's/spicetify apply/spicetify apply --no-restart/g' /tmp/install_marketplace.sh
+
+# Run our modified, silent version of the script
+sh /tmp/install_marketplace.sh
+
+# Clean up the temporary file
+rm /tmp/install_marketplace.sh
+
+success "Spotify, Spicetify, Comfy, and Marketplace cleanly installed!"
+
+echo ""
+success "✅ [Spotify & Spicetify] Done."
+echo ""
