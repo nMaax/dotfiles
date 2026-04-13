@@ -49,7 +49,7 @@ info "🔄 Checking for updates..."
 sudo pacman -Syu --noconfirm
 paru -Syu --noconfirm
 
-info "📦 Checking for missing base packages..."
+info "🔍 Checking for missing base packages..."
 BASE_PACKAGES=(binutils base-devel git vim cmake cpio appmenu-gtk-module libdbusmenu-glib hyprland xdg-desktop-portal-hyprland ddcutil)
 for pkg in "${BASE_PACKAGES[@]}"; do
   if ! pacman -Qi "$pkg" &>/dev/null; then
