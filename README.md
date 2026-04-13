@@ -221,6 +221,8 @@ Then connect simply with `ssh myserver`.
 - [ ] Once everything is finished, add screenshoots and videos in this README
 
 ### For the future
+
+- [ ] Move to fish install script
 - [ ] Generalize for pure arch: track what Cachy installs, including fundamentals like bluetooth, networkmanager, fish, cachyos fish setup, gpu drivers etc.
 - [ ] Fix ksshaskpass Qt::font empty error
 - [ ] Fix OBS Browser install to automate substitution that requires the vlc plugin variant from lua to be changed in luajit
