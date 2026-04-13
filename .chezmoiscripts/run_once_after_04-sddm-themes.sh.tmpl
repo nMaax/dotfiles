@@ -1,0 +1,61 @@
+#!/bin/bash
+set -euo pipefail
+
+{{ template "utils.sh.tmpl" . }}
+{{ template "external_links.sh.tmpl" . }}
+
+echo ""
+info "🖥️ [SDDM Theming] Starting..."
+echo ""
+
+info "🖥️ Setting up Silent SDDM Themes..."
+
+sddm_configured=0
+
+if ! pacman -Qs sddm-silent-theme >/dev/null; then
+  info "Installing sddm-silent-theme..."
+  paru -S --needed --noconfirm sddm-silent-theme
+  sddm_configured=1
+fi
+
+if grep -q "Current=silent" /etc/sddm.conf 2>/dev/null; then
+  success "/etc/sddm.conf is already configured for the silent theme. Skipping..."
+else
+  info "Appending configuration to /etc/sddm.conf..."
+  sudo tee -a /etc/sddm.conf >/dev/null <<'EOF'
+[General]
+InputMethod=qtvirtualkeyboard
+GreeterEnvironment=QML2_IMPORT_PATH=/usr/share/sddm/themes/silent/components/,QT_IM_MODULE=qtvirtualkeyboard
+[Theme]
+Current=silent
+EOF
+  sddm_configured=1
+fi
+
+SILENT_SDDM_EXT_THEMES_DIR="$HOME/.cache/silent-sddm-themes"
+SILENT_SDDM_DIR="/usr/share/sddm/themes/silent"
+AVATAR_SCRIPT="$SILENT_SDDM_DIR/change_avatar.sh"
+USER_FACE="$HOME/.face"
+
+if [ -d "$SILENT_SDDM_EXT_THEMES_DIR" ]; then
+  info "Deploying custom SDDM theme overlay..."
+  sudo cp -r "$SILENT_SDDM_EXT_THEMES_DIR/"* "$SILENT_SDDM_DIR/"
+  success "SDDM custom themes deployed."
+fi
+
+if [ -f "$USER_FACE" ]; then
+  sudo chmod +x "$AVATAR_SCRIPT"
+  sudo "$AVATAR_SCRIPT" "$(whoami)" "$USER_FACE"
+  success "Avatar updated successfully."
+else
+  warn "$USER_FACE not found. Skipping avatar change."
+fi
+
+if [ "$sddm_configured" -eq 1 ]; then
+  add_note "[SDDM] Remind to select systemd owned Hyprland at login in SDDM, in order to enable specific autostarts to work."
+  add_note "[SDDM] Remind to run ./test.sh in $SILENT_SDDM_DIR to check SDDM works and you are not kept out of your system at next boot."
+fi
+
+echo ""
+success "✅ [SDDM Theming] Done."
+echo "" 
