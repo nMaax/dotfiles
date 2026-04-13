@@ -12,11 +12,15 @@ error "Did nothing, will close now."
 exit 1
 {{- end }}
 
-echo ""
 info "📦 [Stage 1] Installing prerequisites..."
 echo ""
 
 clean_notes
+
+if ! ask "⚠️  This is an interactive install — you will need to respond to prompts throughout. Are you ready to proceed?"; then
+  error "Come back when you are ready. Closing."
+  exit 1
+fi
 
 if ! ask "Did you tweak CachyOS as you like?"; then
   error "Go back and tune whatever you like using Cachy Hello. Closing, come back later."
@@ -252,6 +256,9 @@ add_note "[NOCTALIA] ddcutil was installed by default, which may introduce syste
 info "🦉 Installing Noctalia..."
 paru -S --needed --noconfirm noctalia-shell
 add_note "[NOCTALIA] All built-in app-theming you commonly use are pre-enabled by default (GTK, Qt, KColorScheme, Ghostty, Hyprland, btop, Spicetify, Telegram, Zen Browser, cava, Discord, VSCode). Remaining steps require manual in-app user interaction, view official noctalia documentation for your specific needs: https://docs.noctalia.dev/theming/basic-app-theming/"
+
+info "🔍 Installing Quickshell Overview..."
+paru -S --needed --noconfirm quickshell-overview-git
 
 info "🀄 Syncing GTK with Noctalia and removing decorations..."
 gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3'
