@@ -8,6 +8,9 @@ These dotfiles are heavily based on **CachyOS** (not just Arch), specifically th
 
 ## 🧁 Installation
 
+> [!WARNING]
+> **This is NOT a run-and-forget installation.** The install script will prompt you at several points — to confirm system tweaks, accept package substitutions (e.g. for OBS Studio) and review post-install notes. Keep an eye on the terminal throughout the entire process.
+
 1. Tweak CachyOS via the CachyOS Hello app and apply your preferred baseline system tweaks, remind to enable cachy-update;
 2. Prepare your `~/.config/chezmoi/chezmoi.toml` configuration file with your specific variables (use another device as a template).
 3. Install chezmoi and apply the dotfiles
@@ -126,6 +129,96 @@ Both `megacmd-bin` and `keepassxc` are installed by the script as regular packag
 - Prefer **systemd-owned Hyprland** instead of plain one at the SDDM login screen to ensure autostart scripts function correctly.
 - Regardless of your configs, run `./test.sh` to verify SDDM works before rebooting to avoid being locked out.
 
+### 🔐 SSH
+
+The install script enables and starts both `sshd` and the user-level `ssh-agent` automatically. You still need to create a key pair and distribute your public key wherever you want to authenticate.
+
+#### Generating a key
+
+```fish
+ssh-keygen -t ed25519 -C "you@example.com"
+```
+
+Accept the default path (`~/.ssh/id_ed25519`) and choose a strong passphrase. The new key is picked up automatically by the running `ssh-agent`.
+
+#### Connecting to GitHub
+
+1. Copy your public key to the clipboard:
+
+   ```fish
+   cat ~/.ssh/id_ed25519.pub | wl-copy
+   ```
+
+2. Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, paste it and save.
+3. Test the connection:
+
+   ```fish
+   ssh -T git@github.com
+   ```
+
+   You should see: `Hi <username>! You've successfully authenticated…`
+
+4. Tell Git to use SSH for GitHub remotes (optional, but recommended):
+
+   ```fish
+   git config --global url."git@github.com:".insteadOf "https://github.com/"
+   ```
+
+#### Connecting to another machine
+
+Copy your public key to the remote host (replace `user@host` with your target):
+
+```fish
+ssh-copy-id user@host
+```
+
+Or manually append `~/.ssh/id_ed25519.pub` to `~/.ssh/authorized_keys` on the remote.
+
+Optionally, create or edit `~/.ssh/config` to define shortcuts:
+
+```
+Host myserver
+    HostName 192.168.1.10
+    User myuser
+    IdentityFile ~/.ssh/id_ed25519
+```
+
+Then connect simply with `ssh myserver`.
+
+### 🪄 Quickshell: installing quickshell-overview-git alongside noctalia-qs
+
+`noctalia-qs` bundles its own overview implementation and ships files under
+`/usr/share/quickshell/` (or your user config directory). The AUR package
+`quickshell-overview-git` installs files to the same location, so pacman
+reports a conflict and refuses to install both at the same time.
+
+**Recommended approach — merge manually:**
+
+1. Clone the `quickshell-overview-git` PKGBUILD and build the package without installing it:
+
+   ```fish
+   paru -G quickshell-overview-git
+   cd quickshell-overview-git
+   makepkg -s --noconfirm   # builds but does NOT install
+   ```
+
+2. Extract the built package to a temporary directory:
+
+   ```fish
+   mkdir /tmp/qs-overview
+   bsdtar -xf quickshell-overview-git-*.pkg.tar.zst -C /tmp/qs-overview
+   ```
+
+3. Inspect the extracted files and copy only those that do **not** already exist in your noctalia-qs config directory (usually `~/.config/quickshell/`), taking care not to overwrite noctalia-managed files.
+
+4. Reload Quickshell.
+
+**Alternative — disable noctalia's own overview first:**
+
+If noctalia-qs exposes a toggle for its built-in overview (check `~/.config/quickshell/` for a config or `modules/` directory), disable it before installing `quickshell-overview-git` with `paru -S quickshell-overview-git --overwrite '*'`.
+
+> Keep an eye on noctalia release notes — a future version may officially support this package.
+
 ### 🎮 Gaming Reminders
 
 #### 🚀 Steam Launch Options
@@ -150,9 +243,9 @@ Both `megacmd-bin` and `keepassxc` are installed by the script as regular packag
 
 ## 📝 TODOs
 
-- [ ] Notify user at start that they will need to interact with the install script, this is not a run and forget
-- [ ] How to install quickshell-overview-git without making it conflict with noctalia-qs?
-- [ ] What about ssh? What should one do to connect to github or another machine?
+- [x] Notify user at start that they will need to interact with the install script, this is not a run and forget
+- [x] How to install quickshell-overview-git without making it conflict with noctalia-qs?
+- [x] What about ssh? What should one do to connect to github or another machine?
 - [ ] Double check SDDM PAM patching for LUKS is ok
 - [ ] Ultimate dotfiles: review install scripts and what is stored and what not
 - [ ] Seems like some irs and jpg file is still in history, clean it and remove all branches
