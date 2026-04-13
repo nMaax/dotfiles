@@ -1,0 +1,34 @@
+#!/bin/bash
+set -euo pipefail
+
+{{ template "utils.sh.tmpl" . }}
+{{ template "external_links.sh.tmpl" . }}
+
+echo ""
+info "📄 [GRUB Configuration] Starting..."
+echo ""
+
+# Only if GRUB is installed
+if [ -f /etc/default/grub ] && command -v grub-mkconfig >/dev/null; then
+  info "📄 Sanitizing GRUB to plain console (removing CachyOS theme)..."
+  grub_changed=0
+  if grep -q "^GRUB_THEME=" /etc/default/grub; then
+    sudo sed -i "s|^GRUB_THEME=|#GRUB_THEME=|g" /etc/default/grub
+    grub_changed=1
+  fi
+  if grep -q "^#GRUB_TERMINAL_OUTPUT=console" /etc/default/grub; then
+    sudo sed -i "s|^#GRUB_TERMINAL_OUTPUT=console|GRUB_TERMINAL_OUTPUT=console|g" /etc/default/grub
+    grub_changed=1
+  fi
+  if [ "$grub_changed" -eq 1 ]; then
+    sudo grub-mkconfig -o /boot/grub/grub.cfg
+  else
+    success "GRUB already sanitized. Skipping grub-mkconfig."
+  fi
+else
+  warn "GRUB is not installed on this machine, skipping"
+fi
+
+echo ""
+success "✅ [GRUB Configuration] Done."
+echo ""

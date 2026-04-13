@@ -1,0 +1,12 @@
+#!/bin/bash
+set -euo pipefail
+
+{{ template "utils.sh.tmpl" . }}
+
+echo ""
+echo -e "${GREEN}=================================================================${NC}"
+echo -e "${GREEN}🎉 DOTFILES INSTALLATION COMPLETE! PLEASE REBOOT AND READ THE POST-INSTALL STEPS:${NC}"
+echo -e "${GREEN}=================================================================${NC}"
+echo ""
+
+show_notes
