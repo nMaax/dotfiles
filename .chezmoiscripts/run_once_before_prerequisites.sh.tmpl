@@ -16,34 +16,6 @@ echo ""
 success "💤 [Stage 2] Installing apps..."
 echo ""
 
-info "🤓 Installing Nerd Fonts..."
-sudo pacman -S --needed --noconfirm ttf-jetbrains-mono-nerd ttf-iosevka-nerd ttf-cascadia-code-nerd
-info "🍎 Installing Apple Fonts..."
-paru -S --needed --noconfirm apple-fonts
-
-# Install Apple Emoji
-EMOJI_FILE="/tmp/ttf-apple-emoji.pkg.tar.zst"
-
-if ! pacman -Qs ttf-apple-emoji >/dev/null; then
-  info "📥 Downloading verified Apple Emoji package..."
-  curl -L "$APPLE_EMOJI_URL" -o "$EMOJI_FILE"
-
-  # Verify hash before installing, since this is not taken from pacman repo or AUR
-  if echo "$APPLE_EMOJI_SHA256  $EMOJI_FILE" | sha256sum -c -; then
-    if pacman -Qs noto-fonts-emoji >/dev/null; then
-      info "Removing conflicting package: noto-fonts-emoji"
-      sudo pacman -Rns --noconfirm noto-fonts-emoji
-    fi
-    sudo pacman -U --noconfirm "$EMOJI_FILE"
-    success "Apple Emoji installed successfully."
-  else
-    error "SHA256 checksum mismatch for Apple Emoji! Aborting font installation."
-  fi
-  rm -f "$EMOJI_FILE"
-else
-  success "Apple Emoji is already installed."
-fi
-
 info "🌊 Installing browsers..."
 sudo pacman -S --needed --noconfirm chromium
 paru -S --needed --noconfirm zen-browser-bin
