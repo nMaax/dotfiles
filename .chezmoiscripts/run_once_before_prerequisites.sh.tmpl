@@ -11,36 +11,3 @@ error "This script is intended to run on CachyOS."
 error "Did nothing, will close now."
 exit 1
 {{- end }}
-
-echo ""
-success "💤 [Stage 3] Installing Noctalia and Hyprland Extras..."
-echo ""
-
-info "🌙 Installing Noctalia dependencies..."
-paru -S --needed --noconfirm cliphist wlsunset xdg-desktop-portal evolution-data-server hyprshot
-add_note "[NOCTALIA] ddcutil was installed by default, which may introduce system instability with certain monitors; remove it eventually with: sudo pacman -Rns ddcutil"
-
-info "🦉 Installing Noctalia..."
-paru -S --needed --noconfirm noctalia-shell
-add_note "[NOCTALIA] All built-in app-theming you commonly use are pre-enabled by default (GTK, Qt, KColorScheme, Ghostty, Hyprland, btop, Spicetify, Telegram, Zen Browser, cava, Discord, VSCode). Remaining steps require manual in-app user interaction, view official noctalia documentation for your specific needs: https://docs.noctalia.dev/theming/basic-app-theming/"
-
-info "🔍 Installing Quickshell Overview..."
-paru -S --needed --noconfirm quickshell-overview-git
-
-info "🀄 Syncing GTK with Noctalia and removing decorations..."
-gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3'
-gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
-gsettings set org.gnome.desktop.wm.preferences button-layout ':'
-
-info "💧 Setting hyprland plugins..."
-if ! hyprpm list | grep -q dynamic-cursors; then
-  hyprpm update
-  hyprpm add "$HYPR_DYNAMIC_CURSORS_REPO"
-  hyprpm enable dynamic-cursors
-else
-  success "hypr-dynamic-cursors plugin already installed and enabled, skipping."
-fi
-
-echo ""
-success "✅ [Stage 3] Noctalia and Hyprland extras installed."
-echo ""
