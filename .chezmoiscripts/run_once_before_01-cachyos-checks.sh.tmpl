@@ -50,7 +50,7 @@ sudo pacman -Syu --noconfirm
 paru -Syu --noconfirm
 
 info "📦 Checking for missing base packages..."
-BASE_PACKAGES=(binutils base-devel git vim cmake cpio appmenu-gtk-module libdbusmenu-glib hyprland xdg-desktop-portal-hyprland ddcutil)
+BASE_PACKAGES=(binutils base-devel git vim cmake cpio appmenu-gtk-module libdbusmenu-glib)
 for pkg in "${BASE_PACKAGES[@]}"; do
   if ! pacman -Qi "$pkg" &>/dev/null; then
     info "    Installing missing package: $pkg"
