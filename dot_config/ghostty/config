@@ -1,14 +1,12 @@
 # This is the configuration file for Ghostty.
-# Run `ghostty +show-config --default --docs` to view a list of
-# all available config options and their default values.
-# Additionally, each config option is also explained in detail
-# on Ghostty's website, at https://ghostty.org/docs/config.
 #
-# Ghostty can reload the configuration while running by using the menu
-# options or the bound key (default: Command + Shift + comma on macOS and
-# Control + Shift + comma on other platforms). Not all config options can be
-# reloaded while running; some only apply to new windows and others may require
-# a full restart to take effect.
+# Run `ghostty +show-config --default --docs` to view a list of all available
+# config options and their default values. Each option is also documented at
+# https://ghostty.org/docs/config.
+#
+# Ghostty can reload the configuration while running via the menu or the bound
+# key (default: Control + Shift + comma). Not all options can be reloaded at
+# runtime; some only apply to new windows and others require a full restart.
 
 # Vertical padding (top/bottom)
 window-padding-y = 10
