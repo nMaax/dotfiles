@@ -34,7 +34,7 @@ chezmoi init --apply nMaax
 > `ddcutil` has been installed during the install scripts, it may cause instability with certain monitors. You can remove it via `sudo pacman -Rns ddcutil` if you encounter issues.
 
 > [!WARNING]
-> Run `./test.sh` to verify SDDM works before rebooting to avoid being locked out anytime you edit SDDM themes!
+> Run `./test.sh` in `/usr/share/sddm/themes/silent/` to verify SDDM works before rebooting to avoid being locked out anytime you edit SDDM themes!
 
 > [!NOTE]
 > Prefer **systemd-owned Hyprland** instead of plain one at the SDDM login screen to ensure autostart scripts function correctly.
