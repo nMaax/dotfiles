@@ -44,7 +44,7 @@ exec-once = /usr/lib/polkit-kde-authentication-agent-1
 1. Save and restart Hyprland (Super + M or just log out).
 
 > [!NOTE]
-> If you aren't using KDE, the path might be /usr/lib/lxpolkit or similar. Cachy usually defaults to the KDE agent even on Hyprland.
+> If you aren't using KDE, the path might be `/usr/lib/lxpolkit` or similar. Cachy usually defaults to the KDE agent even on Hyprland anyway, so this should be quite rare.
 
 ## 🥞 Post-Installation Notes
 
