@@ -23,7 +23,7 @@ These dotfiles are heavily based on **CachyOS** (not just Arch), specifically th
   gaming = true
 ```
 
-3. Install chezmoi and apply the dotfiles
+1. Install chezmoi and apply the dotfiles
 
 ```fish
 pacman -S chezmoi
@@ -68,19 +68,20 @@ Both `megacmd-bin` and `keepassxc` are installed by the script as regular packag
    mkdir -p ~/MEGA
    mega-sync ~/MEGA/ /
    ```
-   
+
 2. **Open KeePassXC** and point it at your database once the MEGA sync completes. Remind to place the key-file as well.
 
 ### 🔑 Keyring, SDDM, and stability
 
 KWallet presents some issues in non-Plasma environments, the isntall scripts tried to address a clean patching of these issues out of the box, however some issues may still be present, especially with Electron apps who rely on safe storage.
 
-Further information can be found at [Arch Wiki: KDE Wallet](https://wiki.archlinux.org/title/KDE_Wallet) and [Electron Safe Storage Info](https://www.electronjs.org/docs/latest/api/safe-storage). 
+Further information can be found at [Arch Wiki: KDE Wallet](https://wiki.archlinux.org/title/KDE_Wallet) and [Electron Safe Storage Info](https://www.electronjs.org/docs/latest/api/safe-storage).
 
 **When you are prompted to create a wallet** (i.e. the first time an application requests one), use **exactly** these settings:
-  - **Name:** `kdewallet` (the default; any other name will not be unlocked automatically by PAM)
-  - **Encryption:** `Blowfish` (required for `kwallet-pam` auto-unlock; GnuPG encryption is incompatible)
-  - **Password:** your current **user login password** (PAM unlocks the wallet by matching it against the login password)
+
+- **Name:** `kdewallet` (the default; any other name will not be unlocked automatically by PAM)
+- **Encryption:** `Blowfish` (required for `kwallet-pam` auto-unlock; GnuPG encryption is incompatible)
+- **Password:** your current **user login password** (PAM unlocks the wallet by matching it against the login password)
 
 ### 🔐 SSH
 
@@ -114,7 +115,7 @@ Accept the default path (`~/.ssh/id_ed25519`) and choose a strong passphrase. Th
 > [!NOTE]
 > You could be prompted to either create a new wallet, or to unlock the current one, refer to the Keyring section for details.
 
-5. Tell Git to use SSH for GitHub remotes (optional, but recommended):
+1. Tell Git to use SSH for GitHub remotes (optional, but recommended):
 
    ```fish
    git config --global url."git@github.com:".insteadOf "https://github.com/"
@@ -148,6 +149,7 @@ Noctalia presents a standard approach to sync apps colorschemes with its own the
 You can retrive the list of apps on which automtic theming is set on the Noctalia settings themeselves. Note however that part of those may still require some in-app manual intervention, here below are some steps you shall take to complete the theming:
 
 #### GTK and Qt
+
 - **qt5ct** (`qt5ct` command): Set **Color scriptheme** to `noctalia`, **General font** to `SF Pro`, **Fixed-width font** to `CaskaydiaCove Nerd Font Mono`
 - **qt6ct** (`qt6ct` command): Same as above.
   - Qt theming via `qt6ct` with `QT_QPA_PLATFORMTHEME` has been already set in Hyprland config files for environment variables (`env.conf`).
@@ -156,6 +158,7 @@ You can retrive the list of apps on which automtic theming is set on the Noctali
 - GTK apps will automatically fetch the color scheme from the above, while Qt apps must be configured separately going inside app-settings and finding the colorscheme item.
 
 #### Specific apps
+
 - **Zen Browser:** Open `about:config` → set `toolkit.legacyUserProfileCustomizations.stylesheets` to `true`; then open Settings → General → set Website Appearance to Auto; finally Restart Zen Browser.
 - **Discord:** Open Equibop → Settings → Themes → enable one of the two Noctalia themes.
 - **VSCode:** Install the `NoctaliaTheme` extension from the marketplace, then select it via `Ctrl+Shift+P` → *Preferences: Color Theme*.
@@ -167,6 +170,7 @@ You can retrive the list of apps on which automtic theming is set on the Noctali
 > If some apps do not properly fetch the color scheme even after having followed the noctalia guidelines, try to diasable and re-enable them, as well as chaning color-scheme as a whole.\
 
 Furthermore, you can install other themes for apps yourself, have a look at:
+
 - [ZenZero](https://sameerasw.com/zen)
 - [BetterDiscord](https://betterdiscord.app/themes)
 - [Millenium for Steam](https://steambrew.app/themes)
@@ -174,6 +178,7 @@ Furthermore, you can install other themes for apps yourself, have a look at:
 ### 🌐 Broswer(s) setup
 
 The stuff that I usually use during my browsing experience, what do you want with this:
+
 - **Extensions**:
   - [uBlock Origin](https://ublockorigin.com/) – content & ad blocker
   - [ClearURLs](https://github.com/ClearURLs/Addon) – strips tracking parameters from URLs
@@ -187,6 +192,7 @@ The stuff that I usually use during my browsing experience, what do you want wit
 Eventually consider also [Volume Control](https://github.com/Chaython/volumecontrol), [Web Archives](https://github.com/dessant/web-archives), [YouTube Improved](https://github.com/code-charity/youtube), etc.
 
 Furthermore, here is a list of some good misc websites for assets:
+
 - [Pinterest](https://it.pinterest.com/): for propics
 - [Wallheaven](https://wallhaven.cc/): for static backgrounds
 - [MotionBGs](https://motionbgs.com/): for animated wallpapers
@@ -195,13 +201,15 @@ Furthermore, here is a list of some good misc websites for assets:
 ### 🔥 Spicetify Extension
 
 Other stuff I use on Spicetify, my advice is to use the marketplace as much as possible
+
 - Spicy Lyrics (instead of Beautiful Lyrics, which seem to be deprecated)
 - Gloabal Stats for songs, to fetch info on different song.
 - Lucid Theme (instead of the Confy default one)
 
 > [!WARNING]
-> Disable Comfy theme via spicetify cli if you want to install a different one! 
+> Disable Comfy theme via spicetify cli if you want to install a different one!
 > Run the following:
+>
 > ```bash
 > spicetify config current_theme " "
 > spicetify apply
@@ -240,7 +248,7 @@ Of course Mooncake is designed with gaming in mind too, they will then apply som
 - [x] Check if you can move some of the external links as `.externalchezmoi.toml`'s items
 - [x] Re-organize the README
 - [x] Double check SDDM PAM patching for LUKS is ok
-- [ ] Review install scripts
+- [x] Review install scripts
 - [x] Review dotfiles themselves
 - [ ] Seems like some irs and jpg file is still in history, clean it and remove all branches
 - [ ] Close all PRs, and delete all branches
