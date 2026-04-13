@@ -33,6 +33,12 @@ chezmoi init --apply nMaax
 > [!WARNING]
 > `ddcutil` has been installed during the install scripts, it may cause instability with certain monitors. You can remove it via `sudo pacman -Rns ddcutil` if you encounter issues.
 
+> [!WARNING]
+> Run `./test.sh` to verify SDDM works before rebooting to avoid being locked out anytime you edit SDDM themes!
+
+> [!NOTE]
+> Prefer **systemd-owned Hyprland** instead of plain one at the SDDM login screen to ensure autostart scripts function correctly.
+
 ### Handling missing polkit agent password prompt in CachyOS Hello
 
 If CachyHello won't accept your password on a Hyprland-only installation (i.e., no Plasma), the polkit-kde-agent is likely missing from your background processes. You must ensure this agent is running so CachyHello can trigger the authentication pop-up required to apply your changes. To fix do the following:
@@ -51,7 +57,7 @@ exec-once = /usr/lib/polkit-kde-authentication-agent-1
 
 ## 🥞 Post-Installation Notes
 
-### 🔒 MEGA & KeePassXC
+### ☁️ MEGA & KeePassXC
 
 Both `megacmd-bin` and `keepassxc` are installed by the script as regular packages. Set them up manually after installation:
 
@@ -62,23 +68,19 @@ Both `megacmd-bin` and `keepassxc` are installed by the script as regular packag
    mkdir -p ~/MEGA
    mega-sync ~/MEGA/ /
    ```
-
+   
 2. **Open KeePassXC** and point it at your database once the MEGA sync completes. Remind to place the key-file as well.
 
-### 🔑 Keyring
+### 🔑 Keyring, SDDM, and stability
 
-KWallet presents some issues in non-Plasma environments, the isntall scripts tried to address a clean patching of these issues out of the box, however some issues may still be present, especially with Electron apps who rely on safe storage. Further information can be found at [Arch Wiki: KDE Wallet](https://wiki.archlinux.org/title/KDE_Wallet) and [Electron Safe Storage Info](https://www.electronjs.org/docs/latest/api/safe-storage). **When you are prompted to create a wallet** (i.e. the first time an application requests one), use **exactly** these settings:
+KWallet presents some issues in non-Plasma environments, the isntall scripts tried to address a clean patching of these issues out of the box, however some issues may still be present, especially with Electron apps who rely on safe storage.
+
+Further information can be found at [Arch Wiki: KDE Wallet](https://wiki.archlinux.org/title/KDE_Wallet) and [Electron Safe Storage Info](https://www.electronjs.org/docs/latest/api/safe-storage). 
+
+**When you are prompted to create a wallet** (i.e. the first time an application requests one), use **exactly** these settings:
   - **Name:** `kdewallet` (the default; any other name will not be unlocked automatically by PAM)
   - **Encryption:** `Blowfish` (required for `kwallet-pam` auto-unlock; GnuPG encryption is incompatible)
   - **Password:** your current **user login password** (PAM unlocks the wallet by matching it against the login password)
-
-### 🖥️ SDDM
-
-- Prefer **systemd-owned Hyprland** instead of plain one at the SDDM login screen to ensure autostart scripts function correctly.
-
-> [!WARNING]
-> Run `./test.sh` to verify SDDM works before rebooting to avoid being locked out anytime you edit SDDM themes!
-> This also applies for the first installation.
 
 ### 🔐 SSH
 
@@ -109,7 +111,10 @@ Accept the default path (`~/.ssh/id_ed25519`) and choose a strong passphrase. Th
 
    You should see: `Hi <username>! You've successfully authenticated…`
 
-4. Tell Git to use SSH for GitHub remotes (optional, but recommended):
+> [!NOTE]
+> You could be prompted to either create a new wallet, or to unlock the current one, refer to the Keyring section for details.
+
+5. Tell Git to use SSH for GitHub remotes (optional, but recommended):
 
    ```fish
    git config --global url."git@github.com:".insteadOf "https://github.com/"
