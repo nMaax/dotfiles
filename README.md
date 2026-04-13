@@ -239,7 +239,7 @@ Of course Mooncake is designed with gaming in mind too, they will then apply som
 - [x] Add Work/ directory, and add it to XDG_DIRS file too
 - [x] Check if you can move some of the external links as `.externalchezmoi.toml`'s items
 - [x] Re-organize the README
-- [ ] Double check SDDM PAM patching for LUKS is ok
+- [x] Double check SDDM PAM patching for LUKS is ok
 - [ ] Review install scripts
 - [ ] Review dotfiles themselves
 - [ ] Seems like some irs and jpg file is still in history, clean it and remove all branches
