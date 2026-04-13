@@ -49,8 +49,8 @@ info "🔄 Checking for updates..."
 sudo pacman -Syu --noconfirm
 paru -Syu --noconfirm
 
-info "🔍 Checking for missing base packages..."
-BASE_PACKAGES=(binutils base-devel git vim cmake cpio appmenu-gtk-module libdbusmenu-glib hyprland xdg-desktop-portal-hyprland ddcutil)
+info "📦 Checking for missing base packages..."
+BASE_PACKAGES=(binutils base-devel git vim cmake cpio appmenu-gtk-module libdbusmenu-glib)
 for pkg in "${BASE_PACKAGES[@]}"; do
   if ! pacman -Qi "$pkg" &>/dev/null; then
     info "    Installing missing package: $pkg"
@@ -59,7 +59,7 @@ for pkg in "${BASE_PACKAGES[@]}"; do
 done
 
 info "🔧 Installing other utilities..."
-sudo pacman -S --needed --noconfirm smartmontools ffmpeg imagemagick perl-image-exiftool jq texlive-latex glow dust bat ripgrep fd btop nvtop trash-cli transmission-cli ghostscript pandoc poppler qpdf ufw tealdeer ksshaskpass fzf zoxide
+sudo pacman -S --needed --noconfirm smartmontools ffmpeg imagemagick perl-image-exiftool jq texlive-latex glow dust bat ripgrep fd btop fastfetch nvtop trash-cli transmission-cli ghostscript pandoc poppler qpdf ufw tealdeer ksshaskpass fzf zoxide
 paru -S --needed --noconfirm caligula-bin pdfcpu-bin ocrmypdf tesseract-data-eng tesseract-data-ita
 
 info "🖥️ Installing KDE suite, Qt, GTK and utility apps..."
