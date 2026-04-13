@@ -8,9 +8,13 @@ echo ""
 info "🌙 [Hyprland & Noctalia] Starting..."
 echo ""
 
-info "📦 Installing Noctalia dependencies..."
+info "💧 Installing Hyprland core..."
+sudo pacman -S --needed --noconfirm hyprland xdg-desktop-portal-hyprland
+
+info "🌙 Installing Noctalia dependencies..."
+sudo pacman -S --needed --noconfirm ddcutil
+add_note "[NOCTALIA] ddcutil was installed as a Noctalia dependency, which may introduce system instability with certain monitors; remove it eventually with: sudo pacman -Rns ddcutil"
 paru -S --needed --noconfirm cliphist wlsunset xdg-desktop-portal evolution-data-server hyprshot
-add_note "[NOCTALIA] ddcutil was installed by default, which may introduce system instability with certain monitors; remove it eventually with: sudo pacman -Rns ddcutil"
 
 info "🦉 Installing Noctalia..."
 paru -S --needed --noconfirm noctalia-shell
@@ -24,7 +28,7 @@ gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3'
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 gsettings set org.gnome.desktop.wm.preferences button-layout ':'
 
-info "💧 Setting hyprland plugins..."
+info "🩸 Setting hyprland plugins..."
 if ! hyprpm list | grep -q dynamic-cursors; then
   hyprpm update
   hyprpm add "$HYPR_DYNAMIC_CURSORS_REPO"
