@@ -16,7 +16,7 @@ echo ""
 
 # Only if GRUB is installed
 if [ -f /etc/default/grub ] && command -v grub-mkconfig >/dev/null; then
-  info "📄 Sanitizing GRUB to plain console (removing CachyOS theme)..."
+  info "🧹 Sanitizing GRUB to plain console (removing CachyOS theme)..."
   grub_changed=0
   if grep -q "^GRUB_THEME=" /etc/default/grub; then
     sudo sed -i "s|^GRUB_THEME=|#GRUB_THEME=|g" /etc/default/grub
