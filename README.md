@@ -30,6 +30,9 @@ pacman -S chezmoi
 chezmoi init --apply nMaax
 ```
 
+> [!WARNING]
+> `ddcutil` has been installed during the install scripts, it may cause instability with certain monitors. You can remove it via `sudo pacman -Rns ddcutil` if you encounter issues.
+
 ### Handling missing polkit agent password prompt in CachyOS Hello
 
 If CachyHello won't accept your password on a Hyprland-only installation (i.e., no Plasma), the polkit-kde-agent is likely missing from your background processes. You must ensure this agent is running so CachyHello can trigger the authentication pop-up required to apply your changes. To fix do the following:
@@ -48,80 +51,6 @@ exec-once = /usr/lib/polkit-kde-authentication-agent-1
 
 ## 🥞 Post-Installation Notes
 
-### 🎨 Theming
-
-Noctalia presents a standard approach to sync apps colorschemes with its own theme, each app requires its own procedure, part of it can be automated via code, and some other not. Further information at [docs.noctalia.dev/theming](https://docs.noctalia.dev/theming/basic-app-theming/).
-
-You can retrive the list of apps on which automtic theming is set on the Noctalia settings themeselves. Note however that part of those may still require some in-app manual intervention, here below are some steps you shall take to complete the theming:
-
-#### GTK and Qt
-- **qt5ct** (`qt5ct` command): Set **Color scriptheme** to `noctalia`, **General font** to `SF Pro`, **Fixed-width font** to `CaskaydiaCove Nerd Font Mono`
-- **qt6ct** (`qt6ct` command): Same as above.
-  - Qt theming via `qt6ct` with `QT_QPA_PLATFORMTHEME` has been already set in Hyprland config files for environment variables (`env.conf`).
-- **GTK** (`nwg-look`): Ensure Preferences > .config/gtk-4.0 is disabled.
-  - `adw-gtk3` + `prefer-dark` was already applied via `gsettings` during the install script.
-- GTK apps will automatically fetch the color scheme from the above, while Qt apps must be configured separately going inside app-settings and finding the colorscheme item.
-
-#### Specific apps
-- **Zen Browser:** Open `about:config` → set `toolkit.legacyUserProfileCustomizations.stylesheets` to `true`; then open Settings → General → set Website Appearance to Auto; finally Restart Zen Browser.
-- **Discord:** Open Equibop → Settings → Themes → enable one of the two Noctalia themes.
-- **VSCode:** Install the `NoctaliaTheme` extension from the marketplace, then select it via `Ctrl+Shift+P` → *Preferences: Color Theme*.
-- **Telegram:** Open Settings → Chat Settings → scroll to the bottom and enable the custom color theme.
-- **Steam**: Install [Material-Theme](https://steambrew.app/theme?id=ipYjqODds05KMcvh7QJn) and add it in the Millenium Theme Settings, select *Matugen* in the theme color dropdown.
-- All others apps should not require any intervention (e.g. neovim, btop etc.), hopefuly.
-
-> [!NOTE]
-> If some apps do not properly fetch the color scheme even after having followed the noctalia guidelines, try to diasable and re-enable them, as well as chaning color-scheme as a whole.\
-
-Furthermore, you can install other themes for apps yourself, have a look at:
-- [ZenZero](https://sameerasw.com/zen)
-- [BetterDiscord](https://betterdiscord.app/themes)
-- [Millenium for Steam](https://steambrew.app/themes)
-
-### 🌐 Broswer(s) setup
-
-The stuff that I usually use during my browsing experience, what do you want with this:
-- **Extensions**:
-  - [uBlock Origin](https://ublockorigin.com/) – content & ad blocker
-  - [ClearURLs](https://github.com/ClearURLs/Addon) – strips tracking parameters from URLs
-  - [Tridactyl](https://github.com/tridactyl/tridactyl) – Vim-style keyboard navigation (Firefox/Zen)
-  - [MarkDownload](https://github.com/deathau/markdownload) – download pages as Markdown
-  - [DarkReader](https://darkreader.org/help/en/) - automatic dark theming
-  - [Zen Internet](https://addons.mozilla.org/en-US/firefox/addon/zen-internet/) - zen-synched theming for common webpages, needed for [ZenZero](https://sameerasw.com/zen)
-- **Zen Mods**:
-  - [Transparent Zen](https://zen-browser.app/mods/642854b5-88b4-4c40-b256-e035532109df) – make zen look transparent, needed for [ZenZero](https://sameerasw.com/zen)
-
-Eventually consider also [Volume Control](https://github.com/Chaython/volumecontrol), [Web Archives](https://github.com/dessant/web-archives), [YouTube Improved](https://github.com/code-charity/youtube), etc.
-
-Furthermore, here is a list of some good misc websites for common utilities (wallpapers, paywall removal etc).
-- [Pinterest](https://it.pinterest.com/): for propics
-- [Wallheaven](https://wallhaven.cc/): for static backgrounds
-- [MotionBGs](https://motionbgs.com/): for animated wallpapers
-- Guide on how to convert WallpaperEngine backgrounds into video files: from [WallapaperEngine itself](https://help.wallpaperengine.io/en/functionality/export.html), from [Steam community](https://steamcommunity.com/sharedfiles/filedetails/?id=2277828676)
-
-### 🔥 Spicetify Extension
-
-Other stuff I use on Spicetify, my advice is to use the marketplace as much as possible
-- Spicy Lyrics (instead of Beautiful Lyrics, which seem to be deprecated)
-- Gloabal Stats for songs, to fetch info on different song.
-- Lucid Theme (instead of the Confy default one)
-
-> [!WARNING]
-> Disable Comfy theme via spicetify cli if you want to install a different one! 
-> Run the following:
-> ```bash
-> spicetify config current_theme " "
-> spicetify apply
-> ```
-
-### 🦉 Noctalia
-
-- `ddcutil` has been installed during the install scripts, it may cause instability with certain monitors. You can remove it via:
-
-```bash
-sudo pacman -Rns ddcutil
-```
-
 ### 🔒 MEGA & KeePassXC
 
 Both `megacmd-bin` and `keepassxc` are installed by the script as regular packages. Set them up manually after installation:
@@ -136,7 +65,7 @@ Both `megacmd-bin` and `keepassxc` are installed by the script as regular packag
 
 2. **Open KeePassXC** and point it at your database once the MEGA sync completes. Remind to place the key-file as well.
 
-### 🔑 Keyring & Security
+### 🔑 Keyring
 
 KWallet presents some issues in non-Plasma environments, the isntall scripts tried to address a clean patching of these issues out of the box, however some issues may still be present, especially with Electron apps who rely on safe storage. Further information can be found at [Arch Wiki: KDE Wallet](https://wiki.archlinux.org/title/KDE_Wallet) and [Electron Safe Storage Info](https://www.electronjs.org/docs/latest/api/safe-storage). **When you are prompted to create a wallet** (i.e. the first time an application requests one), use **exactly** these settings:
   - **Name:** `kdewallet` (the default; any other name will not be unlocked automatically by PAM)
@@ -207,11 +136,75 @@ Host myserver
 
 Then connect simply with `ssh myserver`.
 
+### 🎨 Theming
+
+Noctalia presents a standard approach to sync apps colorschemes with its own theme, each app requires its own procedure, part of it can be automated via code, and some other not. Further information at [docs.noctalia.dev/theming](https://docs.noctalia.dev/theming/basic-app-theming/).
+
+You can retrive the list of apps on which automtic theming is set on the Noctalia settings themeselves. Note however that part of those may still require some in-app manual intervention, here below are some steps you shall take to complete the theming:
+
+#### GTK and Qt
+- **qt5ct** (`qt5ct` command): Set **Color scriptheme** to `noctalia`, **General font** to `SF Pro`, **Fixed-width font** to `CaskaydiaCove Nerd Font Mono`
+- **qt6ct** (`qt6ct` command): Same as above.
+  - Qt theming via `qt6ct` with `QT_QPA_PLATFORMTHEME` has been already set in Hyprland config files for environment variables (`env.conf`).
+- **GTK** (`nwg-look`): Ensure Preferences > .config/gtk-4.0 is disabled.
+  - `adw-gtk3` + `prefer-dark` was already applied via `gsettings` during the install script.
+- GTK apps will automatically fetch the color scheme from the above, while Qt apps must be configured separately going inside app-settings and finding the colorscheme item.
+
+#### Specific apps
+- **Zen Browser:** Open `about:config` → set `toolkit.legacyUserProfileCustomizations.stylesheets` to `true`; then open Settings → General → set Website Appearance to Auto; finally Restart Zen Browser.
+- **Discord:** Open Equibop → Settings → Themes → enable one of the two Noctalia themes.
+- **VSCode:** Install the `NoctaliaTheme` extension from the marketplace, then select it via `Ctrl+Shift+P` → *Preferences: Color Theme*.
+- **Telegram:** Open Settings → Chat Settings → scroll to the bottom and enable the custom color theme.
+- **Steam**: Install [Material-Theme](https://steambrew.app/theme?id=ipYjqODds05KMcvh7QJn) and add it in the Millenium Theme Settings, select *Matugen* in the theme color dropdown.
+- All others apps should not require any intervention (e.g. neovim, btop etc.), hopefuly.
+
+> [!NOTE]
+> If some apps do not properly fetch the color scheme even after having followed the noctalia guidelines, try to diasable and re-enable them, as well as chaning color-scheme as a whole.\
+
+Furthermore, you can install other themes for apps yourself, have a look at:
+- [ZenZero](https://sameerasw.com/zen)
+- [BetterDiscord](https://betterdiscord.app/themes)
+- [Millenium for Steam](https://steambrew.app/themes)
+
+### 🌐 Broswer(s) setup
+
+The stuff that I usually use during my browsing experience, what do you want with this:
+- **Extensions**:
+  - [uBlock Origin](https://ublockorigin.com/) – content & ad blocker
+  - [ClearURLs](https://github.com/ClearURLs/Addon) – strips tracking parameters from URLs
+  - [Tridactyl](https://github.com/tridactyl/tridactyl) – Vim-style keyboard navigation (Firefox/Zen)
+  - [MarkDownload](https://github.com/deathau/markdownload) – download pages as Markdown
+  - [DarkReader](https://darkreader.org/help/en/) - automatic dark theming
+  - [Zen Internet](https://addons.mozilla.org/en-US/firefox/addon/zen-internet/) - zen-synched theming for common webpages, needed for [ZenZero](https://sameerasw.com/zen)
+- **Zen Mods**:
+  - [Transparent Zen](https://zen-browser.app/mods/642854b5-88b4-4c40-b256-e035532109df) – make zen look transparent, needed for [ZenZero](https://sameerasw.com/zen)
+
+Eventually consider also [Volume Control](https://github.com/Chaython/volumecontrol), [Web Archives](https://github.com/dessant/web-archives), [YouTube Improved](https://github.com/code-charity/youtube), etc.
+
+Furthermore, here is a list of some good misc websites for assets:
+- [Pinterest](https://it.pinterest.com/): for propics
+- [Wallheaven](https://wallhaven.cc/): for static backgrounds
+- [MotionBGs](https://motionbgs.com/): for animated wallpapers
+- Guide on how to convert WallpaperEngine backgrounds into video files: from [WallapaperEngine itself](https://help.wallpaperengine.io/en/functionality/export.html), from [Steam community](https://steamcommunity.com/sharedfiles/filedetails/?id=2277828676)
+
+### 🔥 Spicetify Extension
+
+Other stuff I use on Spicetify, my advice is to use the marketplace as much as possible
+- Spicy Lyrics (instead of Beautiful Lyrics, which seem to be deprecated)
+- Gloabal Stats for songs, to fetch info on different song.
+- Lucid Theme (instead of the Confy default one)
+
+> [!WARNING]
+> Disable Comfy theme via spicetify cli if you want to install a different one! 
+> Run the following:
+> ```bash
+> spicetify config current_theme " "
+> spicetify apply
+> ```
+
 ### 🎮 Gaming
 
-Of course Mooncake is designed with gaming in mind too, they will then apply some minor common installations and tweaks if cachyos gaming packages are detected. For more details, visit the [CachyOS Gaming Wiki](https://wiki.cachyos.org/configuration/gaming).
-
-Here are some handy notes at your disposal to complete your gaming experience in Mooncake:`
+Of course Mooncake is designed with gaming in mind too, they will then apply some minor common installations and tweaks if cachyos gaming packages are detected. For more details, visit the [CachyOS Gaming Wiki](https://wiki.cachyos.org/configuration/gaming). Here are some handy notes at your disposal to complete your gaming experience:
 
 #### 🚀 Steam Launch Options
 
@@ -231,6 +224,8 @@ Here are some handy notes at your disposal to complete your gaming experience in
 - **Compatibility:** Ensure the layer is set to `proton-cachyos (slr)`. Just as in Steam.
 - **Launch Options:** Mirror the launch options used in Steam, each launcher has its own way to do that, which usually do not differ much from Steam anywya, refer to documentation. (e.g. Heroic will provide some form entries for variables and values)
 
+---
+
 ## 📝 TODOs
 
 - [x] Notify user at start that they will need to interact with the install script, this is not a run and forget
@@ -238,7 +233,7 @@ Here are some handy notes at your disposal to complete your gaming experience in
 - [x] What about ssh? What should one do to connect to github or another machine?
 - [x] Add Work/ directory, and add it to XDG_DIRS file too
 - [ ] Check if you can move some of the external links as `.externalchezmoi.toml`'s items
-- [ ] Re-organize the README
+- [x] Re-organize the README
 - [ ] Double check SDDM PAM patching for LUKS is ok
 - [ ] Review install scripts
 - [ ] Review dotfiles themselves
