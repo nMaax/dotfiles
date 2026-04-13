@@ -13,6 +13,15 @@ exit 1
 {{- end }}
 
 echo ""
+echo -e "${YELLOW}=================================================================${NC}"
+echo -e "${YELLOW}⚠️  INTERACTIVE INSTALLATION — DO NOT LEAVE UNATTENDED${NC}"
+echo -e "${YELLOW}=================================================================${NC}"
+echo -e "${YELLOW}This script will ask you several questions and may require you${NC}"
+echo -e "${YELLOW}to accept prompts (e.g. package substitutions in OBS Studio).${NC}"
+echo -e "${YELLOW}Keep an eye on the terminal throughout the entire process.${NC}"
+echo -e "${YELLOW}=================================================================${NC}"
+echo ""
+
 info "📦 [Stage 1] Installing prerequisites..."
 echo ""
 
