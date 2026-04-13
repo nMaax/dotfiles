@@ -1,0 +1,39 @@
+#!/bin/bash
+set -euo pipefail
+
+{{ template "utils.sh.tmpl" . }}
+{{ template "external_links.sh.tmpl" . }}
+
+{{- if ne .chezmoi.osRelease.id "cachyos" }}
+error "This script is intended to run on CachyOS."
+error "Did nothing, will close now."
+exit 1
+{{- end }}
+
+echo ""
+info "🛠️ [System Services] Starting..."
+echo ""
+
+info "🛜 Setting Wireless Regdom to Italy"
+sudo sed -i 's/^WIRELESS_REGDOM=/#&/' /etc/conf.d/wireless-regdom && sudo sed -i '/WIRELESS_REGDOM="IT"/s/^#//' /etc/conf.d/wireless-regdom
+
+info "📝 Update TLDR;"
+tldr --update
+
+info "💾 Enable smartmontools to check for SSD health"
+sudo systemctl enable --now smartd
+sleep 2
+
+info "🧱 Setup Uncomplicated Firewall"
+sudo ufw enable
+sleep 2
+
+info "🔐 Enable SSH daemon and agent"
+sudo systemctl enable --now sshd
+sleep 2
+systemctl --user enable --now ssh-agent
+sleep 2
+
+echo ""
+success "✅ [System Services] Done."
+echo ""
