@@ -5,7 +5,7 @@ set -euo pipefail
 {{ template "external_links.sh.tmpl" . }}
 
 echo ""
-info "🌐 [VPN & Tailscale] Starting..."
+info "🌐 [Tailscale] Starting..."
 echo ""
 
 info "🌐 Installing Tailscale..."
@@ -27,35 +27,6 @@ fi
 warn "No 'tailscale_authkey' found in chezmoi.toml. Skipping auto-login."
 {{- end }}
 
-info "🏔️ Installing NordVPN from AUR..."
-paru -S --noconfirm --needed nordvpn-bin
-
-info "Enabling NordVPN daemon..."
-sudo systemctl enable --now nordvpnd
-sudo usermod -aG nordvpn "$USER"
-sleep 2
-add_note "[NORDVPN]: NORDVPN has introduced a new system group, reboot your system to use it"
-
-{{- if .nordvpn_token }}
-info "Logging into NordVPN using provided token..."
-if ! sg nordvpn -c "nordvpn account" &>/dev/null; then
-  sg nordvpn -c "nordvpn login --token {{ .nordvpn_token }}"
-else
-  success "Already logged into NordVPN. Skipping login."
-fi
-
-# Proceed with settings configuration
-if sg nordvpn -c "nordvpn status" | grep -E -q "Status: (Connected|Disconnected)"; then
-  sg nordvpn -c "nordvpn set dns off"
-  sg nordvpn -c "nordvpn set threatprotection off"
-  sg nordvpn -c "nordvpn set post-quantum on"
-  sg nordvpn -c "nordvpn set firewall on"
-  success "NordVPN configured successfully."
-fi
-{{- else }}
-warn "No 'nordvpn_token' found in chezmoi.toml. Skipping auto-login."
-{{- end }}
-
 echo ""
-success "✅ [VPN & Tailscale] Done."
+success "✅ [Tailscale] Done."
 echo ""
