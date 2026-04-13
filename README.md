@@ -152,6 +152,7 @@ Both `megacmd-bin` and `keepassxc` are installed by the script as regular packag
 
 - [ ] Notify user at start that they will need to interact with the install script, this is not a run and forget
 - [ ] How to install quickshell-overview-git without making it conflict with noctalia-qs?
+- [ ] What about ssh? What should one do to connect to github or another machine?
 - [ ] Double check SDDM PAM patching for LUKS is ok
 - [ ] Ultimate dotfiles: review install scripts and what is stored and what not
 - [ ] Seems like some irs and jpg file is still in history, clean it and remove all branches
