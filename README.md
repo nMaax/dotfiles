@@ -243,7 +243,7 @@ Of course Mooncake is designed with gaming in mind too, it will then apply some 
 
 - [ ] Seems like some irs and jpg file is still in history, clean it and remove all branches
 - [ ] Close all PRs, and delete all branches
-- [ ] Refine WALLHACK Wallpapers (add theme to dotfiles-assets)
+- [ ] Refine WALLHACK Wallpapers -> Make a release for dotfiles-assets
 - [ ] Prepare some default wallpapers x colorschemes combinations
 - [ ] Once everything is finished, add screenshots and videos in this README
 
