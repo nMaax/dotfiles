@@ -1,0 +1,80 @@
+	
+#!/bin/bash
+set -euo pipefail
+
+{{ template "utils.sh.tmpl" . }}
+{{ template "external_links.sh.tmpl" . }}
+
+echo ""
+info "🚀 [Installing Apps] Starting..."
+echo ""
+
+info "🌊 Installing browsers..."
+sudo pacman -S --needed --noconfirm chromium
+paru -S --needed --noconfirm zen-browser-bin
+
+info "👻 Install Ghostty..."
+sudo pacman -S --noconfirm --needed ghostty
+
+info "🔗 Installing Telegram"
+sudo pacman -S --needed --noconfirm telegram-desktop
+
+info "🪐 Installing Starship..."
+sudo pacman -S --needed --noconfirm starship
+
+info "🐍 Installing tools for coding.."
+sudo pacman -S --needed --noconfirm uv lazygit neovim nodejs jdk-openjdk
+paru -S --needed --noconfirm visual-studio-code-bin
+
+info "🤖 Installing AI tools..."
+
+detect_gpu_vendor
+
+if [ -z "$GPU_VENDOR" ]; then
+  warn "No GPU detected via lspci. AI tools will run in CPU-only mode."
+fi
+
+# Install GPU-specific compute libraries / drivers
+if [ "$GPU_VENDOR" = "nvidia" ]; then
+  info "NVIDIA GPU configured. Installing CUDA toolkit for AI acceleration..."
+  sudo pacman -S --needed --noconfirm cuda cudnn
+elif [ "$GPU_VENDOR" = "amd" ]; then
+  info "AMD GPU configured. Installing ROCm/HIP for AI acceleration..."
+  sudo pacman -S --needed --noconfirm rocm-opencl-runtime rocm-hip-sdk hip-runtime-amd
+fi
+
+info "💎 Installing Gemini CLI..."
+sudo pacman -S --needed --noconfirm gemini-cli
+
+info "🦙 Installing Ollama..."
+if [ "$GPU_VENDOR" = "nvidia" ]; then
+  sudo pacman -S --needed --noconfirm ollama-cuda
+elif [ "$GPU_VENDOR" = "amd" ]; then
+  sudo pacman -S --needed --noconfirm ollama-rocm
+else
+  sudo pacman -S --needed --noconfirm ollama
+fi
+sudo systemctl enable --now ollama.service
+
+info "📤 Installing LocalSend..."
+paru -S --needed --noconfirm localsend
+
+info "🔑 Installing KeePassXC..."
+sudo pacman -S --needed --noconfirm keepassxc
+
+info "☁️ Installing MEGA CMD..."
+paru -S --needed --noconfirm megacmd-bin
+
+info "🔬 Installing Element..."
+sudo pacman -S --needed --noconfirm element-desktop
+
+info "🎬 Installing KDenlive and OBS Studio..."
+warn "You will be prompted to do a substitution of vlc plugin into its luajit variant, accept it."
+sudo pacman -S --needed kdenlive obs-studio-browser
+
+info "🎵 Installing EasyEffects and audio effect plugins..."
+sudo pacman -S --needed --noconfirm easyeffects lsp-plugins zam-plugins calf mda.lv2
+
+echo ""
+success "✅ [Installing Apps] Done."
+echo ""
