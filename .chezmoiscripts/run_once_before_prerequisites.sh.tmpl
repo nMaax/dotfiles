@@ -12,79 +12,9 @@ error "Did nothing, will close now."
 exit 1
 {{- end }}
 
-info "📦 [Stage 1] Installing prerequisites..."
-echo ""
-
-clean_notes
-
-if ! ask "⚠️  This is an interactive install — you will need to respond to prompts throughout. Are you ready to proceed?"; then
-  error "Come back when you are ready. Closing."
-  exit 1
-fi
-
-if ! ask "Did you tweak CachyOS as you like?"; then
-  error "Go back and tune whatever you like using Cachy Hello. Closing, come back later."
-  exit 1
-fi
-
-if ! ask "Did you place the chezmoi.toml?"; then
-  error "Please place the chezmoi.toml in its proper location before proceeding. Closing, come back later."
-  exit 1
-fi
-
-{{ if .gaming -}}
-if ! pacman -Q cachyos-gaming-applications cachyos-gaming-meta >/dev/null 2>&1; then
-  error "gaming = true is set but CachyOS gaming packages are not installed. Install them first (e.g. via CachyOS Hello or: sudo pacman -S cachyos-gaming-meta cachyos-gaming-applications), then re-run. Closing."
-  exit 1
-fi
-success "✅ Gaming packages detected."
-{{- end }}
-
-info "📁 Creating home directories..."
-mkdir -p "$HOME/Work"
-xdg-user-dirs-update
-
-info "🔄 Checking for updates..."
-sudo pacman -Syu --noconfirm
-paru -Syu --noconfirm
-
-info "📦 Checking for missing base packages..."
-BASE_PACKAGES=(binutils base-devel git vim cmake cpio appmenu-gtk-module libdbusmenu-glib hyprland xdg-desktop-portal-hyprland ddcutil)
-for pkg in "${BASE_PACKAGES[@]}"; do
-  if ! pacman -Qi "$pkg" &>/dev/null; then
-    info "    Installing missing package: $pkg"
-    sudo pacman -S --needed --noconfirm "$pkg"
-  fi
-done
-
-info "🔧 Installing other utilities..."
-sudo pacman -S --needed --noconfirm smartmontools ffmpeg imagemagick perl-image-exiftool jq texlive-latex glow dust bat ripgrep fd btop nvtop trash-cli transmission-cli ghostscript pandoc poppler qpdf ufw tealdeer ksshaskpass fzf zoxide
-paru -S --needed --noconfirm caligula-bin pdfcpu-bin ocrmypdf tesseract-data-eng tesseract-data-ita
-
-info "🖥️ Installing KDE suite, Qt, GTK and utility apps..."
-paru -S --needed --noconfirm qt6ct-kde qt5ct-kde
-sudo pacman -S --needed --noconfirm \
-  adw-gtk-theme nwg-look \
-  qt6-multimedia archlinux-xdg-menu ark dolphin-plugins filelight \
-  okular haruna kwrite gwenview \
-  kwallet kwallet-pam
-add_note "[KWALLET]: When prompted by an app, make a new wallet named kdewallet and bowfish encryption, using the same password as the user to enable automatic keyring login.\n See https://wiki.archlinux.org/title/KDE_Wallet for more information.\n Look at https://www.electronjs.org/docs/latest/api/safe-storage for Electron-specific information"
-
-echo ""
-success "✅ [Stage 1] Prerequisites installed."
-echo ""
-
 echo ""
 success "💤 [Stage 2] Installing apps..."
 echo ""
-
-GIT_NAME={{ .name | quote }}
-GIT_EMAIL={{ .email | quote }}
-
-info "🐙 Setting Git identity from config..."
-git config --global user.name "$GIT_NAME"
-git config --global user.email "$GIT_EMAIL"
-info "Git identity set: $GIT_NAME <$GIT_EMAIL>"
 
 info "🤓 Installing Nerd Fonts..."
 sudo pacman -S --needed --noconfirm ttf-jetbrains-mono-nerd ttf-iosevka-nerd ttf-cascadia-code-nerd
