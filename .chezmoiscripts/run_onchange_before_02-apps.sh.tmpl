@@ -42,6 +42,9 @@ elif [ "$GPU_VENDOR" = "amd" ]; then
   sudo pacman -S --needed --noconfirm rocm-opencl-runtime rocm-hip-sdk hip-runtime-amd
 fi
 
+info "✨ Installing Gemini Webapp..."
+~/.local/bin/install-webapp.sh "Gemini" "google.gemini.com"
+
 info "💎 Installing Gemini CLI..."
 sudo pacman -S --needed --noconfirm gemini-cli
 
@@ -80,3 +83,4 @@ sudo pacman -S --needed --noconfirm easyeffects lsp-plugins zam-plugins calf mda
 echo ""
 success "✅ [Installing Apps] Done."
 echo ""
+
