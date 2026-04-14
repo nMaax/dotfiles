@@ -241,10 +241,13 @@ Of course Mooncake is designed with gaming in mind too, it will then apply some 
 
 ## 📝 TODOs
 
+- [ ] Try out new plugins for Noctalia: Tailscale plugin, VPN Plugin, AI Plugin, Screen Toolkit
+- [ ] Try out noctalia Polkit Agent (you must uninstall kde polking agent, maybe this is not the right choice in cachy)
 - [ ] Seems like some irs and jpg file is still in history, clean it and remove all branches
 - [ ] Close all PRs, and delete all branches
 - [ ] Refine WALLHACK Wallpapers -> Make a release for dotfiles-assets
 - [ ] Prepare some default wallpapers x colorschemes combinations
+- [ ] Buy Wallpaper enginge and try out [linux-wallpaperengine](https://github.com/Almamu/linux-wallpaperengine)
 - [ ] Once everything is finished, add screenshots and videos in this README
 
 ### For the future
