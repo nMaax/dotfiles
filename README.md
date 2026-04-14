@@ -247,7 +247,7 @@ Of course Mooncake is designed with gaming in mind too, it will then apply some 
 - [ ] Close all PRs, and delete all branches
 - [ ] Refine WALLHACK Wallpapers -> Make a release for dotfiles-assets
 - [ ] Prepare some default wallpapers x colorschemes combinations
-- [ ] Buy Wallpaper enginge and try out [linux-wallpaperengine](https://github.com/Almamu/linux-wallpaperengine)
+- [ ] Buy Wallpaper enginge and try out [linux-wallpaperengine](https://github.com/Almamu/linux-wallpaperengine), there is also a noctalia plugin for it
 - [ ] Once everything is finished, add screenshots and videos in this README
 
 ### For the future
