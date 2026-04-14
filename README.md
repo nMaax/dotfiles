@@ -153,7 +153,7 @@ You can retrieve the list of apps on which automatic theming is set on the Nocta
 - **qt5ct** (`qt5ct` command): Set **Color scriptheme** to `noctalia`, **General font** to `SF Pro`, **Fixed-width font** to `CaskaydiaCove Nerd Font Mono`
 - **qt6ct** (`qt6ct` command): Same as above.
   - Qt theming via `qt6ct` with `QT_QPA_PLATFORMTHEME` has been already set in Hyprland config files for environment variables (`env.conf`).
-- **GTK** (`nwg-look`): Ensure Preferences > .config/gtk-4.0 is disabled.
+- **GTK** (`nwg-look`): Set general font to `SF Pro Regular`, then ensure Preferences > .config/gtk-4.0 is disabled, eventually clear if you found it enabled.
   - `adw-gtk3` + `prefer-dark` was already applied via `gsettings` during the install script.
 - GTK apps will automatically fetch the color scheme from the above, while Qt apps must be configured separately going inside app-settings and finding the colorscheme item.
 
