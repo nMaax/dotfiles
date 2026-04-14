@@ -42,7 +42,7 @@ elif [ "$GPU_VENDOR" = "amd" ]; then
   sudo pacman -S --needed --noconfirm rocm-opencl-runtime rocm-hip-sdk hip-runtime-amd
 fi
 
-info "✨ Installing Gemini Webapp..."
+info "♊ Installing Gemini Webapp..."
 ~/.local/bin/install-webapp.sh "Gemini" "google.gemini.com"
 
 info "💎 Installing Gemini CLI..."
@@ -58,6 +58,9 @@ else
 fi
 sudo systemctl enable --now ollama.service
 
+info "✨ Installing Image upscaler..."
+paru -S --needed --noconfirm realesrgan-ncnn-vulkan-bin
+
 info "📤 Installing LocalSend..."
 paru -S --needed --noconfirm localsend
 
@@ -69,6 +72,9 @@ sudo pacman -S --needed --noconfirm gnome-calculator
 
 info "☁️ Installing MEGA CMD..."
 paru -S --needed --noconfirm megacmd-bin
+
+info "🎴 Installing YouTube downloader..."
+sudo pacman -S --needed --noconfirm yt-dlp
 
 info "🔬 Installing Element..."
 sudo pacman -S --needed --noconfirm element-desktop
@@ -83,4 +89,3 @@ sudo pacman -S --needed --noconfirm easyeffects lsp-plugins zam-plugins calf mda
 echo ""
 success "✅ [Installing Apps] Done."
 echo ""
-
