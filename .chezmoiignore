@@ -11,11 +11,15 @@
 !.config/fontconfig/
 !.config/ghostty/
 !.config/hypr/
-!.config/mimeapps.list
 !.config/noctalia/
 !.config/nvim/
 !.config/pipewire/
 !.config/starship.toml
+!.config/mimeapps.list
+!.config/user-dirs.dirs
+
+## --- GAMING SHADER SIZING ---
+.config/environment.d/gaming.conf
 
 # --- FISH: Exclude shell state ---
 .config/fish/fish_variables
@@ -52,7 +56,6 @@
 !.config/Code - OSS/argv.json
 
 !.config/chromium-flags.conf
-!.config/user-dirs.dirs
 
 # --- LOCAL ---
 .local/*
