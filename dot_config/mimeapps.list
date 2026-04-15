@@ -1,7 +1,7 @@
 [Added Associations]
 application/pdf=org.kde.okular.desktop;
 image/jpeg=org.kde.gwenview.desktop;
-text/markdown=nvim.desktop;org.kde.kwrite.desktop;
+text/markdown=org.kde.kate.desktop;nvim.desktop;org.kde.kwrite.desktop;
 video/mp4=org.kde.haruna.desktop;
 x-scheme-handler/chrome=zen.desktop;
 x-scheme-handler/http=zen.desktop;
@@ -18,7 +18,7 @@ application/xhtml+xml=zen.desktop
 image/jpeg=org.kde.gwenview.desktop;
 image/png=gwenview-4.desktop;
 text/html=zen.desktop
-text/markdown=nvim.desktop;
+text/markdown=org.kde.kate.desktop;
 video/mp4=org.kde.haruna.desktop;
 x-scheme-handler/chrome=zen.desktop
 x-scheme-handler/discord=equibop.desktop
