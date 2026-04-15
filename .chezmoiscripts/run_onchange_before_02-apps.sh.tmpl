@@ -58,6 +58,9 @@ else
 fi
 sudo systemctl enable --now ollama.service
 
+info "🔳 Installing OpenCode..."
+
+paru -S --needed --noconfirm opencode
 info "✨ Installing Image upscaler..."
 paru -S --needed --noconfirm realesrgan-ncnn-vulkan-bin
 
