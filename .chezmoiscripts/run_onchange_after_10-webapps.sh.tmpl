@@ -1,0 +1,15 @@
+#!/bin/bash
+set -euo pipefail
+
+{{ template "utils.sh.tmpl" . }}
+
+echo ""
+info "🌐 [Installing Webapps] Starting..."
+echo ""
+
+info "♊ Installing Gemini Webapp..."
+~/.local/bin/install-webapp.sh "Gemini" "google.gemini.com"
+
+echo ""
+success "✅ [Installing Webapps] Done."
+echo ""
