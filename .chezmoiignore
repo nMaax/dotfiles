@@ -5,6 +5,7 @@
 
 # --- CONFIG ---
 .config/*
+!.config/OpenRGB/
 !.config/environment.d/
 !.config/fastfetch/
 !.config/fish/
@@ -56,6 +57,14 @@
 !.config/Code - OSS/argv.json
 
 !.config/chromium-flags.conf
+
+# --- OPENRGB: Exclude everything except sora-pattern ---
+.config/OpenRGB/**
+!.config/OpenRGB/plugins/
+!.config/OpenRGB/plugins/settings/
+!.config/OpenRGB/plugins/settings/effect-patterns/
+!.config/OpenRGB/plugins/settings/effect-patterns/CustomGradientWave/
+!.config/OpenRGB/plugins/settings/effect-patterns/CustomGradientWave/sora-pattern
 
 # --- LOCAL ---
 .local/*
