@@ -7,7 +7,10 @@ set -euo pipefail
 # For the future: move to shelly when it becomes default in CachyOS
 
 {{- if ne .chezmoi.osRelease.id "cachyos" }}
-error "This script is intended to run on CachyOS. But you are running it on $(. /etc/os-release; echo "$NAME $VERSION")."
+error "This script is intended to run on CachyOS. But you are running it on $(
+  . /etc/os-release
+  echo "$NAME $VERSION"
+)."
 error "Please, use 🥮 dotfiles on CachyOS only."
 exit 1
 {{- end }}
@@ -59,7 +62,7 @@ for pkg in "${BASE_PACKAGES[@]}"; do
 done
 
 info "🔧 Installing other utilities..."
-sudo pacman -S --needed --noconfirm smartmontools ffmpeg imagemagick perl-image-exiftool jq texlive-latex glow dust bat ripgrep fd btop fastfetch nvtop trash-cli transmission-cli ghostscript pandoc poppler qpdf ufw tealdeer ksshaskpass fzf zoxide
+sudo pacman -S --needed --noconfirm curl smartmontools grim slurp wl-clipboard ffmpeg imagemagick perl-image-exiftool gifski zbar jq tesseract texlive-latex glow dust bat ripgrep fd btop fastfetch nvtop trash-cli transmission-cli ghostscript pandoc poppler qpdf ufw tealdeer ksshaskpass fzf zoxide translate-shell
 paru -S --needed --noconfirm caligula-bin pdfcpu-bin ocrmypdf tesseract-data-eng tesseract-data-ita
 
 info "🖥️ Installing KDE suite, Qt, GTK and utility apps..."
@@ -82,3 +85,4 @@ info "Git identity set: $GIT_NAME <$GIT_EMAIL>"
 echo ""
 success "✅ [CachyOS Checks & Prerequisites] Done."
 echo ""
+
