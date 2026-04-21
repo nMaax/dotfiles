@@ -39,6 +39,11 @@
 .config/noctalia/colorschemes/*
 !.config/noctalia/colorschemes/Rosey\ AMOLED
 !.config/noctalia/colorschemes/Lilac\ AMOLED
+!.config/noctalia/colorschemes/Velvet\ AMOLED
+!.config/noctalia/colorschemes/Cyberpunk
+!.config/noctalia/colorschemes/Velvet\ AMOLED
+!.config/noctalia/colorschemes/Cyberpunk
+!.config/noctalia/colorschemes/Occult\ Umbral
 
 # --- NVIM: Exclude matugen-generated theme ---
 .config/nvim/lua/matugen.lua
