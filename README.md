@@ -241,17 +241,16 @@ Of course Mooncake is designed with gaming in mind too, it will then apply some 
 
 ## 📝 TODOs
 
-- [ ] Try out new plugins for Noctalia: Tailscale plugin, VPN Plugin, AI Plugin, Screen Toolkit
-- [ ] Try out noctalia Polkit Agent (you must uninstall kde polking agent, maybe this is not the right choice in cachy)
 - [ ] Refine WALLHACK Wallpapers -> Make a release for dotfiles-assets if files are too large
-- [ ] Enhance assets by introducing a github CI action that autogenerates README with gallery, like [dharmx](https://github.com/dharmx/walls
 - [ ] Prepare some default wallpapers x colorschemes combinations
-- [ ] Buy Wallpaper enginge and try out [linux-wallpaperengine](https://github.com/Almamu/linux-wallpaperengine), there is also a noctalia plugin for it
+- [ ] Enhance assets by introducing a github CI action that autogenerates README with gallery, like [dharmx](https://github.com/dharmx/walls)
 - [ ] Once everything is finished, add screenshots and videos in this README
 
 ### For the future
 
-- [ ] Move to fish install script
+- [ ] Try out noctalia Polkit Agent (you must uninstall kde polking agent, maybe this is not the right choice in cachy)
+- [ ] Move to fish install script (tho it would be non-POSIX!)
+- [ ] Buy Wallpaper enginge and try out [linux-wallpaperengine](https://github.com/Almamu/linux-wallpaperengine), there is also a noctalia plugin for it
 - [ ] Generalize for pure arch: track what Cachy installs, including fundamentals like bluetooth, networkmanager, fish, cachyos fish setup, gpu drivers etc.
 - [ ] Fix ksshaskpass Qt::font empty error
 - [ ] Fix OBS Browser install to automate substitution that requires the vlc plugin variant from lua to be changed in luajit
