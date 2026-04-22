@@ -241,13 +241,12 @@ Of course Mooncake is designed with gaming in mind too, it will then apply some 
 
 ## 📝 TODOs
 
-- [ ] Refine WALLHACK Wallpapers -> Make a release for dotfiles-assets if files are too large
-- [ ] Prepare some default wallpapers x colorschemes combinations
-- [ ] Enhance assets by introducing a github CI action that autogenerates README with gallery, like [dharmx](https://github.com/dharmx/walls)
 - [ ] Once everything is finished, add screenshots and videos in this README
 
 ### For the future
 
+- [ ] Enhance assets by introducing a github CI action that autogenerates README with gallery, like [dharmx](https://github.com/dharmx/walls)
+- [ ] Prepare WALLHACK Wallpapers -> Make a release for dotfiles-assets if files are too large
 - [ ] Try out noctalia Polkit Agent (you must uninstall kde polking agent, maybe this is not the right choice in cachy)
 - [ ] Move to fish install script (tho it would be non-POSIX!)
 - [ ] Buy Wallpaper enginge and try out [linux-wallpaperengine](https://github.com/Almamu/linux-wallpaperengine), there is also a noctalia plugin for it
