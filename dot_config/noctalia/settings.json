@@ -231,6 +231,7 @@
                 {
                     "colorizeDistroLogo": false,
                     "colorizeSystemIcon": "none",
+                    "colorizeSystemText": "none",
                     "customIconPath": "",
                     "enableColorization": false,
                     "icon": "noctalia",
@@ -239,15 +240,22 @@
                 },
                 {
                     "defaultSettings": {
-                        "activeColor": "primary",
-                        "enableToast": true,
-                        "hideInactive": false,
-                        "iconSpacing": 4,
-                        "inactiveColor": "none",
-                        "micFilterRegex": "",
-                        "removeMargins": false
+                        "colorHistory": [
+                        ],
+                        "detectedCompositor": "",
+                        "detectedRecorder": "",
+                        "filenameFormat": "",
+                        "installedLangs": [
+                            "eng"
+                        ],
+                        "paletteColors": [
+                        ],
+                        "screenshotPath": "",
+                        "selectedOcrLang": "eng",
+                        "transAvailable": false,
+                        "videoPath": ""
                     },
-                    "id": "plugin:privacy-indicator"
+                    "id": "plugin:screen-toolkit"
                 }
             ]
         }
@@ -281,7 +289,7 @@
         "manualSunrise": "06:30",
         "manualSunset": "18:30",
         "monitorForColors": "",
-        "predefinedScheme": "Rosey AMOLED",
+        "predefinedScheme": "Velvet AMOLED",
         "schedulingMode": "off",
         "syncGsettings": true,
         "useWallpaperColors": false
@@ -766,6 +774,160 @@
                     "#ff99b8"
                 ],
                 "path": "/home/massimiliano/Pictures/Wallpapers/neaben1.jpg",
+                "useWallpaperColors": false
+            },
+            {
+                "appearance": "dark",
+                "colorScheme": "Cyberpunk",
+                "darkMode": true,
+                "generationMethod": "faithful",
+                "paletteColors": [
+                    "#c4a82e",
+                    "#d14358",
+                    "#00a66c",
+                    "#b32d2d"
+                ],
+                "path": "/home/massimiliano/Pictures/Wallpapers/lucy1.png",
+                "useWallpaperColors": false
+            },
+            {
+                "appearance": "dark",
+                "colorScheme": "Rosey AMOLED",
+                "darkMode": true,
+                "generationMethod": "faithful",
+                "paletteColors": [
+                    "#ff8cb3",
+                    "#ffb3cc",
+                    "#ffcce0",
+                    "#ff99b8"
+                ],
+                "path": "/home/massimiliano/Pictures/Wallpapers/evelyn.jpg",
+                "useWallpaperColors": false
+            },
+            {
+                "appearance": "dark",
+                "colorScheme": "Lilac AMOLED",
+                "darkMode": true,
+                "generationMethod": "faithful",
+                "paletteColors": [
+                    "#b58fff",
+                    "#c79aff",
+                    "#d8b4ff",
+                    "#ff6f9b"
+                ],
+                "path": "/home/massimiliano/Pictures/Wallpapers/rei1.png",
+                "useWallpaperColors": false
+            },
+            {
+                "appearance": "dark",
+                "colorScheme": "Lilac AMOLED",
+                "darkMode": true,
+                "generationMethod": "faithful",
+                "paletteColors": [
+                    "#b58fff",
+                    "#c79aff",
+                    "#d8b4ff",
+                    "#ff6f9b"
+                ],
+                "path": "/home/massimiliano/Pictures/Wallpapers/rei2.png",
+                "useWallpaperColors": false
+            },
+            {
+                "appearance": "dark",
+                "colorScheme": "Occult Umbral",
+                "darkMode": true,
+                "generationMethod": "faithful",
+                "paletteColors": [
+                    "#8b2e2e",
+                    "#8baa82",
+                    "#9a7398",
+                    "#c25b5b"
+                ],
+                "path": "/home/massimiliano/Pictures/Wallpapers/rei3.png",
+                "useWallpaperColors": false
+            },
+            {
+                "appearance": "dark",
+                "colorScheme": "Cyberpunk",
+                "darkMode": true,
+                "generationMethod": "faithful",
+                "paletteColors": [
+                    "#c4a82e",
+                    "#d14358",
+                    "#00a66c",
+                    "#b32d2d"
+                ],
+                "path": "/home/massimiliano/Pictures/Wallpapers/wanna-stay-at-your-house.png",
+                "useWallpaperColors": false
+            },
+            {
+                "appearance": "dark",
+                "colorScheme": "Kanagawa",
+                "darkMode": true,
+                "generationMethod": "faithful",
+                "paletteColors": [
+                    "#76946a",
+                    "#c0a36e",
+                    "#7e9cd8",
+                    "#c34043"
+                ],
+                "path": "/home/massimiliano/Pictures/Wallpapers/hokusai1.png",
+                "useWallpaperColors": false
+            },
+            {
+                "appearance": "dark",
+                "colorScheme": "Kanagawa",
+                "darkMode": true,
+                "generationMethod": "faithful",
+                "paletteColors": [
+                    "#76946a",
+                    "#c0a36e",
+                    "#7e9cd8",
+                    "#c34043"
+                ],
+                "path": "/home/massimiliano/Pictures/Wallpapers/gyarados.jpg",
+                "useWallpaperColors": false
+            },
+            {
+                "appearance": "dark",
+                "colorScheme": "Monochrome",
+                "darkMode": true,
+                "generationMethod": "faithful",
+                "paletteColors": [
+                    "#aaaaaa",
+                    "#a7a7a7",
+                    "#cccccc",
+                    "#dddddd"
+                ],
+                "path": "/home/massimiliano/Pictures/Wallpapers/abstract2.png",
+                "useWallpaperColors": false
+            },
+            {
+                "appearance": "dark",
+                "colorScheme": "Murasaki",
+                "darkMode": true,
+                "generationMethod": "faithful",
+                "paletteColors": [
+                    "#e8bcfb",
+                    "#8e0cc6",
+                    "#066f50",
+                    "#e80e4f"
+                ],
+                "path": "/home/massimiliano/Pictures/Wallpapers/abstract.png",
+                "useWallpaperColors": false
+            },
+            {
+                "appearance": "dark",
+                "colorScheme": "Velvet AMOLED",
+                "darkMode": true,
+                "generationMethod": "faithful",
+                "paletteColors": [
+                    "#b9391f",
+                    "#7c8189",
+                    "#5c575a",
+                    "#b9391f"
+                ],
+                "path": "/home/massimiliano/Pictures/Wallpapers/sora-drive.jpg",
                 "useWallpaperColors": false
             }
         ],
