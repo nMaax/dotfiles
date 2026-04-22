@@ -206,6 +206,25 @@
                     "unreadBadgeColor": "primary"
                 },
                 {
+                    "defaultSettings": {
+                        "colorHistory": [
+                        ],
+                        "detectedCompositor": "",
+                        "detectedRecorder": "",
+                        "filenameFormat": "",
+                        "installedLangs": [
+                            "eng"
+                        ],
+                        "paletteColors": [
+                        ],
+                        "screenshotPath": "",
+                        "selectedOcrLang": "eng",
+                        "transAvailable": false,
+                        "videoPath": ""
+                    },
+                    "id": "plugin:screen-toolkit"
+                },
+                {
                     "deviceNativePath": "__default__",
                     "displayMode": "graphic-clean",
                     "hideIfIdle": false,
@@ -237,25 +256,6 @@
                     "icon": "noctalia",
                     "id": "ControlCenter",
                     "useDistroLogo": false
-                },
-                {
-                    "defaultSettings": {
-                        "colorHistory": [
-                        ],
-                        "detectedCompositor": "",
-                        "detectedRecorder": "",
-                        "filenameFormat": "",
-                        "installedLangs": [
-                            "eng"
-                        ],
-                        "paletteColors": [
-                        ],
-                        "screenshotPath": "",
-                        "selectedOcrLang": "eng",
-                        "transAvailable": false,
-                        "videoPath": ""
-                    },
-                    "id": "plugin:screen-toolkit"
                 }
             ]
         }
