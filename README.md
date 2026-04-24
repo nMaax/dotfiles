@@ -1,4 +1,4 @@
-# 🥮 Mooncake dotfiles
+# 🥮 dotfiles
 
 Personal dotfiles and system configurations, just the way I like it.
 
