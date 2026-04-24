@@ -3,9 +3,9 @@ application/pdf=org.kde.okular.desktop;
 image/jpeg=org.kde.gwenview.desktop;
 text/markdown=org.kde.kate.desktop;nvim.desktop;org.kde.kwrite.desktop;
 video/mp4=org.kde.haruna.desktop;
-x-scheme-handler/chrome=zen.desktop;
 x-scheme-handler/http=zen.desktop;
 x-scheme-handler/https=zen.desktop;
+x-scheme-handler/chrome=zen.desktop;
 
 [Default Applications]
 application/pdf=org.kde.okular.desktop;
