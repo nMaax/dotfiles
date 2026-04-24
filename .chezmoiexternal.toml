@@ -21,6 +21,15 @@ stripComponents = 2
 include = ["*/wallpapers/**"]
 refreshPeriod = "168h"
 
+# Extract Propics folder
+["Pictures/Propics"]
+type = "archive"
+url = "https://github.com/nMaax/dotfiles-assets/archive/main.tar.gz"
+exact = true
+stripComponents = 2
+include = ["*/propics/**"]
+refreshPeriod = "168h"
+
 [".cache/silent-sddm-themes"]
 type = "archive"
 url = "https://github.com/nMaax/dotfiles-sddm/archive/main.tar.gz"
