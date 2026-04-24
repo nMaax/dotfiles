@@ -170,7 +170,7 @@ You can retrieve the list of apps on which automatic theming is set on the Nocta
 - **Discord:** Open Equibop → Settings → Themes → enable one of the two Noctalia themes.
 - **VSCode:** Install the `NoctaliaTheme` extension from the marketplace, then select it via `Ctrl+Shift+P` → *Preferences: Color Theme*.
 - **Telegram:** Open Settings → Chat Settings → scroll to the bottom and enable the custom color theme.
-- **Steam**: Install [Material-Theme](https://steambrew.app/theme?id=ipYjqODds05KMcvh7QJn) and add it in the Millenium Theme Settings, select *Matugen* in the theme color dropdown.
+- **Steam**: Install [Material-Theme](https://steambrew.app/theme?id=ipYjqODds05KMcvh7QJn) and add it in Millenium Settings > Theme, then click the three dots > configure > style > colors > select *Matugen* in the theme color dropdown.
 - All others apps should not require any intervention (e.g. neovim, btop etc.), hopefully.
 
 > [!NOTE]
@@ -192,7 +192,6 @@ The stuff that I usually use during my browsing experience, these are completely
   - [Tridactyl](https://github.com/tridactyl/tridactyl) – Vim-style keyboard navigation (Firefox/Zen)
   - [MarkDownload](https://github.com/deathau/markdownload) – download pages as Markdown
   - [DarkReader](https://darkreader.org/help/en/) - automatic dark theming
-  - [Zen Internet](https://addons.mozilla.org/en-US/firefox/addon/zen-internet/) - zen-synched theming for common webpages, needed for [ZenZero](https://sameerasw.com/zen)
 - **Zen Mods**:
   - [Transparent Zen](https://zen-browser.app/mods/642854b5-88b4-4c40-b256-e035532109df) – make zen look transparent, needed for [ZenZero](https://sameerasw.com/zen)
 
