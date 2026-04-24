@@ -2,7 +2,9 @@
 
 Personal dotfiles and system configurations, just the way I like it.
 
-These dotfiles are heavily based on **CachyOS** (not just Arch), specifically the various packages that Cachy ships (fish, various KDE bloat etc.). Ideally you should have installed CachyOS selecting for hyprland during the Calamares installation.
+These dotfiles are heavily based on **CachyOS** (not just Arch), specifically the various packages that Cachy ships with it's own base installation (fish, sddm, various KDE bloat etc.).
+
+Ideally you should have installed CachyOS selecting for hyprland during the Calamares installation, or without any DE (in such case 🥮 will install Hyprland automatically). 
 
 > Managed using [chezmoi](https://www.chezmoi.io/).
 
@@ -18,12 +20,12 @@ These dotfiles are heavily based on **CachyOS** (not just Arch), specifically th
 [data]
   name = "nMaax"
   email = "you@example.com"
-  tailscale_authkey = "tskey-auth-XXXXXXXXXXXXX"
-  nordvpn_token = "nvpnkey-auth-XXXXXXXXXXXXX"
+  tailscale_authkey = "tskey-auth-XXXXXXXXXXXXX" # Leave "" if you want to skip tailscale
+  nordvpn_token = "nvpnkey-auth-XXXXXXXXXXXXX" # Leave "" if you want to skip nordvpn
   gaming = true
 ```
 
-1. Install chezmoi and apply the dotfiles
+3. Install chezmoi and apply the dotfiles
 
 ```fish
 pacman -S chezmoi
@@ -31,17 +33,19 @@ chezmoi init --apply nMaax
 ```
 
 > [!WARNING]
-> `ddcutil` has been installed during the install scripts, it may cause instability with certain monitors. You can remove it via `sudo pacman -Rns ddcutil` if you encounter issues.
+> `ddcutil` will been installed, which may cause instability with certain monitors. You can remove it via `sudo pacman -Rns ddcutil` if you encounter any issue.
 
 > [!WARNING]
-> Run `./test.sh` in `/usr/share/sddm/themes/silent/` to verify SDDM works before rebooting to avoid being locked out anytime you edit SDDM themes!
+> 🥮 will default on a custom sddm them which should work out of the box, if you ever modify it remind to first run `./test.sh` in `/usr/share/sddm/themes/silent/` to ensure SDDM works before rebooting, and avoiding being locked out at login!
 
 > [!NOTE]
-> Prefer **systemd-owned Hyprland** instead of plain one at the SDDM login screen to ensure autostart scripts function correctly.
+> During log-in in SDDM choose **systemd-owned Hyprland** instead of the plain one, to ensure autostart scripts function correctly (e.g. cachy-update tray icon).
 
 ### Handling missing polkit agent password prompt in CachyOS Hello
 
-If CachyHello won't accept your password on a Hyprland-only installation (i.e., no Plasma), the polkit-kde-agent is likely missing from your background processes. You must ensure this agent is running so CachyHello can trigger the authentication pop-up required to apply your changes. To fix do the following:
+If CachyHello won't accept your password on a Hyprland-only installation (i.e., no Plasma), the polkit-kde-agent is likely missing from your background processes. You must ensure this agent is running so CachyHello can trigger the authentication pop-up required to apply your changes.
+
+To fix do the following:
 
 1. Open your hyprland.conf: vim ~/.config/hypr/hyprland.conf.
 2. Add this line to your "exec-once" section (or anywhere at the bottom):
@@ -50,7 +54,8 @@ If CachyHello won't accept your password on a Hyprland-only installation (i.e., 
 exec-once = /usr/lib/polkit-kde-authentication-agent-1
 ```
 
-1. Save and restart Hyprland (Super + M or just log out).
+3. Save and restart Hyprland (Super + M or just log out).
+4. Now you should be able to tweak cachy as you like, then proceed with the installation as above.
 
 > [!NOTE]
 > If you aren't using KDE, the path might be `/usr/lib/lxpolkit` or similar. Cachy usually defaults to the KDE agent even on Hyprland anyway, so this should be quite rare.
@@ -59,7 +64,9 @@ exec-once = /usr/lib/polkit-kde-authentication-agent-1
 
 ### ☁️ MEGA & KeePassXC
 
-Both `megacmd-bin` and `keepassxc` are installed by the script as regular packages. Set them up manually after installation:
+Both `megacmd-bin` and `keepassxc` are installed by the script as regular packages.
+
+Set them up manually after installation:
 
 1. **Log into MEGA** and configure your sync:
 
@@ -69,19 +76,19 @@ Both `megacmd-bin` and `keepassxc` are installed by the script as regular packag
    mega-sync ~/MEGA/ /
    ```
 
-2. **Open KeePassXC** and point it at your database once the MEGA sync completes. Remember to place the key-file as well.
+2. **Open KeePassXC** and point it at your database once the MEGA sync completes. Remember to place the key-file as well!
 
 ### 🔑 Keyring, SDDM, and stability
 
-KWallet presents some issues in non-Plasma environments, the install scripts tried to cleanly patch these issues out of the box, however some issues may still be present, especially with Electron apps that rely on safe storage.
-
-Further information can be found at [Arch Wiki: KDE Wallet](https://wiki.archlinux.org/title/KDE_Wallet) and [Electron Safe Storage Info](https://www.electronjs.org/docs/latest/api/safe-storage).
+KWallet presents some issues in non-Plasma environments, the install scripts tried to cleanly patch these issues out of the box, however some may still be present, especially with Electron apps that rely on safe-storage.
 
 **When you are prompted to create a wallet** (i.e. the first time an application requests one), use **exactly** these settings:
 
 - **Name:** `kdewallet` (the default; any other name will not be unlocked automatically by PAM)
 - **Encryption:** `Blowfish` (required for `kwallet-pam` auto-unlock; GnuPG encryption is incompatible)
 - **Password:** your current **user login password** (PAM unlocks the wallet by matching it against the login password)
+
+Further information can be found at [Arch Wiki: KDE Wallet](https://wiki.archlinux.org/title/KDE_Wallet) and [Electron Safe Storage Info](https://www.electronjs.org/docs/latest/api/safe-storage).
 
 ### 🔐 SSH
 
@@ -177,7 +184,7 @@ Furthermore, you can install other themes for apps yourself, have a look at:
 
 ### 🌐 Browser(s) setup
 
-The stuff that I usually use during my browsing experience, what do you want with this:
+The stuff that I usually use during my browsing experience, these are completely optional and at your preference, do what you want with them:
 
 - **Extensions**:
   - [uBlock Origin](https://ublockorigin.com/) – content & ad blocker
@@ -202,9 +209,9 @@ Furthermore, here is a list of some good misc websites for assets:
 
 Other stuff I use on Spicetify, my advice is to use the marketplace as much as possible
 
-- Spicy Lyrics (instead of Beautiful Lyrics, which seem to be deprecated)
+- Spicy Lyrics (instead of Beautiful Lyrics, which seem to be deprecated!)
 - Global Stats for songs, to fetch info on different songs.
-- Lucid Theme (instead of the Confy default one)
+- Lucid Theme (instead of the Confy default one, tho this one looks quite heavy, bloated and dirty, ngl.)
 
 > [!WARNING]
 > Disable Comfy theme via spicetify cli if you want to install a different one!
@@ -217,7 +224,7 @@ Other stuff I use on Spicetify, my advice is to use the marketplace as much as p
 
 ### 🎮 Gaming
 
-Of course Mooncake is designed with gaming in mind too, it will then apply some minor common installations and tweaks if cachyos gaming packages are detected. For more details, visit the [CachyOS Gaming Wiki](https://wiki.cachyos.org/configuration/gaming). Here are some handy notes at your disposal to complete your gaming experience:
+Of course 🥮 is designed with gaming in mind too, 🥮 will apply some common installations and tweaks if cachyos gaming packages are detected. For more details, visit the [CachyOS Gaming Wiki](https://wiki.cachyos.org/configuration/gaming). Here are some handy notes at your disposal to complete your gaming experience:
 
 #### 🚀 Steam Launch Options
 
