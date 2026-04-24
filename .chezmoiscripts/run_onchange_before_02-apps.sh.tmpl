@@ -74,7 +74,14 @@ info "🧮 Installing GNOME Calculator..."
 sudo pacman -S --needed --noconfirm gnome-calculator
 
 info "☁️ Installing MEGA CMD..."
-paru -S --needed --noconfirm megacmd-bin
+# Check if the package is installed
+if pacman -Qi "megacmd" > /dev/null 2>&1; then
+    success "MEGA is already installed. Skipping..."
+else
+    # The way the documentation wants https://mega.io/en/cmd
+    wget https://mega.nz/linux/repo/Arch_Extra/x86_64/megacmd-x86_64.pkg.tar.zst
+    sudo pacman -U "$PWD/megacmd-x86_64.pkg.tar.zst"
+fi
 
 info "🎴 Installing YouTube downloader..."
 sudo pacman -S --needed --noconfirm yt-dlp
