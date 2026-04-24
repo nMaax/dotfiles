@@ -5,7 +5,10 @@ set -euo pipefail
 {{ template "external_links.sh.tmpl" . }}
 
 {{- if ne .chezmoi.osRelease.id "cachyos" }}
-error "This script is intended to run on CachyOS. But you are running it on $(. /etc/os-release; echo "$NAME $VERSION")."
+error "This script is intended to run on CachyOS. But you are running it on $(
+  . /etc/os-release
+  echo "$NAME $VERSION"
+)."
 error "Please, use 🥮 dotfiles on CachyOS only."
 exit 1
 {{- end }}
@@ -18,7 +21,10 @@ paru -S --needed --noconfirm millennium
 
 info "🦚 Installing OpenRGB..."
 sudo pacman -S --needed --noconfirm openrgb
-paru -S --needed --noconfirm  openrgb-plugin-effects-git
+paru -S --needed --noconfirm openrgb-plugin-effects-git
+
+info "🎎 Installing Wallpaper Engine compatibility layer..."
+paru -S --needed --noconfirm linux-wallpaperengine
 
 info "⛏️ Installing Minecraft (Prism-launcher and Java dependencies)..."
 sudo pacman -S --needed --noconfirm prismlauncher
