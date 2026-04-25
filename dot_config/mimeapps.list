@@ -1,5 +1,6 @@
 [Added Associations]
 application/pdf=org.kde.okular.desktop;
+application/vnd.google-earth.kml+xml=org.kde.kate.desktop;
 image/jpeg=org.kde.gwenview.desktop;
 image/png=org.kde.gwenview.desktop;
 text/markdown=org.kde.kate.desktop;nvim.desktop;org.kde.kwrite.desktop;
@@ -10,6 +11,7 @@ x-scheme-handler/https=zen.desktop;
 
 [Default Applications]
 application/pdf=org.kde.okular.desktop;
+application/vnd.google-earth.kml+xml=org.kde.kate.desktop;
 application/x-extension-htm=zen.desktop
 application/x-extension-html=zen.desktop
 application/x-extension-shtml=zen.desktop
