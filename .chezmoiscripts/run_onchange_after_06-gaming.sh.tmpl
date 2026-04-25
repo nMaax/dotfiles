@@ -46,6 +46,9 @@ else
   info "Feral's gamemode not installed. Skipping ananicy-cpp conflict check."
 fi
 
+info "🩸 Disabling dynamic cursor for compatibility issues in games..."
+hyprpm disable dynamic-cursor
+
 add_note "[GAMING] 🖥️ Shader cache is configured via chezmoi (~/.config/environment.d/gaming.conf). It should work immediately."
 
 add_note "[GAMING] 🖱️ Mouse acceleration profile for gaming is set to 'flat' (no acceleration) via the Hyprland input config (~/.config/hypr/hyprland/input.conf). Update the 'name' field there with the exact device name from \`hyprctl devices\`."
