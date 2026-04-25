@@ -108,7 +108,7 @@ class Command:
                 "launchers": {
                     "enable": True,
                     "match": [
-                        {"class": "steam"},
+                        {"title": "Steam"},
                         {"class": "lutris"},
                         {"class": "com.heroicgameslauncher.hgl"},
                         {"class": "heroic"},
