@@ -47,7 +47,11 @@ else
 fi
 
 info "🩸 Disabling dynamic cursor for compatibility issues in games..."
-hyprpm disable dynamic-cursor
+if hyprpm disable dynamic-cursor >/dev/null 2>&1; then
+  info "Successfully disabled dynamic-cursor."
+else
+  warn "Could not disable dynamic-cursor (likely missing or already disabled). Skipping..."
+fi
 
 add_note "[GAMING] 🖥️ Shader cache is configured via chezmoi (~/.config/environment.d/gaming.conf). It should work immediately."
 
