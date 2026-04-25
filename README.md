@@ -4,7 +4,7 @@ Personal dotfiles and system configurations, just the way I like it.
 
 These dotfiles are heavily based on **CachyOS** (not just Arch), specifically the various packages that Cachy ships with it's own base installation (fish, sddm, various KDE bloat etc.).
 
-Ideally you should have installed CachyOS selecting for hyprland during the Calamares installation, or without any DE (in such case 🥮 will install Hyprland automatically). 
+Ideally you should have installed CachyOS selecting for hyprland during the Calamares installation, or without any DE (in such case 🥮 will install Hyprland automatically).
 
 > Managed using [chezmoi](https://www.chezmoi.io/).
 
@@ -25,7 +25,7 @@ Ideally you should have installed CachyOS selecting for hyprland during the Cala
   gaming = true
 ```
 
-3. Install chezmoi and apply the dotfiles
+1. Install chezmoi and apply the dotfiles
 
 ```fish
 pacman -S chezmoi
@@ -54,8 +54,8 @@ To fix do the following:
 exec-once = /usr/lib/polkit-kde-authentication-agent-1
 ```
 
-3. Save and restart Hyprland (Super + M or just log out).
-4. Now you should be able to tweak cachy as you like, then proceed with the installation as above.
+1. Save and restart Hyprland (Super + M or just log out).
+2. Now you should be able to tweak cachy as you like, then proceed with the installation as above.
 
 > [!NOTE]
 > If you aren't using KDE, the path might be `/usr/lib/lxpolkit` or similar. Cachy usually defaults to the KDE agent even on Hyprland anyway, so this should be quite rare.
@@ -227,7 +227,7 @@ Of course 🥮 is designed with gaming in mind too, 🥮 will apply some common 
 
 #### 🚀 Steam Launch Options
 
-- **NVIDIA:** `PROTON_ENABLE_WAYLAND=1 PROTON_DLSS_UPGRADE=1 PROTON_NVIDIA_LIBS_NO_32BIT=1 PROTON_USE_NTSYNC=1 PROTON_ENABLE_HDR=1 ENABLE_HDR_WSI=1 game-performance %command%`
+- **NVIDIA:** `PROTON_ENABLE_WAYLAND=1 PROTON_DLSS_UPGRADE=1 PROTON_NVIDIA_LIBS_NO_32BIT=1 PROTON_ENABLE_HDR=1 ENABLE_HDR_WSI=1 game-performance %command%`
 - **AMD:** `PROTON_USE_NTSYNC=1 ENABLE_LAYER_MESA_ANTI_LAG=1 PROTON_FSR4_UPGRADE=1 game-performance %command%`
 
 #### ⚙️ Steam/Proton Settings
