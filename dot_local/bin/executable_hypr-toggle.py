@@ -125,6 +125,14 @@ class Command:
                     "move": True,
                 },
             },
+            "password": {
+                "keepassxc": {
+                    "enable": True,
+                    "match": [{"class": "org.keepassxc.KeePassXC"}],
+                    "command": ["keepassxc"],
+                    "move": True,
+                }
+            },
         }
 
         user_config_path = Path.home() / ".config" / "hypr-toggle" / "config.json"
