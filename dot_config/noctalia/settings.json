@@ -256,6 +256,19 @@
                     "icon": "noctalia",
                     "id": "ControlCenter",
                     "useDistroLogo": false
+                },
+                {
+                    "defaultSettings": {
+                        "activeColor": "primary",
+                        "camFilterRegex": "",
+                        "enableToast": true,
+                        "hideInactive": false,
+                        "iconSpacing": 4,
+                        "inactiveColor": "none",
+                        "micFilterRegex": "",
+                        "removeMargins": false
+                    },
+                    "id": "plugin:privacy-indicator"
                 }
             ]
         }
@@ -264,7 +277,7 @@
         "backlightDeviceMappings": [
         ],
         "brightnessStep": 5,
-        "enableDdcSupport": false,
+        "enableDdcSupport": true,
         "enforceMinimum": true
     },
     "calendar": {
@@ -381,6 +394,11 @@
                         "y": 100
                     }
                 ]
+            },
+            {
+                "name": "DP-1",
+                "widgets": [
+                ]
             }
         ],
         "overviewEnabled": true
@@ -481,7 +499,7 @@
         "showScreenCorners": false,
         "showSessionButtonsOnLockScreen": true,
         "smoothScrollEnabled": true,
-        "telemetryEnabled": true
+        "telemetryEnabled": false
     },
     "hooks": {
         "colorGeneration": "",
@@ -533,12 +551,12 @@
         "bluetoothRssiPollingEnabled": false,
         "disableDiscoverability": true,
         "networkPanelView": "wifi",
-        "wifiDetailsViewMode": "grid"
+        "wifiDetailsViewMode": "list"
     },
     "nightLight": {
         "autoSchedule": true,
         "dayTemp": "6500",
-        "enabled": false,
+        "enabled": true,
         "forced": false,
         "manualSunrise": "06:30",
         "manualSunset": "18:30",
@@ -738,6 +756,10 @@
             {
                 "enabled": true,
                 "id": "kcolorscheme"
+            },
+            {
+                "enabled": true,
+                "id": "steam"
             }
         ],
         "enableUserTheming": true
@@ -766,7 +788,7 @@
                 "appearance": "dark",
                 "colorScheme": "Rosey AMOLED",
                 "darkMode": true,
-                "generationMethod": "faithful",
+                "generationMethod": "tonal-spot",
                 "paletteColors": [
                     "#ff8cb3",
                     "#ffb3cc",
