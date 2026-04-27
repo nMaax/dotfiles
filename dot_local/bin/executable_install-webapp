@@ -3,7 +3,7 @@
 
 if [ "$#" -lt 2 ]; then
   echo "Usage: $0 \"<App Name>\" \"<URL>\" [\"<Icon URL or local name>\"]"
-  echo "  Tip: You can find great high-res icons at https://dashboardicons.com"
+  echo "  Tip: You can find great high-res icons at https://dashboardicons.com (png only!)"
   exit 1
 fi
 
@@ -44,7 +44,7 @@ if [ -n "$ICON_ARG" ]; then
   fi
 else
   echo "No icon provided. Fetching default website favicon..."
-  echo "(Tip: For a much sharper icon, pass an image URL as the 3rd argument. Great source: https://dashboardicons.com)"
+  echo "(Tip: For a much sharper icon, pass an image URL (png!) as the 3rd argument. Great source: https://dashboardicons.com)"
 
   FAVICON_URL="https://www.google.com/s2/favicons?domain=${APP_URL}&sz=128"
   if curl -fsSL -o "$DOWNLOADED_ICON" "$FAVICON_URL" && [[ -s "$DOWNLOADED_ICON" ]]; then
