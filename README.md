@@ -250,16 +250,13 @@ Of course 🥮 is designed with gaming in mind too, 🥮 will apply some common 
 
 ## 📝 TODOs
 
+- [ ] Try to rice [quickshell overview])(https://github.com/Shanu-Kumawat/quickshell-overview#%EF%B8%8F-configuration)
 - [ ] Once everything is finished, add screenshots and videos in this README
 
 ### For the future
 
-- [ ] Enhance assets by introducing a github CI action that autogenerates README with gallery, like [dharmx](https://github.com/dharmx/walls)
-- [ ] Install [Hyprland Scroll Overview](https://github.com/yayuuu/hyprland-scroll-overview) plugin instead of qs overiview
 - [ ] Prepare WALLHACK Wallpapers -> Make a release for dotfiles-assets if files are too large
-- [ ] Try out noctalia Polkit Agent (you must uninstall kde polking agent, maybe this is not the right choice in cachy)
-- [ ] Move to fish install script (tho it would be non-POSIX!)
-- [ ] Buy Wallpaper enginge and try out [linux-wallpaperengine](https://github.com/Almamu/linux-wallpaperengine), there is also a noctalia plugin for it
-- [ ] Generalize for pure arch: track what Cachy installs, including fundamentals like bluetooth, networkmanager, fish, cachyos fish setup, gpu drivers etc.
-- [ ] Fix ksshaskpass Qt::font empty error
-- [ ] Fix OBS Browser install to automate substitution that requires the vlc plugin variant from lua to be changed in luajit
+- [ ] Enhance assets by introducing a github CI action that autogenerates README with gallery, like [dharmx](https://github.com/dharmx/walls)
+- [ ] Try out [Hyprland Scroll Overview](https://github.com/yayuuu/hyprland-scroll-overview) plugin instead of qs overiview
+- [ ] Try out [Noctalia Polkit Agent](https://noctalia.dev/plugins/polkit-agent) (you must uninstall kde polking agent, maybe this is not the right choice in cachy)
+- [ ] Generalize for pure Arch by reproducing what Cachy installs, including fundamentals like bluetooth, networkmanager, fish, cachyos fish setup, gpu drivers etc.
