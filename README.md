@@ -255,6 +255,7 @@ Of course 🥮 is designed with gaming in mind too, 🥮 will apply some common 
 ### For the future
 
 - [ ] Enhance assets by introducing a github CI action that autogenerates README with gallery, like [dharmx](https://github.com/dharmx/walls)
+- [ ] Install [Hyprland Scroll Overview](https://github.com/yayuuu/hyprland-scroll-overview) plugin instead of qs overiview
 - [ ] Prepare WALLHACK Wallpapers -> Make a release for dotfiles-assets if files are too large
 - [ ] Try out noctalia Polkit Agent (you must uninstall kde polking agent, maybe this is not the right choice in cachy)
 - [ ] Move to fish install script (tho it would be non-POSIX!)
