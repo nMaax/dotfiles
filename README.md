@@ -257,6 +257,7 @@ Of course 🥮 is designed with gaming in mind too, 🥮 will apply some common 
 
 - [ ] Prepare WALLHACK Wallpapers -> Make a release for dotfiles-assets if files are too large
 - [ ] Enhance assets by introducing a github CI action that autogenerates README with gallery, like [dharmx](https://github.com/dharmx/walls)
+- [ ] Try out these [QyLock](https://github.com/Darkkal44/qylock) as new SDDM presets
 - [ ] Try out [Hyprland Scroll Overview](https://github.com/yayuuu/hyprland-scroll-overview) plugin instead of qs overiview
 - [ ] Try out [Noctalia Polkit Agent](https://noctalia.dev/plugins/polkit-agent) (you must uninstall kde polking agent, maybe this is not the right choice in cachy)
 - [ ] Generalize for pure Arch by reproducing what Cachy installs, including fundamentals like bluetooth, networkmanager, fish, cachyos fish setup, gpu drivers etc.
