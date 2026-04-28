@@ -13,7 +13,7 @@ Ideally you should have installed CachyOS selecting for hyprland during the Cala
 > [!WARNING]
 > **This is NOT a run-and-forget installation.** The install script will prompt you at several points. Keep an eye on the terminal throughout the entire process.
 
-1. Tweak CachyOS via the CachyOS Hello app and apply your preferred baseline system tweaks, remember to enable cachy-update;
+1. Tweak CachyOS via the CachyOS Hello app and apply your preferred baseline system tweaks, remember to **enable cachy-update**;
 2. Prepare your `~/.config/chezmoi/chezmoi.toml` configuration file with your specific variables
 
 ```toml
@@ -34,9 +34,6 @@ chezmoi init --apply nMaax
 
 > [!WARNING]
 > `ddcutil` will been installed, which may cause instability with certain monitors. You can remove it via `sudo pacman -Rns ddcutil` if you encounter any issue.
-
-> [!WARNING]
-> 🥮 will default on a custom sddm them which should work out of the box, if you ever modify it remind to first run `./test.sh` in `/usr/share/sddm/themes/silent/` to ensure SDDM works before rebooting, and avoiding being locked out at login!
 
 > [!NOTE]
 > During log-in in SDDM choose **systemd-owned Hyprland** instead of the plain one, to ensure autostart scripts function correctly (e.g. cachy-update tray icon).
@@ -78,7 +75,7 @@ Set them up manually after installation:
 
 2. **Open KeePassXC** and point it at your database once the MEGA sync completes. Remember to place the key-file as well!
 
-### 🔑 Keyring, SDDM, and stability
+### 🔑 Keyring and SDDM
 
 KWallet presents some issues in non-Plasma environments, the install scripts tried to cleanly patch these issues out of the box, however some may still be present, especially with Electron apps that rely on safe-storage.
 
@@ -89,6 +86,10 @@ KWallet presents some issues in non-Plasma environments, the install scripts tri
 - **Password:** your current **user login password** (PAM unlocks the wallet by matching it against the login password)
 
 Further information can be found at [Arch Wiki: KDE Wallet](https://wiki.archlinux.org/title/KDE_Wallet) and [Electron Safe Storage Info](https://www.electronjs.org/docs/latest/api/safe-storage).
+
+
+> [!WARNING]
+> 🥮 will default on a custom [SilentSDDM](https://github.com/uiriansan/SilentSDDM) them which should work out of the box, if you ever modify it remind to first run `./test.sh` in `/usr/share/sddm/themes/silent/` to ensure SDDM works before rebooting, and avoiding being locked out at login!
 
 ### 🔐 SSH
 
@@ -181,6 +182,8 @@ Furthermore, you can install other themes for apps yourself, have a look at:
 - [ZenZero](https://sameerasw.com/zen)
 - [BetterDiscord](https://betterdiscord.app/themes)
 - [Millenium for Steam](https://steambrew.app/themes)
+
+🥮 also supports [linux-wallpaperengine](https://github.com/Almamu/linux-wallpaperengine)! If you installed Steam you can see how to set it up and [related plugin](https://noctalia.dev/plugins/linux-wallpaperengine-controller/)
 
 ### 🌐 Browser(s) setup
 
