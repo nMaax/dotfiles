@@ -62,7 +62,7 @@ for pkg in "${BASE_PACKAGES[@]}"; do
 done
 
 info "🔧 Installing other utilities..."
-sudo pacman -S --needed --noconfirm curl sshfs caligula smartmontools grim slurp wl-clipboard ffmpeg imagemagick perl-image-exiftool gifski zbar jq tesseract texlive-latex glow dust bat ripgrep fd btop fastfetch nvtop trash-cli transmission-cli ghostscript pandoc poppler qpdf ufw tealdeer ksshaskpass fzf zoxide translate-shell
+sudo pacman -S --needed --noconfirm curl zip 7zip sshfs caligula smartmontools grim slurp wl-clipboard ffmpeg resvg imagemagick perl-image-exiftool gifski zbar jq tesseract texlive-latex glow dust bat ripgrep fd btop fastfetch nvtop trash-cli transmission-cli ghostscript pandoc poppler qpdf ufw tealdeer ksshaskpass fzf zoxide translate-shell
 paru -S --needed --noconfirm pdfcpu-bin ocrmypdf tesseract-data-eng tesseract-data-ita
 
 info "🖥️ Installing KDE suite, Qt, GTK and utility apps..."
