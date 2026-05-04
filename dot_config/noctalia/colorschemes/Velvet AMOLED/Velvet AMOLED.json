@@ -16,11 +16,14 @@
     "mOnSurfaceVariant": "#A6A8AC",
     "mOutline": "#282525",
     "mShadow": "#000000",
+    "surface_container_high": "#7C8189",
+    "surfaceContainerHigh": "#7C8189",
+    "mSurfaceContainerHigh": "#7C8189",
     "terminal": {
       "foreground": "#D8D9DB",
       "background": "#000000",
-      "selectionFg": "#D8D9DB",
-      "selectionBg": "#5C575A",
+      "selectionFg": "#000000",
+      "selectionBg": "#7C8189",
       "cursorText": "#000000",
       "cursor": "#B9391F",
       "normal": {
@@ -62,6 +65,9 @@
     "mOnSurfaceVariant": "#282525",
     "mOutline": "#A6A8AC",
     "mShadow": "#282525",
+    "surface_container_high": "#A6A8AC",
+    "surfaceContainerHigh": "#A6A8AC",
+    "mSurfaceContainerHigh": "#A6A8AC",
     "terminal": {
       "foreground": "#070708",
       "background": "#D8D9DB",
