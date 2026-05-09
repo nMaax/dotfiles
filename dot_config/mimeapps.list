@@ -1,6 +1,7 @@
 [Added Associations]
 application/pdf=org.kde.okular.desktop;
 application/vnd.google-earth.kml+xml=org.kde.kate.desktop;
+application/zip=org.kde.ark.desktop;
 image/jpeg=org.kde.gwenview.desktop;
 image/png=org.kde.gwenview.desktop;
 text/markdown=org.kde.kate.desktop;nvim.desktop;org.kde.kwrite.desktop;
@@ -18,6 +19,7 @@ application/x-extension-shtml=zen.desktop
 application/x-extension-xht=zen.desktop
 application/x-extension-xhtml=zen.desktop
 application/xhtml+xml=zen.desktop
+application/zip=org.kde.ark.desktop;
 image/jpeg=org.kde.gwenview.desktop;
 image/png=org.kde.gwenview.desktop;
 text/html=zen.desktop
