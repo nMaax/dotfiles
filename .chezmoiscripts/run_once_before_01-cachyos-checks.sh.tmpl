@@ -49,7 +49,7 @@ mkdir -p "$HOME/Work"
 xdg-user-dirs-update
 
 info "🔄 System update reminder..."
-if ask "Have you updated your system (sudo pacman -Syu && paru -Syu)?"; then
+if ask "Have you updated your system (paru -Syu)?"; then
   success "✅ Great, continuing installation."
 else
   warn "System update is recommended before installation. Proceeding without updating may cause issues."

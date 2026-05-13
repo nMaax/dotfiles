@@ -13,7 +13,7 @@ Ideally you should have installed CachyOS selecting for hyprland during the Cala
 > [!WARNING]
 > **This is NOT a run-and-forget installation.** The install script will prompt you at several points. Keep an eye on the terminal throughout the entire process.
 
-1. Tweak CachyOS via the CachyOS Hello app and apply your preferred baseline system tweaks, remember to **enable cachy-update** and run a manual full update (`sudo pacman -Syu && paru -Syu`) before install;
+1. Tweak CachyOS via the CachyOS Hello app and apply your preferred baseline system tweaks, remember to **enable cachy-update** and run a manual full update (`paru -Syu`) before install;
 2. Prepare your `~/.config/chezmoi/chezmoi.toml` configuration file with your specific variables
 
 ```toml
