@@ -52,7 +52,7 @@ info "🔄 System update reminder..."
 if ask "Have you updated your system (paru -Syu)?"; then
   success "✅ Great, continuing installation."
 else
-  warn "System update is recommended before installation. Proceeding without updating may cause issues."
+  warn "System update is recommended before installation. Skipping it may cause package conflicts or dependency resolution failures."
 fi
 
 info "📦 Checking for missing base packages..."
