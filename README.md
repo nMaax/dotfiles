@@ -41,11 +41,11 @@ chezmoi init --apply nMaax
 
 ### Handling missing polkit agent password prompt in CachyOS Hello
 
-If CachyHello won't accept your password on a Hyprland-only installation (i.e., no Plasma), the polkit-kde-agent is likely missing from your background processes. You must ensure this agent is running so CachyHello can trigger the authentication pop-up required to apply your changes.
+If CachyHello won't accept your password on a Hyprland-only installation (i.e., no Plasma), the polkit-kde-agent is likely missing from your background processes. You must ensure this agent is running so CachyHello can trigger the authentication pop-up required to apply your changes. This will likely happen if you proceed to use CachyHello before 🥮 installation, as the below is already implemented in 🥮.
 
-To fix do the following:
+To fix, do the following:
 
-1. Open your hyprland.conf: vim ~/.config/hypr/hyprland.conf.
+1. Open your hyprland.conf: `vim ~/.config/hypr/hyprland.conf`.
 2. Add this line to your "exec-once" section (or anywhere at the bottom):
 
 ```conf
@@ -53,7 +53,7 @@ exec-once = /usr/lib/polkit-kde-authentication-agent-1
 ```
 
 1. Save and restart Hyprland (Super + M or just log out).
-2. Now you should be able to tweak cachy as you like, then proceed with the installation as above.
+2. Now you should be able to tweak cachy as you like, and proceed with 🥮 installation.
 
 > [!NOTE]
 > If you aren't using KDE, the path might be `/usr/lib/lxpolkit` or similar. Cachy usually defaults to the KDE agent even on Hyprland anyway, so this should be quite rare.
