@@ -25,6 +25,8 @@ Ideally you should have installed CachyOS selecting for hyprland during the Cala
   gaming = true
 ```
 
+During install, Tailscale and NordVPN steps now ask whether to wipe `tailscale_authkey` / `nordvpn_token` from `~/.config/chezmoi/chezmoi.toml` right after use.
+
 1. Install chezmoi and apply the dotfiles
 
 ```fish
