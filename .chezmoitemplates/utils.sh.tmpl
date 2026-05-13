@@ -38,7 +38,28 @@ reset_chezmoi_data_secret() {
     return
   fi
 
-  sed -Ei "s|^([[:space:]]*${key}[[:space:]]*=[[:space:]]*).*$|\\1\"\" # ${reminder}|" "$config_file"
+  local tmp_file
+  tmp_file="$(mktemp)"
+
+  if ! awk -v key="$key" -v reminder="$reminder" '
+    BEGIN { updated=0 }
+    {
+      if ($0 ~ "^[[:space:]]*" key "[[:space:]]*=") {
+        match($0, /^[[:space:]]*/)
+        print substr($0, RSTART, RLENGTH) key " = \"\" # " reminder
+        updated=1
+      } else {
+        print
+      }
+    }
+    END { exit(updated ? 0 : 1) }
+  ' "$config_file" >"$tmp_file"; then
+    rm -f "$tmp_file"
+    warn "Failed to update '$key' in $config_file."
+    return
+  fi
+
+  mv "$tmp_file" "$config_file"
   success "Removed '$key' from $config_file."
 }
 
