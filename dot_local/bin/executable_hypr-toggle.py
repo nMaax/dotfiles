@@ -66,7 +66,12 @@ class Command:
             "sysmon": {
                 "btop": {
                     "enable": True,
-                    "match": [{"title": "btop"}, {"title": "nvtop"}],
+                    "match": [
+                        {"title": "btop"},
+                        {"title": "nvtop"},
+                        {"title": "htop"},
+                        {"title": "top"},
+                    ],
                     "command": ["ghostty", "-e", "btop"],
                     "move": True,
                 },
@@ -77,14 +82,13 @@ class Command:
                     "match": [
                         {"class": "Spotify"},
                         {"class": "spotify"},
-                        {"title": "Spotify"},
                         {"class": "feishin"},
                         {"class": "Supersonic"},
                         {"class": "Cider"},
                         {"class": "com.github.th_ch.youtube_music"},
                         {"class": "Plexamp"},
                     ],
-                    "command": ["spotify"],  # Change to your preferred default player
+                    "command": ["spotify"],
                     "move": True,
                 },
             },
@@ -97,10 +101,10 @@ class Command:
                         {"class": "vesktop"},
                         {"class": "org.telegram.desktop"},
                         {"class": "TelegramDesktop"},
-                        {"class": "whatsapp"},
+                        {"title": "web.whatsapp.com"},
                         {"class": "Element"},
                     ],
-                    "command": ["discord"],  # Change to your preferred default chat app
+                    "command": ["discord"],
                     "move": True,
                 },
             },
@@ -113,7 +117,7 @@ class Command:
                         {"class": "com.heroicgameslauncher.hgl"},
                         {"class": "heroic"},
                     ],
-                    "command": ["steam"],  # Defaults to opening Steam
+                    "command": ["steam"],
                     "move": True,
                 },
             },
@@ -155,7 +159,7 @@ class Command:
                 if client.get("enable"):
                     self.handle_client_config(client)
 
-        # BUG FIX: Always toggle the workspace so it drops down immediately!
+        # Always toggle the workspace so it drops down immediately!
         # Even if the app takes 2 seconds to load, the workspace will be waiting for it.
         hypr.dispatch("togglespecialworkspace", self.workspace)
 
