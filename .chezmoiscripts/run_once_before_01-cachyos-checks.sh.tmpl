@@ -49,10 +49,10 @@ mkdir -p "$HOME/Work"
 xdg-user-dirs-update
 
 info "🔄 System update reminder..."
-if ask "Have you updated your system (paru -Syu, includes official + AUR packages)?"; then
+if ask "Have you run a full system update (paru -Syu) before starting this installation?"; then
   success "✅ Great, continuing installation."
 else
-  warn "System update is recommended before installation. Skipping it may cause package conflicts or dependency resolution failures."
+  warn "A full system update is required before installation to prevent package conflicts or dependency resolution failures."
 fi
 
 info "📦 Checking for missing base packages..."
