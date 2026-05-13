@@ -48,9 +48,12 @@ info "📁 Creating home directories..."
 mkdir -p "$HOME/Work"
 xdg-user-dirs-update
 
-info "🔄 Checking for updates..."
-sudo pacman -Syu --noconfirm
-paru -Syu --noconfirm
+info "🔄 System update reminder..."
+if ask "Have you run a full system update (paru -Syu) before starting this installation?"; then
+  success "✅ Great, continuing installation."
+else
+  warn "A full system update is required before installation to prevent package conflicts or dependency resolution failures."
+fi
 
 info "📦 Checking for missing base packages..."
 BASE_PACKAGES=(binutils base-devel git vim cmake cpio appmenu-gtk-module libdbusmenu-glib)
