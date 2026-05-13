@@ -37,11 +37,10 @@ if ! ask "Did you place the chezmoi.toml at ~/.config/chezmoi/?"; then
 fi
 
 {{ if .gaming -}}
-if ! pacman -Q cachyos-gaming-applications cachyos-gaming-meta >/dev/null 2>&1; then
-  error "gaming = true is set but CachyOS gaming packages are not installed. Install them first (e.g. via CachyOS Hello or: sudo pacman -S cachyos-gaming-meta cachyos-gaming-applications), then re-run. Closing."
-  exit 1
-fi
-success "✅ Gaming packages detected."
+info "🎮 gaming = true detected, ensuring CachyOS gaming packages are installed..."
+sudo pacman -S --needed --noconfirm cachyos-gaming-meta
+sudo pacman -S --needed --noconfirm cachyos-gaming-applications
+success "✅ CachyOS gaming packages are ensured."
 {{- end }}
 
 info "📁 Creating home directories..."
