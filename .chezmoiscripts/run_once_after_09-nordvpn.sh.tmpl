@@ -33,6 +33,10 @@ if sg nordvpn -c "nordvpn status" | grep -E -q "Status: (Connected|Disconnected)
   sg nordvpn -c "nordvpn set firewall on"
   success "NordVPN configured successfully."
 fi
+
+if ask "🧹 Remove 'nordvpn_token' from ~/.config/chezmoi/chezmoi.toml now? (under [data], set nordvpn_token = \"\")"; then
+  reset_chezmoi_data_secret "nordvpn_token" "Leave \"\" if you want to skip nordvpn"
+fi
 {{- else }}
 warn "No 'nordvpn_token' found in chezmoi.toml. Skipping auto-login."
 {{- end }}

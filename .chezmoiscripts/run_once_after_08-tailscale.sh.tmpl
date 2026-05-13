@@ -23,6 +23,10 @@ else
   sudo tailscale up --ssh --authkey="{{ .tailscale_authkey }}"
   success "Tailscale connected successfully."
 fi
+
+if ask "🧹 Remove 'tailscale_authkey' from ~/.config/chezmoi/chezmoi.toml now? (under [data], set tailscale_authkey = \"\")"; then
+  reset_chezmoi_data_secret "tailscale_authkey" "Leave \"\" if you want to skip tailscale"
+fi
 {{- else }}
 warn "No 'tailscale_authkey' found in chezmoi.toml. Skipping auto-login."
 {{- end }}
