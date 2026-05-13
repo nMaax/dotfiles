@@ -13,8 +13,7 @@ Ideally you should have installed CachyOS selecting for hyprland during the Cala
 > [!WARNING]
 > **This is NOT a run-and-forget installation.** The install script will prompt you at several points. Keep an eye on the terminal throughout the entire process.
 
-1. Tweak CachyOS via the CachyOS Hello app and apply your preferred baseline system tweaks, remember to **enable cachy-update** and run a manual full update (`paru -Syu`) before install;
-2. Prepare your `~/.config/chezmoi/chezmoi.toml` configuration file with your specific variables
+1. Prepare your `~/.config/chezmoi/chezmoi.toml` configuration file with your specific variables
 
 ```toml
 [data]
@@ -25,9 +24,9 @@ Ideally you should have installed CachyOS selecting for hyprland during the Cala
   gaming = true
 ```
 
-During install, Tailscale and NordVPN steps now ask whether to wipe `tailscale_authkey` / `nordvpn_token` from `~/.config/chezmoi/chezmoi.toml` right after use.
+During install, you will have the option to automatically wipe `tailscale_authkey` / `nordvpn_token` from `~/.config/chezmoi/chezmoi.toml` right after their use.
 
-1. Install chezmoi and apply the dotfiles
+2. Install chezmoi and apply the dotfiles
 
 ```fish
 pacman -S chezmoi
