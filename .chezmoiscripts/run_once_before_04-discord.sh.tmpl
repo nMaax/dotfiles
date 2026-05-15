@@ -9,10 +9,21 @@ info "👾 [Discord Setup] Starting..."
 echo ""
 
 info "💬 Installing Discord (Equicord + OpenAsar) from AUR..."
-paru -S --needed --noconfirm discord equicord-installer-bin
+paru -S --needed --noconfirm discord
 
-sudo Equilotl -install -location /opt/discord || success "Equicord already installed, skipping..."
-sudo Equilotl -install-openasar -location /opt/discord || success "OpenAsar already installed, skipping..."
+paru -S --needed --noconfirm discord
+
+if paru -S --needed --noconfirm equicord-installer-bin; then
+  sudo Equilotl -install -location /opt/discord || success "Equicord already installed, skipping..."
+else
+  warning "Equicord installation failed, skipping Equicord setup."
+fi
+
+if sudo Equilotl -install-openasar -location /opt/discord; then
+  success "OpenAsar installed successfully."
+else
+  warning "OpenAsar installation failed, skipping."
+fi
 
 paru -Rns --noconfirm equicord-installer-bin || true
 
