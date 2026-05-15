@@ -14,8 +14,11 @@ window-padding-y = 10
 # Horizontal padding (left/right)
 window-padding-x = 12
 
-# Optional: ensure the background color fills the padding
+# Ensure the background color fills the padding
 window-padding-balance = true
 
+# Cursor shader
 custom-shader = shaders/cursor_warp.glsl
+
 theme = noctalia
+
