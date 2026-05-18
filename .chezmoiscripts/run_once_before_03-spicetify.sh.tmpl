@@ -15,7 +15,7 @@ warn "By default we will wipe anything related to spicetify first, to make a cle
 rm -rf "$HOME/.config/spicetify"
 
 # Force reinstall Spotify and Spicetify.
-# Removing '--needed' ensures paru replaces any modified files in /opt/spotify 
+# Removing '--needed' ensures paru replaces any modified files in /opt/spotify
 # with fresh ones from your local package cache.
 paru -S --noconfirm spotify spicetify-cli
 
@@ -49,7 +49,7 @@ spicetify config inject_css 1 replace_colors 1 overwrite_assets 1 inject_theme_j
 spicetify apply --no-restart
 
 # Install Marketplace
-info "Installing Spicetify Marketplace... (⚠️ not really the Arch way, but it doesnt touch anything outside home/)" 
+info "Installing Spicetify Marketplace... (⚠️ not really the Arch way, but it doesnt touch anything outside home/)"
 
 # Download the script to a temporary file instead of piping it directly to sh
 curl -fsSL "$SPICETIFY_MARKETPLACE_INSTALL_URL" -o /tmp/install_marketplace.sh
@@ -68,3 +68,4 @@ success "Spotify, Spicetify, Comfy, and Marketplace cleanly installed!"
 echo ""
 success "✅ [Spotify & Spicetify] Done."
 echo ""
+
