@@ -247,6 +247,76 @@ Of course 🥮 is designed with gaming in mind too, 🥮 will apply some common 
 - **Compatibility:** Ensure the layer is set to `proton-cachyos (slr)`. Just as in Steam.
 - **Launch Options:** Mirror the launch options used in Steam, each launcher has its own way to do that, which usually do not differ much from Steam anyway, refer to documentation. (e.g. Heroic will provide some form entries for variables and values)
 
+### 📹 Streaming (P2P)
+
+Open your terminal and use your preferred AUR helper (like `yay` or `paru`) to install the core capture tools. We will also pull down the 32-bit library for `vkcapture` so older or indie games running through Proton capture correctly.
+
+```bash
+# Install the Vulkan/OpenGL video capture plugin
+paru -S obs-vkcapture lib32-obs-vkcapture
+
+# Install the PipeWire application audio capture plugin
+paru -S obs-pipewire-audio-capture
+
+```
+
+If you are not satisyied with the Wayland screenshare when streaming gaming on your Electron app (e.g. Discord) then 🥮 brings some plugins to stream your games with low latency and low added input latency on the game. Namely using `obs-vkcapture`, `lib32-obs-vkcapture`, `obs-pipewire-audio-capture`.
+
+1. Launch your game, so its audio and video hooks are active in your system.
+2. Open OBS Studio. Under the **Sources** dock, click the **`+`** icon.
+3. Add a **Game Capture (Vulkan/OpenGL)** source. Leave its properties on default; it will automatically hook into your game's engine.
+4. Click **`+`** again and add an **Application Audio Capture (PipeWire)** source.
+5. Inside its properties, find the **Application** dropdown menu and select **`wine64-preloader`** (this represents your Steam Proton / Wine game process).
+
+Because you are explicitly capturing the game audio now, you must turn off OBS's global desktop capture so your friends don't hear everything twice:
+
+* Go to **Settings** $\rightarrow$ **Audio**.
+* Under **Global Audio Devices**, change **Desktop Audio** to **Disabled**. Click **Apply**.
+
+To drop your hardware encoding delay down to less than 15 milliseconds, you need to adjust your video framing and reconfigure the NVIDIA NVENC encoder pipeline.
+
+On the left menu, select the **Video** tab. Do not use the "Rescale Output" checkbox in the encoder menu; handle it here instead:
+
+* **Base (Canvas) Resolution:** Match this to your monitor's native resolution (e.g., `2560x1440`).
+* **Output (Scaled) Resolution:** Set this to **`1920x1080`** (1080p is the sweet spot).
+* **Downscale Filter:** `Bicubic (Sharpened scaling, 16 samples)`.
+* **Common FPS Values:** `60`.
+
+Go to the **Output** tab and flip the **Output Mode** at the very top from *Simple* to **Advanced**. In the **Streaming** tab, mirror these exact specifications:
+
+| Setting Field | Value to Select / Type | Why it matters |
+| --- | --- | --- |
+| **Audio Encoder** | `FFmpeg Opus` | Enforced by WebRTC for instant, crisp sound. |
+| **Video Encoder** | `NVIDIA NVENC H.264` | Uses your GPU hardware so your game doesn't lag. |
+| **Rate Control** | `CBR` | Delivers a smooth, predictable data stream. |
+| **Bitrate** | `6000 Kbps` | Pristine quality for 1080p60 without network bloating. |
+| **Keyframe Interval** | `1 s` | Allows the web player to recover instantly from dropped packets. |
+| **Preset** | `P1: Fastest (Lowest Latency)` | Bypasses complex frame analysis to prioritize speed. |
+| **Tuning** | `Low Latency` | Cuts out internal encoder buffer queues. |
+| **Multipass Mode** | `Single Pass` | Processes the frame once instead of twice. |
+| **Profile** | `baseline` | Strips out heavy compression loops that cause player buffering. |
+| **Look-ahead** | 🟩 **Uncheck** | Prevents the GPU from processing future frames in advance. |
+| **Adaptive Quantization** | 🟩 **Uncheck** | Eliminates extra algorithmic calculation passes. |
+| **B-Frames** | `0` | **Most Important:** Sends frames out instantly as they render. |
+
+Go to the **Advanced** tab on the left sidebar. Under **General**, change **Process Priority** from *Normal* to **`Above Normal`** or **`High`**. This stops the Linux kernel from starving OBS of resources when your game hits an intense scene.
+
+Now we are ready to fire Up the Meshcast Stream
+
+1. Open your web browser and navigate to **[Meshcast.io](https://meshcast.io/)**.
+2. Scroll to the **Stream using WHIP** section, type a unique ID, select your closest regional server location, and click the link generation button.
+3. Meshcast will hand you a **WHIP URL** that looks similar to this: `https://cae2.meshcast.io/whip/MadaMada1234`.
+4. In OBS, go to **Settings** > **Stream**.
+5. Set **Service** to **WHIP**.
+6. Split your Meshcast link across the two input boxes like this:
+- **Server:** `https://cae2.meshcast.io/whip/`
+- **Bearer Token:** `MadaMada1234` *(The unique string at the very end of your link)* (or just skip the token and put the whole link in the server field)
+7. Click **Apply** and **OK**.
+
+Now you can copy the **Watch Page Link** provided by the Meshcast interface (e.g., `https://meshcast.io/view.html?geo=cae2&id=MadaMada1234`) and send it over to your friends.
+
+Hit **Start Streaming** in OBS. Your game stream will bypass your local home firewall completely via Meshcast's edge servers, and your friends will see your high-framerate gameplay and isolated audio with a sub-second delay.
+
 ---
 
 ## 📝 TODOs
