@@ -41,6 +41,8 @@ fi
 
 rm -f "$UDEV_RULE_TMP"
 
+# TODO: add printer drivers etc.
+
 info "Downloading EasyEffects Community Presets... (⚠️ not really the Arch way, but it doesnt touch anything outside home/)"
 if [ -z "$(ls -A "$HOME/.config/easyeffects/db/" 2>/dev/null)" ]; then
   bash <(curl -fsSL "$EASYEFFECTS_PRESETS_INSTALL_URL")
