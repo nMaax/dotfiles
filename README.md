@@ -257,7 +257,6 @@ paru -S obs-vkcapture lib32-obs-vkcapture
 
 # Install the PipeWire application audio capture plugin
 paru -S obs-pipewire-audio-capture
-
 ```
 
 If you are not satisyied with the Wayland screenshare when streaming gaming on your Electron app (e.g. Discord) then 🥮 brings some plugins to stream your games with low latency and low added input latency on the game. Namely using `obs-vkcapture`, `lib32-obs-vkcapture`, `obs-pipewire-audio-capture`.
@@ -321,7 +320,11 @@ Hit **Start Streaming** in OBS. Your game stream will bypass your local home fir
 
 ## 📝 TODOs
 
-- [ ] Try to rice [quickshell overview])(https://github.com/Shanu-Kumawat/quickshell-overview#%EF%B8%8F-configuration)
+- [ ] Solve TODOs around the codebase
+- [ ] Clean-up README section for streaming
+- [ ] Make it possible to run chezmoi scripts atomically, to e.g. clean up spicetify
+- [ ] Try to rice [quickshell overview](https://github.com/Shanu-Kumawat/quickshell-overview#%EF%B8%8F-configuration)
+- [ ] Make [paletter.py](https://pastebin.com/r0BzzEqK) a runnable script with, e.g., a fish function to automatically generate color palettes
 - [ ] Once everything is finished, add screenshots and videos in this README
 
 ### For the future
@@ -329,6 +332,6 @@ Hit **Start Streaming** in OBS. Your game stream will bypass your local home fir
 - [ ] Prepare WALLHACK Wallpapers -> Make a release for dotfiles-assets if files are too large
 - [ ] Enhance assets by introducing a github CI action that autogenerates README with gallery, like [dharmx](https://github.com/dharmx/walls)
 - [ ] Try out these [QyLock](https://github.com/Darkkal44/qylock) as new SDDM presets
-- [ ] Try out [Hyprland Scroll Overview](https://github.com/yayuuu/hyprland-scroll-overview) plugin instead of qs overiview
+- [ ] Try out [Hyprland Scroll Overview](https://github.com/yayuuu/hyprland-scroll-overview) plugin instead of qs overiview once it works in Hyprland 0.55
 - [ ] Try out [Noctalia Polkit Agent](https://noctalia.dev/plugins/polkit-agent) (you must uninstall kde polking agent, maybe this is not the right choice in cachy)
 - [ ] Generalize for pure Arch by reproducing what Cachy installs, including fundamentals like bluetooth, networkmanager, fish, cachyos fish setup, gpu drivers etc.
