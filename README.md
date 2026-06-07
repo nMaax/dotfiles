@@ -55,7 +55,7 @@ exec-once = /usr/lib/polkit-kde-authentication-agent-1
 3. Save and restart Hyprland (Super + M or just log out and log back in).
 4. Now you should be able to tweak cachy as you like, and proceed with 🥮 installation.
 
-## Post-Installation Notes
+## Post-Installation
 
 ### MEGA & KeePassXC
 
@@ -223,7 +223,7 @@ Other stuff I use on Spicetify, I warmly advice is to use the marketplace as muc
 
 ### Gaming
 
-Of course 🥮 is designed with gaming in mind too, 🥮 will apply some common installations and tweaks if cachyos gaming packages are detected. For more details, visit the [CachyOS Gaming Wiki](https://wiki.cachyos.org/configuration/gaming). Here are some handy notes at your disposal to complete your gaming experience:
+Of course 🥮 is designed with gaming in mind too, 🥮 will apply some common installations and tweaks if cachyos gaming packages are detected. For more details, visit the [CachyOS Gaming Wiki](https://wiki.cachyos.org/configuration/gaming). Here is quick guidance to complete your gaming experience:
 
 #### Launch Options
 

@@ -52,8 +52,8 @@ else
 fi
 
 if [ "$sddm_configured" -eq 1 ]; then
-  add_note "[SDDM] Remind to select systemd owned Hyprland at login in SDDM, in order to enable specific autostarts to work."
-  add_note "[SDDM] Remind to run ./test.sh in $SILENT_SDDM_DIR to check SDDM works and you are not kept out of your system at next boot."
+  warn "[SDDM] Select systemd-owned Hyprland in SDDM so specific autostarts work."
+  warn "[SDDM] Run ./test.sh in $SILENT_SDDM_DIR to verify SDDM before reboot."
 fi
 
 echo ""

@@ -13,12 +13,13 @@ sudo pacman -S --needed --noconfirm hyprland xdg-desktop-portal-hyprland
 
 info "🌙 Installing Noctalia dependencies..."
 sudo pacman -S --needed --noconfirm ddcutil
-add_note "[NOCTALIA] ddcutil was installed as a Noctalia dependency, which may introduce system instability with certain monitors; remove it eventually with: sudo pacman -Rns ddcutil"
+warn "[NOCTALIA] ddcutil may cause instability on some monitors; remove it if needed with: sudo pacman -Rns ddcutil"
 paru -S --needed --noconfirm cliphist wlsunset xdg-desktop-portal evolution-data-server hyprshot
 
 info "🦉 Installing Noctalia..."
 paru -S --needed --noconfirm noctalia-shell
-add_note "[NOCTALIA] All built-in app-theming you commonly use are pre-enabled by default (GTK, Qt, KColorScheme, Ghostty, Hyprland, btop, Spicetify, Telegram, Zen Browser, cava, Discord, VSCode). Remaining steps require manual in-app user interaction, view official noctalia documentation for your specific needs: https://docs.noctalia.dev/theming/basic-app-theming/"
+info "[NOCTALIA] Built-in app theming is pre-enabled for common apps."
+info "Remaining app-specific steps: https://docs.noctalia.dev/theming/basic-app-theming/"
 
 info "🔍 Installing Quickshell Overview..."
 paru -S --needed --noconfirm quickshell-overview-git
