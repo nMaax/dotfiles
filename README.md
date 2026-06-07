@@ -4,16 +4,16 @@ Personal dotfiles and system configurations, just the way I like it.
 
 These dotfiles are heavily based on **CachyOS** (not just Arch), specifically the various packages that Cachy ships with it's own base installation (fish, sddm, various KDE bloat etc.).
 
-Ideally you should have installed CachyOS selecting for hyprland during the Calamares installation, or without any DE (in such case 🥮 will install Hyprland automatically).
+Ideally you should have installed CachyOS selecting for hyprland during the Calamares installation, or without any DE/WM (in such case 🥮 will install Hyprland automatically).
 
 > Managed using [chezmoi](https://www.chezmoi.io/).
 
-## 🧁 Installation
+## Installation
 
 > [!WARNING]
 > **This is NOT a run-and-forget installation.** The install script will prompt you at several points. Keep an eye on the terminal throughout the entire process.
 
-1. Prepare your `~/.config/chezmoi/chezmoi.toml` configuration file with your specific variables
+1. Prepare your `~/.config/chezmoi/chezmoi.toml` configuration file
 
 ```toml
 [data]
@@ -41,7 +41,7 @@ chezmoi init --apply nMaax
 
 ### Handling missing polkit agent password prompt in CachyOS Hello
 
-If CachyHello won't accept your password on a Hyprland-only installation (i.e., no Plasma), the polkit-kde-agent is likely missing from your background processes. You must ensure this agent is running so CachyHello can trigger the authentication pop-up required to apply your changes. This will likely happen if you proceed to use CachyHello before 🥮 installation, as the below is already implemented in 🥮.
+If you would like to tweak CachyOS before running 🥮, but CachyOS Hello won't accept your password on a Hyprland-only installation (i.e., no Plasma), the polkit-kde-agent is likely missing from your background processes. You must ensure this agent is running so CachyOS Hello can trigger the authentication pop-up required to apply your changes. This will likely happen if you proceed to use CachyHello before 🥮 installation, as the below is already implemented in 🥮.
 
 To fix, do the following:
 
@@ -52,15 +52,12 @@ To fix, do the following:
 exec-once = /usr/lib/polkit-kde-authentication-agent-1
 ```
 
-1. Save and restart Hyprland (Super + M or just log out).
-2. Now you should be able to tweak cachy as you like, and proceed with 🥮 installation.
+3. Save and restart Hyprland (Super + M or just log out and log back in).
+4. Now you should be able to tweak cachy as you like, and proceed with 🥮 installation.
 
-> [!NOTE]
-> If you aren't using KDE, the path might be `/usr/lib/lxpolkit` or similar. Cachy usually defaults to the KDE agent even on Hyprland anyway, so this should be quite rare.
+## Post-Installation Notes
 
-## 🥞 Post-Installation Notes
-
-### ☁️ MEGA & KeePassXC
+### MEGA & KeePassXC
 
 Both `megacmd-bin` and `keepassxc` are installed by the script as regular packages.
 
@@ -76,25 +73,21 @@ Set them up manually after installation:
 
 2. **Open KeePassXC** and point it at your database once the MEGA sync completes. Remember to place the key-file as well!
 
-### 🔑 Keyring and SDDM
+### Keyring (KWallet) and SSH
 
-KWallet presents some issues in non-Plasma environments, the install scripts tried to cleanly patch these issues out of the box, however some may still be present, especially with Electron apps that rely on safe-storage.
+KWallet is the password manager of choice in 🥮, due to the already wide presence of KDE-ecosystem tools by CachyOS itself. However, KWallet often presents some issues in non-Plasma environments, the install scripts will try to cleanly patch these issues out of the box, togheter pre-setted config files; however some may still be present, especially with Electron apps that rely on the Electron safe-storage feature.
 
-**When you are prompted to create a wallet** (i.e. the first time an application requests one), use **exactly** these settings:
+Crucially, remind that **when you are prompted to create a wallet** (i.e. the first time an application requests one), use **exactly** these settings:
 
 - **Name:** `kdewallet` (the default; any other name will not be unlocked automatically by PAM)
 - **Encryption:** `Blowfish` (required for `kwallet-pam` auto-unlock; GnuPG encryption is incompatible)
 - **Password:** your current **user login password** (PAM unlocks the wallet by matching it against the login password)
 
+Or simply do it by yourself after installing 🥮.
+
 Further information can be found at [Arch Wiki: KDE Wallet](https://wiki.archlinux.org/title/KDE_Wallet) and [Electron Safe Storage Info](https://www.electronjs.org/docs/latest/api/safe-storage).
 
-
-> [!WARNING]
-> 🥮 will default on a custom [SilentSDDM](https://github.com/uiriansan/SilentSDDM) them which should work out of the box, if you ever modify it remind to first run `./test.sh` in `/usr/share/sddm/themes/silent/` to ensure SDDM works before rebooting, and avoiding being locked out at login!
-
-### 🔐 SSH
-
-The install script enables and starts both `sshd` and the user-level `ssh-agent` automatically. But you still need to create a key pair and distribute your public key wherever you want to authenticate. Here are some common procedures you may want to do:
+The install script enables both `sshd` and the user-level `ssh-agent` automatically. But you still need to create a key pair and distribute your public key wherever you want to authenticate. Here are some common procedures you may want to do:
 
 #### Generating a key
 
@@ -102,7 +95,7 @@ The install script enables and starts both `sshd` and the user-level `ssh-agent`
 ssh-keygen -t ed25519 -C "axew"
 ```
 
-Accept the default path (`~/.ssh/id_ed25519`) and choose a strong passphrase. The new key is picked up automatically by the running `ssh-agent`.
+Accept the default path (`~/.ssh/id_ed25519`) and optionally choose a passphrase. The new key is picked up automatically by the running `ssh-agent`.
 
 #### Connecting to GitHub
 
@@ -122,9 +115,9 @@ Accept the default path (`~/.ssh/id_ed25519`) and choose a strong passphrase. Th
    You should see: `Hi <username>! You've successfully authenticated…`
 
 > [!NOTE]
-> You could be prompted to either create a new wallet, or to unlock the current one, refer to the Keyring section for details.
+> You could be prompted to either create a new wallet, or to unlock the current one, refer to the above section for details.
 
-1. Tell Git to use SSH for GitHub remotes (optional, but recommended):
+4. Tell Git to use SSH for GitHub remotes (optional, but recommended):
 
    ```fish
    git config --global url."git@github.com:".insteadOf "https://github.com/"
@@ -132,7 +125,7 @@ Accept the default path (`~/.ssh/id_ed25519`) and choose a strong passphrase. Th
 
 #### Connecting to another machine
 
-Copy your public key to the remote host (replace `user@host` with your target):
+Copy your public key to the remote host (replace `user@host` with your remote target machine):
 
 ```fish
 ssh-copy-id user@host
@@ -151,7 +144,7 @@ Host myserver
 
 Then connect simply with `ssh myserver`.
 
-### 🎨 Theming
+### Theming
 
 Noctalia presents a standard approach to sync apps colorschemes with its own theme, each app requires its own procedure, part of it can be automated via code, and some other not. Further information at [docs.noctalia.dev/theming](https://docs.noctalia.dev/theming/basic-app-theming/).
 
@@ -184,9 +177,9 @@ Furthermore, you can install other themes for apps yourself, have a look at:
 - [BetterDiscord](https://betterdiscord.app/themes)
 - [Millenium for Steam](https://steambrew.app/themes)
 
-🥮 also supports [linux-wallpaperengine](https://github.com/Almamu/linux-wallpaperengine)! If you installed Steam you can see how to set it up and [related plugin](https://noctalia.dev/plugins/linux-wallpaperengine-controller/)
+🥮 also supports [linux-wallpaperengine](https://github.com/Almamu/linux-wallpaperengine)! If you installed Steam you can see how to set it up and the [related plugin](https://noctalia.dev/plugins/linux-wallpaperengine-controller/)
 
-### 🌐 Browser(s) setup
+### Browser setup
 
 The stuff that I usually use during my browsing experience, these are completely optional and at your preference, do what you want with them:
 
@@ -199,18 +192,21 @@ The stuff that I usually use during my browsing experience, these are completely
 - **Zen Mods**:
   - [Transparent Zen](https://zen-browser.app/mods/642854b5-88b4-4c40-b256-e035532109df) – make zen look transparent, needed for [ZenZero](https://sameerasw.com/zen)
 
-Eventually consider also [Volume Control](https://github.com/Chaython/volumecontrol), [Web Archives](https://github.com/dessant/web-archives), [YouTube Improved](https://github.com/code-charity/youtube), etc.
+Eventually consider also 
+  - [Volume Control](https://github.com/Chaython/volumecontrol)
+  - [Web Archives](https://github.com/dessant/web-archives)
+  - [YouTube Improved](https://github.com/code-charity/youtube)
 
-Furthermore, here is a list of some good misc websites for assets:
+Furthermore, here is a list of some good misc websites for assets in case you wanted to customize 🥮:
 
 - [Pinterest](https://it.pinterest.com/): for propics
 - [Wallhaven](https://wallhaven.cc/): for static backgrounds
 - [MotionBGs](https://motionbgs.com/): for animated wallpapers
 - Guide on how to convert WallpaperEngine backgrounds into video files: from [WallapaperEngine itself](https://help.wallpaperengine.io/en/functionality/export.html), from [Steam community](https://steamcommunity.com/sharedfiles/filedetails/?id=2277828676)
 
-### 🔥 Spicetify Extension
+### Spicetify extensions
 
-Other stuff I use on Spicetify, my advice is to use the marketplace as much as possible
+Other stuff I use on Spicetify, I warmly advice is to use the marketplace as much as possible to install them! Spicetify and Spicetify marketplace are automatically installed with 🥮.
 
 - Spicy Lyrics (instead of Beautiful Lyrics, which seem to be deprecated!)
 - Global Stats for songs, to fetch info on different songs.
@@ -225,31 +221,32 @@ Other stuff I use on Spicetify, my advice is to use the marketplace as much as p
 > spicetify apply
 > ```
 
-### 🎮 Gaming
+### Gaming
 
 Of course 🥮 is designed with gaming in mind too, 🥮 will apply some common installations and tweaks if cachyos gaming packages are detected. For more details, visit the [CachyOS Gaming Wiki](https://wiki.cachyos.org/configuration/gaming). Here are some handy notes at your disposal to complete your gaming experience:
 
-#### 🚀 Steam Launch Options
+#### Launch Options
 
-- **NVIDIA:** `PROTON_ENABLE_WAYLAND=1 PROTON_DLSS_UPGRADE=1 PROTON_NVIDIA_LIBS_NO_32BIT=1 PROTON_ENABLE_HDR=1 ENABLE_HDR_WSI=1 game-performance %command%`
-- **AMD:** `PROTON_USE_NTSYNC=1 ENABLE_LAYER_MESA_ANTI_LAG=1 PROTON_FSR4_UPGRADE=1 game-performance %command%`
+The below is the common Steam format for launch options, however you can achive an equivalent setup also in other launchers like Heroic and Lutris.
 
-#### ⚙️ Steam/Proton Settings
+- **NVIDIA:** `PROTON_ENABLE_WAYLAND=1 PROTON_DLSS_UPGRADE=1 PROTON_NVIDIA_LIBS_NO_32BIT=1 game-performance %command%`
+- **AMD:** `PROTON_ENABLE_WAYLAND=1 PROTON_FSR4_UPGRADE=1 ENABLE_LAYER_MESA_ANTI_LAG=1 game-performance %command%`
+
+For Lutris specifically, remind to enable **Disable Lutris Runtime** and **Prefer system libraries**
+
+#### Steam/Proton Settings
 
 - **Compatibility:** Set `proton-cachyos (slr)` as your default Proton layer.
 - **Pre-caching:** If using Proton-CachyOS, navigate to **Steam -> Settings -> Downloads** and **UNCHECK**:
   - "Enable Shader Pre-caching"
   - "Allow background processing of Vulkan shaders"
+ 
+> ![WARNING]
+> 🥮 enables tearing automatically for steam_apps (recognized via hyprland client class), to disable it see [Hyprland wiki](https://wiki.hypr.land/Configuring/Advanced-and-Cool/Tearing/) 
 
-#### 🍷 Lutris, Heroic and other Launchers Settings
+### Streaming (P2P)
 
-- **System Options:** Enable **"Disable Lutris Runtime"** and **"Prefer system libraries"**.
-- **Compatibility:** Ensure the layer is set to `proton-cachyos (slr)`. Just as in Steam.
-- **Launch Options:** Mirror the launch options used in Steam, each launcher has its own way to do that, which usually do not differ much from Steam anyway, refer to documentation. (e.g. Heroic will provide some form entries for variables and values)
-
-### 📹 Streaming (P2P)
-
-Open your terminal and use your preferred AUR helper (like `yay` or `paru`) to install the core capture tools. We will also pull down the 32-bit library for `vkcapture` so older or indie games running through Proton capture correctly.
+If you are not satisfyied with the Wayland screenshare when streaming gaming on your Electron app (e.g. Discord) then 🥮 brings some plugins to stream your games with low latency and low added input latency on the game. Namely using `obs-vkcapture`, `lib32-obs-vkcapture`, `obs-pipewire-audio-capture`.
 
 ```bash
 # Install the Vulkan/OpenGL video capture plugin
@@ -259,15 +256,13 @@ paru -S obs-vkcapture lib32-obs-vkcapture
 paru -S obs-pipewire-audio-capture
 ```
 
-If you are not satisyied with the Wayland screenshare when streaming gaming on your Electron app (e.g. Discord) then 🥮 brings some plugins to stream your games with low latency and low added input latency on the game. Namely using `obs-vkcapture`, `lib32-obs-vkcapture`, `obs-pipewire-audio-capture`.
-
 1. Launch your game, so its audio and video hooks are active in your system.
 2. Open OBS Studio. Under the **Sources** dock, click the **`+`** icon.
 3. Add a **Game Capture (Vulkan/OpenGL)** source. Leave its properties on default; it will automatically hook into your game's engine.
 4. Click **`+`** again and add an **Application Audio Capture (PipeWire)** source.
 5. Inside its properties, find the **Application** dropdown menu and select **`wine64-preloader`** (this represents your Steam Proton / Wine game process).
 
-Because you are explicitly capturing the game audio now, you must turn off OBS's global desktop capture so your friends don't hear everything twice:
+Because you are explicitly capturing the game audio now, you must turn off OBS's global desktop capture so your friend don't hear everything twice:
 
 * Go to **Settings** $\rightarrow$ **Audio**.
 * Under **Global Audio Devices**, change **Desktop Audio** to **Disabled**. Click **Apply**.
@@ -294,13 +289,13 @@ Go to the **Output** tab and flip the **Output Mode** at the very top from *Simp
 | **Tuning** | `Low Latency` | Cuts out internal encoder buffer queues. |
 | **Multipass Mode** | `Single Pass` | Processes the frame once instead of twice. |
 | **Profile** | `baseline` | Strips out heavy compression loops that cause player buffering. |
-| **Look-ahead** | 🟩 **Uncheck** | Prevents the GPU from processing future frames in advance. |
-| **Adaptive Quantization** | 🟩 **Uncheck** | Eliminates extra algorithmic calculation passes. |
+| **Look-ahead** | 🔲 **Uncheck** | Prevents the GPU from processing future frames in advance. |
+| **Adaptive Quantization** | 🔲 **Uncheck** | Eliminates extra algorithmic calculation passes. |
 | **B-Frames** | `0` | **Most Important:** Sends frames out instantly as they render. |
 
-Go to the **Advanced** tab on the left sidebar. Under **General**, change **Process Priority** from *Normal* to **`Above Normal`** or **`High`**. This stops the Linux kernel from starving OBS of resources when your game hits an intense scene.
+Finally, go to the **Advanced** tab on the left sidebar. Under **General**, change **Process Priority** from *Normal* to **`Above Normal`** or **`High`**. This stops the Linux kernel from starving OBS of resources when your game hits an intense scene.
 
-Now we are ready to fire Up the Meshcast Stream
+Now we are ready to run the Meshcast Stream
 
 1. Open your web browser and navigate to **[Meshcast.io](https://meshcast.io/)**.
 2. Scroll to the **Stream using WHIP** section, type a unique ID, select your closest regional server location, and click the link generation button.
