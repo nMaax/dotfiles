@@ -15,7 +15,7 @@ info "Enabling NordVPN daemon..."
 sudo systemctl enable --now nordvpnd
 sudo usermod -aG nordvpn "$USER"
 sleep 2
-add_note "[NORDVPN]: NORDVPN has introduced a new system group, reboot your system."
+warn "[NORDVPN] A new system group was added. Reboot your system."
 
 {{- if .nordvpn_token }}
 info "Logging into NordVPN using provided token..."

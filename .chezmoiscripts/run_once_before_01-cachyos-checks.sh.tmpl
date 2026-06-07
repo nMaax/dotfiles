@@ -19,8 +19,6 @@ echo ""
 info "📦 [Checks & Prerequisites] Starting..."
 echo ""
 
-clean_notes
-
 if ! ask "⚠️  This is an interactive install — you will need to respond to prompts throughout. Are you ready to proceed?"; then
   error "Come back when you are ready. Closing."
   exit 1
@@ -69,7 +67,9 @@ sudo pacman -S --needed --noconfirm \
   qt6-multimedia archlinux-xdg-menu ark dolphin-plugins filelight \
   okular haruna kwrite gwenview \
   kwallet kwalletmanager kwallet-pam
-add_note "[KWALLET]: When prompted by an app, make a new wallet named kdewallet and bowfish encryption, using the same password as the user to enable automatic keyring login.\n See https://wiki.archlinux.org/title/KDE_Wallet for more information.\n Look at https://www.electronjs.org/docs/latest/api/safe-storage for Electron-specific information"
+warn "[KWALLET] When prompted, create wallet 'kdewallet' with Blowfish and use your user password for auto-unlock."
+info "More info: https://wiki.archlinux.org/title/KDE_Wallet"
+info "Electron safe storage: https://www.electronjs.org/docs/latest/api/safe-storage"
 
 GIT_NAME={{ .name | quote }}
 GIT_EMAIL={{ .email | quote }}
