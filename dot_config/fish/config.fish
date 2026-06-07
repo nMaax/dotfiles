@@ -1,12 +1,5 @@
 source /usr/share/cachyos-fish-config/cachyos-config.fish
 
-function fish_greeting
-    # Only run fastfetch if the terminal width is greater than 80 characters
-    if test "$COLUMNS" -gt 80
-        fastfetch
-    end
-end
-
 # Some useful variables
 set -gx TERMINAL ghostty
 set -gx EDITOR vim
