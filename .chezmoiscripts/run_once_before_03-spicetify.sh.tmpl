@@ -14,4 +14,12 @@ if [[ ! -f "$SPICETIFY_SETUP_SCRIPT" ]]; then
   exit 1
 fi
 
+echo ""
+info "🎧 [Spotify & Spicetify] Starting..."
+echo ""
+
 bash "$SPICETIFY_SETUP_SCRIPT"
+
+echo ""
+success "✅ [Spotify & Spicetify] Done."
+echo ""

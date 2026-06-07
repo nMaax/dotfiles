@@ -4,22 +4,14 @@ set -euo pipefail
 COMFY_REPO="${1:-https://github.com/Comfy-Themes/Spicetify.git}"
 MARKETPLACE_INSTALL_URL="${2:-https://raw.githubusercontent.com/spicetify/marketplace/main/resources/install.sh}"
 
-info() { echo -e "\033[0;34m==>\033[0m $1"; }
-success() { echo -e "\033[0;32m==>\033[0m $1"; }
-warn() { echo -e "\033[1;33m==>\033[0m $1"; }
-
-echo ""
-info "🎧 [Spotify & Spicetify] Starting..."
-echo ""
-
-info "🎵 Installing Spotify (spicetify) from AUR..."
-warn "By default we will wipe anything related to spicetify first, to make a clean installation"
+echo "Installing Spotify (spicetify) from AUR..."
+echo "By default we will wipe anything related to spicetify first, to make a clean installation"
 
 rm -rf "$HOME/.config/spicetify"
 
 paru -S --noconfirm spotify spicetify-cli
 
-info "Setting up Spicetify permissions..."
+echo "Setting up Spicetify permissions..."
 sudo chmod a+wr /opt/spotify
 sudo chmod a+wr /opt/spotify/Apps -R
 
@@ -33,7 +25,7 @@ spicetify backup apply --no-restart
 SPICETIFY_CONFIG_DIR="$HOME/.config/spicetify"
 SPICETIFY_THEMES_DIR="$SPICETIFY_CONFIG_DIR/Themes"
 
-info "Installing Comfy theme for Spicetify..."
+echo "Installing Comfy theme for Spicetify..."
 mkdir -p "$SPICETIFY_THEMES_DIR"
 cd "$SPICETIFY_THEMES_DIR"
 git clone "$COMFY_REPO" ComfyRepo
@@ -44,15 +36,11 @@ spicetify config current_theme Comfy color_scheme Comfy
 spicetify config inject_css 1 replace_colors 1 overwrite_assets 1 inject_theme_js 1
 spicetify apply --no-restart
 
-info "Installing Spicetify Marketplace... (⚠️ not really the Arch way, but it doesnt touch anything outside home/)"
+echo "Installing Spicetify Marketplace... (⚠️ not really the Arch way, but it doesnt touch anything outside home/)"
 
 curl -fsSL "$MARKETPLACE_INSTALL_URL" -o /tmp/install_marketplace.sh
 sed -i 's/spicetify apply/spicetify apply --no-restart/g' /tmp/install_marketplace.sh
 sh /tmp/install_marketplace.sh
 rm /tmp/install_marketplace.sh
 
-success "Spotify, Spicetify, Comfy, and Marketplace cleanly installed!"
-
-echo ""
-success "✅ [Spotify & Spicetify] Done."
-echo ""
+echo "Spotify, Spicetify, Comfy, and Marketplace cleanly installed!"
