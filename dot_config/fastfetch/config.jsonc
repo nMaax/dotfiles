@@ -70,7 +70,7 @@
     {
       "type": "packages",
       "key": "│   {#35}pkgs  {#}",
-      "format": "{pacman} pacman, {aur} aur, {flatpak} flatpak │"
+      "format": "{pacman} pacman, {aur} aur, {flatpak} flatpak, {appimage} appimage │"
     },
     {
       "type": "command",
