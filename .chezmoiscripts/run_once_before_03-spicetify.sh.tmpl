@@ -2,13 +2,16 @@
 set -euo pipefail
 
 {{ template "utils.sh.tmpl" . }}
-{{ template "external_links.sh.tmpl" . }}
 
-SPICETIFY_SETUP_SCRIPT="{{ .chezmoi.sourceDir }}/dot_local/bin/executable_spicetify-setup.sh"
+SPICETIFY_SETUP_SCRIPT="{{ .chezmoi.homeDir }}/.local/bin/spicetify-setup.sh"
+
+if [[ ! -f "$SPICETIFY_SETUP_SCRIPT" ]]; then
+  SPICETIFY_SETUP_SCRIPT="{{ .chezmoi.sourceDir }}/dot_local/bin/executable_spicetify-setup.sh"
+fi
 
 if [[ ! -f "$SPICETIFY_SETUP_SCRIPT" ]]; then
   error "Missing Spicetify setup script at $SPICETIFY_SETUP_SCRIPT"
   exit 1
 fi
 
-bash "$SPICETIFY_SETUP_SCRIPT" "$SPICETIFY_COMFY_REPO" "$SPICETIFY_MARKETPLACE_INSTALL_URL"
+bash "$SPICETIFY_SETUP_SCRIPT"
