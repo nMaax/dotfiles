@@ -68,9 +68,10 @@
       "format": "{1>30} │"
     },
     {
-      "type": "packages",
+      "type": "command",
       "key": "│   {#35}pkgs  {#}",
-      "format": "{all>30} │"
+      "text": "if command -v pacman >/dev/null 2>&1; then pacman_count=$(pacman -Qnq 2>/dev/null | wc -l); aur_count=$(pacman -Qmq 2>/dev/null | wc -l); else pacman_count=0; aur_count=0; fi; if command -v flatpak >/dev/null 2>&1; then flatpak_count=$(flatpak list --columns=application 2>/dev/null | sed '/^$/d' | wc -l); else flatpak_count=0; fi; printf '%s pacman, %s aur, %s flatpak' \"$pacman_count\" \"$aur_count\" \"$flatpak_count\"",
+      "format": "{1>30} │"
     },
     {
       "type": "command",
