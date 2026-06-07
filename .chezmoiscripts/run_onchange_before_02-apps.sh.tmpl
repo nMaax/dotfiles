@@ -102,7 +102,6 @@ info "🎵 Installing EasyEffects and audio effect plugins..."
 sudo pacman -S --needed --noconfirm easyeffects lsp-plugins zam-plugins calf mda.lv2
 
 info "🎧 Installing Spotify & Spicetify..."
-
 SPICETIFY_SETUP_SCRIPT="{{ .chezmoi.homeDir }}/.local/bin/spicetify-setup.sh"
 
 if [[ ! -f "$SPICETIFY_SETUP_SCRIPT" ]]; then
@@ -115,6 +114,9 @@ if [[ ! -f "$SPICETIFY_SETUP_SCRIPT" ]]; then
 fi
 
 bash "$SPICETIFY_SETUP_SCRIPT"
+
+info "👾 Installing Discord..."
+sudo pacman -S --needed --noconfirm discord
 
 echo ""
 success "✅ [Installing Apps] Done."
