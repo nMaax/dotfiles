@@ -208,9 +208,9 @@ Furthermore, here is a list of some good misc websites for assets in case you wa
 
 Other stuff I use on Spicetify, I warmly advice is to use the marketplace as much as possible to install them! Spicetify and Spicetify marketplace are automatically installed with 🥮.
 
-- Spicy Lyrics (instead of Beautiful Lyrics, which seem to be deprecated!)
+- [Spicy Lyrics](https://github.com/Spikerko/spicy-lyrics) (instead of Beautiful Lyrics, which seem to be deprecated!)
 - Global Stats for songs, to fetch info on different songs.
-- Lucid Theme (instead of the Confy default one, tho this one looks quite heavy, bloated and dirty, ngl.)
+- [Lucid Theme](https://github.com/sanoojes/spicetify-lucid) (instead of the Confy default one, tho this one looks quite heavy, bloated and dirty, ngl.)
 
 > [!WARNING]
 > Disable Comfy theme via spicetify cli if you want to install a different one!
