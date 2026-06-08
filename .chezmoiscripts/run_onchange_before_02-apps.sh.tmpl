@@ -101,6 +101,23 @@ sudo pacman -S --needed --noconfirm kdenlive obs-studio
 info "🎵 Installing EasyEffects and audio effect plugins..."
 sudo pacman -S --needed --noconfirm easyeffects lsp-plugins zam-plugins calf mda.lv2
 
+info "🎧 Installing Spotify & Spicetify..."
+SPICETIFY_SETUP_SCRIPT="{{ .chezmoi.homeDir }}/.local/bin/spicetify-setup.sh"
+
+if [[ ! -f "$SPICETIFY_SETUP_SCRIPT" ]]; then
+  SPICETIFY_SETUP_SCRIPT="{{ .chezmoi.sourceDir }}/.local/bin/spicetify-setup.sh"
+fi
+
+if [[ ! -f "$SPICETIFY_SETUP_SCRIPT" ]]; then
+  error "Missing Spicetify setup script at $SPICETIFY_SETUP_SCRIPT"
+  exit 1
+fi
+
+bash "$SPICETIFY_SETUP_SCRIPT"
+
+info "👾 Installing Discord..."
+sudo pacman -S --needed --noconfirm discord
+
 echo ""
 success "✅ [Installing Apps] Done."
 echo ""
