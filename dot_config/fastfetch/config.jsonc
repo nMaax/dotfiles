@@ -70,12 +70,13 @@
     {
       "type": "packages",
       "key": "│   {#35}pkgs  {#}",
-      "format": "{pacman} pacman, {flatpak-all} flatpak │"
+      "format": "{pacman>12} pacman, {flatpak-all} flatpak │"
     },
     {
       "type": "command",
       "key": "│   {#35}aur   {#}",
-      "text": "pacman -Qm | wc -l"
+      "text": "pacman -Qm | wc -l",
+      "format": "{1>30} │"
     },
     {
       "type": "command",
