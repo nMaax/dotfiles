@@ -322,7 +322,6 @@ Hit **Start Streaming** in OBS. Your game stream will bypass your local home fir
 ## 📝 TODOs
 
 - [ ] Solve TODOs around the codebase and move to Lua
-- [ ] Make it possible to run chezmoi scripts automically, to e.g. clean-up spicetify
 - [ ] Try to rice [quickshell overview](https://github.com/Shanu-Kumawat/quickshell-overview#%EF%B8%8F-configuration)
 - [ ] Make [paletter.py](https://pastebin.com/r0BzzEqK) a runnable script with, e.g., a fish function to automatically generate color palettes
 - [ ] Once everything is finished, add screenshots and videos in this README
