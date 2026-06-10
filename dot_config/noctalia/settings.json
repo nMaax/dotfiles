@@ -727,10 +727,6 @@
             },
             {
                 "enabled": true,
-                "id": "spicetify"
-            },
-            {
-                "enabled": true,
                 "id": "telegram"
             },
             {
@@ -756,6 +752,10 @@
             {
                 "enabled": true,
                 "id": "steam"
+            },
+            {
+                "enabled": true,
+                "id": "spicetify"
             }
         ],
         "enableUserTheming": true
