@@ -216,6 +216,7 @@ If you want to re-run just the Spicetify setup without `chezmoi apply`, run:
 
 - [Spicy Lyrics](https://github.com/Spikerko/spicy-lyrics) (instead of Beautiful Lyrics, which seem to be deprecated!)
 - Global Stats for songs, to fetch info on different songs.
+- Shuffle+ for a fisher-yates randomization with zero bias.
 - [Lucid Theme](https://github.com/sanoojes/spicetify-lucid) (instead of the Confy default one, tho this one looks quite heavy, bloated and dirty, ngl.)
 
 > [!WARNING]
@@ -247,7 +248,7 @@ For Lutris specifically, remind to enable **Disable Lutris Runtime** and **Prefe
   - "Enable Shader Pre-caching"
   - "Allow background processing of Vulkan shaders"
  
-> ![WARNING]
+> [!WARNING]
 > 🥮 enables tearing automatically for steam_apps (recognized via hyprland client class), to disable it see [Hyprland wiki](https://wiki.hypr.land/Configuring/Advanced-and-Cool/Tearing/) 
 
 ### Streaming (P2P)
