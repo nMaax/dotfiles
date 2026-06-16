@@ -25,7 +25,7 @@ info "🦆 Installing yazi..."
 sudo pacman -S --needed --noconfirm yazi
 
 info "🐍 Installing tools for coding.."
-sudo pacman -S --needed --noconfirm uv lazygit neovim tmux nodejs npm jdk-openjdk github-cli
+sudo pacman -S --needed --noconfirm uv lazygit neovim tmux nodejs npm jdk-openjdk github-cli gcc-fortran make
 paru -S --needed --noconfirm visual-studio-code-bin direnv
 
 info "🤖 Installing AI tools..."
@@ -103,7 +103,7 @@ sudo pacman -S --needed --noconfirm easyeffects lsp-plugins zam-plugins calf mda
 
 # Do not use the local file itself as it is not available (this chezmoi script is run before applying dotfiles!)
 info "🎧 Installing Spotify & Spicetify..."
-curl -fsSL https://raw.githubusercontent.com/nMaax/dotfiles/refs/heads/main/dot_local/bin/executable_spicetify-setup.sh | sh   
+curl -fsSL https://raw.githubusercontent.com/nMaax/dotfiles/refs/heads/main/dot_local/bin/executable_spicetify-setup.sh | sh
 
 info "👾 Installing Discord..."
 sudo pacman -S --needed --noconfirm discord
