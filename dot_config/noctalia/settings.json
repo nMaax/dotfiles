@@ -195,6 +195,8 @@
                     "hidePassive": false,
                     "id": "Tray",
                     "pinned": [
+                        "NordVPN",
+                        "Cachy-Update"
                     ]
                 },
                 {
@@ -398,6 +400,38 @@
             {
                 "name": "DP-1",
                 "widgets": [
+                    {
+                        "defaultSettings": {
+                            "completedCount": 0,
+                            "count": 0,
+                            "current_page_id": 0,
+                            "exportEmptySections": false,
+                            "exportFormat": "markdown",
+                            "exportPath": "~/Documents",
+                            "isExpanded": false,
+                            "pages": [
+                                {
+                                    "id": 0,
+                                    "name": "General"
+                                }
+                            ],
+                            "priorityColors": {
+                                "high": "#f44336",
+                                "low": "#9e9e9e",
+                                "medium": "#2196f3"
+                            },
+                            "showBackground": true,
+                            "showCompleted": true,
+                            "todos": [
+                            ],
+                            "useCustomColors": false
+                        },
+                        "id": "plugin:todo",
+                        "scale": 1,
+                        "showBackground": true,
+                        "x": 1120,
+                        "y": 80
+                    }
                 ]
             }
         ],
@@ -482,7 +516,7 @@
         "lockOnSuspend": true,
         "lockScreenAnimations": false,
         "lockScreenBlur": 0,
-        "lockScreenCountdownDuration": 10000,
+        "lockScreenCountdownDuration": 20000,
         "lockScreenMonitors": [
         ],
         "lockScreenTint": 0,
@@ -516,21 +550,21 @@
     "idle": {
         "customCommands": "[]",
         "enabled": true,
-        "fadeDuration": 5,
+        "fadeDuration": 10,
         "lockCommand": "",
-        "lockTimeout": 630,
+        "lockTimeout": 420,
         "resumeLockCommand": "",
         "resumeScreenOffCommand": "",
         "resumeSuspendCommand": "",
         "screenOffCommand": "",
-        "screenOffTimeout": 600,
+        "screenOffTimeout": 300,
         "suspendCommand": "",
         "suspendTimeout": 1800
     },
     "location": {
         "analogClockInCalendar": false,
         "autoLocate": true,
-        "firstDayOfWeek": -1,
+        "firstDayOfWeek": 1,
         "hideWeatherCityName": false,
         "hideWeatherTimezone": false,
         "name": "",
