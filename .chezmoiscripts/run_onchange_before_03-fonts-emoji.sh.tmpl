@@ -17,6 +17,9 @@ paru -S --needed --noconfirm apple-fonts
 info "🔤 Installing Google Fonts..."
 paru -S --needed --noconfirm ttf-google-fonts-git
 
+info "🐧 Installing Linux Libertine Fonts..."
+sudo pacman -S --needed --noconfirm ttf-linux-libertine
+
 # Install Apple Emoji
 EMOJI_FILE="/tmp/ttf-apple-emoji.pkg.tar.zst"
 
@@ -43,3 +46,4 @@ fi
 echo ""
 success "✅ [Fonts & Emoji] Done."
 echo ""
+
