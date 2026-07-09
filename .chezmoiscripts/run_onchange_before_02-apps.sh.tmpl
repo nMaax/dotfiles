@@ -46,7 +46,7 @@ elif [ "$GPU_VENDOR" = "amd" ]; then
 fi
 
 info "💎 Installing Antigravity CLI (Gemini)..."
-paru -S antigravity-cli
+paru -S --needed --noconfirm antigravity-cli
 
 info "🦙 Installing Ollama..."
 if [ "$GPU_VENDOR" = "nvidia" ]; then
