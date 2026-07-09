@@ -45,8 +45,8 @@ elif [ "$GPU_VENDOR" = "amd" ]; then
   sudo pacman -S --needed --noconfirm rocm-opencl-runtime rocm-hip-sdk hip-runtime-amd
 fi
 
-info "💎 Installing Gemini CLI..."
-sudo pacman -S --needed --noconfirm gemini-cli
+info "💎 Installing Antigravity CLI (Gemini)..."
+paru -S antigravity-cli
 
 info "🦙 Installing Ollama..."
 if [ "$GPU_VENDOR" = "nvidia" ]; then
