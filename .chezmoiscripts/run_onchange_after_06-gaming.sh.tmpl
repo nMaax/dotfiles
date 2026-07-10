@@ -49,13 +49,6 @@ else
   info "Feral's gamemode not installed. Skipping ananicy-cpp conflict check."
 fi
 
-info "🩸 Disabling dynamic cursor for compatibility issues in games..."
-if hyprpm disable dynamic-cursor >/dev/null 2>&1; then
-  info "Successfully disabled dynamic-cursor."
-else
-  warn "Could not disable dynamic-cursor (likely missing or already disabled). Skipping..."
-fi
-
 info "[GAMING] Shader cache is configured via ~/.config/environment.d/gaming.conf."
 
 info "[GAMING] Mouse acceleration is set to 'flat' in ~/.config/hypr/hyprland/input.conf."
