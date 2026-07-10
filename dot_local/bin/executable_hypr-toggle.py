@@ -103,6 +103,7 @@ class Command:
                         {"class": "TelegramDesktop"},
                         {"title": "web.whatsapp.com"},
                         {"class": "Element"},
+                        {"class": "signal"},
                     ],
                     "command": ["discord"],
                     "move": True,
