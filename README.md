@@ -322,6 +322,7 @@ Hit **Start Streaming** in OBS. Your game stream will bypass your local home fir
 
 ## 📝 TODOs
 
+- [ ] Optimize dotfiles overall
 - [ ] Move to shelly
 - [ ] Solve TODOs around the codebase and move to Lua
 - [ ] Try to rice [quickshell overview](https://github.com/Shanu-Kumawat/quickshell-overview#%EF%B8%8F-configuration)
