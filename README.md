@@ -6,7 +6,7 @@ These dotfiles are heavily based on **CachyOS** (not just Arch), specifically th
 
 Ideally you should have installed CachyOS selecting for hyprland during the Calamares installation, or without any DE/WM (in such case 🥮 will install Hyprland automatically).
 
-> Managed using [chezmoi](https://www.chezmoi.io/).
+> Managed using [chezmoi](https://www.chezmoi.io/). Code written with the help of Gemini, Claude and Copilot.
 
 ## Installation
 
