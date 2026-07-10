@@ -20,5 +20,6 @@ window-padding-balance = true
 # Cursor shader
 custom-shader = shaders/cursor_warp.glsl
 
+# Sync theme with noctalia
 theme = noctalia
 
