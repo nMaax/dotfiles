@@ -51,11 +51,11 @@
         "autoHideDelay": 500,
         "autoShowDelay": 150,
         "backgroundOpacity": 0.93,
-        "barType": "floating",
+        "barType": "framed",
         "capsuleColorKey": "none",
         "capsuleOpacity": 1,
         "contentPadding": 2,
-        "density": "default",
+        "density": "comfortable",
         "displayMode": "always_visible",
         "enableExclusionZoneInset": true,
         "fontScale": 1,
@@ -72,7 +72,7 @@
         "mouseWheelAction": "none",
         "mouseWheelWrap": true,
         "outerCorners": true,
-        "position": "top",
+        "position": "left",
         "reverseScroll": false,
         "rightClickAction": "controlCenter",
         "rightClickCommand": "",
@@ -948,6 +948,76 @@
                     "#b9391f"
                 ],
                 "path": "/home/massimiliano/Pictures/Wallpapers/sora-drive.jpg",
+                "useWallpaperColors": false
+            },
+            {
+                "appearance": "dark",
+                "colorScheme": "Occult Umbral",
+                "darkMode": true,
+                "generationMethod": "faithful",
+                "paletteColors": [
+                    "#8b2e2e",
+                    "#8baa82",
+                    "#9a7398",
+                    "#c25b5b"
+                ],
+                "path": "/home/massimiliano/Pictures/Wallpapers/cowboybeboop1.png",
+                "useWallpaperColors": false
+            },
+            {
+                "appearance": "dark",
+                "colorScheme": "Velvet AMOLED",
+                "darkMode": true,
+                "generationMethod": "faithful",
+                "paletteColors": [
+                    "#b9391f",
+                    "#7c8189",
+                    "#5c575a",
+                    "#b9391f"
+                ],
+                "path": "/home/massimiliano/Pictures/Wallpapers/sora-carnage.jpg",
+                "useWallpaperColors": false
+            },
+            {
+                "appearance": "dark",
+                "colorScheme": "Monochrome",
+                "darkMode": true,
+                "generationMethod": "faithful",
+                "paletteColors": [
+                    "#aaaaaa",
+                    "#a7a7a7",
+                    "#cccccc",
+                    "#dddddd"
+                ],
+                "path": "/home/massimiliano/Pictures/Wallpapers/yumi-sora.jpg",
+                "useWallpaperColors": false
+            },
+            {
+                "appearance": "dark",
+                "colorScheme": "GitHub Dark",
+                "darkMode": true,
+                "generationMethod": "faithful",
+                "paletteColors": [
+                    "#58a6ff",
+                    "#bc8cff",
+                    "#bc8cff",
+                    "#f85149"
+                ],
+                "path": "/home/massimiliano/Pictures/Wallpapers/space1.png",
+                "useWallpaperColors": false
+            },
+            {
+                "appearance": "dark",
+                "colorScheme": "Velvet AMOLED",
+                "darkMode": true,
+                "generationMethod": "faithful",
+                "paletteColors": [
+                    "#b9391f",
+                    "#7c8189",
+                    "#5c575a",
+                    "#b9391f"
+                ],
+                "path": "/home/massimiliano/Pictures/Wallpapers/red1.png",
                 "useWallpaperColors": false
             }
         ],
