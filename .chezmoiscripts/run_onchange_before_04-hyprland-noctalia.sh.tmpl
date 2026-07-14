@@ -24,6 +24,15 @@ info "Remaining app-specific steps: https://docs.noctalia.dev/theming/basic-app-
 info "🔍 Installing Quickshell Overview..."
 paru -S --needed --noconfirm quickshell-overview-git
 
+info "🩸 Setting hyprland plugins..."
+if ! hyprpm list | grep -q hyprland-scroll-overview; then
+  hyprpm add https://github.com/yayuuu/hyprland-scroll-overview.git
+  hyprpm update
+  hyprpm enable scrolloverview
+else
+  success "hyprland-scroll-overview plugin already installed and enabled, skipping."
+fi
+
 info "🖼️ Installing mpvpaper for Video Wallpaper alternative backend..."
 paru -S --needed --noconfirm mpvpaper
 
