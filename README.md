@@ -322,18 +322,15 @@ Hit **Start Streaming** in OBS. Your game stream will bypass your local home fir
 
 ## 📝 TODOs
 
-- [ ] Optimize dotfiles overall
 - [ ] Move to shelly
-- [ ] Solve TODOs around the codebase and move to Lua
+- [ ] Solve TODOs around the codebase and move to Lua (optimize for gaming performances)
 - [ ] Try to rice [quickshell overview](https://github.com/Shanu-Kumawat/quickshell-overview#%EF%B8%8F-configuration)
 - [ ] Make [paletter.py](https://pastebin.com/r0BzzEqK) a runnable script with, e.g., a fish function to automatically generate color palettes
 - [ ] Once everything is finished, add screenshots and videos in this README
 
 ### For the future
 
-- [ ] Prepare WALLHACK Wallpapers -> Make a release for dotfiles-assets if files are too large
+- [ ] Prepare 2K-4K WALLHACK Wallpapers -> Make a release for dotfiles-assets if files are too large
 - [ ] Enhance assets by introducing a github CI action that autogenerates README with gallery, like [dharmx](https://github.com/dharmx/walls)
-- [ ] Try out these [QyLock](https://github.com/Darkkal44/qylock) as new SDDM presets
-- [ ] Try out [Hyprland Scroll Overview](https://github.com/yayuuu/hyprland-scroll-overview) plugin instead of qs overiview once it works in Hyprland 0.55
 - [ ] Try out [Noctalia Polkit Agent](https://noctalia.dev/plugins/polkit-agent) (you must uninstall kde polking agent, maybe this is not the right choice in cachy)
 - [ ] Generalize for pure Arch by reproducing what Cachy installs, including fundamentals like bluetooth, networkmanager, fish, cachyos fish setup, gpu drivers etc.
