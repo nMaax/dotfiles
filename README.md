@@ -318,21 +318,20 @@ Now we are ready to run the Meshcast Stream
 
 Now you can copy the **Watch Page Link** provided by the Meshcast interface (e.g., `https://meshcast.io/view.html?geo=cae2&id=MadaMada1234`) and send it over to your friends.
 
-Hit **Start Streaming** in OBS. Your game stream will bypass your local home firewall completely via Meshcast's edge servers, and your friends will see your high-framerate gameplay and isolated audio with a sub-second delay.
+Hit **Start Streaming** in OBS. That's it :)
 
 ---
 
 ## 📝 TODOs
-
 - [ ] Move to shelly
 - [ ] Solve TODOs around the codebase and move to Lua (optimize for gaming performances)
 - [ ] Try to rice [quickshell overview](https://github.com/Shanu-Kumawat/quickshell-overview#%EF%B8%8F-configuration)
+- [ ] Try to rice [scroll overview](https://github.com/yayuuu/hyprland-scroll-overview)
 - [ ] Make [paletter.py](https://pastebin.com/r0BzzEqK) a runnable script with, e.g., a fish function to automatically generate color palettes
+- [ ] Prepare 2K-4K WALLHACK Wallpapers -> Make a release for dotfiles-assets if files are too large
 - [ ] Once everything is finished, add screenshots and videos in this README
 
 ### For the future
-
-- [ ] Prepare 2K-4K WALLHACK Wallpapers -> Make a release for dotfiles-assets if files are too large
-- [ ] Enhance assets by introducing a github CI action that autogenerates README with gallery, like [dharmx](https://github.com/dharmx/walls)
+- [ ] Enhance assets by introducing a GitHub CI action that autogenerates README with gallery, like [dharmx](https://github.com/dharmx/walls)
 - [ ] Try out [Noctalia Polkit Agent](https://noctalia.dev/plugins/polkit-agent) (you must uninstall kde polking agent, maybe this is not the right choice in cachy)
 - [ ] Generalize for pure Arch by reproducing what Cachy installs, including fundamentals like bluetooth, networkmanager, fish, cachyos fish setup, gpu drivers etc.
