@@ -239,6 +239,8 @@ The below is the common Steam format for launch options, however you can achive 
 - **NVIDIA:** `PROTON_ENABLE_WAYLAND=1 PROTON_DLSS_UPGRADE=1 PROTON_NVIDIA_LIBS_NO_32BIT=1 game-performance %command%`
 - **AMD:** `PROTON_ENABLE_WAYLAND=1 PROTON_FSR4_UPGRADE=1 ENABLE_LAYER_MESA_ANTI_LAG=1 game-performance %command%`
 
+> [!WARNING] If you encounter a black screen it probably is a conflict between direct scanout and native wayland compositor for the game. In such case set `PROTON_ENABLE_WAYLAND=0` or disable `direct_scanout` in Hyprland settings. 
+
 For Lutris specifically, remind to enable **Disable Lutris Runtime** and **Prefer system libraries**
 
 #### Steam/Proton Settings
@@ -285,7 +287,7 @@ On the left menu, select the **Video** tab. Do not use the "Rescale Output" chec
 
 Go to the **Output** tab and flip the **Output Mode** at the very top from *Simple* to **Advanced**. In the **Streaming** tab, mirror these exact specifications:
 
-| Setting Field | Value to Select / Type | Why it matters |
+| Setting | Value to Select / Type | Description |
 | --- | --- | --- |
 | **Audio Encoder** | `FFmpeg Opus` | Enforced by WebRTC for instant, crisp sound. |
 | **Video Encoder** | `NVIDIA NVENC H.264` | Uses your GPU hardware so your game doesn't lag. |
