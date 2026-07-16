@@ -26,7 +26,7 @@ Ideally you should have installed CachyOS selecting for hyprland during the Cala
 
 During install, you will have the option to automatically wipe `tailscale_authkey` / `nordvpn_token` from `~/.config/chezmoi/chezmoi.toml` right after their use.
 
-2. Install chezmoi and apply the dotfiles
+1. Install chezmoi and apply the dotfiles
 
 ```fish
 pacman -S chezmoi
@@ -52,8 +52,8 @@ To fix, do the following:
 exec-once = /usr/lib/polkit-kde-authentication-agent-1
 ```
 
-3. Save and restart Hyprland (Super + M or just log out and log back in).
-4. Now you should be able to tweak cachy as you like, and proceed with 🥮 installation.
+1. Save and restart Hyprland (Super + M or just log out and log back in).
+2. Now you should be able to tweak cachy as you like, and proceed with 🥮 installation.
 
 ## Post-Installation
 
@@ -117,7 +117,7 @@ Accept the default path (`~/.ssh/id_ed25519`) and optionally choose a passphrase
 > [!NOTE]
 > You could be prompted to either create a new wallet, or to unlock the current one, refer to the above section for details.
 
-4. Tell Git to use SSH for GitHub remotes (optional, but recommended):
+1. Tell Git to use SSH for GitHub remotes (optional, but recommended):
 
    ```fish
    git config --global url."git@github.com:".insteadOf "https://github.com/"
@@ -192,10 +192,11 @@ The stuff that I usually use during my browsing experience, these are completely
 - **Zen Mods**:
   - [Transparent Zen](https://zen-browser.app/mods/642854b5-88b4-4c40-b256-e035532109df) – make zen look transparent, needed for [ZenZero](https://sameerasw.com/zen)
 
-Eventually consider also 
-  - [Volume Control](https://github.com/Chaython/volumecontrol)
-  - [Web Archives](https://github.com/dessant/web-archives)
-  - [YouTube Improved](https://github.com/code-charity/youtube)
+Eventually consider also
+
+- [Volume Control](https://github.com/Chaython/volumecontrol)
+- [Web Archives](https://github.com/dessant/web-archives)
+- [YouTube Improved](https://github.com/code-charity/youtube)
 
 Furthermore, here is a list of some good misc websites for assets in case you wanted to customize 🥮:
 
@@ -239,7 +240,7 @@ The below is the common Steam format for launch options, however you can achive 
 - **NVIDIA:** `PROTON_ENABLE_WAYLAND=1 PROTON_DLSS_UPGRADE=1 PROTON_NVIDIA_LIBS_NO_32BIT=1 game-performance %command%`
 - **AMD:** `PROTON_ENABLE_WAYLAND=1 PROTON_FSR4_UPGRADE=1 ENABLE_LAYER_MESA_ANTI_LAG=1 game-performance %command%`
 
-> [!WARNING] If you encounter a black screen it probably is a conflict between direct scanout and native wayland compositor for the game. In such case set `PROTON_ENABLE_WAYLAND=0` or disable `direct_scanout` in Hyprland settings. 
+> [!WARNING] If you encounter a black screen it probably is a conflict between direct scanout and native wayland compositor for the game. In such case set `PROTON_ENABLE_WAYLAND=0` or disable `direct_scanout` in Hyprland settings.
 
 For Lutris specifically, remind to enable **Disable Lutris Runtime** and **Prefer system libraries**
 
@@ -249,9 +250,9 @@ For Lutris specifically, remind to enable **Disable Lutris Runtime** and **Prefe
 - **Pre-caching:** If using Proton-CachyOS, navigate to **Steam -> Settings -> Downloads** and **UNCHECK**:
   - "Enable Shader Pre-caching"
   - "Allow background processing of Vulkan shaders"
- 
+
 > [!WARNING]
-> 🥮 enables tearing automatically for steam_apps (recognized via hyprland client class), to disable it see [Hyprland wiki](https://wiki.hypr.land/Configuring/Advanced-and-Cool/Tearing/) 
+> 🥮 enables tearing automatically for steam_apps (recognized via hyprland client class), to disable it see [Hyprland wiki](https://wiki.hypr.land/Configuring/Advanced-and-Cool/Tearing/)
 
 ### Streaming (P2P)
 
@@ -273,17 +274,17 @@ paru -S obs-pipewire-audio-capture
 
 Because you are explicitly capturing the game audio now, you must turn off OBS's global desktop capture so your friend don't hear everything twice:
 
-* Go to **Settings** $\rightarrow$ **Audio**.
-* Under **Global Audio Devices**, change **Desktop Audio** to **Disabled**. Click **Apply**.
+- Go to **Settings** $\rightarrow$ **Audio**.
+- Under **Global Audio Devices**, change **Desktop Audio** to **Disabled**. Click **Apply**.
 
 To drop your hardware encoding delay down to less than 15 milliseconds, you need to adjust your video framing and reconfigure the NVIDIA NVENC encoder pipeline.
 
 On the left menu, select the **Video** tab. Do not use the "Rescale Output" checkbox in the encoder menu; handle it here instead:
 
-* **Base (Canvas) Resolution:** Match this to your monitor's native resolution (e.g., `2560x1440`).
-* **Output (Scaled) Resolution:** Set this to **`1920x1080`** (1080p is the sweet spot).
-* **Downscale Filter:** `Bicubic (Sharpened scaling, 16 samples)`.
-* **Common FPS Values:** `60`.
+- **Base (Canvas) Resolution:** Match this to your monitor's native resolution (e.g., `2560x1440`).
+- **Output (Scaled) Resolution:** Set this to **`1920x1080`** (1080p is the sweet spot).
+- **Downscale Filter:** `Bicubic (Sharpened scaling, 16 samples)`.
+- **Common FPS Values:** `60`.
 
 Go to the **Output** tab and flip the **Output Mode** at the very top from *Simple* to **Advanced**. In the **Streaming** tab, mirror these exact specifications:
 
@@ -312,9 +313,11 @@ Now we are ready to run the Meshcast Stream
 4. In OBS, go to **Settings** > **Stream**.
 5. Set **Service** to **WHIP**.
 6. Split your Meshcast link across the two input boxes like this:
+
 - **Server:** `https://cae2.meshcast.io/whip/`
 - **Bearer Token:** `MadaMada1234` *(The unique string at the very end of your link)* (or just skip the token and put the whole link in the server field)
-7. Click **Apply** and **OK**.
+
+1. Click **Apply** and **OK**.
 
 Now you can copy the **Watch Page Link** provided by the Meshcast interface (e.g., `https://meshcast.io/view.html?geo=cae2&id=MadaMada1234`) and send it over to your friends.
 
@@ -323,15 +326,17 @@ Hit **Start Streaming** in OBS. That's it :)
 ---
 
 ## 📝 TODOs
+
 - [ ] Move to shelly
 - [ ] Solve TODOs around the codebase and move to Lua (optimize for gaming performances)
 - [ ] Try to rice [quickshell overview](https://github.com/Shanu-Kumawat/quickshell-overview#%EF%B8%8F-configuration)
 - [ ] Try to rice [scroll overview](https://github.com/yayuuu/hyprland-scroll-overview)
-- [ ] Make [paletter.py](https://pastebin.com/r0BzzEqK) a runnable script with, e.g., a fish function to automatically generate color palettes
+- [x] Make [paletter.py](https://pastebin.com/r0BzzEqK) a runnable script with, e.g., a fish function to automatically generate color palettes
 - [ ] Prepare 2K-4K WALLHACK Wallpapers -> Make a release for dotfiles-assets if files are too large
 - [ ] Once everything is finished, add screenshots and videos in this README
 
 ### For the future
+
 - [ ] Enhance assets by introducing a GitHub CI action that autogenerates README with gallery, like [dharmx](https://github.com/dharmx/walls)
 - [ ] Try out [Noctalia Polkit Agent](https://noctalia.dev/plugins/polkit-agent) (you must uninstall kde polking agent, maybe this is not the right choice in cachy)
 - [ ] Generalize for pure Arch by reproducing what Cachy installs, including fundamentals like bluetooth, networkmanager, fish, cachyos fish setup, gpu drivers etc.
