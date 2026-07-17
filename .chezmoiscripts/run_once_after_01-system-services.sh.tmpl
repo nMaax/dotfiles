@@ -5,8 +5,7 @@ set -euo pipefail
 {{ template "external_links.sh.tmpl" . }}
 
 {{- if ne .chezmoi.osRelease.id "cachyos" }}
-error "This script is intended to run on CachyOS."
-error "Did nothing, will close now."
+error "This script is intended to run on CachyOS. Aborting."
 exit 1
 {{- end }}
 
