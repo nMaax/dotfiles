@@ -4,7 +4,7 @@ Personal dotfiles and system configurations, just the way I like it.
 
 These dotfiles are heavily based on **CachyOS** (not just Arch), specifically the various packages that Cachy ships with it's own base installation (fish, sddm, various KDE bloat etc.).
 
-Ideally you should have installed CachyOS selecting for hyprland during the Calamares installation, or without any DE/WM (in such case 🥮 will install Hyprland automatically).
+Ideally you should have installed CachyOS selecting for Hyprland (optionally also Plasma as a fallback) during the Calamares installation, or without any DE/WM (in such case 🥮 will install Hyprland automatically).
 
 > Managed using [chezmoi](https://www.chezmoi.io/). Code written with the help of Gemini, Claude and Copilot.
 
@@ -37,7 +37,7 @@ chezmoi init --apply nMaax
 > `ddcutil` will been installed, which may cause instability with certain monitors. You can remove it via `sudo pacman -Rns ddcutil` if you encounter any issue.
 
 > [!NOTE]
-> During log-in in SDDM choose **systemd-owned Hyprland** instead of the plain one, to ensure autostart scripts function correctly (e.g. cachy-update tray icon).
+> During log-in in SDDM choose **systemd-owned Hyprland** (UWSM) instead of the plain one, to ensure autostart scripts function correctly (e.g. cachy-update tray icon).
 
 ### Handling missing polkit agent password prompt in CachyOS Hello
 
