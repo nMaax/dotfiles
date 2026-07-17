@@ -21,7 +21,7 @@ Ideally you should have installed CachyOS selecting for Hyprland (optionally als
   email = "you@example.com"
   tailscale_authkey = "tskey-auth-XXXXXXXXXXXXX" # Leave "" if you want to skip tailscale
   nordvpn_token = "nvpnkey-auth-XXXXXXXXXXXXX" # Leave "" if you want to skip nordvpn
-  gaming = true
+  gaming = true # false to avoid installing Steam, Mango, OpenRGB etc.
 ```
 
 During install, you will have the option to automatically wipe `tailscale_authkey` / `nordvpn_token` from `~/.config/chezmoi/chezmoi.toml` right after their use.
@@ -41,39 +41,23 @@ chezmoi init --apply nMaax
 
 ### Handling missing polkit agent password prompt in CachyOS Hello
 
-If you would like to tweak CachyOS before running 🥮, but CachyOS Hello won't accept your password on a Hyprland-only installation (i.e., no Plasma), the polkit-kde-agent is likely missing from your background processes. You must ensure this agent is running so CachyOS Hello can trigger the authentication pop-up required to apply your changes. This will likely happen if you proceed to use CachyHello before 🥮 installation, as the below is already implemented in 🥮.
+If you would like to tweak CachyOS before running 🥮, but CachyOS Hello won't accept your password on a Hyprland-only installation (i.e., no Plasma), the polkit-kde-agent is likely missing from your background processes. You must ensure this agent is running so CachyOS Hello can trigger the authentication pop-up required to apply your changes.
 
 To fix, do the following:
 
 1. Open your hyprland.conf: `vim ~/.config/hypr/hyprland.conf`.
 2. Add this line to your "exec-once" section (or anywhere at the bottom):
 
-```conf
-exec-once = /usr/lib/polkit-kde-authentication-agent-1
-```
+  ```conf
+  exec-once = /usr/lib/polkit-kde-authentication-agent-1
+  ```
 
-1. Save and restart Hyprland (Super + M or just log out and log back in).
-2. Now you should be able to tweak cachy as you like, and proceed with 🥮 installation.
+3. Save and restart Hyprland (Super + M or just log out and log back in).
+4. Now you should be able to tweak cachy as you like, and proceed with 🥮 installation.
 
 ## Post-Installation
 
-### MEGA & KeePassXC
-
-Both `megacmd-bin` and `keepassxc` are installed by the script as regular packages.
-
-Set them up manually after installation:
-
-1. **Log into MEGA** and configure your sync:
-
-   ```fish
-   mega-login
-   mkdir -p ~/MEGA
-   mega-sync ~/MEGA/ /
-   ```
-
-2. **Open KeePassXC** and point it at your database once the MEGA sync completes. Remember to place the key-file as well!
-
-### Keyring (KWallet) and SSH
+### Keyring (KWallet)
 
 KWallet is the password manager of choice in 🥮, due to the already wide presence of KDE-ecosystem tools by CachyOS itself. However, KWallet often presents some issues in non-Plasma environments, the install scripts will try to cleanly patch these issues out of the box, togheter pre-setted config files; however some may still be present, especially with Electron apps that rely on the Electron safe-storage feature.
 
@@ -86,6 +70,8 @@ Crucially, remind that **when you are prompted to create a wallet** (i.e. the fi
 Or simply do it by yourself after installing 🥮.
 
 Further information can be found at [Arch Wiki: KDE Wallet](https://wiki.archlinux.org/title/KDE_Wallet) and [Electron Safe Storage Info](https://www.electronjs.org/docs/latest/api/safe-storage).
+
+### SSH
 
 The install script enables both `sshd` and the user-level `ssh-agent` automatically. But you still need to create a key pair and distribute your public key wherever you want to authenticate. Here are some common procedures you may want to do:
 
@@ -144,6 +130,22 @@ Host myserver
 
 Then connect simply with `ssh myserver`.
 
+### MEGA & KeePassXC
+
+Both `megacmd-bin` and `keepassxc` are installed by the script as regular packages.
+
+Set them up manually after installation:
+
+1. **Log into MEGA** and configure your sync:
+
+   ```fish
+   mega-login
+   mkdir -p ~/MEGA
+   mega-sync ~/MEGA/ /
+   ```
+
+2. **Open KeePassXC** and point it at your database once the MEGA sync completes. Remember to place the key-file as well!
+
 ### Theming
 
 Noctalia presents a standard approach to sync apps colorschemes with its own theme, each app requires its own procedure, part of it can be automated via code, and some other not. Further information at [docs.noctalia.dev/theming](https://docs.noctalia.dev/theming/basic-app-theming/).
@@ -179,7 +181,7 @@ Furthermore, you can install other themes for apps yourself, have a look at:
 
 🥮 also supports [linux-wallpaperengine](https://github.com/Almamu/linux-wallpaperengine)! If you installed Steam you can see how to set it up and the [related plugin](https://noctalia.dev/plugins/linux-wallpaperengine-controller/)
 
-### Browser setup
+### Browsing
 
 The stuff that I usually use during my browsing experience, these are completely optional and at your preference, do what you want with them:
 
@@ -242,6 +244,8 @@ The below is the common Steam format for launch options, however you can achive 
 
 > [!WARNING] If you encounter a black screen it probably is a conflict between direct scanout and native wayland compositor for the game. In such case set `PROTON_ENABLE_WAYLAND=0` or disable `direct_scanout` in Hyprland settings.
 
+> [!WARNING] If you see a "Comping shaders (xx%)..." on the bottom left, you can remove it by adding `DXVK_HUD=0`
+
 For Lutris specifically, remind to enable **Disable Lutris Runtime** and **Prefer system libraries**
 
 #### Steam/Proton Settings
@@ -250,9 +254,6 @@ For Lutris specifically, remind to enable **Disable Lutris Runtime** and **Prefe
 - **Pre-caching:** If using Proton-CachyOS, navigate to **Steam -> Settings -> Downloads** and **UNCHECK**:
   - "Enable Shader Pre-caching"
   - "Allow background processing of Vulkan shaders"
-
-> [!WARNING]
-> 🥮 enables tearing automatically for steam_apps (recognized via hyprland client class), to disable it see [Hyprland wiki](https://wiki.hypr.land/Configuring/Advanced-and-Cool/Tearing/)
 
 ### Streaming (P2P)
 
