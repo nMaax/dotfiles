@@ -25,7 +25,7 @@ info "🦆 Installing yazi..."
 sudo pacman -S --needed --noconfirm yazi
 
 info "🐍 Installing tools for coding.."
-sudo pacman -S --needed --noconfirm uv lazygit neovim tmux nodejs npm jdk-openjdk github-cli gcc-fortran make
+sudo pacman -S --needed --noconfirm uv lazygit neovim tmux nodejs npm jdk-openjdk github-cli gcc-fortran make python python-lsp-server
 paru -S --needed --noconfirm visual-studio-code-bin direnv
 
 info "🤖 Installing AI tools..."
@@ -45,7 +45,10 @@ elif [ "$GPU_VENDOR" = "amd" ]; then
   sudo pacman -S --needed --noconfirm rocm-opencl-runtime rocm-hip-sdk hip-runtime-amd
 fi
 
-info "💎 Installing Antigravity CLI (Gemini)..."
+info "🦀 Installing Claude Code..."
+sudo pacman -S --needed --noconfirm claude-code
+
+info "💎 Installing Antigravity CLI..."
 paru -S --needed --noconfirm antigravity-cli
 
 info "🦙 Installing Ollama..."

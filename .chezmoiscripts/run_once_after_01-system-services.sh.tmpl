@@ -5,7 +5,10 @@ set -euo pipefail
 {{ template "external_links.sh.tmpl" . }}
 
 {{- if ne .chezmoi.osRelease.id "cachyos" }}
-error "This script is intended to run on CachyOS. But you are running it on $(. /etc/os-release; echo "$NAME $VERSION"). Aborting."
+error "This script is intended to run on CachyOS. But you are running it on $(
+  . /etc/os-release
+  echo "$NAME $VERSION"
+). Aborting."
 {{- end }}
 
 echo ""
