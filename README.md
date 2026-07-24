@@ -333,6 +333,7 @@ Hit **Start Streaming** in OBS. That's it :)
 - [ ] Try to rice [quickshell overview](https://github.com/Shanu-Kumawat/quickshell-overview#%EF%B8%8F-configuration)
 - [ ] Try to rice [scroll overview](https://github.com/yayuuu/hyprland-scroll-overview)
 - [ ] Remove unused AUR packages
+- [ ] Explore new plugins and remove unused
 - [x] Make [paletter.py](https://pastebin.com/r0BzzEqK) a runnable script with, e.g., a fish function to automatically generate color palettes
 - [ ] Prepare 2K-4K WALLHACK Wallpapers -> Make a release for dotfiles-assets if files are too large
 - [ ] Once everything is finished, add screenshots and videos in this README
