@@ -92,6 +92,9 @@ else
   sudo pacman -U "$PWD/megacmd-x86_64.pkg.tar.zst"
 fi
 
+infor "📄 Installing LibreOffice and Xournal..."
+sudo pacman -S --needed --noconfirm libreoffice-fresh xournalpp
+
 info "🎴 Installing YouTube downloader..."
 sudo pacman -S --needed --noconfirm yt-dlp
 
