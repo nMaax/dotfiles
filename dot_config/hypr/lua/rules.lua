@@ -51,11 +51,19 @@ hl.window_rule({
 	workspace = "special:password",
 })
 
--- Audio managers workspace
+-- AI workspace (replaces the old EasyEffects/audio workspace).
+-- Two groups here: the CLI tools, which get an explicit `ghostty --class=` when
+-- launched from keybindings.lua, and the chromium `--app=` webapps, whose app_id
+-- chromium derives from the URL as chrome-<host><path, / -> _>-Default.
+-- Deliberately scoped per-host rather than a blanket chrome-.* so the non-AI
+-- webapps (WhatsApp, ddocs, MCHOSE HUB) are not caught.
+-- NOTE: this is a Hyprland regex, not a Lua pattern -- hence \\. not %.
 hl.window_rule({
-	name = "audio-workspace-class",
-	match = { class = "^(easyeffects)" },
-	workspace = "special:audio",
+	name = "ai-workspace-class",
+	match = {
+		class = "^(ai\\.claude|ai\\.antigravity|chrome-(gemini\\.google\\.com|github\\.com__copilot|chatgpt\\.com|claude\\.ai).*)$",
+	},
+	workspace = "special:ai",
 })
 
 -- Music workspace
@@ -90,14 +98,20 @@ hl.window_rule({
 	workspace = "special:games",
 })
 
--- Games do not belong to any workspace
+-- Games get their own reserved workspace (11), so they never land in the middle
+-- of the 1-10 rotation. 11 is outside that range on purpose: nothing existing is
+-- sacrificed, and it is reachable via SUPER+SHIFT+G. Its gaps/border are zeroed
+-- by the workspace_rule in monitors.lua.
+--
+-- NOTE: this replaces the previous `workspace = "unset"` (games stayed wherever
+-- they happened to open).
 hl.window_rule({
-	name = "games-stay-on-main-workspace",
+	name = "games-workspace",
 	match = {
 		content = "game",
 		class = "^(steam_app_.*|.*\\.exe|wine|Wine|lutris_.*|heroic_.*|love)$", -- love is VRRTest
 	},
-	workspace = "unset",
+	workspace = "11",
 	no_vrr = false, -- Always try to enable VRR
 	idle_inhibit = "always", -- Do not sleep
 })

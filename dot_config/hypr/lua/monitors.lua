@@ -66,4 +66,13 @@ hl.workspace_rule({ workspace = "3", monitor = "m[1]", persistent = true })
 hl.workspace_rule({ workspace = "4", monitor = "m[1]", persistent = true })
 hl.workspace_rule({ workspace = "5", monitor = "m[1]", persistent = true })
 
+-- Games reserved (see the games-workspace rule in rules.lua)
+--
+-- Deliberately outside the 1-10 range so no general-purpose workspace is given
+-- up, and deliberately NOT persistent: it would otherwise sit permanently in
+-- Noctalia's workspace indicator for something used occasionally. The rule still
+-- applies whenever the workspace materialises, i.e. when a game opens.
+-- On m[1] because the gaming monitors (the 240Hz ASUS/Samsung above) are external.
+hl.workspace_rule({ workspace = "11", monitor = "m[1]", gaps_in = 0, gaps_out = 0, border_size = 0 })
+
 -- Of course with just one monitor these do not apply

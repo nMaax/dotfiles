@@ -47,6 +47,11 @@ hl.config({
             border_locked_inactive = colors.surface,
         },
         groupbar = {
+            -- Hide the tab strip when a group holds only one window -- there is
+            -- nothing to switch between, so it is pure visual noise. (New in
+            -- Hyprland 0.56.)
+            disable_when_only = true,
+
             col = {
                 active = colors.secondary,
                 inactive = colors.surface,
@@ -61,7 +66,16 @@ hl.config({
     },
 
     scrolling = {
-        -- None to do, I like the default :)
+        -- Niri-like behaviour: a new window takes the FULL screen width and the
+        -- tape scrolls horizontally, instead of splitting the screen 50/50 with
+        -- the previous window. The stock default is 0.5, which is exactly what
+        -- caused the half-screen split.
+        --
+        -- Note this is the *default* width only -- colresize and `fit active`
+        -- (SUPER+SHIFT+X) still resize columns freely afterwards, and
+        -- scrolling:explicit_column_widths (0.333/0.5/0.667/1.0) remains the
+        -- preset list for colresize +conf/-conf.
+        column_width = 1.0,
     },
 
     master = {
