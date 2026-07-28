@@ -4,100 +4,104 @@
 -- See https://docs.noctalia.dev/getting-started/keybinds/
 -- see https://github.com/blackbartblues/cheatsheet-noctalia-plugin for more
 --
--- NOTE: original bind-flag -> hl.bind opts mapping used throughout this file
--- (see migration plan): bind -> (none), binde -> repeating=true,
--- bindm -> drag=true, bindl -> locked=true, bindel -> repeating=true+locked=true.
---
--- NOTE: `#"..."` trailing description comments from the original are mapped
--- to the opts.description field (documented in the researched hl.bind opts
--- list) rather than dropped -- unconfirmed whether the noctalia cheatsheet
--- plugin can actually introspect these the same way it read hyprlang's
--- inline comments; verify at first live test.
---
--- NOTE: scrolloverview:overview / scrolloverview:navigate are dispatchers
--- registered by the scrolloverview plugin (plugins.lua), not part of core
--- hl.dsp.*. There's no documented native Lua wrapper for arbitrary/plugin
--- dispatcher names, so these are called the safe, always-correct way: via
--- `hyprctl dispatch` through hl.exec_cmd (equivalent effect, doesn't depend
--- on unconfirmed Lua API sugar).
-
--- NOTE: v5 rewrite -- "noctalia" is now a standalone native binary with a
--- `noctalia msg <command>` IPC scheme, replacing v4's `qs -c noctalia-shell
--- ipc call <command>`. Commands remapped against the official docs at
--- https://docs.noctalia.dev/v5/ipc/ (shell/, surfaces/, media-and-ui/,
--- system-controls/, plugins/). Plugin panel toggles use the documented
--- generic `panel-toggle <author/plugin-id>` form with the "noctalia/" author
--- prefix confirmed from doc examples and plugin ids taken from
--- dot_config/noctalia/plugins.json -- NOT verified live yet, flagged below
--- wherever a mapping is a best-effort guess rather than a documented exact
--- match.
 local function ipc(args)
-    return "noctalia msg " .. args
+	return "noctalia msg " .. args
 end
 
 local function plugin_dispatch(cmd)
-    return hl.dsp.exec_cmd("hyprctl dispatch " .. cmd)
+	return hl.dsp.exec_cmd("hyprctl dispatch " .. cmd)
 end
 
 -- 1. MAIN BINDS
 hl.bind("SUPER+RETURN", hl.dsp.exec_cmd("ghostty"), { description = "Open terminal" })
 hl.bind("SUPER+Q", hl.dsp.window.close({}), { description = "Kill active window" })
 hl.bind("SUPER+SHIFT+Q", hl.dsp.exec_cmd("hyprctl kill"), { description = "Kill (stubborn) window under crossair" })
-hl.bind("SUPER+F", hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle" }), { description = "Go fullscreen" })
+hl.bind(
+	"SUPER+F",
+	hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle" }),
+	{ description = "Go fullscreen" }
+)
 hl.bind("SUPER+SHIFT+F", hl.dsp.window.float({ action = "toggle" }), { description = "Make active window to float" })
 -- TODO: Maybe with LUA I can make this as conditional logic instead of using a script?
-hl.bind("SUPER+X", hl.dsp.exec_cmd("~/.local/bin/hypr-scrolling.sh"), { description = "Toggle scrolling/dwindle modes" })
 hl.bind(
-    "SUPER+ALT+CTRL+R",
-    hl.dsp.exec_cmd("hyprctl reload && hyprpm reload -n && " .. ipc("config-reload")),
-    { description = "Reload hyprland and noctalia" }
+	"SUPER+X",
+	hl.dsp.exec_cmd("~/.local/bin/hypr-scrolling.sh"),
+	{ description = "Toggle scrolling/dwindle modes" }
 )
 hl.bind(
-    "SUPER+ALT+CTRL+T",
-    hl.dsp.exec_cmd("hyprctl reload && hyprpm reload -n && killall noctalia && noctalia"),
-    { description = "Reload hyprland and restart noctalia" }
+	"SUPER+ALT+CTRL+R",
+	hl.dsp.exec_cmd("hyprctl reload && hyprpm reload -n && " .. ipc("config-reload")),
+	{ description = "Reload hyprland and noctalia" }
+)
+hl.bind(
+	"SUPER+ALT+CTRL+T",
+	hl.dsp.exec_cmd("hyprctl reload && hyprpm reload -n && killall noctalia && noctalia"),
+	{ description = "Reload hyprland and restart noctalia" }
 )
 
 -- Dwindle only
 hl.bind("SUPER+Y", hl.dsp.layout("togglesplit"), { description = "Switch split orientation (dwindle only)" })
-hl.bind("SUPER+U", hl.dsp.window.pseudo({ action = "toggle" }), { description = "Make active window to pseudo (dwindle only)" })
+hl.bind(
+	"SUPER+U",
+	hl.dsp.window.pseudo({ action = "toggle" }),
+	{ description = "Make active window to pseudo (dwindle only)" }
+)
 
 -- Noctalia binds
--- NOTE: v5 remap, see the ipc() NOTE above. Confirmed exact matches use the
--- documented command verbatim; anything marked "unverified" is a best-effort
--- guess (plugin panel/entry names, or a UI concept -- e.g. a standalone
--- "media panel" or "audio panel" -- that may no longer exist as such in v5)
--- and needs live testing once noctalia v5 is actually installed.
 hl.bind("ALT+RETURN", hl.dsp.exec_cmd(ipc("panel-toggle launcher")), { description = "Search for apps" })
-hl.bind("SUPER+V", hl.dsp.exec_cmd(ipc("panel-toggle clipboard")), { description = "Open clipboard" }) -- built-in panel in v5; clipper plugin may be redundant now
-hl.bind("SUPER+period", hl.dsp.exec_cmd(ipc("panel-toggle launcher emoji")), { description = "Open emoji picker" }) -- unverified: "emoji" as a launcher query/mode keyword
-hl.bind("SUPER+SHIFT+period", hl.dsp.exec_cmd(ipc("panel-toggle noctalia/kaomoji-provider")), { description = "Open kaomoji picker" }) -- unverified plugin panel id
+hl.bind("SUPER+V", hl.dsp.exec_cmd(ipc("panel-toggle clipboard")), { description = "Open clipboard" })
+hl.bind("SUPER+period", hl.dsp.exec_cmd(ipc("panel-toggle launcher emoji")), { description = "Open emoji picker" })
+hl.bind(
+	"SUPER+SHIFT+period",
+	hl.dsp.exec_cmd(ipc("panel-toggle noctalia/kaomoji-provider")),
+	{ description = "Open kaomoji picker" }
+) -- unverified plugin panel id
 hl.bind("SUPER+BACKSPACE", hl.dsp.exec_cmd(ipc("session lock")), { description = "Lockscreen" })
-hl.bind("SUPER+W", hl.dsp.exec_cmd(ipc("panel-toggle wallpaper")), { description = "Open wallpaper and colorscheme selector" })
-hl.bind("SUPER+SHIFT+W", hl.dsp.exec_cmd(ipc("panel-toggle noctalia/video-wallpaper")), { description = "Open animated wallpaper selector" }) -- unverified plugin panel id
-hl.bind("SUPER+ALT+W", hl.dsp.exec_cmd(ipc("panel-toggle noctalia/linux-wallpaperengine-controller")), { description = "Open wallpaper engine selector" }) -- unverified plugin panel id
+hl.bind(
+	"SUPER+W",
+	hl.dsp.exec_cmd(ipc("panel-toggle wallpaper")),
+	{ description = "Open wallpaper and colorscheme selector" }
+)
+hl.bind(
+	"SUPER+SHIFT+W",
+	hl.dsp.exec_cmd(ipc("panel-toggle noctalia/video-wallpaper")),
+	{ description = "Open animated wallpaper selector" }
+) -- unverified plugin panel id
+hl.bind(
+	"SUPER+ALT+W",
+	hl.dsp.exec_cmd(ipc("panel-toggle noctalia/linux-wallpaperengine-controller")),
+	{ description = "Open wallpaper engine selector" }
+) -- unverified plugin panel id
 -- TODO: also the cheatsheet keybind can be moved to /? and re-mapped in italian using LUA
-hl.bind("SUPER+F1", hl.dsp.exec_cmd(ipc("panel-toggle noctalia/keybind-cheatsheet")), { description = "Show this helping cheatsheet" }) -- unverified plugin panel id
+hl.bind(
+	"SUPER+F1",
+	hl.dsp.exec_cmd(ipc("panel-toggle noctalia/keybind-cheatsheet")),
+	{ description = "Show this helping cheatsheet" }
+) -- unverified plugin panel id
 hl.bind("SUPER+F2", hl.dsp.exec_cmd(ipc("panel-toggle control-center media")), { description = "Open media panel" }) -- unverified: standalone media panel may not exist in v5 (bar has an inline MediaMini widget instead)
 hl.bind("SUPER+F3", hl.dsp.exec_cmd(ipc("panel-toggle control-center")), { description = "Open noctalia panel" })
 hl.bind("SUPER+F4", hl.dsp.exec_cmd(ipc("settings-toggle")), { description = "Open settings panel" })
 hl.bind("SUPER+F5", hl.dsp.exec_cmd(ipc("power-cycle")), { description = "Cycle power profiles" })
 hl.bind(
-    "SUPER+F10",
-    -- UNVERIFIED: v5's generic plugin event-dispatch syntax is
-    -- `plugin <author/plugin:entry> <target> <event> [payload]` (docs example:
-    -- "plugin noctalia/screen_recorder:service all toggle") -- the entry name
-    -- (":service"?) and event/payload names below are guesses; each plugin
-    -- defines its own onIpc(event, payload) handler, so this needs checking
-    -- against the actual plugin source or live testing.
-    hl.dsp.exec_cmd(
-        ipc("plugin noctalia/linux-wallpaperengine-controller:service all stop")
-            .. " && "
-            .. ipc("plugin noctalia/video-wallpaper:service all setEnabled false")
-    ),
-    { description = "Disable all animated wallpapers" }
+	"SUPER+F10",
+	-- UNVERIFIED: v5's generic plugin event-dispatch syntax is
+	-- `plugin <author/plugin:entry> <target> <event> [payload]` (docs example:
+	-- "plugin noctalia/screen_recorder:service all toggle") -- the entry name
+	-- (":service"?) and event/payload names below are guesses; each plugin
+	-- defines its own onIpc(event, payload) handler, so this needs checking
+	-- against the actual plugin source or live testing.
+	hl.dsp.exec_cmd(
+		ipc("plugin noctalia/linux-wallpaperengine-controller:service all stop")
+			.. " && "
+			.. ipc("plugin noctalia/video-wallpaper:service all setEnabled false")
+	),
+	{ description = "Disable all animated wallpapers" }
 )
-hl.bind("SUPER+F11", hl.dsp.exec_cmd("hyprctl dispatch monitor ,preferred,auto,1"), { description = "Reload monitors configs" })
+hl.bind(
+	"SUPER+F11",
+	hl.dsp.exec_cmd("hyprctl dispatch monitor ,preferred,auto,1"),
+	{ description = "Reload monitors configs" }
+)
 hl.bind("SUPER+Escape", hl.dsp.exec_cmd(ipc("panel-toggle session")), { description = "Open power/reboot menu" })
 
 -- 2. APPS AND SPECIAL WORKSPACES
@@ -114,12 +118,36 @@ hl.bind("SUPER+T", hl.dsp.exec_cmd("Telegram"), { description = "Open Telegram" 
 
 -- Access special workspaces by toggle command
 -- TODO: Maybe with LUA I can make this as conditional logic instead of using a script?
-hl.bind("SUPER+Delete", hl.dsp.exec_cmd("~/.local/bin/hypr-toggle.py sysmon"), { description = "Toggle system monitors workspace (btop)" })
-hl.bind("SUPER+C", hl.dsp.exec_cmd("~/.local/bin/hypr-toggle.py communication"), { description = "Toggle communication workspace (Discord)" })
-hl.bind("SUPER+M", hl.dsp.exec_cmd("~/.local/bin/hypr-toggle.py music"), { description = "Toggle music workspace (Spotify)" })
-hl.bind("SUPER+G", hl.dsp.exec_cmd("~/.local/bin/hypr-toggle.py games"), { description = "Toggle game launchers workspace (Steam)" })
-hl.bind("SUPER+A", hl.dsp.exec_cmd("~/.local/bin/hypr-toggle.py audio"), { description = "Toggle audio workspace (EasyEffects)" })
-hl.bind("SUPER+P", hl.dsp.exec_cmd("~/.local/bin/hypr-toggle.py password"), { description = "Toggle password workspace (KeePassXC)" })
+hl.bind(
+	"SUPER+Delete",
+	hl.dsp.exec_cmd("~/.local/bin/hypr-toggle.py sysmon"),
+	{ description = "Toggle system monitors workspace (btop)" }
+)
+hl.bind(
+	"SUPER+C",
+	hl.dsp.exec_cmd("~/.local/bin/hypr-toggle.py communication"),
+	{ description = "Toggle communication workspace (Discord)" }
+)
+hl.bind(
+	"SUPER+M",
+	hl.dsp.exec_cmd("~/.local/bin/hypr-toggle.py music"),
+	{ description = "Toggle music workspace (Spotify)" }
+)
+hl.bind(
+	"SUPER+G",
+	hl.dsp.exec_cmd("~/.local/bin/hypr-toggle.py games"),
+	{ description = "Toggle game launchers workspace (Steam)" }
+)
+hl.bind(
+	"SUPER+A",
+	hl.dsp.exec_cmd("~/.local/bin/hypr-toggle.py audio"),
+	{ description = "Toggle audio workspace (EasyEffects)" }
+)
+hl.bind(
+	"SUPER+P",
+	hl.dsp.exec_cmd("~/.local/bin/hypr-toggle.py password"),
+	{ description = "Toggle password workspace (KeePassXC)" }
+)
 hl.bind("SUPER+S", hl.dsp.workspace.toggle_special("magic"), { description = "Toggle scratchpad" })
 
 -- 3. MOVE AROUND (arrows)
@@ -143,23 +171,44 @@ hl.bind("SUPER+9", hl.dsp.focus({ workspace = "9" }))
 hl.bind("SUPER+0", hl.dsp.focus({ workspace = "10" }), { description = "Access workspace [0-9]" })
 
 -- Move focus around external monitors
--- NOTE: directional u/d/l/r carried over verbatim for the `monitor` field;
--- the researched hl.dsp.focus({monitor=...}) examples only showed
--- name/+/-/next/prev, not direction letters -- verify at first live test.
 hl.bind("SUPER+ALT+up", hl.dsp.focus({ monitor = "u" }), { description = "Move focus on monitor up" })
 hl.bind("SUPER+ALT+down", hl.dsp.focus({ monitor = "d" }), { description = "Move focus on monitor down" })
 hl.bind("SUPER+ALT+left", hl.dsp.focus({ monitor = "l" }), { description = "Move focus on monitor left" })
 hl.bind("SUPER+ALT+right", hl.dsp.focus({ monitor = "r" }), { description = "Move focus on monitor right" })
 
 -- Scroll workspaces with arrows and vim-keys
-hl.bind("SUPER+K", hl.dsp.focus({ workspace = "-1" }), { repeating = true, description = "Scroll workspaces to the left" })
-hl.bind("SUPER+CTRL+up", hl.dsp.focus({ workspace = "-1" }), { repeating = true, description = "Scroll workspaces to the left" })
-hl.bind("SUPER+J", hl.dsp.focus({ workspace = "+1" }), { repeating = true, description = "Scroll workspaces to the right" })
-hl.bind("SUPER+CTRL+down", hl.dsp.focus({ workspace = "+1" }), { repeating = true, description = "Scroll workspaces to the right" })
+hl.bind(
+	"SUPER+K",
+	hl.dsp.focus({ workspace = "-1" }),
+	{ repeating = true, description = "Scroll workspaces to the left" }
+)
+hl.bind(
+	"SUPER+CTRL+up",
+	hl.dsp.focus({ workspace = "-1" }),
+	{ repeating = true, description = "Scroll workspaces to the left" }
+)
+hl.bind(
+	"SUPER+J",
+	hl.dsp.focus({ workspace = "+1" }),
+	{ repeating = true, description = "Scroll workspaces to the right" }
+)
+hl.bind(
+	"SUPER+CTRL+down",
+	hl.dsp.focus({ workspace = "+1" }),
+	{ repeating = true, description = "Scroll workspaces to the right" }
+)
 
 -- Scroll workspaces with mouse wheel
-hl.bind("SUPER+mouse_up", hl.dsp.focus({ workspace = "e+1" }), { description = "Scroll left workspaces with mouse scroll wheel" })
-hl.bind("SUPER+mouse_down", hl.dsp.focus({ workspace = "e-1" }), { description = "Scroll right workspaces with mouse scroll wheel" })
+hl.bind(
+	"SUPER+mouse_up",
+	hl.dsp.focus({ workspace = "e+1" }),
+	{ description = "Scroll left workspaces with mouse scroll wheel" }
+)
+hl.bind(
+	"SUPER+mouse_down",
+	hl.dsp.focus({ workspace = "e-1" }),
+	{ description = "Scroll right workspaces with mouse scroll wheel" }
+)
 
 -- Scroll workspaces with mouse side buttons (M4 and M5)
 hl.bind("SUPER+mouse:275", hl.dsp.focus({ workspace = "e+1" }), { description = "Scroll right workspace with mouse 4" })
@@ -176,15 +225,27 @@ hl.bind("SUPER+SHIFT+6", hl.dsp.window.move({ workspace = "6" }))
 hl.bind("SUPER+SHIFT+7", hl.dsp.window.move({ workspace = "7" }))
 hl.bind("SUPER+SHIFT+8", hl.dsp.window.move({ workspace = "8" }))
 hl.bind("SUPER+SHIFT+9", hl.dsp.window.move({ workspace = "9" }))
-hl.bind("SUPER+SHIFT+0", hl.dsp.window.move({ workspace = "10" }), { description = "Move window to workspace [0-9 | S]" })
+hl.bind(
+	"SUPER+SHIFT+0",
+	hl.dsp.window.move({ workspace = "10" }),
+	{ description = "Move window to workspace [0-9 | S]" }
+)
 
 -- Move windows to scratchpad
 hl.bind("SUPER+SHIFT+S", hl.dsp.window.move({ workspace = "special:magic" }))
 
 -- Move windows with SUPER CTRL arrows and vim keys
-hl.bind("SUPER+CTRL+SHIFT+K", hl.dsp.window.move({ workspace = "-1" }), { repeating = true, description = "Move window to left workspace (vim, or arrows)" })
+hl.bind(
+	"SUPER+CTRL+SHIFT+K",
+	hl.dsp.window.move({ workspace = "-1" }),
+	{ repeating = true, description = "Move window to left workspace (vim, or arrows)" }
+)
 hl.bind("SUPER+CTRL+SHIFT+up", hl.dsp.window.move({ workspace = "-1" }), { repeating = true })
-hl.bind("SUPER+CTRL+SHIFT+J", hl.dsp.window.move({ workspace = "+1" }), { repeating = true, description = "Move window to right workspace (vim, or arrows)" })
+hl.bind(
+	"SUPER+CTRL+SHIFT+J",
+	hl.dsp.window.move({ workspace = "+1" }),
+	{ repeating = true, description = "Move window to right workspace (vim, or arrows)" }
+)
 hl.bind("SUPER+CTRL+SHIFT+down", hl.dsp.window.move({ workspace = "+1" }), { repeating = true })
 
 -- Re-arrange windows with arrows
@@ -197,15 +258,36 @@ hl.bind("SUPER+SHIFT+L", hl.dsp.window.move({ direction = "r" }), { description 
 
 -- Re-size windows with +/- (use Equal instead of Plus in US Keyboard) or mouse
 -- TODO: solve this +/- mismatch with LUA!
--- NOTE: x/y must be plain numbers (not "-10%" strings); relative=true makes
--- them percentage deltas of the window's current size, matching the
--- original hyprlang "-10% 0" semantics -- confirmed live via hyprctl eval.
-hl.bind("SUPER+Minus", hl.dsp.window.resize({ x = -10, y = 0, relative = true }), { repeating = true, description = "Resize widow to the left" })
-hl.bind("SUPER+Plus", hl.dsp.window.resize({ x = 10, y = 0, relative = true }), { repeating = true, description = "Resize window to right" })
-hl.bind("SUPER+Equal", hl.dsp.window.resize({ x = 10, y = 0, relative = true }), { repeating = true, description = "Resize window to right" })
-hl.bind("SUPER+SHIFT+Minus", hl.dsp.window.resize({ x = 0, y = -10, relative = true }), { repeating = true, description = "Resize window up" })
-hl.bind("SUPER+SHIFT+Plus", hl.dsp.window.resize({ x = 0, y = 10, relative = true }), { repeating = true, description = "Resize window down" })
-hl.bind("SUPER+SHIFT+Equal", hl.dsp.window.resize({ x = 0, y = 10, relative = true }), { repeating = true, description = "Resize window down" })
+hl.bind(
+	"SUPER+Minus",
+	hl.dsp.window.resize({ x = -10, y = 0, relative = true }),
+	{ repeating = true, description = "Resize widow to the left" }
+)
+hl.bind(
+	"SUPER+Plus",
+	hl.dsp.window.resize({ x = 10, y = 0, relative = true }),
+	{ repeating = true, description = "Resize window to right" }
+)
+hl.bind(
+	"SUPER+Equal",
+	hl.dsp.window.resize({ x = 10, y = 0, relative = true }),
+	{ repeating = true, description = "Resize window to right" }
+)
+hl.bind(
+	"SUPER+SHIFT+Minus",
+	hl.dsp.window.resize({ x = 0, y = -10, relative = true }),
+	{ repeating = true, description = "Resize window up" }
+)
+hl.bind(
+	"SUPER+SHIFT+Plus",
+	hl.dsp.window.resize({ x = 0, y = 10, relative = true }),
+	{ repeating = true, description = "Resize window down" }
+)
+hl.bind(
+	"SUPER+SHIFT+Equal",
+	hl.dsp.window.resize({ x = 0, y = 10, relative = true }),
+	{ repeating = true, description = "Resize window down" }
+)
 -- NOTE: mouse-drag move/resize use the dedicated no-arg dispatchers + the
 -- `mouse` opt (confirmed against the official shipped example config at
 -- /usr/share/hypr/hyprland.lua) -- window.move({})/drag=true (what was here
@@ -215,38 +297,65 @@ hl.bind("SUPER+mouse:273", hl.dsp.window.resize(), { mouse = true, description =
 
 -- Show all open workspaces
 hl.bind("SUPER+TAB", plugin_dispatch("scrolloverview:overview toggle"))
-hl.bind("SUPER+SHIFT+TAB", hl.dsp.exec_cmd("qs ipc -c overview call overview toggle"), { description = "Show all open workspaces" })
+hl.bind(
+	"SUPER+SHIFT+TAB",
+	hl.dsp.exec_cmd("qs ipc -c overview call overview toggle"),
+	{ description = "Show all open workspaces" }
+)
 
 -- Submap for scrolloverview navigation
 hl.define_submap("scrolloverview", function()
-    hl.bind("left", plugin_dispatch("scrolloverview:navigate left"))
-    hl.bind("H", plugin_dispatch("scrolloverview:navigate left"))
-    hl.bind("right", plugin_dispatch("scrolloverview:navigate right"))
-    hl.bind("L", plugin_dispatch("scrolloverview:navigate right"))
-    hl.bind("up", plugin_dispatch("scrolloverview:navigate up"))
-    hl.bind("K", plugin_dispatch("scrolloverview:navigate up"))
-    hl.bind("down", plugin_dispatch("scrolloverview:navigate down"))
-    hl.bind("J", plugin_dispatch("scrolloverview:navigate down"))
-    hl.bind("SUPER+TAB", plugin_dispatch("scrolloverview:overview off"))
-    hl.bind("TAB", plugin_dispatch("scrolloverview:overview off"))
-    hl.bind("RETURN", plugin_dispatch("scrolloverview:overview off"))
-    hl.bind("Escape", plugin_dispatch("scrolloverview:overview off"))
+	hl.bind("left", plugin_dispatch("scrolloverview:navigate left"))
+	hl.bind("H", plugin_dispatch("scrolloverview:navigate left"))
+	hl.bind("right", plugin_dispatch("scrolloverview:navigate right"))
+	hl.bind("L", plugin_dispatch("scrolloverview:navigate right"))
+	hl.bind("up", plugin_dispatch("scrolloverview:navigate up"))
+	hl.bind("K", plugin_dispatch("scrolloverview:navigate up"))
+	hl.bind("down", plugin_dispatch("scrolloverview:navigate down"))
+	hl.bind("J", plugin_dispatch("scrolloverview:navigate down"))
+	hl.bind("SUPER+TAB", plugin_dispatch("scrolloverview:overview off"))
+	hl.bind("TAB", plugin_dispatch("scrolloverview:overview off"))
+	hl.bind("RETURN", plugin_dispatch("scrolloverview:overview off"))
+	hl.bind("Escape", plugin_dispatch("scrolloverview:overview off"))
 end)
 
 -- 5. SCREENSHOTS
-hl.bind("PRINT", hl.dsp.exec_cmd("hyprshot -m output -o ~/Pictures/Screenshots"), { description = "Take screenshot of the entire screen" })
-hl.bind("SUPER+PRINT", hl.dsp.exec_cmd("hyprshot -m region -o ~/Pictures/Screenshots"), { description = "Take screenshot of a selected region" })
-hl.bind("SUPER+SHIFT+PRINT", hl.dsp.exec_cmd("hyprshot -m window -o ~/Pictures/Screenshots"), { description = "Take screenshot of the active window" })
+hl.bind(
+	"PRINT",
+	hl.dsp.exec_cmd("hyprshot -m output -o ~/Pictures/Screenshots"),
+	{ description = "Take screenshot of the entire screen" }
+)
+hl.bind(
+	"SUPER+PRINT",
+	hl.dsp.exec_cmd("hyprshot -m region -o ~/Pictures/Screenshots"),
+	{ description = "Take screenshot of a selected region" }
+)
+hl.bind(
+	"SUPER+SHIFT+PRINT",
+	hl.dsp.exec_cmd("hyprshot -m window -o ~/Pictures/Screenshots"),
+	{ description = "Take screenshot of the active window" }
+)
 
 -- 6. MULTIMEDIA
 -- Laptop multimedia keys for volume and LCD brightness
-hl.bind("SUPER+SHIFT+A", hl.dsp.exec_cmd(ipc("panel-toggle control-center audio")), { description = "Open audio devices panel" }) -- unverified: standalone audio panel may not exist in v5
+hl.bind(
+	"SUPER+SHIFT+A",
+	hl.dsp.exec_cmd(ipc("panel-toggle control-center audio")),
+	{ description = "Open audio devices panel" }
+) -- unverified: standalone audio panel may not exist in v5
 hl.bind("SUPER+ALT+A", hl.dsp.exec_cmd(ipc("panel-toggle control-center media")), { description = "Open media panel" }) -- unverified, see NOTE on SUPER+F2 above
-hl.bind("SUPER+XF86AudioMute", hl.dsp.exec_cmd('fish -c "audio-cycle --output"'), { locked = true, description = "Switch audio output device" })
-hl.bind("SUPER+SHIFT+XF86AudioMute", hl.dsp.exec_cmd('fish -c "audio-cycle --input"'), { locked = true, description = "Switch audio input device" })
+hl.bind(
+	"SUPER+XF86AudioMute",
+	hl.dsp.exec_cmd('fish -c "audio-cycle --output"'),
+	{ locked = true, description = "Switch audio output device" }
+)
+hl.bind(
+	"SUPER+SHIFT+XF86AudioMute",
+	hl.dsp.exec_cmd('fish -c "audio-cycle --input"'),
+	{ locked = true, description = "Switch audio input device" }
+)
 
 -- Standard multimedia keys for volume and brightness
--- NOTE: v5 remap confirmed against docs.noctalia.dev/v5/ipc/system-controls/
 hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd(ipc("volume-up")), { repeating = true, locked = true })
 hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd(ipc("volume-down")), { repeating = true, locked = true })
 hl.bind("XF86AudioMute", hl.dsp.exec_cmd(ipc("volume-mute")), { locked = true })
@@ -255,9 +364,6 @@ hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd(ipc("brightness-up")), { repeatin
 hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd(ipc("brightness-down")), { repeating = true, locked = true })
 
 -- Standard multimedia keys for play/pause and next/prev
--- NOTE: v5 remap confirmed against docs.noctalia.dev/v5/ipc/media-and-ui/
--- ("media toggle" plays/pauses -- both Pause and Play keys map to it, same
--- as the original playPause behavior)
 hl.bind("XF86AudioNext", hl.dsp.exec_cmd(ipc("media next")), { locked = true })
 hl.bind("XF86AudioPause", hl.dsp.exec_cmd(ipc("media toggle")), { locked = true })
 hl.bind("XF86AudioPlay", hl.dsp.exec_cmd(ipc("media toggle")), { locked = true })

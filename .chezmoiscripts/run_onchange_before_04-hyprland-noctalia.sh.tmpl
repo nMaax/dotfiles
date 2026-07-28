@@ -46,6 +46,16 @@ info "🔍 Installing Quickshell Overview..."
 paru -S --needed --noconfirm quickshell-overview-git
 
 info "🩸 Setting hyprland plugins..."
+# NOTE: on a rolling-release system, `hyprland` occasionally gets rebuilt
+# with the SAME version string but a different pkgrel (e.g. 0.56.1-1.1 ->
+# 0.56.1-2.1) -- this changes the exact ABI hyprpm checks plugins against,
+# and shows up as Hyprland config errors like "unknown config key
+# plugin.scrolloverview.*" or hyprpm saying "header version is not equal to
+# running hyprland version". `hyprpm update` alone does NOT catch this (it
+# only checks the version tag, not the exact build) -- this "already
+# installed, skipping" branch below won't either, since it doesn't even run
+# update. If this happens again, the fix is:
+#   hyprpm purge-cache && hyprpm add https://github.com/yayuuu/hyprland-scroll-overview.git && hyprpm update && hyprpm enable scrolloverview
 if ! hyprpm list | grep -q hyprland-scroll-overview; then
   hyprpm add https://github.com/yayuuu/hyprland-scroll-overview.git
   hyprpm update

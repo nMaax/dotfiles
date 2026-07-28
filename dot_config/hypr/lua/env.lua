@@ -2,9 +2,6 @@
 -- See https://wiki.hypr.land/Configuring/Advanced-and-Cool/Environment-variables/
 
 -- SSH agent socket path
--- NOTE (known unknown #2, see migration plan): os.getenv may be restricted in
--- Hyprland's Lua sandbox (the binary selectively opens Lua stdlibs). If this
--- errors at load time, replace with the hardcoded resolved path instead.
 hl.env("SSH_AUTH_SOCK", (os.getenv("XDG_RUNTIME_DIR") or "") .. "/ssh-agent.socket")
 -- SSH askpass program for GUI prompts
 hl.env("SSH_ASKPASS", "/usr/bin/ksshaskpass")

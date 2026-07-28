@@ -3,11 +3,17 @@
 --
 -- NOTE: plugin *loading* stays external via hyprpm (see the `hyprpm reload`
 -- exec-once in autostart.lua) -- this repo never loaded the plugin via a
--- `plugin =` directive, only configured its options here. Whether
--- plugin-contributed option tables nest under hl.config({ plugin = {...} })
--- the same way core options do is unconfirmed (plugins register their own
--- config schema dynamically) -- verify at first live test.
-
+-- `plugin =` directive, only configured its options here.
+--
+-- BUGFIX: the `hl.config({ plugin = { scrolloverview = {...} } })` table
+-- shape is correct (confirmed against the plugin's own README), but
+-- `shadow.color` must be an integer (or gradient), NOT the hyprlang-only
+-- `rgba(...)` string -- per the plugin's own docs: "The Hyprlang-only
+-- rgba(...) syntax is not accepted there." Passing a string for that one
+-- nested value made Hyprland reject the ENTIRE scrolloverview table as
+-- malformed, which is why every sibling key (workspace_gap, layout, etc.)
+-- was also showing as "unknown config key" in `hyprctl configerrors` --
+-- not because the table shape itself was wrong.
 hl.config({
     plugin = {
         scrolloverview = {
@@ -21,7 +27,7 @@ hl.config({
                 enabled = true,
                 range = 50,
                 render_power = 3,
-                color = "rgba(1a1a1aee)",
+                color = 0xee1a1a1a, -- rgba(1a1a1aee) as an AARRGGBB integer
             },
         },
     },

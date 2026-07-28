@@ -1,39 +1,38 @@
 -- INPUT
 -- See https://wiki.hypr.land/Configuring/Basics/Variables/#input
--- This really depends on your preferences, e.g. you play games, different keyboards you own, available space on the table/touchpad
 
 -- DEFAULT
 hl.config({
-    input = {
-        -- TODO: maybe with lua I can make some of the following be conditional on which peripheral are plugged?
-        -- e.g.
-        --  - Disable all that stuff when not focused on a game, or when game-performance mode is not enabled
-        --  - Use it as default on laptop, and us as default on desktop
-        kb_layout = "us, it",
-        kb_options = "compose:caps, grp:win_space_toggle",
-        follow_mouse = 1,
+	input = {
+		-- TODO: maybe with lua I can make some of the following be conditional on which peripheral are plugged?
+		-- e.g.
+		--  - Disable all that stuff when not focused on a game, or when game-performance mode is not enabled
+		--  - Use it as default on laptop, and us as default on desktop
+		kb_layout = "us, it",
+		kb_options = "compose:caps, grp:win_space_toggle",
+		follow_mouse = 1,
 
-        sensitivity = 0.2,
-        accel_profile = "adaptive",
+		sensitivity = 0.2,
+		accel_profile = "adaptive",
 
-        -- This one cannot be set per-device, enable just in case
-        -- TODO: maybe with lua you can make it conditional when a game runs.
-        -- force_no_accel = true,
+		-- This one cannot be set per-device, enable just in case
+		-- TODO: maybe with lua you can make it conditional when a game runs.
+		-- force_no_accel = true,
 
-        -- Scroll lock on middle button
-        scroll_method = "on_button_down",
-        scroll_button_lock = true,
-        scroll_button = 274,
+		-- Scroll lock on middle button
+		scroll_method = "on_button_down",
+		scroll_button_lock = true,
+		scroll_button = 274,
 
-        touchpad = {
-            natural_scroll = true,
-            -- NOTE: Lua schema uses underscores (unlike hyprlang's hyphenated
-            -- "tap-to-click") -- confirmed via hyprctl configerrors: "unknown
-            -- config key 'input.touchpad.tap-to-click'".
-            tap_to_click = true,
-            disable_while_typing = true,
-        },
-    },
+		touchpad = {
+			natural_scroll = true,
+			-- NOTE: Lua schema uses underscores (unlike hyprlang's hyphenated
+			-- "tap-to-click") -- confirmed via hyprctl configerrors: "unknown
+			-- config key 'input.touchpad.tap-to-click'".
+			tap_to_click = true,
+			disable_while_typing = true,
+		},
+	},
 })
 
 -- Per-device settings
@@ -41,17 +40,17 @@ hl.config({
 
 -- GAMING MOUSE
 hl.device({
-    name = "realtek-mchose-l7-pro+",
-    sensitivity = 0,
-    accel_profile = "flat",
-    scroll_method = "no_scroll",
+	name = "realtek-mchose-l7-pro+",
+	sensitivity = 0,
+	accel_profile = "flat",
+	scroll_method = "no_scroll",
 })
 
 -- TOUCHPAD
 hl.device({
-    name = "elan050a:01-04f3:3158-touchpad",
-    sensitivity = 0.8,
-    accel_profile = "adaptive", -- Adaptive enables acceleration
+	name = "elan050a:01-04f3:3158-touchpad",
+	sensitivity = 0.8,
+	accel_profile = "adaptive", -- Adaptive enables acceleration
 })
 
 -- GESTURES
