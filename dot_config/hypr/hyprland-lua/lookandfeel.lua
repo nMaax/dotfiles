@@ -12,8 +12,10 @@
 -- live-read bridge is confirmed possible (needs io.open availability in this
 -- Lua sandbox -- verify post-cutover, only testable via hyprctl eval once
 -- this config is already active).
-local color_active_border = "rgb(b9391f) rgb(5c575a) 90deg" -- $primary $tertiary 90deg
-local color_inactive_border = "rgb(000000) rgb(010101) 90deg" -- $surface $surface_lowest 90deg
+--
+-- NOTE: gradients need the { colors = {...}, angle = N } table shape (not a
+-- flat "colorA colorB Ndeg" string like hyprlang) -- confirmed against the
+-- official shipped example config at /usr/share/hypr/hyprland.lua.
 
 hl.config({
     general = {
@@ -22,11 +24,10 @@ hl.config({
         border_size = 2,
 
         -- See https://wiki.hypr.land/Configuring/Variables/#variable-types for info about colors
-        -- NOTE: dotted key name carried over verbatim from hyprlang; unconfirmed
-        -- whether the real Lua schema keeps this name or renames it (e.g.
-        -- active_border_color) -- verify at first live test.
-        ["col.active_border"] = color_active_border,
-        ["col.inactive_border"] = color_inactive_border,
+        col = {
+            active_border = { colors = { "rgb(b9391f)", "rgb(5c575a)" }, angle = 90 }, -- $primary $tertiary 90deg
+            inactive_border = { colors = { "rgb(000000)", "rgb(010101)" }, angle = 90 }, -- $surface $surface_lowest 90deg
+        },
 
         -- Set to true to enable resizing windows by clicking and dragging on borders and gaps
         resize_on_border = true,

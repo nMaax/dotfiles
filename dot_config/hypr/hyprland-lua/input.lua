@@ -27,7 +27,10 @@ hl.config({
 
         touchpad = {
             natural_scroll = true,
-            ["tap-to-click"] = true,
+            -- NOTE: Lua schema uses underscores (unlike hyprlang's hyphenated
+            -- "tap-to-click") -- confirmed via hyprctl configerrors: "unknown
+            -- config key 'input.touchpad.tap-to-click'".
+            tap_to_click = true,
             disable_while_typing = true,
         },
     },

@@ -172,14 +172,21 @@ hl.bind("SUPER+SHIFT+L", hl.dsp.window.move({ direction = "r" }), { description 
 
 -- Re-size windows with +/- (use Equal instead of Plus in US Keyboard) or mouse
 -- TODO: solve this +/- mismatch with LUA!
-hl.bind("SUPER+Minus", hl.dsp.window.resize({ x = "-10%", y = "0" }), { repeating = true, description = "Resize widow to the left" })
-hl.bind("SUPER+Plus", hl.dsp.window.resize({ x = "10%", y = "0" }), { repeating = true, description = "Resize window to right" })
-hl.bind("SUPER+Equal", hl.dsp.window.resize({ x = "10%" }), { repeating = true, description = "Resize window to right" })
-hl.bind("SUPER+SHIFT+Minus", hl.dsp.window.resize({ x = "0", y = "-10%" }), { repeating = true, description = "Resize window up" })
-hl.bind("SUPER+SHIFT+Plus", hl.dsp.window.resize({ x = "0", y = "10%" }), { repeating = true, description = "Resize window down" })
-hl.bind("SUPER+SHIFT+Equal", hl.dsp.window.resize({ x = "0", y = "10%" }), { repeating = true, description = "Resize window down" })
-hl.bind("SUPER+mouse:272", hl.dsp.window.move({}), { drag = true, description = "Re-arrange windows with mouse" })
-hl.bind("SUPER+mouse:273", hl.dsp.window.resize({}), { drag = true, description = "Re-size windows with mouse" })
+-- NOTE: x/y must be plain numbers (not "-10%" strings); relative=true makes
+-- them percentage deltas of the window's current size, matching the
+-- original hyprlang "-10% 0" semantics -- confirmed live via hyprctl eval.
+hl.bind("SUPER+Minus", hl.dsp.window.resize({ x = -10, y = 0, relative = true }), { repeating = true, description = "Resize widow to the left" })
+hl.bind("SUPER+Plus", hl.dsp.window.resize({ x = 10, y = 0, relative = true }), { repeating = true, description = "Resize window to right" })
+hl.bind("SUPER+Equal", hl.dsp.window.resize({ x = 10, y = 0, relative = true }), { repeating = true, description = "Resize window to right" })
+hl.bind("SUPER+SHIFT+Minus", hl.dsp.window.resize({ x = 0, y = -10, relative = true }), { repeating = true, description = "Resize window up" })
+hl.bind("SUPER+SHIFT+Plus", hl.dsp.window.resize({ x = 0, y = 10, relative = true }), { repeating = true, description = "Resize window down" })
+hl.bind("SUPER+SHIFT+Equal", hl.dsp.window.resize({ x = 0, y = 10, relative = true }), { repeating = true, description = "Resize window down" })
+-- NOTE: mouse-drag move/resize use the dedicated no-arg dispatchers + the
+-- `mouse` opt (confirmed against the official shipped example config at
+-- /usr/share/hypr/hyprland.lua) -- window.move({})/drag=true (what was here
+-- before) don't exist / don't validate.
+hl.bind("SUPER+mouse:272", hl.dsp.window.drag(), { mouse = true, description = "Re-arrange windows with mouse" })
+hl.bind("SUPER+mouse:273", hl.dsp.window.resize(), { mouse = true, description = "Re-size windows with mouse" })
 
 -- Show all open workspaces
 hl.bind("SUPER+TAB", plugin_dispatch("scrolloverview:overview toggle"))
