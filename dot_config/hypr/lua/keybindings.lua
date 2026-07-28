@@ -2,13 +2,7 @@
 -- See https://wiki.hypr.land/Configuring/Keywords/
 -- see https://wiki.hypr.land/Configuring/Binds/ for more
 -- See https://docs.noctalia.dev/v5/ipc/ for the full `noctalia msg` command list
--- (or run `noctalia msg --help`, which is the authoritative source)
---
--- NOTE: keys here are resolved POSITIONALLY, not by the active layout. With
--- input.resolve_binds_by_sym = false (see input.lua) Hyprland maps each bind's
--- keysym to a keycode using the FIRST kb_layout (us) and then matches keycodes,
--- so every bind below fires on the same physical key whether us or it is
--- active. Write binds in us keysyms and they just work on both.
+
 local function ipc(args)
 	return "noctalia msg " .. args
 end
@@ -27,20 +21,12 @@ hl.bind(
 	{ description = "Go fullscreen" }
 )
 hl.bind("SUPER+SHIFT+F", hl.dsp.window.float({ action = "toggle" }), { description = "Make active window to float" })
--- Native replacement for ~/.local/bin/hypr-scrolling.sh, which shelled out to
--- `hyprctl getoption general:layout -j | jq -r .str` and then `hyprctl keyword`.
--- hl.bind accepts a plain Lua function as its action, and hl.config works at
--- runtime (not just at config load), so the whole thing collapses to two lines
--- with no subprocess, no jq dependency, and no round-trip through hyprctl.
 hl.bind("SUPER+X", function()
 	local current = hl.get_config("general.layout")
 	hl.config({ general = { layout = current == "scrolling" and "dwindle" or "scrolling" } })
 end, { description = "Toggle scrolling/dwindle modes" })
 hl.bind(
 	"SUPER+ALT+CTRL+R",
-	-- The cheatsheet plugin caches its parsed snapshot and only re-parses when
-	-- asked, so poke its data service too -- otherwise it keeps showing the
-	-- pre-reload binds.
 	hl.dsp.exec_cmd(
 		"hyprctl reload && hyprpm reload -n && "
 			.. ipc("config-reload")
@@ -63,31 +49,9 @@ hl.bind(
 	{ description = "Make active window to pseudo (dwindle only)" }
 )
 
--- Noctalia binds
---
--- Plugin entries are addressed as <author>/<plugin>:<entry-id>, where both
--- halves come from the plugin's own plugin.toml -- NOT from the directory names
--- under ~/.config/noctalia/plugins/ (those are the v4 layout). v5 plugins live
--- in ~/.local/state/noctalia/plugins/materialized/. Verified via
--- `noctalia msg plugins list` and each plugin.toml:
---   Kaomoji            noctalia/kaomoji            launcher_provider, prefix "kao"
---   Video Wallpaper    noctalia/mpvpaper           panel "picker"
---   W Engine           tadomika_ari/w-engine       panel "w-engine-panel"
---   Keybind Cheatsheet kenn/keybind-cheatsheet     panel "cheatsheet"
---   Bongo Cat          noctalia/bongocat           bar widget "cat" only -- no
---     panel, so nothing to bind here. It does accept pause/resume/toggle via
---     `noctalia msg plugin noctalia/bongocat:cat focused toggle` if ever wanted.
 hl.bind("ALT+RETURN", hl.dsp.exec_cmd(ipc("panel-toggle launcher")), { description = "Search for apps" })
 hl.bind("SUPER+V", hl.dsp.exec_cmd(ipc("panel-toggle clipboard")), { description = "Open clipboard" })
--- Emoji and kaomoji are launcher *providers*, not panels: they're reached by
--- pre-filling the launcher's search input with the provider's "/" prefix.
--- Kaomoji sets include_in_global_search = false, so the prefix is the ONLY way
--- to reach it.
-hl.bind(
-	"SUPER+period",
-	hl.dsp.exec_cmd(ipc('panel-toggle launcher "/emo"')),
-	{ description = "Open emoji picker" }
-)
+hl.bind("SUPER+period", hl.dsp.exec_cmd(ipc('panel-toggle launcher "/emo"')), { description = "Open emoji picker" })
 hl.bind(
 	"SUPER+SHIFT+period",
 	hl.dsp.exec_cmd(ipc('panel-toggle launcher "/kao"')),
@@ -109,37 +73,14 @@ hl.bind(
 	hl.dsp.exec_cmd(ipc("panel-toggle tadomika_ari/w-engine:w-engine-panel")),
 	{ description = "Open wallpaper engine selector" }
 )
--- Cheatsheet on "/" instead of F1. Resolves to the physical us "/" key (xkb
--- AB10), which is the key labelled "-" on the it layout -- same physical key
--- either way, see the note at the top of this file.
 hl.bind(
 	"SUPER+slash",
 	hl.dsp.exec_cmd(ipc("panel-toggle kenn/keybind-cheatsheet:cheatsheet")),
 	{ description = "Show this helping cheatsheet" }
 )
-hl.bind("SUPER+F2", hl.dsp.exec_cmd(ipc("panel-toggle control-center media")), { description = "Open media panel" })
-hl.bind("SUPER+F3", hl.dsp.exec_cmd(ipc("panel-toggle control-center")), { description = "Open noctalia panel" })
-hl.bind("SUPER+F4", hl.dsp.exec_cmd(ipc("settings-toggle")), { description = "Open settings panel" })
-hl.bind("SUPER+F5", hl.dsp.exec_cmd(ipc("power-cycle")), { description = "Cycle power profiles" })
 hl.bind(
 	"SUPER+F10",
-	-- Two different mechanisms, because the two plugins are not equally capable:
-	--
-	--  * mpvpaper exposes a real onIpc handler (mpvpaper_service.luau) accepting
-	--    clear-all / clear / pause|freeze / resume|thaw / toggle. Its service is
-	--    a singleton, so the target must be `all`.
-	--  * W Engine has NO onIpc handler anywhere -- its "start" service is just a
-	--    boot-time reset, and its panel launches wallpapers with
-	--    `setsid linux-wallpaperengine ...` and stops them by `kill <stored pid>`.
-	--    So pkill is the only route from a keybind. This mirrors the plugin's own
-	--    `pkill linux-wallpaper` in start.luau.
-	--
-	-- `;` not `&&`: the pkill must still run when nothing is playing and the
-	-- mpvpaper call reports failure (and pkill itself exits 1 when it matches
-	-- nothing, which is fine and must not abort anything either).
-	hl.dsp.exec_cmd(
-		ipc("plugin noctalia/mpvpaper:service all clear-all") .. " ; pkill -f linux-wallpaperengine"
-	),
+	hl.dsp.exec_cmd(ipc("plugin noctalia/mpvpaper:service all clear-all") .. " ; pkill -f linux-wallpaperengine"),
 	{ description = "Disable all animated wallpapers" }
 )
 hl.bind(
@@ -162,32 +103,6 @@ hl.bind("SUPER+D", hl.dsp.exec_cmd("discord"), { description = "Open Discord" })
 hl.bind("SUPER+T", hl.dsp.exec_cmd("Telegram"), { description = "Open Telegram" })
 
 -- Access special workspaces by toggle command
---
--- Native replacement for ~/.local/bin/hypr-toggle.py. That script did three
--- things: (1) spawn the app if no matching window exists, (2) move matching
--- windows into special:<name> with movetoworkspacesilent, (3) toggle the special
--- workspace. Step (2) is now redundant -- rules.lua already carries
--- `workspace = "special:<name>"` window rules for all six groups, so apps land
--- in the right place at spawn time. That leaves (1) and (3), both of which the
--- Lua runtime does directly:
---   * hl.get_windows() returns windows on HIDDEN special workspaces too
---     (verified live: found Spotify on special:music while special:magic was the
---     visible one), so "is it already running" is answerable without hyprctl.
---   * hl.bind takes a plain Lua function, so no subprocess at all.
---
--- Two deliberate behaviour changes vs. the script, both judged acceptable:
---   * The ~/.config/hypr-toggle/config.json override is gone. These lists are
---     the config now.
---   * A matching window already parked on a NORMAL workspace is no longer
---     dragged into the special one. In practice the window rules mean apps are
---     never in that state; if it happens, SUPER+SHIFT+S-style manual moves still
---     work.
---
--- These are Lua patterns, NOT regexes: there is no `|` alternation, so every
--- rules.lua alternative gets its own entry. Anchored on purpose -- the Python
--- used substring matching, which meant its bare "top" matcher also matched
--- "btop". Class and title matchers are kept separate (as the script had them) so
--- that e.g. a browser tab titled "discord" can't suppress the spawn.
 local function toggle_ws(name, matchers, command)
 	return function()
 		local running = false
@@ -212,43 +127,68 @@ local function toggle_ws(name, matchers, command)
 	end
 end
 
-hl.bind("SUPER+Delete", toggle_ws("sysmon", {
-	title = { "^btop$", "^nvtop$", "^htop$", "^top$" },
-}, "ghostty -e btop"), { description = "Toggle system monitors workspace (btop)" })
-hl.bind("SUPER+C", toggle_ws("communication", {
-	class = {
-		"^discord$",
-		"^equibop$",
-		"^vesktop$",
-		"^org%.telegram%.desktop$",
-		"^TelegramDesktop$",
-		"^whatsapp$",
-		"^Element$",
-		"^signal$",
-	},
-	title = { "web%.whatsapp%.com" },
-}, "discord"), { description = "Toggle communication workspace (Discord)" })
-hl.bind("SUPER+M", toggle_ws("music", {
-	class = {
-		"^[Ss]potify$",
-		"^feishin$",
-		"^Supersonic$",
-		"^Cider$",
-		"^com%.github%.th_ch%.youtube_music$",
-		"^Plexamp$",
-	},
-	title = { "^Spotify$", "^Spotify Premium$", "^Spotify Free$" },
-}, "spotify"), { description = "Toggle music workspace (Spotify)" })
-hl.bind("SUPER+G", toggle_ws("games", {
-	class = { "^steam$", "^lutris$", "^com%.heroicgameslauncher%.hgl$", "^heroic$" },
-	title = { "^Steam$" },
-}, "steam"), { description = "Toggle game launchers workspace (Steam)" })
-hl.bind("SUPER+A", toggle_ws("audio", {
-	class = { "^easyeffects$", "^com%.github%.wwmm%.easyeffects$" },
-}, "easyeffects"), { description = "Toggle audio workspace (EasyEffects)" })
-hl.bind("SUPER+P", toggle_ws("password", {
-	class = { "^org%.keepassxc%.KeePassXC$" },
-}, "keepassxc"), { description = "Toggle password workspace (KeePassXC)" })
+hl.bind(
+	"SUPER+Delete",
+	toggle_ws("sysmon", {
+		title = { "^btop$", "^nvtop$", "^htop$", "^top$" },
+	}, "ghostty -e btop"),
+	{ description = "Toggle system monitors workspace (btop)" }
+)
+-- TODO: should rather make one workspace for each app, e.g. divide telegram and discord and whatsapp
+hl.bind(
+	"SUPER+C",
+	toggle_ws("communication", {
+		class = {
+			"^discord$",
+			"^equibop$",
+			"^vesktop$",
+			"^org%.telegram%.desktop$",
+			"^TelegramDesktop$",
+			"^whatsapp$",
+			"^Element$",
+			"^signal$",
+		},
+		title = { "web%.whatsapp%.com" },
+	}, "discord"),
+	{ description = "Toggle communication workspace (Discord)" }
+)
+hl.bind(
+	"SUPER+M",
+	toggle_ws("music", {
+		class = {
+			"^[Ss]potify$",
+			"^feishin$",
+			"^Supersonic$",
+			"^Cider$",
+			"^com%.github%.th_ch%.youtube_music$",
+			"^Plexamp$",
+		},
+		title = { "^Spotify$", "^Spotify Premium$", "^Spotify Free$" },
+	}, "spotify"),
+	{ description = "Toggle music workspace (Spotify)" }
+)
+hl.bind(
+	"SUPER+G",
+	toggle_ws("games", {
+		class = { "^steam$", "^lutris$", "^com%.heroicgameslauncher%.hgl$", "^heroic$" },
+		title = { "^Steam$" },
+	}, "steam"),
+	{ description = "Toggle game launchers workspace (Steam)" }
+)
+hl.bind(
+	"SUPER+A",
+	toggle_ws("audio", {
+		class = { "^easyeffects$", "^com%.github%.wwmm%.easyeffects$" },
+	}, "easyeffects"),
+	{ description = "Toggle audio workspace (EasyEffects)" }
+)
+hl.bind(
+	"SUPER+P",
+	toggle_ws("password", {
+		class = { "^org%.keepassxc%.KeePassXC$" },
+	}, "keepassxc"),
+	{ description = "Toggle password workspace (KeePassXC)" }
+)
 hl.bind("SUPER+S", hl.dsp.workspace.toggle_special("magic"), { description = "Toggle scratchpad" })
 
 -- 3. MOVE AROUND (arrows)
@@ -357,36 +297,24 @@ hl.bind("SUPER+SHIFT+H", hl.dsp.window.move({ direction = "l" }), { description 
 hl.bind("SUPER+SHIFT+right", hl.dsp.window.move({ direction = "r" }), { description = "Move window right" })
 hl.bind("SUPER+SHIFT+L", hl.dsp.window.move({ direction = "r" }), { description = "Move window right" })
 
--- Re-size windows with -/= or mouse.
---
--- There is no us/it mismatch to solve here after all: binds resolve
--- positionally (input.resolve_binds_by_sym = false, see input.lua and the note
--- at the top of this file), so `Minus`/`Equal` always land on the same physical
--- keys regardless of which layout is active.
---
--- The old triple binding (Minus + Plus + Equal) was therefore redundant rather
--- than a workaround: on the us layout `plus` IS shift+`equal`, so `SUPER+Plus`
--- resolved to the very same keycode as `SUPER+Equal` and just registered a
--- second, identical bind. Dropped both Plus variants; us keysyms are the
--- canonical spelling.
 hl.bind(
 	"SUPER+Minus",
-	hl.dsp.window.resize({ x = -10, y = 0, relative = true }),
+	hl.dsp.window.resize({ x = -20, y = 0, relative = true }),
 	{ repeating = true, description = "Resize widow to the left" }
 )
 hl.bind(
 	"SUPER+Equal",
-	hl.dsp.window.resize({ x = 10, y = 0, relative = true }),
+	hl.dsp.window.resize({ x = 20, y = 0, relative = true }),
 	{ repeating = true, description = "Resize window to right" }
 )
 hl.bind(
 	"SUPER+SHIFT+Minus",
-	hl.dsp.window.resize({ x = 0, y = -10, relative = true }),
+	hl.dsp.window.resize({ x = 0, y = -20, relative = true }),
 	{ repeating = true, description = "Resize window up" }
 )
 hl.bind(
 	"SUPER+SHIFT+Equal",
-	hl.dsp.window.resize({ x = 0, y = 10, relative = true }),
+	hl.dsp.window.resize({ x = 0, y = 20, relative = true }),
 	{ repeating = true, description = "Resize window down" }
 )
 -- NOTE: mouse-drag move/resize use the dedicated no-arg dispatchers + the

@@ -1,9 +1,5 @@
 -- WINDOWS
 -- See https://wiki.hypr.land/Configuring/Window-Rules/ for more
---
--- NOTE: the original already used the newer named windowrule{} block syntax
--- (name= + match:field=), which maps closely 1:1 onto hl.window_rule({name=,
--- match={...}, ...effects}).
 
 -- Ignore maximize requests from all apps. You'll probably like this.
 hl.window_rule({
@@ -132,7 +128,7 @@ hl.window_rule({
 
 -- Blur Noctalia's own surfaces (bar, panels, dock, osd, window switcher, etc.)
 -- See https://docs.noctalia.dev/v5/compositor-settings/hyprland/
--- NOTE: part of the v5 upgrade, verify namespace pattern once noctalia v5 is
+-- TODO: part of the v5 upgrade, verify namespace pattern once noctalia v5 is
 -- actually installed and running.
 hl.layer_rule({
 	name = "noctalia",
