@@ -21,8 +21,18 @@
 -- `hyprctl dispatch` through hl.exec_cmd (equivalent effect, doesn't depend
 -- on unconfirmed Lua API sugar).
 
+-- NOTE: v5 rewrite -- "noctalia" is now a standalone native binary with a
+-- `noctalia msg <command>` IPC scheme, replacing v4's `qs -c noctalia-shell
+-- ipc call <command>`. Commands remapped against the official docs at
+-- https://docs.noctalia.dev/v5/ipc/ (shell/, surfaces/, media-and-ui/,
+-- system-controls/, plugins/). Plugin panel toggles use the documented
+-- generic `panel-toggle <author/plugin-id>` form with the "noctalia/" author
+-- prefix confirmed from doc examples and plugin ids taken from
+-- dot_config/noctalia/plugins.json -- NOT verified live yet, flagged below
+-- wherever a mapping is a best-effort guess rather than a documented exact
+-- match.
 local function ipc(args)
-    return "qs -c noctalia-shell ipc call " .. args
+    return "noctalia msg " .. args
 end
 
 local function plugin_dispatch(cmd)
@@ -39,12 +49,12 @@ hl.bind("SUPER+SHIFT+F", hl.dsp.window.float({ action = "toggle" }), { descripti
 hl.bind("SUPER+X", hl.dsp.exec_cmd("~/.local/bin/hypr-scrolling.sh"), { description = "Toggle scrolling/dwindle modes" })
 hl.bind(
     "SUPER+ALT+CTRL+R",
-    hl.dsp.exec_cmd("hyprctl reload && hyprpm reload -n && qs -c noctalia-shell ipc call config-reload"),
+    hl.dsp.exec_cmd("hyprctl reload && hyprpm reload -n && " .. ipc("config-reload")),
     { description = "Reload hyprland and noctalia" }
 )
 hl.bind(
     "SUPER+ALT+CTRL+T",
-    hl.dsp.exec_cmd("hyprctl reload && hyprpm reload -n && killall qs && qs -c noctalia-shell"),
+    hl.dsp.exec_cmd("hyprctl reload && hyprpm reload -n && killall noctalia && noctalia"),
     { description = "Reload hyprland and restart noctalia" }
 )
 
@@ -53,27 +63,42 @@ hl.bind("SUPER+Y", hl.dsp.layout("togglesplit"), { description = "Switch split o
 hl.bind("SUPER+U", hl.dsp.window.pseudo({ action = "toggle" }), { description = "Make active window to pseudo (dwindle only)" })
 
 -- Noctalia binds
-hl.bind("ALT+RETURN", hl.dsp.exec_cmd(ipc("launcher toggle")), { description = "Search for apps" })
-hl.bind("SUPER+V", hl.dsp.exec_cmd(ipc("plugin:clipper toggle")), { description = "Open clipboard" })
-hl.bind("SUPER+period", hl.dsp.exec_cmd(ipc("launcher emoji")), { description = "Open emoji picker" })
-hl.bind("SUPER+SHIFT+period", hl.dsp.exec_cmd(ipc("plugin:kaomoji toggle")), { description = "Open kaomoji picker" })
-hl.bind("SUPER+BACKSPACE", hl.dsp.exec_cmd(ipc("lockScreen lock")), { description = "Lockscreen" })
-hl.bind("SUPER+W", hl.dsp.exec_cmd(ipc("wallpaper toggle")), { description = "Open wallpaper and colorscheme selector" })
-hl.bind("SUPER+SHIFT+W", hl.dsp.exec_cmd(ipc("plugin:videowallpaper openPanel")), { description = "Open animated wallpaper selector" })
-hl.bind("SUPER+ALT+W", hl.dsp.exec_cmd(ipc("plugin:linux-wallpaperengine-controller toggle")), { description = "Open wallpaper engine selector" })
+-- NOTE: v5 remap, see the ipc() NOTE above. Confirmed exact matches use the
+-- documented command verbatim; anything marked "unverified" is a best-effort
+-- guess (plugin panel/entry names, or a UI concept -- e.g. a standalone
+-- "media panel" or "audio panel" -- that may no longer exist as such in v5)
+-- and needs live testing once noctalia v5 is actually installed.
+hl.bind("ALT+RETURN", hl.dsp.exec_cmd(ipc("panel-toggle launcher")), { description = "Search for apps" })
+hl.bind("SUPER+V", hl.dsp.exec_cmd(ipc("panel-toggle clipboard")), { description = "Open clipboard" }) -- built-in panel in v5; clipper plugin may be redundant now
+hl.bind("SUPER+period", hl.dsp.exec_cmd(ipc("panel-toggle launcher emoji")), { description = "Open emoji picker" }) -- unverified: "emoji" as a launcher query/mode keyword
+hl.bind("SUPER+SHIFT+period", hl.dsp.exec_cmd(ipc("panel-toggle noctalia/kaomoji-provider")), { description = "Open kaomoji picker" }) -- unverified plugin panel id
+hl.bind("SUPER+BACKSPACE", hl.dsp.exec_cmd(ipc("session lock")), { description = "Lockscreen" })
+hl.bind("SUPER+W", hl.dsp.exec_cmd(ipc("panel-toggle wallpaper")), { description = "Open wallpaper and colorscheme selector" })
+hl.bind("SUPER+SHIFT+W", hl.dsp.exec_cmd(ipc("panel-toggle noctalia/video-wallpaper")), { description = "Open animated wallpaper selector" }) -- unverified plugin panel id
+hl.bind("SUPER+ALT+W", hl.dsp.exec_cmd(ipc("panel-toggle noctalia/linux-wallpaperengine-controller")), { description = "Open wallpaper engine selector" }) -- unverified plugin panel id
 -- TODO: also the cheatsheet keybind can be moved to /? and re-mapped in italian using LUA
-hl.bind("SUPER+F1", hl.dsp.exec_cmd(ipc("plugin:keybind-cheatsheet toggle")), { description = "Show this helping cheatsheet" })
-hl.bind("SUPER+F2", hl.dsp.exec_cmd(ipc("media toggle")), { description = "Open media panel" })
-hl.bind("SUPER+F3", hl.dsp.exec_cmd(ipc("controlCenter toggle")), { description = "Open noctalia panel" })
-hl.bind("SUPER+F4", hl.dsp.exec_cmd(ipc("settings toggle")), { description = "Open settings panel" })
-hl.bind("SUPER+F5", hl.dsp.exec_cmd(ipc("powerProfile cycle")), { description = "Cycle power profiles" })
+hl.bind("SUPER+F1", hl.dsp.exec_cmd(ipc("panel-toggle noctalia/keybind-cheatsheet")), { description = "Show this helping cheatsheet" }) -- unverified plugin panel id
+hl.bind("SUPER+F2", hl.dsp.exec_cmd(ipc("panel-toggle control-center media")), { description = "Open media panel" }) -- unverified: standalone media panel may not exist in v5 (bar has an inline MediaMini widget instead)
+hl.bind("SUPER+F3", hl.dsp.exec_cmd(ipc("panel-toggle control-center")), { description = "Open noctalia panel" })
+hl.bind("SUPER+F4", hl.dsp.exec_cmd(ipc("settings-toggle")), { description = "Open settings panel" })
+hl.bind("SUPER+F5", hl.dsp.exec_cmd(ipc("power-cycle")), { description = "Cycle power profiles" })
 hl.bind(
     "SUPER+F10",
-    hl.dsp.exec_cmd(ipc("plugin:linux-wallpaperengine-controller stop all") .. " && " .. ipc("plugin:videowallpaper setEnabled false")),
+    -- UNVERIFIED: v5's generic plugin event-dispatch syntax is
+    -- `plugin <author/plugin:entry> <target> <event> [payload]` (docs example:
+    -- "plugin noctalia/screen_recorder:service all toggle") -- the entry name
+    -- (":service"?) and event/payload names below are guesses; each plugin
+    -- defines its own onIpc(event, payload) handler, so this needs checking
+    -- against the actual plugin source or live testing.
+    hl.dsp.exec_cmd(
+        ipc("plugin noctalia/linux-wallpaperengine-controller:service all stop")
+            .. " && "
+            .. ipc("plugin noctalia/video-wallpaper:service all setEnabled false")
+    ),
     { description = "Disable all animated wallpapers" }
 )
 hl.bind("SUPER+F11", hl.dsp.exec_cmd("hyprctl dispatch monitor ,preferred,auto,1"), { description = "Reload monitors configs" })
-hl.bind("SUPER+Escape", hl.dsp.exec_cmd(ipc("sessionMenu toggle")), { description = "Open power/reboot menu" })
+hl.bind("SUPER+Escape", hl.dsp.exec_cmd(ipc("panel-toggle session")), { description = "Open power/reboot menu" })
 
 -- 2. APPS AND SPECIAL WORKSPACES
 hl.bind("SUPER+B", hl.dsp.exec_cmd("zen-browser"), { description = "Open the zen browser" })
@@ -215,21 +240,25 @@ hl.bind("SUPER+SHIFT+PRINT", hl.dsp.exec_cmd("hyprshot -m window -o ~/Pictures/S
 
 -- 6. MULTIMEDIA
 -- Laptop multimedia keys for volume and LCD brightness
-hl.bind("SUPER+SHIFT+A", hl.dsp.exec_cmd(ipc("volume togglePanel")), { description = "Open audio devices panel" })
-hl.bind("SUPER+ALT+A", hl.dsp.exec_cmd(ipc("media toggle")), { description = "Open media panel" })
+hl.bind("SUPER+SHIFT+A", hl.dsp.exec_cmd(ipc("panel-toggle control-center audio")), { description = "Open audio devices panel" }) -- unverified: standalone audio panel may not exist in v5
+hl.bind("SUPER+ALT+A", hl.dsp.exec_cmd(ipc("panel-toggle control-center media")), { description = "Open media panel" }) -- unverified, see NOTE on SUPER+F2 above
 hl.bind("SUPER+XF86AudioMute", hl.dsp.exec_cmd('fish -c "audio-cycle --output"'), { locked = true, description = "Switch audio output device" })
 hl.bind("SUPER+SHIFT+XF86AudioMute", hl.dsp.exec_cmd('fish -c "audio-cycle --input"'), { locked = true, description = "Switch audio input device" })
 
 -- Standard multimedia keys for volume and brightness
-hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd(ipc("volume increase")), { repeating = true, locked = true })
-hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd(ipc("volume decrease")), { repeating = true, locked = true })
-hl.bind("XF86AudioMute", hl.dsp.exec_cmd(ipc("volume muteOutput")), { locked = true })
-hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd(ipc("volume muteInput")), { locked = true })
-hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd(ipc("brightness increase")), { repeating = true, locked = true })
-hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd(ipc("brightness decrease")), { repeating = true, locked = true })
+-- NOTE: v5 remap confirmed against docs.noctalia.dev/v5/ipc/system-controls/
+hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd(ipc("volume-up")), { repeating = true, locked = true })
+hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd(ipc("volume-down")), { repeating = true, locked = true })
+hl.bind("XF86AudioMute", hl.dsp.exec_cmd(ipc("volume-mute")), { locked = true })
+hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd(ipc("mic-mute")), { locked = true })
+hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd(ipc("brightness-up")), { repeating = true, locked = true })
+hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd(ipc("brightness-down")), { repeating = true, locked = true })
 
 -- Standard multimedia keys for play/pause and next/prev
+-- NOTE: v5 remap confirmed against docs.noctalia.dev/v5/ipc/media-and-ui/
+-- ("media toggle" plays/pauses -- both Pause and Play keys map to it, same
+-- as the original playPause behavior)
 hl.bind("XF86AudioNext", hl.dsp.exec_cmd(ipc("media next")), { locked = true })
-hl.bind("XF86AudioPause", hl.dsp.exec_cmd(ipc("media playPause")), { locked = true })
-hl.bind("XF86AudioPlay", hl.dsp.exec_cmd(ipc("media playPause")), { locked = true })
+hl.bind("XF86AudioPause", hl.dsp.exec_cmd(ipc("media toggle")), { locked = true })
+hl.bind("XF86AudioPlay", hl.dsp.exec_cmd(ipc("media toggle")), { locked = true })
 hl.bind("XF86AudioPrev", hl.dsp.exec_cmd(ipc("media previous")), { locked = true })

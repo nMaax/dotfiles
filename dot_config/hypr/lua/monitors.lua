@@ -43,22 +43,27 @@ hl.monitor({
 hl.monitor({ output = "", mode = "preferred", position = "auto-up", scale = 1 })
 
 -- See https://wiki.hypr.land/Configuring/Workspace-Rules/ for workspace rules
+--
+-- NOTE: persistent=true added per Noctalia's v5 Hyprland integration guide
+-- (https://docs.noctalia.dev/v5/compositor-settings/hyprland/) so these
+-- workspaces stay visible in Noctalia's workspace indicator even when empty
+-- -- a real Hyprland-Lua-API feature, unrelated to the noctalia version.
 
 -- Laptop reserved
-hl.workspace_rule({ workspace = "6", monitor = laptop })
-hl.workspace_rule({ workspace = "7", monitor = laptop })
-hl.workspace_rule({ workspace = "8", monitor = laptop })
-hl.workspace_rule({ workspace = "9", monitor = laptop })
-hl.workspace_rule({ workspace = "10", monitor = laptop })
+hl.workspace_rule({ workspace = "6", monitor = laptop, persistent = true })
+hl.workspace_rule({ workspace = "7", monitor = laptop, persistent = true })
+hl.workspace_rule({ workspace = "8", monitor = laptop, persistent = true })
+hl.workspace_rule({ workspace = "9", monitor = laptop, persistent = true })
+hl.workspace_rule({ workspace = "10", monitor = laptop, persistent = true })
 
 -- External reserved
 -- NOTE: "m[1]" monitor-by-index selector carried over verbatim from hyprlang;
 -- unconfirmed whether hl.workspace_rule's `monitor` field accepts this same
 -- selector syntax -- verify at first live test.
-hl.workspace_rule({ workspace = "1", monitor = "m[1]" })
-hl.workspace_rule({ workspace = "2", monitor = "m[1]" })
-hl.workspace_rule({ workspace = "3", monitor = "m[1]" })
-hl.workspace_rule({ workspace = "4", monitor = "m[1]" })
-hl.workspace_rule({ workspace = "5", monitor = "m[1]" })
+hl.workspace_rule({ workspace = "1", monitor = "m[1]", persistent = true })
+hl.workspace_rule({ workspace = "2", monitor = "m[1]", persistent = true })
+hl.workspace_rule({ workspace = "3", monitor = "m[1]", persistent = true })
+hl.workspace_rule({ workspace = "4", monitor = "m[1]", persistent = true })
+hl.workspace_rule({ workspace = "5", monitor = "m[1]", persistent = true })
 
 -- Of course with just one monitor these do not apply

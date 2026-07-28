@@ -13,7 +13,14 @@ hl.on("hyprland.start", function()
     -- Compound line (pkill + backgrounded wl-paste watcher) kept as a single
     -- shell invocation rather than split into separate exec_cmd calls.
     hl.exec_cmd("sh -c 'pkill -9 wl-paste; wl-paste --watch cliphist store &'")
-    hl.exec_cmd("qs -c noctalia-shell")
+    -- NOTE: v5 rewrite -- noctalia is now a standalone native binary, not a
+    -- quickshell config launched via `qs -c noctalia-shell`. Confirmed:
+    -- the `noctalia` package's deps no longer include noctalia-qs/quickshell
+    -- at all. Per https://docs.noctalia.dev/v5/compositor-settings/hyprland/
+    hl.exec_cmd("noctalia")
+    -- Unrelated to noctalia -- separate quickshell config for the
+    -- hyprland-scroll-overview plugin's UI, unaffected by the noctalia
+    -- version change.
     hl.exec_cmd("qs -c overview")
     hl.exec_cmd("hyprpm reload")
     hl.exec_cmd("mega-sync")

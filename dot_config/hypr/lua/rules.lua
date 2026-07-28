@@ -111,6 +111,17 @@ hl.window_rule({
     idle_inhibit = "always", -- Do not sleep
 })
 
+-- Noctalia settings window
+-- See https://docs.noctalia.dev/v5/compositor-settings/hyprland/
+-- NOTE: class "dev.noctalia.Noctalia" is the v5 app id -- part of the v5
+-- upgrade, verify once noctalia v5 is actually installed and running.
+hl.window_rule({
+    name = "noctalia-settings",
+    match = { class = "dev.noctalia.Noctalia" },
+    float = true,
+    size = { 1080, 920 },
+})
+
 -- Remove effects
 hl.window_rule({
     name = "no-effect-overwatch",
@@ -124,4 +135,17 @@ hl.window_rule({
     rounding = 0,
     border_size = 0,
     decorate = false,
+})
+
+-- Blur Noctalia's own surfaces (bar, panels, dock, osd, window switcher, etc.)
+-- See https://docs.noctalia.dev/v5/compositor-settings/hyprland/
+-- NOTE: part of the v5 upgrade, verify namespace pattern once noctalia v5 is
+-- actually installed and running.
+hl.layer_rule({
+    name = "noctalia",
+    match = { namespace = "^noctalia-(bar-.+|notification|dock|panel|attached-panel|osd|window-switcher)$" },
+    no_anim = true,
+    ignore_alpha = 0.5,
+    blur = true,
+    blur_popups = true,
 })
