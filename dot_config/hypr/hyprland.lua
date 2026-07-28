@@ -1,21 +1,18 @@
 -- Hyprland Lua config entry point.
--- Draft 1:1 translation of hyprland.conf's `source =` chain -- see the
--- "hyprland-lua-migration" plan for full context, the researched hl.* API
--- surface, and every flagged unknown referenced below.
 --
--- NOT applied yet: this file is excluded via .chezmoiignore until it has
--- been tested live and the user is ready to restart Hyprland.
+-- Hyprland loads this file INSTEAD of hyprland.conf whenever it exists (checked
+-- once at startup, not a merge). The legacy hyprland.conf and hyprland/*.conf
+-- files are therefore inert; they're kept only as a rollback path, and
+-- ~/.local/bin/hyprland-conf-cleanup.sh removes them when that's no longer
+-- wanted.
 --
--- NOTE: noctalia-colors.conf (sourced first in the legacy config) is NOT
--- required here -- it's a hyprlang $var file, not Lua, and out of scope to
--- touch (managed by the noctalia package). Its currently-resolved values are
--- inlined as a static placeholder directly in lua/lookandfeel.lua.
+-- Module order below mirrors the old `source =` chain. `require` replaces
+-- `source`, resolved relative to ~/.config/hypr/.
 --
--- NOTE (known unknown #1): multi-file `require` support in Hyprland's Lua
--- sandbox is UNVERIFIED -- `hyprctl eval`/`repl` only work once a Lua config
--- is already active, so this can't be pre-tested before the first real
--- cutover restart. If `require` errors at load time, flatten these into a
--- single hyprland.lua with section comment banners instead.
+-- Colors are NOT required here: noctalia regenerates lua/colors.lua from
+-- lua/colors-template.lua via its own user-templates.toml mechanism, and
+-- lua/lookandfeel.lua requires that generated file directly. See
+-- dot_config/noctalia/user-templates.toml.
 
 require("lua.autostart")
 require("lua.env")

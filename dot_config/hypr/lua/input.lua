@@ -12,6 +12,22 @@ hl.config({
 		kb_options = "compose:caps, grp:win_space_toggle",
 		follow_mouse = 1,
 
+		-- Keep keybinds POSITIONAL across the us/it layout toggle.
+		--
+		-- false (Hyprland's default, but pinned here explicitly): each bind's
+		-- keysym is mapped to a keycode using the FIRST layout above (us), and
+		-- matching is then done on keycodes -- so every bind fires on the same
+		-- physical key no matter which layout is currently active. This is why
+		-- keybindings.lua can be written entirely in us keysyms.
+		--
+		-- Setting this to true would make binds follow the ACTIVE layout instead,
+		-- which would silently relocate every punctuation bind the moment
+		-- SUPER+Space switches to it: "-" would jump from the us Minus key to the
+		-- us "/" key, "/" (the cheatsheet) would stop working altogether, etc.
+		-- Left explicit rather than implicit so an upstream default change can't
+		-- quietly break all of them.
+		resolve_binds_by_sym = false,
+
 		sensitivity = 0.2,
 		accel_profile = "adaptive",
 
