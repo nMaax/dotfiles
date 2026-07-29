@@ -85,15 +85,71 @@ hyprctl eval 'local f = io.open("/tmp/probe.txt","w") f:write(tostring(hl.get_co
 That technique is how the layout toggle, the window matchers and `hl.dsp.window.move`'s `window`
 selector were each confirmed to *work* rather than merely load.
 
-### Unit-testing keybinding closures
+### Probing config logic offline with a stubbed `hl`
 
-`keybindings.lua` only ever touches the global `hl`, so the real file can be loaded in plain
-`lua5.4` against a stubbed `hl` whose `bind()` **captures** the bound function. You can then invoke a
-closure with synthetic `get_windows()` state and assert what it dispatched — full branch coverage,
-no live session involved. This is how `app_ws`'s five cases (spawn / reveal / hide / follow-a-moved
-window / prefer-the-window-on-its-own-workspace) were verified. Worth rebuilding whenever a
-closure's logic gets non-trivial; a working example was left at
-`scratchpad/test_app_ws.lua`.
+The Lua config only ever touches the global `hl`, so any file under `dot_config/hypr/lua/` can be
+loaded in plain `lua5.4` against a fake `hl` and driven with synthetic state — no compositor, no
+monitors, no plugins. Use it when a closure's branches can't be produced on this hardware (extra
+monitors, an app dragged out of its workspace, a cold boot before plugins load).
+
+Write these to `/tmp` and delete them when the question is answered. **Do not commit them** — they
+encode matcher lists and bind names verbatim, so they rot the moment the config is edited, and there
+is no CI to notice. This is a debugging instrument, not a test suite.
+
+The whole recipe, which takes a couple of minutes to rebuild:
+
+```lua
+-- Any hl.dsp.a.b(opts) becomes an inspectable { kind = "a.b", opts = opts }
+local function dsp(prefix)
+  return setmetatable({}, { __index = function(_, k)
+    local path = prefix == "" and k or prefix .. "." .. k
+    return setmetatable({}, { __call = function(_, o) return { kind = path, opts = o } end,
+                              __index = dsp(path) })
+  end })
+end
+
+local binds, log = {}, {}
+hl = {
+  dsp = dsp(""),
+  bind = function(keys, action) binds[keys] = action end,   -- CAPTURE, don't run
+  dispatch = function(x) assert(x ~= nil, "dispatch got nil") log[#log+1] = x end,
+  exec_cmd = function(c) log[#log+1] = { kind = "exec_cmd", opts = c } end,
+  workspace_rule = function(r) log[#log+1] = r end,
+  on = function(event, fn) binds[event] = fn end,           -- capture event handlers too
+  define_submap = function(_, fn) fn() end,                 -- or redirect into a sub-table
+  config = function() end, notification = { create = function() end },
+  get_windows = function() return state.windows end,
+  get_monitors = function() return state.monitors end,
+  -- ...whatever else the file under test calls
+}
+dofile("dot_config/hypr/lua/keybindings.lua")
+binds["SUPER+D"]()            -- now assert on `log`
+```
+
+Two things that decide whether this is worth anything:
+
+- **Capture, then invoke.** `hl.bind` storing the function is what makes closures reachable;
+  `hl.on` likewise, so `monitor.layout_changed` handlers can be fired by hand.
+- **Mock fidelity is the whole ballgame.** A stub that returns what you *assume* upstream returns
+  will cheerfully pass broken code — this happened for real with the scrolloverview plugin (§6g),
+  where the stub returned a value but the plugin returns nothing inside a keybind. Read the upstream
+  source for the contract, mirror *both* branches when behaviour is context-sensitive, and assert the
+  negative (`dispatch` never receives `nil`).
+
+### Checking cross-file matcher drift
+
+An app's class is spelled twice: as a Hyprland regex in `rules.lua` (which places the window) and as
+a Lua pattern in `keybindings.lua` (which finds it again). Editing one and not the other gives an app
+that lands on a special workspace its keybind cannot find. After touching either list, compare them:
+
+```bash
+grep -oE '"\^[^"]+"' dot_config/hypr/lua/keybindings.lua | tr -d '"' | sed 's/%//g'
+grep -oE 'class = "[^"]+"' dot_config/hypr/lua/rules.lua
+```
+
+Real instance: the password workspace listed ten apps in `rules.lua` but six in `keybindings.lua`, so
+Enpass/KWalletManager/Seahorse/Secrets would open there and `SUPER+P` would spawn a second KeePassXC
+instead of revealing them.
 
 ---
 
@@ -355,7 +411,7 @@ terminal program ever needs placing.
    Consequence for testing: `hyprctl eval` is **not** a keybind context, so a plugin call that works
    there can still be wrong in a bind. This defeated a full round of my own testing. When mocking a
    plugin in the stubbed-`hl` harness, mirror both branches and `assert` that `hl.dispatch` is never
-   handed `nil` — see `scratchpad/test_plugin.lua`.
+   handed `nil`.
 
 6h. **`hl.dsp.exec_raw` is not a dispatcher runner** — it `spawnRaw`s a process (exec without a
    shell). For "re-apply my monitors" the dispatcher is `hl.dsp.force_renderer_reload()`; note
@@ -419,9 +475,8 @@ Expect "no problems found"; without the config it reports 335.
 takes it away — the same mechanism upstream's own test suite uses. Both fire
 `monitor.layout_changed`, so this exercises real add/remove code paths, including the drop back to a
 single monitor. Note a headless output reports `physical_width/height = 0`, which conveniently also
-exercises any EDID-missing fallback. Combine with the stubbed-`hl` harness
-(`scratchpad/test_monitors.lua`) for the geometry cases a headless output can't produce, such as two
-equal-sized monitors differing only in position.
+exercises any EDID-missing fallback. Combine with a stubbed-`hl` harness (§1) for the geometry cases
+a headless output can't produce, such as two equal-sized monitors differing only in position.
 
 7. **`change_id` (Hyprland 0.56) cannot target workspaces 1–10 here.** It rejects an already-occupied
    target id, and `monitors.lua` declares 1–10 `persistent = true`, so all ten always exist. The
