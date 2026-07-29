@@ -54,6 +54,12 @@
 !.config/noctalia/colorschemes/Oasis Abyss
 !.config/noctalia/colorschemes/ADW
 
+!.local/state/
+.local/state/*
+!.local/state/noctalia/
+.local/state/noctalia/*
+!.local/state/noctalia/settings.toml
+
 # --- NVIM: Exclude matugen-generated theme ---
 .config/nvim/lua/matugen.lua
 

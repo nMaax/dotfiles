@@ -309,10 +309,9 @@ a fallback (they don't conflict — v4 is JSON at `~/.config/noctalia/`, v5 is T
 
 - IPC is `noctalia msg <command>`, and **`noctalia msg --help` is authoritative** — prefer it over
   the docs. `keybindings.lua` wraps it in a local `ipc()` helper.
-- **v5 settings are NOT tracked by this repo.** They live in `~/.local/state/noctalia/settings.toml`
-  with `plugins/materialized/` and `plugins/data/`. Anything configured there (e.g.
-  `[shell.screenshot] directory`) is a manual step belonging in `CLEANUP.md` §5 — don't try to
-  template it.
+- **v5 settings: only `settings.toml` is tracked**, at `dot_local/private_state/noctalia/settings.toml`
+  (`private_` because `~/.local/state` is 0700). Everything else there — history, usage stats,
+  downloaded caches, plugin build output — stays untracked via `.chezmoiignore`.
 - **Plugin IDs are `<author>/<plugin>:<entry>`.** Panels: `panel-toggle noctalia/mpvpaper:picker`.
   Events: `plugin <author/plugin:entry> <target[:bar]> <event> [payload]`, target `all` for singleton
   services. Enumerate what's installed with `noctalia msg plugins list` — the v4 directory names
@@ -541,4 +540,6 @@ remember are gone), assume it was intentional and ask — do not restore it.
 - Comments explain *why*, especially for anything empirically discovered. A comment recording "this
   option is pinned because the alternative breaks X" has already paid for itself several times here.
   Prune comments that merely restate the code.
+- Keep comments short — one or two lines. State the rule and the reason, not a full inventory of
+  every file/case it covers; that belongs in the diff or commit message, not living in a comment.
 - `git commit` messages are one-liners listing the changes, not verbose bodies.
