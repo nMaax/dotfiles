@@ -17,17 +17,6 @@ warn "[NOCTALIA] ddcutil may cause instability on some monitors; remove it if ne
 paru -S --needed --noconfirm cliphist wlsunset xdg-desktop-portal evolution-data-server hyprshot
 
 info "🦉 Installing Noctalia..."
-paru -S --needed --noconfirm noctalia-shell
-# NOTE: v4 (noctalia-shell) is being KEPT INSTALLED on purpose, as a fallback
-# with its own working settings, alongside the new v5 beta below. Per
-# https://docs.noctalia.dev/v5/getting-started/faq/ : v4 and v5 don't
-# conflict as packages (confirmed via `pacman -Si noctalia`: conflicts only
-# with noctalia-git/noctalia-bin, NOT noctalia-shell) and their config files
-# don't collide either (v4 = JSON, v5 = TOML, different filenames) -- so
-# both can coexist and either can be launched independently. v5's plugin
-# ecosystem is also still very early (most v4 plugins have no v5 equivalent
-# yet), which is the other reason not to burn the v4 bridge yet.
-#
 # v5 is a full rewrite: no longer built on quickshell at all (a native
 # binary), new IPC scheme ("noctalia msg <command>" instead of
 # "qs -c noctalia-shell ipc call"), new app id (dev.noctalia.Noctalia).
@@ -35,12 +24,6 @@ paru -S --needed --noconfirm noctalia-shell
 sudo pacman -S --needed --noconfirm noctalia
 info "[NOCTALIA] Built-in app theming is pre-enabled for common apps."
 info "Remaining app-specific steps: https://docs.noctalia.dev/v5/theming/app-theming/"
-warn "[NOCTALIA] v5 has NO automatic settings migration from v4 (official, not a gap on our end)."
-warn "Your v4 dot_config/noctalia/settings.json + plugins.json (bar layout, pinned apps, enabled"
-warn "plugins, etc.) will NOT carry over -- v5 reads its own separate *.toml files instead."
-warn "You'll need to reconfigure the bar/panels/plugins from scratch via v5's own Settings UI."
-info "[NOCTALIA] v4 (noctalia-shell) is kept installed as a fallback -- when you're ready to drop"
-info "it for good, see ~/.local/bin/noctalia-v4-cleanup.sh (not run automatically)."
 
 info "🔍 Installing Quickshell Overview..."
 paru -S --needed --noconfirm quickshell-overview-git

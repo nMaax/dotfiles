@@ -3,12 +3,8 @@
 
 local laptop = "eDP-1"
 
--- Primary Monitor
-hl.monitor({ output = laptop, mode = "1920x1080@144", position = "0x0", scale = 1 })
-
--- NOTE: you should specify here monitors where you want to turn VRR always on (most probably gaming ones)
-
 -- Some monitor I saw in my life
+hl.monitor({ output = laptop, mode = "1920x1080@144", position = "0x0", scale = 1 })
 hl.monitor({ output = "desc:OOO YZ2748", mode = "1920x1080@60.00", position = "auto-up", scale = 1 })
 hl.monitor({
 	output = "desc:Ancor Communications Inc ASUS VN247 G2LMTF057181",

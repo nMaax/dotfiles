@@ -250,8 +250,7 @@ Bibata hyprcursor from the user's `nMaax/dotfiles-assets` and `nMaax/dotfiles-sd
 - KWallet is the keyring, and PAM auto-unlock only works for a wallet literally named `kdewallet`
   with Blowfish encryption and the login password. `autostart.lua` execs `pam_kwallet_init`.
 - `dot_local/bin/` holds the helper scripts the config calls (`install-webapp`, `launch-webapp.sh`,
-  `linux-wallpaperengine`, `spicetify-setup.sh`). Two others (`hypr-scrolling.sh`, `hypr-toggle.py`)
-  are now dead — replaced by native Lua, pending removal per `CLEANUP.md` §3.
+  `linux-wallpaperengine`, `spicetify-setup.sh`).
 - `dot_config/fish/functions/` is a large library of one-purpose media/document conversion functions
   (`pdf-*`, `vid2*`, `*2png`, …). Self-contained; add new ones as single files following the
   existing naming.
@@ -261,8 +260,8 @@ Bibata hyprcursor from the user's `nMaax/dotfiles-assets` and `nMaax/dotfiles-sd
 ## 4. Hyprland Lua config
 
 `hyprland.lua` is loaded **instead of** `hyprland.conf` when it exists — checked once at startup, not
-merged. The legacy `hyprland.conf` and `hyprland/*.conf` are therefore **inert**, kept only as a
-rollback path and listed in `CLEANUP.md` §1. Editing them does nothing.
+merged. The legacy `hyprland.conf` and `hyprland/*.conf` were removed per `CLEANUP.md` §1 (both
+source and live copies) once the Lua config proved itself; there is no `.conf` fallback anymore.
 
 `require("lua.foo")` replaces `source =`, resolved relative to `~/.config/hypr/`. Module order in
 `hyprland.lua` mirrors the old source chain.
@@ -514,8 +513,6 @@ Known, deliberate TODOs. Non-trivial, and the user wants to scope them:
 - `performance.lua` — competitive-gaming latency tuning
 - `keybindings.lua` (~line 137) — split the communication workspace per app (telegram / discord /
   whatsapp separately)
-- Actually removing the v4 and `.conf` source files — the user wants to do this together when they
-  commit to it. Everything needed is in `CLEANUP.md`.
 
 `README.md` also carries a user-facing TODO list; those are the user's own project ideas, not work
 queued for Claude.

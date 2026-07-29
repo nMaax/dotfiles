@@ -1,6 +1,6 @@
 -- MISC
 -- https://wiki.hypr.land/Configuring/Variables/#misc
---
+
 hl.config({
 	misc = {
 		focus_on_activate = false, -- whether Hyprland should focus an app that requests to be focused

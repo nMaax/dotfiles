@@ -22,9 +22,9 @@ Two recurring gotchas, worth internalising once:
 Superseded by `hyprland.lua`. Hyprland loads `hyprland.lua` *instead of* `hyprland.conf` whenever the
 former exists, so these files are already inert — this is pure tidying with no functional effect.
 
-- [ ] Remove the live files:
+- [x] Remove the live files:
       `rm -f ~/.config/hypr/hyprland.conf && rm -rf ~/.config/hypr/hyprland`
-- [ ] Remove them from the chezmoi source:
+- [x] Remove them from the chezmoi source:
       `git rm dot_config/hypr/hyprland.conf && git rm -r dot_config/hypr/hyprland`
 
 **Do not touch:** `~/.config/hypr/xdph.conf` (a different program's config —
@@ -42,12 +42,12 @@ and their configs don't collide (v4 = JSON, v5 = TOML, different paths), so ther
 keeping it beyond disk.
 
 - [ ] Remove the package: `sudo pacman -Rns noctalia-shell`
-- [ ] Remove the live v4 config:
-      `rm -f ~/.config/noctalia/settings.json ~/.config/noctalia/plugins.json && rm -rf ~/.config/noctalia/colorschemes`
-- [ ] Remove the v4 config from the chezmoi source: `git rm -r dot_config/noctalia`
-- [ ] Prune the now-dead `.config/noctalia/**` lines from `.chezmoiignore` (the generated-file
+- [x] Remove the live v4 config:
+      `rm -f ~/.config/noctalia/settings.json ~/.config/noctalia/plugins.json && rm -rf ~/.config/noctalia/colorschemes ~/.config/noctalia/templates`
+- [x] Remove the v4 config from the chezmoi source: `git rm -r dot_config/noctalia`
+- [x] Prune the now-dead `.config/noctalia/**` lines from `.chezmoiignore` (the generated-file
       exclusions and the whole `!.config/noctalia/colorschemes/...` allowlist)
-- [ ] Also drop the v4 install line from
+- [x] Also drop the v4 install line from
       `.chezmoiscripts/run_onchange_before_04-hyprland-noctalia.sh.tmpl`
       (`paru -S --needed --noconfirm noctalia-shell`) and the comment block explaining the coexistence
 
@@ -68,12 +68,12 @@ rest of the v4 config, or the Lua config's colours stop updating on theme change
 These are dead code — the keybinds that called them now do the work natively in
 `dot_config/hypr/lua/keybindings.lua`.
 
-- [ ] `hypr-scrolling.sh` — replaced by the `SUPER+X` closure using `hl.get_config` + `hl.config`
-- [ ] `hypr-toggle.py` — replaced by the `toggle_ws()` closure using `hl.get_windows()`
-- [ ] Source: `git rm dot_local/bin/executable_hypr-scrolling.sh dot_local/bin/executable_hypr-toggle.py`
-- [ ] Live: `rm -f ~/.local/bin/hypr-scrolling.sh ~/.local/bin/hypr-toggle.py`
-- [ ] `hypr-toggle.py`'s optional override file, if you ever made one:
-      `rm -rf ~/.config/hypr-toggle`
+- [x] `hypr-scrolling.sh` — replaced by the `SUPER+X` closure using `hl.get_config` + `hl.config`
+- [x] `hypr-toggle.py` — replaced by the `toggle_ws()` closure using `hl.get_windows()`
+- [x] Source: `git rm dot_local/bin/executable_hypr-scrolling.sh dot_local/bin/executable_hypr-toggle.py`
+- [x] Live: `rm -f ~/.local/bin/hypr-scrolling.sh ~/.local/bin/hypr-toggle.py`
+- [x] `hypr-toggle.py`'s optional override file, if you ever made one:
+      `rm -rf ~/.config/hypr-toggle` (none existed)
 
 **What breaks:** nothing, as long as `grep -rn 'hypr-toggle\|hypr-scrolling' dot_config/` comes back
 empty first. Run that check before deleting.
@@ -112,11 +112,12 @@ track. These have to be set through the Settings UI by hand, and will need redoi
 
 ## 6. Stray files from old bugs
 
-- [ ] `rm ~/.local/share/applications/install-webapp.desktop` — created by a bug in
+- [x] `rm ~/.local/share/applications/install-webapp.desktop` — created by a bug in
       `run_onchange_after_07-webapps.sh.tmpl` that passed an extra `install-webapp` argument, so the
       app name and URL both became `install-webapp`. The script is fixed; the stray entry isn't
       self-cleaning.
-- [ ] Check `~/.local/share/icons/webapps/` for a matching orphan icon.
+- [x] Check `~/.local/share/icons/webapps/` for a matching orphan icon (found and removed
+      `install-webapp.png`).
 
 ---
 
@@ -126,4 +127,4 @@ track. These have to be set through the Settings UI by hand, and will need redoi
 chezmoi source when this file was written. Per the gotcha at the top, the already-applied copies are
 still sitting in `$HOME`:
 
-- [ ] `rm -f ~/.local/bin/noctalia-v4-cleanup.sh ~/.local/bin/hyprland-conf-cleanup.sh`
+- [x] `rm -f ~/.local/bin/noctalia-v4-cleanup.sh ~/.local/bin/hyprland-conf-cleanup.sh`
