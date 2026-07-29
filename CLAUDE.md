@@ -329,6 +329,38 @@ terminal program ever needs placing.
    miss when you don't read the output, so nothing happens and you think it worked. Use
    `hyprctl eval 'hl.dispatch(hl.dsp.focus({ workspace = "2" }))'` instead.
 
+   The same trap applies *inside* the config: any bind built as
+   `hl.dsp.exec_cmd("hyprctl dispatch ...")` is dead on arrival. This silently broke every
+   scrolloverview bind for the entire hyprlang-to-Lua transition — the plugin was loaded and the
+   binds were registered, they just never did anything.
+
+6g. **Plugin dispatchers live at `hl.plugin.<name>.<dispatcher>(arg)`**, not behind `hyprctl`. They
+   return an ordinary dispatcher, exactly like `hl.dsp.*`, so
+   `hl.dispatch(hl.plugin.scrolloverview.overview("toggle"))` works and reports `{ ok = true }`.
+   Enumerate what a loaded plugin offers with
+   `hyprctl eval 'for k in pairs(hl.plugin.<name>) do ... end'`; `hl.get_loaded_plugins()` lists names.
+
+   **Resolve it lazily, inside the bind's function.** `hyprpm` loads plugins from `autostart.lua`, so
+   at config-parse time on a cold boot `hl.plugin.<name>` is still `nil` and indexing it eagerly
+   aborts the entire config. `keybindings.lua`'s `scrolloverview()` helper shows the pattern.
+
+   **These factories are context-sensitive, and this is a genuine trap.** Called from *inside* a Lua
+   keybind callback, the plugin runs the dispatcher **immediately and returns nothing**; called
+   anywhere else (config parse, `hyprctl eval`) it returns a bind-action function and runs nothing.
+   So `hl.dispatch(plugin.overview("toggle"))` inside a bind passes `nil` and warns "expected a
+   dispatcher" *after* the action has already fired. Either pass the factory result straight to
+   `hl.bind` at parse time, or call it inside the callback and invoke the result only
+   `if type(action) == "function"`. Verified in scrolloverview's `Config.cpp:dispatcherFactoryLua`.
+
+   Consequence for testing: `hyprctl eval` is **not** a keybind context, so a plugin call that works
+   there can still be wrong in a bind. This defeated a full round of my own testing. When mocking a
+   plugin in the stubbed-`hl` harness, mirror both branches and `assert` that `hl.dispatch` is never
+   handed `nil` — see `scratchpad/test_plugin.lua`.
+
+6h. **`hl.dsp.exec_raw` is not a dispatcher runner** — it `spawnRaw`s a process (exec without a
+   shell). For "re-apply my monitors" the dispatcher is `hl.dsp.force_renderer_reload()`; note
+   `monitor` is a config *keyword*, never a dispatcher.
+
 6c. **Workspace window rules are evaluated on window *open* only.** A window moved out of its special
    workspace afterwards stays out — verified by moving a rule-matched window to workspace 7 and
    watching it remain. That's what makes manual placement overridable, and it's why the throw-in

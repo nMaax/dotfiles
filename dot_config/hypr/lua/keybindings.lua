@@ -7,8 +7,18 @@ local function ipc(args)
 	return "noctalia msg " .. args
 end
 
-local function plugin_dispatch(cmd)
-	return hl.dsp.exec_cmd("hyprctl dispatch " .. cmd)
+local function scrolloverview(dispatcher, arg)
+	return function()
+		local plugin = hl.plugin.scrolloverview
+		if not plugin then
+			hl.notification.create({ text = "scrolloverview plugin is not loaded", timeout = 2000 })
+			return
+		end
+		local action = plugin[dispatcher](arg)
+		if type(action) == "function" then
+			action()
+		end
+	end
 end
 
 -- 1. MAIN BINDS
@@ -41,7 +51,7 @@ hl.bind(
 	{ description = "Reload hyprland and restart noctalia" }
 )
 
--- TODO : improve scrolling and dwindle related kaybinds, discover QoL features and find the right keybinds]
+-- TODO : improve scrolling and dwindle related keybinds, discover QoL features and find the right keybinds]
 -- among issues found so far:
 --  1. When moving windows in scrolling mode, they all get down the other window creating a vertical split; I think it should be more intuitive
 --  such that every new window spawns in full width and height, and then one can move it to the left where it will behave just like any other workspace split: both vertically and horizonally splitting
@@ -101,12 +111,7 @@ hl.bind(
 	hl.dsp.exec_cmd(ipc("plugin noctalia/mpvpaper:service all clear-all") .. " ; pkill -f linux-wallpaperengine"),
 	{ description = "Disable all animated wallpapers" }
 )
--- TODO: this one doesnt seem to work, maybe it is an halluccination?
-hl.bind(
-	"SUPER+F11",
-	hl.dsp.exec_cmd("hyprctl dispatch monitor ,preferred,auto,1"),
-	{ description = "Reload monitors configs" }
-)
+hl.bind("SUPER+F11", hl.dsp.force_renderer_reload(), { description = "Reload monitors configs" })
 hl.bind("SUPER+Escape", hl.dsp.exec_cmd(ipc("panel-toggle session")), { description = "Open power/reboot menu" })
 
 -- 2. APPS AND SPECIAL WORKSPACES
@@ -266,16 +271,12 @@ hl.bind("SUPER+right", hl.dsp.focus({ direction = "right" }), { description = "M
 hl.bind("SUPER+L", hl.dsp.focus({ direction = "right" }), { description = "Move focus right" })
 
 -- Access workspaces with numbers
-hl.bind("SUPER+1", hl.dsp.focus({ workspace = "1" }))
-hl.bind("SUPER+2", hl.dsp.focus({ workspace = "2" }))
-hl.bind("SUPER+3", hl.dsp.focus({ workspace = "3" }))
-hl.bind("SUPER+4", hl.dsp.focus({ workspace = "4" }))
-hl.bind("SUPER+5", hl.dsp.focus({ workspace = "5" }))
-hl.bind("SUPER+6", hl.dsp.focus({ workspace = "6" }))
-hl.bind("SUPER+7", hl.dsp.focus({ workspace = "7" }))
-hl.bind("SUPER+8", hl.dsp.focus({ workspace = "8" }))
-hl.bind("SUPER+9", hl.dsp.focus({ workspace = "9" }))
-hl.bind("SUPER+0", hl.dsp.focus({ workspace = "10" }), { description = "Access workspace [0-9]" })
+for key = 0, 9 do
+	local id = key == 0 and 10 or key
+	hl.bind("SUPER+" .. key, hl.dsp.focus({ workspace = tostring(id) }), {
+		description = "Access workspace " .. id,
+	})
+end
 
 -- Move focus around external monitors
 hl.bind("SUPER+ALT+up", hl.dsp.focus({ monitor = "u" }), { description = "Move focus on monitor up" })
@@ -323,23 +324,19 @@ hl.bind("SUPER+mouse:276", hl.dsp.focus({ workspace = "e-1" }), { description = 
 
 -- 4. MANAGE WINDOWS
 -- Move windows to workspaces with numbers
-hl.bind("SUPER+SHIFT+1", hl.dsp.window.move({ workspace = "1" }))
-hl.bind("SUPER+SHIFT+2", hl.dsp.window.move({ workspace = "2" }))
-hl.bind("SUPER+SHIFT+3", hl.dsp.window.move({ workspace = "3" }))
-hl.bind("SUPER+SHIFT+4", hl.dsp.window.move({ workspace = "4" }))
-hl.bind("SUPER+SHIFT+5", hl.dsp.window.move({ workspace = "5" }))
-hl.bind("SUPER+SHIFT+6", hl.dsp.window.move({ workspace = "6" }))
-hl.bind("SUPER+SHIFT+7", hl.dsp.window.move({ workspace = "7" }))
-hl.bind("SUPER+SHIFT+8", hl.dsp.window.move({ workspace = "8" }))
-hl.bind("SUPER+SHIFT+9", hl.dsp.window.move({ workspace = "9" }))
-hl.bind(
-	"SUPER+SHIFT+0",
-	hl.dsp.window.move({ workspace = "10" }),
-	{ description = "Move window to workspace [0-9 | S]" }
-)
+for key = 0, 9 do
+	local id = key == 0 and 10 or key
+	hl.bind("SUPER+SHIFT+" .. key, hl.dsp.window.move({ workspace = tostring(id) }), {
+		description = "Move window to workspace " .. id,
+	})
+end
 
 -- Move windows to scratchpad
-hl.bind("SUPER+SHIFT+S", hl.dsp.window.move({ workspace = "special:magic" }))
+hl.bind(
+	"SUPER+SHIFT+S",
+	hl.dsp.window.move({ workspace = "special:magic" }),
+	{ description = "Move window to scratchpad" }
+)
 
 local function move_workspace_windows(target)
 	return function()
@@ -373,13 +370,21 @@ hl.bind(
 	hl.dsp.window.move({ workspace = "-1" }),
 	{ repeating = true, description = "Move window to left workspace (vim, or arrows)" }
 )
-hl.bind("SUPER+CTRL+SHIFT+up", hl.dsp.window.move({ workspace = "-1" }), { repeating = true })
+hl.bind(
+	"SUPER+CTRL+SHIFT+up",
+	hl.dsp.window.move({ workspace = "-1" }),
+	{ repeating = true, description = "Move window to left workspace (vim, or arrows)" }
+)
 hl.bind(
 	"SUPER+CTRL+SHIFT+J",
 	hl.dsp.window.move({ workspace = "+1" }),
 	{ repeating = true, description = "Move window to right workspace (vim, or arrows)" }
 )
-hl.bind("SUPER+CTRL+SHIFT+down", hl.dsp.window.move({ workspace = "+1" }), { repeating = true })
+hl.bind(
+	"SUPER+CTRL+SHIFT+down",
+	hl.dsp.window.move({ workspace = "+1" }),
+	{ repeating = true, description = "Move window to right workspace (vim, or arrows)" }
+)
 
 -- Re-arrange windows with arrows
 hl.bind("SUPER+SHIFT+up", hl.dsp.window.move({ direction = "u" }), { description = "Move window up" })
@@ -413,7 +418,7 @@ hl.bind("SUPER+mouse:272", hl.dsp.window.drag(), { mouse = true, description = "
 hl.bind("SUPER+mouse:273", hl.dsp.window.resize(), { mouse = true, description = "Re-size windows with mouse" })
 
 -- Show all open workspaces
-hl.bind("SUPER+TAB", plugin_dispatch("scrolloverview:overview toggle"))
+hl.bind("SUPER+TAB", scrolloverview("overview", "toggle"), { description = "Show the scrolling overview" })
 hl.bind(
 	"SUPER+SHIFT+TAB",
 	hl.dsp.exec_cmd("qs ipc -c overview call overview toggle"),
@@ -422,18 +427,24 @@ hl.bind(
 
 -- Submap for scrolloverview navigation
 hl.define_submap("scrolloverview", function()
-	hl.bind("left", plugin_dispatch("scrolloverview:navigate left"))
-	hl.bind("H", plugin_dispatch("scrolloverview:navigate left"))
-	hl.bind("right", plugin_dispatch("scrolloverview:navigate right"))
-	hl.bind("L", plugin_dispatch("scrolloverview:navigate right"))
-	hl.bind("up", plugin_dispatch("scrolloverview:navigate up"))
-	hl.bind("K", plugin_dispatch("scrolloverview:navigate up"))
-	hl.bind("down", plugin_dispatch("scrolloverview:navigate down"))
-	hl.bind("J", plugin_dispatch("scrolloverview:navigate down"))
-	hl.bind("SUPER+TAB", plugin_dispatch("scrolloverview:overview off"))
-	hl.bind("TAB", plugin_dispatch("scrolloverview:overview off"))
-	hl.bind("RETURN", plugin_dispatch("scrolloverview:overview off"))
-	hl.bind("Escape", plugin_dispatch("scrolloverview:overview off"))
+	local navigation = {
+		left = "left",
+		H = "left",
+		right = "right",
+		L = "right",
+		up = "up",
+		K = "up",
+		down = "down",
+		J = "down",
+	}
+	for key, direction in pairs(navigation) do
+		hl.bind(key, scrolloverview("navigate", direction), {
+			description = "Move overview selection " .. direction .. " (vim, or arrows)",
+		})
+	end
+	for _, key in ipairs({ "SUPER+TAB", "TAB", "RETURN", "Escape" }) do
+		hl.bind(key, scrolloverview("overview", "off"), { description = "Close the overview" })
+	end
 end)
 
 -- 5. SCREENSHOTS
@@ -447,8 +458,6 @@ hl.bind(
 	hl.dsp.exec_cmd(ipc("screenshot-region")),
 	{ description = "Take screenshot of a selected region" }
 )
--- NOTE: deliberate change of meaning. Noctalia has no per-window capture mode,
--- so this is now an interactive monitor picker rather than "the active window".
 hl.bind(
 	"SUPER+SHIFT+PRINT",
 	hl.dsp.exec_cmd(ipc("screenshot-fullscreen pick")),
@@ -475,15 +484,31 @@ hl.bind(
 )
 
 -- Standard multimedia keys for volume and brightness
-hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd(ipc("volume-up")), { repeating = true, locked = true })
-hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd(ipc("volume-down")), { repeating = true, locked = true })
-hl.bind("XF86AudioMute", hl.dsp.exec_cmd(ipc("volume-mute")), { locked = true })
-hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd(ipc("mic-mute")), { locked = true })
-hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd(ipc("brightness-up")), { repeating = true, locked = true })
-hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd(ipc("brightness-down")), { repeating = true, locked = true })
+hl.bind(
+	"XF86AudioRaiseVolume",
+	hl.dsp.exec_cmd(ipc("volume-up")),
+	{ repeating = true, locked = true, description = "Raise volume" }
+)
+hl.bind(
+	"XF86AudioLowerVolume",
+	hl.dsp.exec_cmd(ipc("volume-down")),
+	{ repeating = true, locked = true, description = "Lower volume" }
+)
+hl.bind("XF86AudioMute", hl.dsp.exec_cmd(ipc("volume-mute")), { locked = true, description = "Mute volume" })
+hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd(ipc("mic-mute")), { locked = true, description = "Mute microphone" })
+hl.bind(
+	"XF86MonBrightnessUp",
+	hl.dsp.exec_cmd(ipc("brightness-up")),
+	{ repeating = true, locked = true, description = "Raise screen brightness" }
+)
+hl.bind(
+	"XF86MonBrightnessDown",
+	hl.dsp.exec_cmd(ipc("brightness-down")),
+	{ repeating = true, locked = true, description = "Lower screen brightness" }
+)
 
 -- Standard multimedia keys for play/pause and next/prev
-hl.bind("XF86AudioNext", hl.dsp.exec_cmd(ipc("media next")), { locked = true })
-hl.bind("XF86AudioPause", hl.dsp.exec_cmd(ipc("media toggle")), { locked = true })
-hl.bind("XF86AudioPlay", hl.dsp.exec_cmd(ipc("media toggle")), { locked = true })
-hl.bind("XF86AudioPrev", hl.dsp.exec_cmd(ipc("media previous")), { locked = true })
+hl.bind("XF86AudioNext", hl.dsp.exec_cmd(ipc("media next")), { locked = true, description = "Next track" })
+hl.bind("XF86AudioPause", hl.dsp.exec_cmd(ipc("media toggle")), { locked = true, description = "Play/pause" })
+hl.bind("XF86AudioPlay", hl.dsp.exec_cmd(ipc("media toggle")), { locked = true, description = "Play/pause" })
+hl.bind("XF86AudioPrev", hl.dsp.exec_cmd(ipc("media previous")), { locked = true, description = "Previous track" })
