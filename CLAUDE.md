@@ -1,0 +1,405 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+Personal dotfiles for a **CachyOS + Hyprland + Noctalia** desktop, managed with
+[chezmoi](https://www.chezmoi.io/). There is no build system, no test suite and no CI — the
+"application" is the user's machine, and the closest thing to a test run is `chezmoi apply` followed
+by asking the affected program whether it is happy.
+
+Three docs at the root, with distinct jobs:
+
+- `README.md` — user-facing install and post-install setup guide.
+- `CLEANUP.md` — read-first checklist of things safe to delete once fallbacks aren't wanted.
+  Deliberately **not** a script; it replaced two `*-cleanup.sh` scripts precisely so nothing
+  destructive gets run blindly.
+- **This file** — how to change things without breaking them.
+
+---
+
+## 1. Commands
+
+### chezmoi
+
+```bash
+chezmoi diff                      # what would change in $HOME
+chezmoi status                    # short form; see the 99.sh note below
+chezmoi apply --exclude=scripts   # DEFAULT for config work: regular files only
+chezmoi apply                     # full run, EXECUTES install scripts (sudo prompts) -- user's call
+chezmoi cat <target>              # render one file as it would be applied
+chezmoi execute-template < .chezmoiscripts/run_onchange_after_07-webapps.sh.tmpl
+chezmoi doctor                    # environment sanity
+```
+
+`chezmoi execute-template` is the way to test a `.tmpl` change: it renders the template, including
+`{{ template "utils.sh.tmpl" . }}` inclusions, **without executing** anything. Use it on scripts
+rather than running them.
+
+`chezmoi status` will essentially always show `R .chezmoiscripts/99.sh` pending, and `chezmoi verify`
+will exit 1 because of it. That is expected, not a problem: `run_after_99.sh.tmpl` has neither
+`once` nor `onchange` in its name, so it is due on *every* apply, and `--exclude=scripts` never runs
+it. Ignore that one line; investigate anything else.
+
+### Validating changes
+
+There are no linters installed (no `shellcheck`, `stylua`, `luacheck`) — don't reach for them.
+Validation is per-subsystem:
+
+```bash
+# Hyprland Lua -- syntax
+luac5.4 -p dot_config/hypr/lua/*.lua dot_config/hypr/hyprland.lua
+
+# Hyprland -- did it actually load?
+hyprctl reload && hyprctl configerrors     # MUST print nothing
+
+# Shell scripts / templates -- render, don't run
+chezmoi execute-template < .chezmoiscripts/<script>.tmpl | bash -n
+
+# Fish functions
+fish -n dot_config/fish/functions/<name>.fish
+```
+
+### The Hyprland change loop
+
+Do all five steps. Steps 1–2 catch typos; only step 5 catches semantic errors, and Hyprland is
+alarmingly tolerant of nonsense (§6).
+
+```bash
+luac5.4 -p dot_config/hypr/lua/*.lua dot_config/hypr/hyprland.lua   # 1. syntax
+git diff                                                            # 2. review the real diff
+chezmoi diff                                                        # 3. what changes in $HOME
+chezmoi apply --exclude=scripts                                     # 4. apply
+hyprctl reload && hyprctl configerrors                              # 5. must be empty
+```
+
+Read the actual `git diff`. Do not report from the list of files you believe you edited.
+
+**Empty `configerrors` is necessary, not sufficient** — it only proves the config *parsed*. To verify
+that Lua closures behave, run them through `hyprctl eval`; it only ever prints `ok`, so write results
+to a scratch file and read that back:
+
+```bash
+hyprctl eval 'local f = io.open("/tmp/probe.txt","w") f:write(tostring(hl.get_config("general.layout"))) f:close()'
+```
+
+That technique is how the layout toggle, the window matchers and `hl.dsp.window.move`'s `window`
+selector were each confirmed to *work* rather than merely load.
+
+### Unit-testing keybinding closures
+
+`keybindings.lua` only ever touches the global `hl`, so the real file can be loaded in plain
+`lua5.4` against a stubbed `hl` whose `bind()` **captures** the bound function. You can then invoke a
+closure with synthetic `get_windows()` state and assert what it dispatched — full branch coverage,
+no live session involved. This is how `app_ws`'s five cases (spawn / reveal / hide / follow-a-moved
+window / prefer-the-window-on-its-own-workspace) were verified. Worth rebuilding whenever a
+closure's logic gets non-trivial; a working example was left at
+`scratchpad/test_app_ws.lua`.
+
+---
+
+## 2. This is a chezmoi source directory, not live config
+
+`/home/massimiliano/.local/share/chezmoi` is the *source*. Nothing edited here takes effect until
+applied. The live files are in `$HOME`.
+
+Source-name mangling matters when hunting for a file:
+
+| Source path | Applies to |
+|---|---|
+| `dot_config/hypr/lua/rules.lua` | `~/.config/hypr/lua/rules.lua` |
+| `dot_local/bin/executable_install-webapp` | `~/.local/bin/install-webapp` (chmod +x) |
+| `dot_config/private_Code/` | `~/.config/Code/` (no group/world perms — 0700 dir, 0600 file) |
+| `*.tmpl` | rendered through Go templates with `.chezmoi` data |
+| `.chezmoiscripts/run_*` | not applied — *executed* (§3) |
+
+Root-level files (`README.md`, `CLEANUP.md`, this file) are excluded from applying by the leading `*`
+in `.chezmoiignore`, so they stay repo-only. New root files need no ignore entry.
+
+### Hard rules
+
+- **Never edit files under `$HOME` directly.** Every change goes into the source tree, then through
+  `chezmoi apply`. A manual `$HOME` edit is silently reverted on the next apply, and worse, it makes
+  the source lie about the system state.
+- **Never poke around inside installed packages, plugin internals, or other programs' private state
+  to figure something out.** The user has stated this explicitly and it is a standing constraint.
+  When stuck, read documentation (§7) — do not reverse-engineer by rummaging through their machine.
+- **Removing a file from the source does NOT delete the applied copy in `$HOME`.** A `git rm` needs a
+  matching manual `rm`. Conversely, deleting only the live file achieves nothing — the next apply
+  recreates it. This trips people up constantly; it's why `CLEANUP.md` opens with it.
+- **Do not touch these** — they are owned by other software:
+  - `dot_config/hypr/noctalia/` — regenerated by the noctalia package
+  - `dot_config/hypr/lua/colors.lua` — generated by noctalia from `colors-template.lua`; ignored in
+    `.chezmoiignore`, do not add it to git
+  - `dot_config/hypr/xdph.conf` — `xdg-desktop-portal-hyprland`'s config, unrelated program
+  - `dot_config/nvim/lua/matugen.lua`, `dot_config/ghostty/themes/` — same pattern, theme output
+- **`dot_config/noctalia/user-templates.toml` is shared between Noctalia v4 and v5.** It generates
+  the Hyprland border colours, so it must survive any future v4 purge (`CLEANUP.md` §2).
+
+---
+
+## 3. The install pipeline
+
+Understanding this requires reading `.chezmoiscripts/`, `.chezmoitemplates/` and
+`.chezmoiexternal.toml` together, so here is the shape.
+
+### Ordering
+
+chezmoi runs `before_` scripts, then applies regular files, then runs `after_` scripts. The numeric
+prefixes order scripts *within* each phase, and the two sequences are independent:
+
+- `before`: `01-cachyos-checks` → `02-apps` → `03-fonts-emoji` → `04-hyprland-noctalia`
+- `after`: `01-system-services` → `02-grub` → `03-sddm-PAM` → `04-sddm-themes` → `05-misc` →
+  `06-gaming` → `07-webapps` → `08-tailscale` → `09-nordvpn` → `10-finalize` → `99` (hyprpm update)
+
+The `run_once_` / `run_onchange_` / bare `run_` prefix decides *when*: once ever, on content change,
+or every apply. **Renaming a script or editing an `onchange` one re-triggers it** — that is the
+intended mechanism for "reinstall these packages", but it also means a cosmetic edit to a script
+causes a real reinstall on the next full apply. Say so when you make one.
+
+### Shared shell library
+
+Every script opens with `#!/bin/bash`, `set -euo pipefail`, then includes the shared templates.
+Follow that pattern; don't redefine what's already provided:
+
+```bash
+{{ template "utils.sh.tmpl" . }}
+{{ template "external_links.sh.tmpl" . }}
+```
+
+- `utils.sh.tmpl` — logging (`info`, `success`, `warn`, `error`), `ask <question>` (Y/n prompt,
+  Enter = yes), `reset_chezmoi_data_secret <key> <reminder>` (blanks a secret out of the user's
+  `chezmoi.toml` after use), and `detect_gpu_vendor` which sets `GPU_VENDOR` to `nvidia`/`amd`/`""`.
+- `external_links.sh.tmpl` — **all** external download URLs, versions and SHA256 hashes, as shell
+  variables with "last checked" dates. When an upstream asset moves, edit this file; never inline a
+  URL into a script.
+
+### Template data
+
+Scripts gate on the user's `~/.config/chezmoi/chezmoi.toml` `[data]` block: `.name`, `.email`,
+`.gaming` (skip Steam/OpenRGB/etc.), `.tailscale_authkey`, `.nordvpn_token` (empty string = skip
+that integration entirely). Several also branch on
+`{{- if ne .chezmoi.osRelease.id "cachyos" }}` to install what CachyOS would otherwise have
+provided. New optional features should follow the same "empty/false means skip cleanly" convention.
+
+### Externals
+
+`.chezmoiexternal.toml` pulls wallpapers, propics (`~/.face`, `~/.logo`), the SDDM theme and the
+Bibata hyprcursor from the user's `nMaax/dotfiles-assets` and `nMaax/dotfiles-sddm` repos, with a
+168h `refreshPeriod`. Large binary assets live there, **not** in this repo.
+
+### Setup facts that affect config code
+
+- Login must be **systemd-owned Hyprland (UWSM)** in SDDM, or autostart entries (tray icons, agents)
+  misbehave. `dot_config/hypr/lua/autostart.lua` assumes it.
+- KWallet is the keyring, and PAM auto-unlock only works for a wallet literally named `kdewallet`
+  with Blowfish encryption and the login password. `autostart.lua` execs `pam_kwallet_init`.
+- `dot_local/bin/` holds the helper scripts the config calls (`install-webapp`, `launch-webapp.sh`,
+  `linux-wallpaperengine`, `spicetify-setup.sh`). Two others (`hypr-scrolling.sh`, `hypr-toggle.py`)
+  are now dead — replaced by native Lua, pending removal per `CLEANUP.md` §3.
+- `dot_config/fish/functions/` is a large library of one-purpose media/document conversion functions
+  (`pdf-*`, `vid2*`, `*2png`, …). Self-contained; add new ones as single files following the
+  existing naming.
+
+---
+
+## 4. Hyprland Lua config
+
+`hyprland.lua` is loaded **instead of** `hyprland.conf` when it exists — checked once at startup, not
+merged. The legacy `hyprland.conf` and `hyprland/*.conf` are therefore **inert**, kept only as a
+rollback path and listed in `CLEANUP.md` §1. Editing them does nothing.
+
+`require("lua.foo")` replaces `source =`, resolved relative to `~/.config/hypr/`. Module order in
+`hyprland.lua` mirrors the old source chain.
+
+| Module | Holds |
+|---|---|
+| `autostart.lua` | `hl.on("hyprland.start", ...)` execs |
+| `env.lua` | `hl.env()` |
+| `permissions.lua` | entirely commented out, nothing active |
+| `monitors.lua` | `hl.monitor()`, `hl.workspace_rule()` |
+| `lookandfeel.lua` | `hl.config` for general/decoration/animations/layouts. **No perf settings** |
+| `input.lua` | keyboard/touchpad/per-device |
+| `keybindings.lua` | all `hl.bind()`, plus the native Lua helper closures |
+| `rules.lua` | `hl.window_rule()`, `hl.layer_rule()` |
+| `plugins.lua` | plugin *options* only — loading stays with `hyprpm` |
+| `performance.lua` | latency/rendering tuning |
+| `misc.lua` | the `misc` block |
+
+Setters: `hl.config`, `hl.bind`, `hl.monitor`, `hl.workspace_rule`, `hl.window_rule`, `hl.layer_rule`,
+`hl.curve`/`hl.animation`, `hl.device`, `hl.gesture`, `hl.env`, `hl.exec_cmd`, `hl.on`,
+`hl.define_submap`, `hl.dispatch`, `hl.notification.create`, `hl.timer`.
+
+Queries (all verified live): `hl.get_config(key)`, `hl.get_windows(filters)` — includes windows on
+*hidden* special workspaces, which is what makes the special-workspace toggle work —
+`hl.get_active_workspace()`, `hl.get_workspace_windows(id)`, `hl.get_active_window()`,
+`hl.get_workspaces()`. An `HL.Window` exposes `class`, `title`, `initial_class`, `initial_title`,
+`address`, `workspace`, `pid`.
+
+Two capabilities justify the migration off hyprlang:
+
+- **`hl.bind` accepts a plain Lua function.** This is how `hypr-scrolling.sh` and `hypr-toggle.py`
+  became in-process closures (`toggle_ws`, `move_workspace_windows` in `keybindings.lua`) with no
+  shell round-trip.
+- **`hl.config` works at runtime**, not just at load. `SUPER+X` flips `general.layout` between
+  `scrolling` and `dwindle` by reading `hl.get_config` and writing `hl.config` back.
+
+---
+
+## 5. Noctalia v5
+
+**Invariant: Hyprland Lua ⟺ Noctalia v5; Hyprland `.conf` ⟺ Noctalia v4.** Both are installed, v4 as
+a fallback (they don't conflict — v4 is JSON at `~/.config/noctalia/`, v5 is TOML at
+`~/.local/state/noctalia/`). We use Lua + v5. Do not mix.
+
+- IPC is `noctalia msg <command>`, and **`noctalia msg --help` is authoritative** — prefer it over
+  the docs. `keybindings.lua` wraps it in a local `ipc()` helper.
+- **v5 settings are NOT tracked by this repo.** They live in `~/.local/state/noctalia/settings.toml`
+  with `plugins/materialized/` and `plugins/data/`. Anything configured there (e.g.
+  `[shell.screenshot] directory`) is a manual step belonging in `CLEANUP.md` §5 — don't try to
+  template it.
+- **Plugin IDs are `<author>/<plugin>:<entry>`.** Panels: `panel-toggle noctalia/mpvpaper:picker`.
+  Events: `plugin <author/plugin:entry> <target[:bar]> <event> [payload]`, target `all` for singleton
+  services. Enumerate what's installed with `noctalia msg plugins list` — the v4 directory names
+  under `~/.config/noctalia/plugins/` are **not** valid v5 IDs (all five were wrong initially, and
+  all five omitted the `:entry` half).
+- **Not every plugin is a panel.** Kaomoji is a *launcher provider*, reached as
+  `panel-toggle launcher "/kao"`. Bongo Cat has no panel at all. Providers use the
+  `shell.launcher.provider_prefix` char: `/emo`, `/kao`, `/calc`, `/wall`, `/session`, `/win`.
+- **Not every plugin has IPC.** W Engine has no handler, so its kill path is
+  `pkill -f linux-wallpaperengine` alongside mpvpaper's real `clear-all` event.
+- Screenshots use Noctalia native (`screenshot-region`,
+  `screenshot-fullscreen [pick|monitor|all]`). There is **no per-window** mode — `pick` picks a
+  monitor. `hyprshot` is consequently unused and listed for removal; if per-window capture is ever
+  wanted back, hyprshot has to stay.
+
+### Webapps
+
+`dot_local/bin/executable_install-webapp` creates chromium `--app=` desktop entries. Chromium derives
+the Wayland app_id as `chrome-<host><path with / → _>-Default`. Confirmed live:
+`chrome-gemini.google.com__app-Default`, `chrome-claude.ai__-Default` (an empty path still yields
+`__`). Match these **prefix-anchored and per-host** — a blanket `^chrome-.*-Default$` would drag
+WhatsApp, ddocs and MCHOSE HUB into whatever workspace you're scoping.
+
+For terminal tools, `ghostty --class=<id> -e <cmd>` sets a deterministic app_id (ghostty exposes any
+config key as a CLI flag), far more robust than matching volatile terminal titles. Verified live:
+`ghostty --class=ai.claude` really does produce class `ai.claude`, and a workspace rule then picks it
+up unaided. Nothing in the config uses this at the moment — the AI CLIs it was introduced for turned
+out to work badly on a special workspace and are opened by hand now — but it's the right tool if a
+terminal program ever needs placing.
+
+---
+
+## 6. Gotchas that cost real time
+
+1. **Hyprland registers duplicate keybinds silently.** No `configerrors` entry, no warning — both
+   exist and one shadows the other. *Always* sweep after adding binds:
+   ```bash
+   hyprctl binds -j | jq -r '.[]|"\(.modmask)|\(.key)|\(.submap)"' | sort | uniq -d
+   ```
+   Anything printed is a conflict. This caught a real one (Antigravity landed on the media panel's
+   `SUPER+ALT+A`).
+
+2. **Dispatcher constructors do not validate option keys.**
+   `hl.dsp.window.move({workspace=..., bogus=1})` constructs happily. Option names can only be
+   confirmed by actually dispatching — a clean load is not evidence that an option name is right.
+
+3. **Lua patterns are not regex.** No `|` alternation; `.` must be escaped `%.`. And the two files
+   use *different* conventions:
+   - `rules.lua` matchers are Hyprland **regex** → `chrome-claude\\.ai`
+   - `keybindings.lua` matchers are **Lua patterns** → `^chrome%-claude%.ai`
+
+   Same concept, two escapings, same repo. Check which file you're in.
+
+4. **Binds are positional, not layout-dependent.** `input.resolve_binds_by_sym = false` is pinned in
+   `input.lua` (Hyprland's default, pinned deliberately with a comment). Each bind's keysym maps to a
+   keycode via the **first** `kb_layout` (`us`), then matching is by keycode — so every bind fires on
+   the same physical key whether `us` or `it` is active. **Write binds in US keysyms.** Setting the
+   option `true` would relocate every punctuation bind. This is why `SUPER+slash` works as `?` on
+   both layouts, and why resize uses `Minus`/`Equal` (the `Plus` variants were duplicate keycodes and
+   were deleted).
+
+5. **`pkill -f <pattern>` matches its own shell's command line** and kills the shell (exit 144,
+   truncated output). Use the bracket trick: `pkill -f 'mark[e]r'`.
+
+6. **`hyprctl eval` only prints `ok`** — see §1 for the scratch-file workaround.
+
+6b. **`hyprctl dispatch <dispatcher>` does not work under the Lua config.** The argument is parsed as
+   *Lua* (`hyprctl dispatch workspace 2` → `hl.dispatch(workspace 2)` → syntax error), and Hyprland
+   says so in the error: "dispatch in lua is a shorthand for hl.dispatch(...)". Failures are easy to
+   miss when you don't read the output, so nothing happens and you think it worked. Use
+   `hyprctl eval 'hl.dispatch(hl.dsp.focus({ workspace = "2" }))'` instead.
+
+6c. **Workspace window rules are evaluated on window *open* only.** A window moved out of its special
+   workspace afterwards stays out — verified by moving a rule-matched window to workspace 7 and
+   watching it remain. That's what makes manual placement overridable, and it's why the throw-in
+   binds (`SUPER+SHIFT+<key>`) can park *any* app in a special workspace and have it stick.
+   Corollary: an app that closes to tray and reopens gets the rule applied afresh.
+
+6d. **`hl.dsp.focus({ window = w })` reveals a hidden special workspace** as it focuses, and there is
+   no `hl.dsp.window.focus` — focusing is always `hl.dsp.focus`. That single call is what lets a
+   keybind reach an app whether it's tucked away or dragged out somewhere else.
+
+7. **`change_id` (Hyprland 0.56) cannot target workspaces 1–10 here.** It rejects an already-occupied
+   target id, and `monitors.lua` declares 1–10 `persistent = true`, so all ten always exist. The
+   move-whole-workspace feature (`SUPER+ALT+<digit>`) therefore moves each window individually.
+   `change_id` remains the right tool for *stashing* a layout at an unused high id.
+
+8. **Scrolling-layout niri behaviour is `scrolling.column_width = 1.0`** (the `0.5` default caused the
+   50/50 split). `fit_into_view`, `fit active` and `inhibit_scroll` are **layout messages**, not
+   config options — they go through `hl.dsp.layout(...)`, not `hl.config`.
+
+---
+
+## 7. Where to find answers
+
+- **`hyprctl descriptions`** — enumerates every config option with `name`, `description`, `default`,
+  `current`, `min`, `max`, `map`. The key is `name`, not `value`. More reliable than the wiki for
+  defaults and for confirming an option exists in the *installed* version.
+- **`hyprctl binds -j`**, **`hyprctl clients -j`**, **`hyprctl workspacerules`** — verify what
+  actually registered.
+- **The Hyprland wiki cannot be fetched** — JS-rendered, WebFetch returns only navigation. Use
+  `hyprctl descriptions`, `gh release view vX.Y.Z -R hyprwm/Hyprland`, and `gh pr view <n>` on the
+  individual PRs. PR bodies and test cases are excellent primary sources (that's how `change_id`'s
+  occupancy restriction was found).
+- **`noctalia msg --help`** and `docs.noctalia.dev`; `noctalia.dev/plugins/...` or a plugin's upstream
+  GitHub for its syntax.
+- **`chezmoi doctor`** and `chezmoi.io/reference` for chezmoi semantics.
+
+---
+
+## 8. Deferred work — do not start without asking
+
+Known, deliberate TODOs. Non-trivial, and the user wants to scope them:
+
+- `monitors.lua` — dynamic monitor detection / primary switching when the external display connects
+- `input.lua` — conditional per-device input config
+- `performance.lua` — competitive-gaming latency tuning
+- `keybindings.lua` (~line 137) — split the communication workspace per app (telegram / discord /
+  whatsapp separately)
+- Actually removing the v4 and `.conf` source files — the user wants to do this together when they
+  commit to it. Everything needed is in `CLEANUP.md`.
+
+`README.md` also carries a user-facing TODO list; those are the user's own project ideas, not work
+queued for Claude.
+
+Also: the user edits these files between sessions. If something looks like it regressed (binds you
+remember are gone), assume it was intentional and ask — do not restore it.
+
+---
+
+## 9. Conventions
+
+- Tabs for indentation in the Hyprland Lua files. (`dot_config/nvim/stylua.toml` specifies 2 spaces,
+  but it governs the *nvim* tree only — don't apply it here.)
+- Shell scripts: `#!/bin/bash`, `set -euo pipefail`, shared templates included, user-facing output
+  through `info`/`success`/`warn`/`error` rather than bare `echo`.
+- `description` on `hl.bind` is what the keybind-cheatsheet plugin displays, so it doubles as user
+  documentation. Convention is one description per *group*, not per bind: repetitive binds are left
+  bare and the last member carries a collapsed label — `SUPER+1`…`SUPER+9` are undescribed and
+  `SUPER+0` says `"Access workspace [0-9]"`. Media/`XF86*` keys and submap navigation binds are
+  deliberately undescribed (self-evident, and they'd flood the sheet). Anything genuinely new and
+  discoverable gets its own.
+- Comments explain *why*, especially for anything empirically discovered. A comment recording "this
+  option is pinned because the alternative breaks X" has already paid for itself several times here.
+  Prune comments that merely restate the code.
+- `git commit` messages are one-liners listing the changes, not verbose bodies.
