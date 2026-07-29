@@ -41,7 +41,11 @@ hl.bind(
 	{ description = "Reload hyprland and restart noctalia" }
 )
 
--- TODO : improve scrolling and dwindle related kaybinds, discover QoL features and find the right keybinds
+-- TODO : improve scrolling and dwindle related kaybinds, discover QoL features and find the right keybinds]
+-- among issues found so far:
+--  1. When moving windows in scrolling mode, they all get down the other window creating a vertical split; I think it should be more intuitive
+--  such that every new window spawns in full width and height, and then one can move it to the left where it will behave just like any other workspace split: both vertically and horizonally splitting
+--  2. SUPER+SHIFT+X and SUPER+Z do not seem to work, or maybe they simply cannot trigger in the specific layour I naturally end up into, we should review what would be their use and better keubinds anyway
 
 -- Scrolling only
 hl.bind(
@@ -54,7 +58,6 @@ hl.bind(
 	hl.dsp.layout("fit_into_view"),
 	{ description = "Scroll active column fully into view (scrolling only)" }
 )
-hl.bind("SUPER+SHIFT+Z", hl.dsp.layout("inhibit_scroll"), { description = "Toggle scroll inhibit (scrolling only)" })
 
 -- Dwindle only
 hl.bind("SUPER+Y", hl.dsp.layout("togglesplit"), { description = "Switch split orientation (dwindle only)" })
@@ -98,6 +101,7 @@ hl.bind(
 	hl.dsp.exec_cmd(ipc("plugin noctalia/mpvpaper:service all clear-all") .. " ; pkill -f linux-wallpaperengine"),
 	{ description = "Disable all animated wallpapers" }
 )
+-- TODO: this one doesnt seem to work, maybe it is an halluccination?
 hl.bind(
 	"SUPER+F11",
 	hl.dsp.exec_cmd("hyprctl dispatch monitor ,preferred,auto,1"),
@@ -113,16 +117,6 @@ hl.bind("SUPER+ALT+N", hl.dsp.exec_cmd("kate"), { description = "Open Kate" })
 hl.bind("SUPER+E", hl.dsp.exec_cmd("dolphin"), { description = "Open dolphin file manager" })
 hl.bind("SUPER+SHIFT+E", hl.dsp.exec_cmd("ghostty -e yazi"), { description = "Open yazi file manager" })
 
--- Discord and Telegram are no longer plain launchers: they own one special
--- workspace each, bound as SUPER+D / SUPER+T further down. The Claude Code and
--- Antigravity CLIs had binds here too, but they are just terminal programs and
--- are better opened by hand than pinned to the AI workspace.
-
--- Follows the app, not the workspace: spawn if nothing matches, focus it if it
--- lives elsewhere (focusing reveals a hidden special workspace), and toggle off
--- only when the match is already focused on its own workspace. Workspace rules
--- fire on open only, so a window dragged out stays out and this still finds it.
--- window.workspace is an HL.Workspace userdata, not a string -- compare .name.
 local function window_on_special(window, special)
 	return window.workspace ~= nil and window.workspace.name == special
 end
@@ -165,11 +159,7 @@ local function app_ws(name, matchers, command)
 		end
 
 		local active = hl.get_active_window()
-		if
-			window_on_special(target, special)
-			and active
-			and active.address == target.address
-		then
+		if window_on_special(target, special) and active and active.address == target.address then
 			hl.dispatch(hl.dsp.workspace.toggle_special(name))
 			return
 		end
@@ -227,8 +217,6 @@ hl.bind(
 	}, "steam"),
 	{ description = "Toggle game launchers workspace (Steam)" }
 )
--- Moved off SUPER+SHIFT+G, which now throws a window into the launchers
--- workspace like every other SUPER+SHIFT+<key> below.
 hl.bind("SUPER+CTRL+G", hl.dsp.focus({ workspace = "11" }), { description = "Go to games workspace" })
 hl.bind(
 	"SUPER+A",
@@ -251,11 +239,7 @@ hl.bind(
 			"^KeePass2$",
 			"^[Bb]itwarden$",
 			"^1[Pp]assword$",
-			"^Enpass$",
 			"^proton%-pass$",
-			"^org%.kde%.kwalletmanager5$",
-			"^org%.gnome%.Seahorse$",
-			"^org%.gnome%.World%.Secrets$",
 		},
 	}, "keepassxc"),
 	{ description = "Toggle password workspace (KeePassXC)" }

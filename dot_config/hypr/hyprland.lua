@@ -9,3 +9,5 @@ require("lua.rules")
 require("lua.plugins")
 require("lua.performance")
 require("lua.misc")
+
+-- TODO: we should move many function in dedicated files and re-organize the code overall
