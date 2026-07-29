@@ -37,31 +37,35 @@ hl.window_rule({
 	workspace = "special:sysmon",
 })
 
--- Communication workspace
+-- Discord and Telegram get their own workspaces
 hl.window_rule({
-	name = "comms-workspace-class",
-	match = { class = "^(discord|equibop|vesktop|org.telegram.desktop|whatsapp|Element)$" },
-	workspace = "special:communication",
+	name = "discord-workspace-class",
+	match = { class = "^(discord|equibop|vesktop)$" },
+	workspace = "special:discord",
+})
+hl.window_rule({
+	name = "telegram-workspace-class",
+	match = { class = "^(org\\.telegram\\.desktop|TelegramDesktop)$" },
+	workspace = "special:telegram",
 })
 
--- Password managers workspace
+-- Password managers workspace. Only KeePassXC is installed; the rest are here so
+-- the rule keeps working if one gets added later.
 hl.window_rule({
 	name = "password-workspace-class",
-	match = { class = "^(org.keepassxc.KeePassXC)" },
+	match = {
+		class = "^(org\\.keepassxc\\.KeePassXC|keepassxc|KeePass2|[Bb]itwarden|1[Pp]assword|Enpass|proton-pass|org\\.kde\\.kwalletmanager5|org\\.gnome\\.Seahorse|org\\.gnome\\.World\\.Secrets)$",
+	},
 	workspace = "special:password",
 })
 
--- AI workspace (replaces the old EasyEffects/audio workspace).
--- Two groups here: the CLI tools, which get an explicit `ghostty --class=` when
--- launched from keybindings.lua, and the chromium `--app=` webapps, whose app_id
--- chromium derives from the URL as chrome-<host><path, / -> _>-Default.
--- Deliberately scoped per-host rather than a blanket chrome-.* so the non-AI
--- webapps (WhatsApp, ddocs, MCHOSE HUB) are not caught.
--- NOTE: this is a Hyprland regex, not a Lua pattern -- hence \\. not %.
+-- AI workspace: webapps only. The Claude Code and Antigravity CLIs used to be
+-- placed here via `ghostty --class=ai.*`, but they work better as ordinary
+-- terminal windows, so they are opened by hand now.
 hl.window_rule({
 	name = "ai-workspace-class",
 	match = {
-		class = "^(ai\\.claude|ai\\.antigravity|chrome-(gemini\\.google\\.com|github\\.com__copilot|chatgpt\\.com|claude\\.ai).*)$",
+		class = "^chrome-(gemini\\.google\\.com|github\\.com__copilot|chatgpt\\.com|claude\\.ai).*$",
 	},
 	workspace = "special:ai",
 })
@@ -69,7 +73,7 @@ hl.window_rule({
 -- Music workspace
 hl.window_rule({
 	name = "music-workspace-class",
-	match = { class = "^([Ss]potify|feishin|Supersonic|Cider|com.github.th_ch.youtube_music|Plexamp)$" },
+	match = { class = "^([Ss]potify|feishin|Supersonic|Cider|com\\.github\\.th_ch\\.youtube_music|Plexamp)$" },
 	workspace = "special:music",
 })
 hl.window_rule({
@@ -94,17 +98,11 @@ hl.window_rule({
 hl.window_rule({
 	name = "games-launchers-workspace-class",
 	-- Matches Steam, Lutris, and Heroic (com.heroicgameslauncher.hgl)
-	match = { class = "^(steam|lutris|com.heroicgameslauncher.hgl|heroic)$" },
+	match = { class = "^(steam|lutris|com\\.heroicgameslauncher\\.hgl|heroic)$" },
 	workspace = "special:games",
 })
 
--- Games get their own reserved workspace (11), so they never land in the middle
--- of the 1-10 rotation. 11 is outside that range on purpose: nothing existing is
--- sacrificed, and it is reachable via SUPER+SHIFT+G. Its gaps/border are zeroed
--- by the workspace_rule in monitors.lua.
---
--- NOTE: this replaces the previous `workspace = "unset"` (games stayed wherever
--- they happened to open).
+-- Games always go to Workspace 11
 hl.window_rule({
 	name = "games-workspace",
 	match = {
@@ -114,15 +112,6 @@ hl.window_rule({
 	workspace = "11",
 	no_vrr = false, -- Always try to enable VRR
 	idle_inhibit = "always", -- Do not sleep
-})
-
--- Noctalia settings window
--- See https://docs.noctalia.dev/v5/compositor-settings/hyprland/
-hl.window_rule({
-	name = "noctalia-settings",
-	match = { class = "dev.noctalia.Noctalia" },
-	float = true,
-	size = { 1080, 920 },
 })
 
 -- Remove effects
@@ -140,10 +129,22 @@ hl.window_rule({
 	decorate = false,
 })
 
+-- Noctalia settings window
+-- See https://docs.noctalia.dev/v5/compositor-settings/hyprland/
+hl.window_rule({
+	name = "noctalia-settings",
+	match = { class = "^dev\\.noctalia\\.Noctalia$" },
+	float = true,
+	size = { 1080, 920 },
+})
+
 -- Blur Noctalia's own surfaces (bar, panels, dock, osd, window switcher, etc.)
 -- See https://docs.noctalia.dev/v5/compositor-settings/hyprland/
--- TODO: part of the v5 upgrade, verify namespace pattern once noctalia v5 is
--- actually installed and running.
+-- Verified against v5 with `hyprctl layers` while opening each surface: all seven
+-- alternatives exist as noctalia-{bar-default,notification,dock,panel,
+-- attached-panel,osd,window-switcher}. noctalia-screen-corner and
+-- noctalia-wallpaper are the two v5 layers deliberately left out -- blurring the
+-- wallpaper layer in particular would be wrong.
 hl.layer_rule({
 	name = "noctalia",
 	match = { namespace = "^noctalia-(bar-.+|notification|dock|panel|attached-panel|osd|window-switcher)$" },

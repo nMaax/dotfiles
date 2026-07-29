@@ -41,14 +41,11 @@ hl.bind(
 	{ description = "Reload hyprland and restart noctalia" }
 )
 
--- Scrolling only -- layout messages added in Hyprland 0.56.
--- These are layoutmsg's, not dispatchers, so they go through hl.dsp.layout()
--- (same as togglesplit below).
+-- TODO : improve scrolling and dwindle related kaybinds, discover QoL features and find the right keybinds
+
+-- Scrolling only
 hl.bind(
 	"SUPER+SHIFT+X",
-	-- 0.56 changed "fit active": it used to just set the column width to 1.0
-	-- (which colresize already did), and now expands the active column into all
-	-- the unused space on the monitor -- niri's expand-column-to-available-width.
 	hl.dsp.layout("fit active"),
 	{ description = "Expand column into free space (scrolling only)" }
 )
@@ -57,13 +54,7 @@ hl.bind(
 	hl.dsp.layout("fit_into_view"),
 	{ description = "Scroll active column fully into view (scrolling only)" }
 )
-hl.bind(
-	"SUPER+SHIFT+Z",
-	-- Per-workspace toggle: freezes the tape so focus changes stop scrolling the
-	-- view. Useful to pin a reference layout in place.
-	hl.dsp.layout("inhibit_scroll"),
-	{ description = "Toggle scroll inhibit (scrolling only)" }
-)
+hl.bind("SUPER+SHIFT+Z", hl.dsp.layout("inhibit_scroll"), { description = "Toggle scroll inhibit (scrolling only)" })
 
 -- Dwindle only
 hl.bind("SUPER+Y", hl.dsp.layout("togglesplit"), { description = "Switch split orientation (dwindle only)" })
@@ -122,82 +113,100 @@ hl.bind("SUPER+ALT+N", hl.dsp.exec_cmd("kate"), { description = "Open Kate" })
 hl.bind("SUPER+E", hl.dsp.exec_cmd("dolphin"), { description = "Open dolphin file manager" })
 hl.bind("SUPER+SHIFT+E", hl.dsp.exec_cmd("ghostty -e yazi"), { description = "Open yazi file manager" })
 
--- Specific apps keybinds
-hl.bind("SUPER+D", hl.dsp.exec_cmd("discord"), { description = "Open Discord" })
-hl.bind("SUPER+T", hl.dsp.exec_cmd("Telegram"), { description = "Open Telegram" })
--- The two AI CLIs. Both need a terminal (neither has a launcher entry), and both
--- get an explicit --class so the AI workspace rule in rules.lua picks them up --
--- verified: `ghostty --class=ai.claude` really does set the Wayland app_id, and
--- the resulting window lands on special:ai by itself.
---
--- These exist as their own binds because SUPER+A only auto-spawns Claude Code
--- when the AI group is *entirely* empty -- with a webapp already open it just
--- toggles, so without these there would be no way to start either CLI by key.
---
--- `agy` is the binary antigravity-cli installs; there is no `antigravity`
--- command. ALT+I ("AI") rather than the more obvious ALT+A because ALT+A is
--- already the media panel further down, and Hyprland accepts duplicate binds
--- silently rather than erroring.
-hl.bind("SUPER+ALT+C", hl.dsp.exec_cmd("ghostty --class=ai.claude -e claude"), { description = "Open Claude Code" })
-hl.bind(
-	"SUPER+ALT+I",
-	hl.dsp.exec_cmd("ghostty --class=ai.antigravity -e agy"),
-	{ description = "Open Antigravity" }
-)
+-- Discord and Telegram are no longer plain launchers: they own one special
+-- workspace each, bound as SUPER+D / SUPER+T further down. The Claude Code and
+-- Antigravity CLIs had binds here too, but they are just terminal programs and
+-- are better opened by hand than pinned to the AI workspace.
 
--- Access special workspaces by toggle command
-local function toggle_ws(name, matchers, command)
+-- Follows the app, not the workspace: spawn if nothing matches, focus it if it
+-- lives elsewhere (focusing reveals a hidden special workspace), and toggle off
+-- only when the match is already focused on its own workspace. Workspace rules
+-- fire on open only, so a window dragged out stays out and this still finds it.
+-- window.workspace is an HL.Workspace userdata, not a string -- compare .name.
+local function window_on_special(window, special)
+	return window.workspace ~= nil and window.workspace.name == special
+end
+
+local function app_ws(name, matchers, command)
+	local special = "special:" .. name
 	return function()
-		local running = false
+		local target
 		for _, window in ipairs(hl.get_windows()) do
+			local hit = false
 			for _, pattern in ipairs(matchers.class or {}) do
 				if (window.class or ""):match(pattern) then
-					running = true
+					hit = true
 				end
 			end
 			for _, pattern in ipairs(matchers.title or {}) do
 				if (window.title or ""):match(pattern) then
-					running = true
+					hit = true
 				end
 			end
+			if hit then
+				-- Prefer a window still on its own workspace, so a second window
+				-- left elsewhere doesn't hijack the bind.
+				if window_on_special(window, special) then
+					target = window
+					break
+				end
+				target = target or window
+			end
 		end
-		if not running and command then
-			hl.exec_cmd(command)
+
+		if not target then
+			if command then
+				hl.exec_cmd(command)
+			end
+			-- Toggle unconditionally, so the workspace slides in immediately even if
+			-- the app we just spawned takes a couple of seconds to map.
+			hl.dispatch(hl.dsp.workspace.toggle_special(name))
+			return
 		end
-		-- Toggle unconditionally, so the workspace slides in immediately even if
-		-- the app we just spawned takes a couple of seconds to map.
-		hl.dispatch(hl.dsp.workspace.toggle_special(name))
+
+		local active = hl.get_active_window()
+		if
+			window_on_special(target, special)
+			and active
+			and active.address == target.address
+		then
+			hl.dispatch(hl.dsp.workspace.toggle_special(name))
+			return
+		end
+		hl.dispatch(hl.dsp.focus({ window = target }))
 	end
+end
+
+-- Throw the focused window into a special workspace, whatever app it belongs to.
+-- Nothing drags it back out, again because workspace rules only fire on open.
+local function throw_to_ws(name)
+	return hl.dsp.window.move({ workspace = "special:" .. name })
 end
 
 hl.bind(
 	"SUPER+Delete",
-	toggle_ws("sysmon", {
+	app_ws("sysmon", {
 		title = { "^btop$", "^nvtop$", "^htop$", "^top$" },
 	}, "ghostty -e btop"),
 	{ description = "Toggle system monitors workspace (btop)" }
 )
--- TODO: should rather make one workspace for each app, e.g. divide telegram and discord and whatsapp
 hl.bind(
-	"SUPER+C",
-	toggle_ws("communication", {
-		class = {
-			"^discord$",
-			"^equibop$",
-			"^vesktop$",
-			"^org%.telegram%.desktop$",
-			"^TelegramDesktop$",
-			"^whatsapp$",
-			"^Element$",
-			"^signal$",
-		},
-		title = { "web%.whatsapp%.com" },
+	"SUPER+D",
+	app_ws("discord", {
+		class = { "^discord$", "^equibop$", "^vesktop$" },
 	}, "discord"),
-	{ description = "Toggle communication workspace (Discord)" }
+	{ description = "Toggle Discord workspace" }
+)
+hl.bind(
+	"SUPER+T",
+	app_ws("telegram", {
+		class = { "^org%.telegram%.desktop$", "^TelegramDesktop$" },
+	}, "Telegram"),
+	{ description = "Toggle Telegram workspace" }
 )
 hl.bind(
 	"SUPER+M",
-	toggle_ws("music", {
+	app_ws("music", {
 		class = {
 			"^[Ss]potify$",
 			"^feishin$",
@@ -212,59 +221,57 @@ hl.bind(
 )
 hl.bind(
 	"SUPER+G",
-	toggle_ws("games", {
+	app_ws("games", {
 		class = { "^steam$", "^lutris$", "^com%.heroicgameslauncher%.hgl$", "^heroic$" },
 		title = { "^Steam$" },
 	}, "steam"),
 	{ description = "Toggle game launchers workspace (Steam)" }
 )
--- SUPER+G toggles the *launchers* (special workspace); this reaches the reserved
--- workspace where the games themselves land. See rules.lua + monitors.lua.
-hl.bind("SUPER+SHIFT+G", hl.dsp.focus({ workspace = "11" }), { description = "Go to games workspace" })
--- AI workspace. Replaces the old EasyEffects toggle that used to live on this
--- key (EasyEffects is deliberately left with no keybind at all now).
---
--- The two CLI tools get an explicit ghostty --class so they have a stable app_id
--- to match on, instead of us having to guess at terminal titles (ghostty exposes
--- `class` as a config key, and any config key can be passed as a CLI flag).
--- `agy` is the binary antigravity-cli actually installs -- there is no
--- `antigravity` command.
---
--- The chrome-* entries are chromium `--app=` windows created by
--- ~/.local/bin/install-webapp. Chromium derives that app_id from the URL as
--- chrome-<host><path, / -> _>-Default -- confirmed live against
--- chrome-gemini.google.com__app-Default and chrome-claude.ai__-Default (empty
--- path still yields the "__"). Matched per-host and prefix-anchored (no trailing
--- $) on purpose: a blanket ^chrome-.* would also swallow the WhatsApp, ddocs,
--- MCHOSE HUB and Ask Brave webapps, which are not AI tools.
---
--- NOTE on spawning: like every other toggle_ws bind, this only runs its command
--- when NOTHING in the group matches -- so with a webapp already open it is a
--- pure toggle and will not start Claude Code. That is deliberate (toggling to
--- read Gemini shouldn't spawn a terminal); the CLIs have their own launchers on
--- SUPER+ALT+C / SUPER+ALT+I for when you do want them.
+-- Moved off SUPER+SHIFT+G, which now throws a window into the launchers
+-- workspace like every other SUPER+SHIFT+<key> below.
+hl.bind("SUPER+CTRL+G", hl.dsp.focus({ workspace = "11" }), { description = "Go to games workspace" })
 hl.bind(
 	"SUPER+A",
-	toggle_ws("ai", {
+	app_ws("ai", {
 		class = {
-			"^ai%.claude$",
-			"^ai%.antigravity$",
 			"^chrome%-gemini%.google%.com",
 			"^chrome%-github%.com__copilot",
 			"^chrome%-chatgpt%.com",
 			"^chrome%-claude%.ai",
 		},
-	}, "ghostty --class=ai.claude -e claude"),
-	{ description = "Toggle AI workspace (Claude Code)" }
+	}, 'launch-webapp.sh "https://claude.ai"'),
+	{ description = "Toggle AI workspace (Claude webapp)" }
 )
 hl.bind(
 	"SUPER+P",
-	toggle_ws("password", {
-		class = { "^org%.keepassxc%.KeePassXC$" },
+	app_ws("password", {
+		class = {
+			"^org%.keepassxc%.KeePassXC$",
+			"^keepassxc$",
+			"^KeePass2$",
+			"^[Bb]itwarden$",
+			"^1[Pp]assword$",
+			"^Enpass$",
+			"^proton%-pass$",
+			"^org%.kde%.kwalletmanager5$",
+			"^org%.gnome%.Seahorse$",
+			"^org%.gnome%.World%.Secrets$",
+		},
 	}, "keepassxc"),
 	{ description = "Toggle password workspace (KeePassXC)" }
 )
 hl.bind("SUPER+S", hl.dsp.workspace.toggle_special("magic"), { description = "Toggle scratchpad" })
+
+-- SUPER+SHIFT+<same key> throws the focused window in, even an app with no rule
+-- for that workspace. Placement is overridable both ways: drag anything in, drag
+-- anything out, it stays where you put it.
+hl.bind("SUPER+SHIFT+Delete", throw_to_ws("sysmon"), { description = "Move window to system monitors workspace" })
+hl.bind("SUPER+SHIFT+D", throw_to_ws("discord"), { description = "Move window to Discord workspace" })
+hl.bind("SUPER+SHIFT+T", throw_to_ws("telegram"), { description = "Move window to Telegram workspace" })
+hl.bind("SUPER+SHIFT+M", throw_to_ws("music"), { description = "Move window to music workspace" })
+hl.bind("SUPER+SHIFT+G", throw_to_ws("games"), { description = "Move window to game launchers workspace" })
+hl.bind("SUPER+SHIFT+A", throw_to_ws("ai"), { description = "Move window to AI workspace" })
+hl.bind("SUPER+SHIFT+P", throw_to_ws("password"), { description = "Move window to password workspace" })
 
 -- 3. MOVE AROUND (arrows)
 hl.bind("SUPER+up", hl.dsp.focus({ direction = "up" }), { description = "Move focus up" })
@@ -350,18 +357,6 @@ hl.bind(
 -- Move windows to scratchpad
 hl.bind("SUPER+SHIFT+S", hl.dsp.window.move({ workspace = "special:magic" }))
 
--- Move the ENTIRE window arrangement of the current workspace to another id.
---
--- Hyprland 0.56 added hl.dsp.workspace.change_id({ workspace = ..., id = N }),
--- which renumbers a workspace in place and carries its windows and name along.
--- That is NOT usable for this bind, though: change_id refuses a target id that
--- is already occupied, and monitors.lua declares workspaces 1-10 as
--- `persistent = true`, so all ten always exist and every target would be
--- rejected. (change_id is still the right tool for *stashing* a whole layout at
--- an unused high id, e.g. 20+ -- it just can't hit the numbered rotation.)
---
--- So instead: walk the windows and move each one, which works regardless of
--- occupancy and merges into whatever is already on the target.
 local function move_workspace_windows(target)
 	return function()
 		local current = hl.get_active_workspace()
@@ -430,10 +425,6 @@ hl.bind(
 	hl.dsp.window.resize({ x = 0, y = 20, relative = true }),
 	{ repeating = true, description = "Resize window down" }
 )
--- NOTE: mouse-drag move/resize use the dedicated no-arg dispatchers + the
--- `mouse` opt (confirmed against the official shipped example config at
--- /usr/share/hypr/hyprland.lua) -- window.move({})/drag=true (what was here
--- before) don't exist / don't validate.
 hl.bind("SUPER+mouse:272", hl.dsp.window.drag(), { mouse = true, description = "Re-arrange windows with mouse" })
 hl.bind("SUPER+mouse:273", hl.dsp.window.resize(), { mouse = true, description = "Re-size windows with mouse" })
 
@@ -462,18 +453,6 @@ hl.define_submap("scrolloverview", function()
 end)
 
 -- 5. SCREENSHOTS
---
--- Noctalia's native capture, replacing hyprshot (which is now removable -- see
--- CLEANUP.md). Gains screen-freeze before region select, clipboard copy, and an
--- optional annotator pipe.
---
--- Output location is NOT set here: it comes from Noctalia's own
--- [shell.screenshot] block (directory / filename_pattern / save_to_file /
--- copy_to_clipboard / freeze_screen / ...). That lives in
--- ~/.local/state/noctalia/settings.toml, which this repo does not track, so an
--- empty `directory` means captures land in ~/Pictures rather than the
--- ~/Pictures/Screenshots that hyprshot used. Setting it is a one-off manual step
--- in Noctalia's Settings UI -- listed in CLEANUP.md.
 hl.bind(
 	"PRINT",
 	hl.dsp.exec_cmd(ipc("screenshot-fullscreen")),
@@ -493,12 +472,9 @@ hl.bind(
 )
 
 -- 6. MULTIMEDIA
--- Laptop multimedia keys for volume and LCD brightness
--- These open the control-center at a given tab. Valid contexts per
--- `noctalia msg --help` ("panel-toggle <id> [context]"): media, audio,
--- bluetooth, notifications, system, weather, screen_time.
+-- Moved off SUPER+SHIFT+A, which now throws a window into the AI workspace.
 hl.bind(
-	"SUPER+SHIFT+A",
+	"SUPER+CTRL+A",
 	hl.dsp.exec_cmd(ipc("panel-toggle control-center audio")),
 	{ description = "Open audio devices panel" }
 )
