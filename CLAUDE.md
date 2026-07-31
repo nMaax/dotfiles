@@ -337,9 +337,11 @@ WhatsApp, ddocs and MCHOSE HUB into whatever workspace you're scoping.
 For terminal tools, `ghostty --class=<id> -e <cmd>` sets a deterministic app_id (ghostty exposes any
 config key as a CLI flag), far more robust than matching volatile terminal titles. Verified live:
 `ghostty --class=ai.claude` really does produce class `ai.claude`, and a workspace rule then picks it
-up unaided. Nothing in the config uses this at the moment — the AI CLIs it was introduced for turned
-out to work badly on a special workspace and are opened by hand now — but it's the right tool if a
-terminal program ever needs placing.
+up unaided. The AI CLIs it was introduced for turned out to work badly on a special workspace and are
+opened by hand now, but the sysmon workspace (`SUPER+Delete` → btop) uses exactly this pattern —
+class `sysmon.btop`, matched in both `keybindings.lua` and `rules.lua` — after title matching proved
+unreliable (ghostty's title only updates after the window is already mapped, too late for an
+open-time workspace rule).
 
 ---
 
@@ -537,6 +539,7 @@ remember are gone), assume it was intentional and ask — do not restore it.
 - Comments explain *why*, especially for anything empirically discovered. A comment recording "this
   option is pinned because the alternative breaks X" has already paid for itself several times here.
   Prune comments that merely restate the code.
-- Keep comments short — one or two lines. State the rule and the reason, not a full inventory of
-  every file/case it covers; that belongs in the diff or commit message, not living in a comment.
+- Keep comments short — one or two lines, not verbose. State the rule and the reason in as few
+  words as the fact allows; skip the mechanism narration and the full inventory of every file/case
+  it covers — that belongs in the diff or commit message, not living in a comment.
 - `git commit` messages are one-liners listing the changes, not verbose bodies.

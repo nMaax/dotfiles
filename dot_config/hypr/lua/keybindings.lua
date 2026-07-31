@@ -51,7 +51,7 @@ hl.bind(
 	{ description = "Reload hyprland and restart noctalia" }
 )
 
--- TODO : improve scrolling and dwindle related keybinds, discover QoL features and find the right keybinds]
+-- TODO : improve scrolling and dwindle related keybinds, discover QoL features and find the right keybinds
 -- among issues found so far:
 --  1. When moving windows in scrolling mode, they all get down the other window creating a vertical split; I think it should be more intuitive
 --  such that every new window spawns in full width and height, and then one can move it to the left where it will behave just like any other workspace split: both vertically and horizonally splitting
@@ -181,8 +181,8 @@ end
 hl.bind(
 	"SUPER+Delete",
 	app_ws("sysmon", {
-		title = { "^btop$", "^nvtop$", "^htop$", "^top$" },
-	}, "ghostty -e btop"),
+		class = { "^sysmon%.btop$" },
+	}, "ghostty --class=sysmon.btop -e btop"),
 	{ description = "Toggle system monitors workspace (btop)" }
 )
 hl.bind(

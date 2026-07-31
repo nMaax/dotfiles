@@ -51,8 +51,9 @@ keeping it beyond disk.
       `.chezmoiscripts/run_onchange_before_04-hyprland-noctalia.sh.tmpl`
       (`paru -S --needed --noconfirm noctalia-shell`) and the comment block explaining the coexistence
 
-**Keep `noctalia-qs`** — it stays installed either way, because `quickshell-overview-git` (the
-unrelated ScrollOverview plugin UI) depends on it.
+**Keep `noctalia-qs`** for now — once §8 removes `quickshell-overview-git`, the only remaining
+dependent is `noctalia-shell` itself, so it goes away naturally when this section's package removal
+happens.
 
 **What breaks:** your v4 bar layout, pinned apps, enabled plugins and colorschemes are gone for good.
 v5 has no migration path from v4, so this is only safe once v5 is fully configured to your liking.
@@ -128,3 +129,28 @@ chezmoi source when this file was written. Per the gotcha at the top, the alread
 still sitting in `$HOME`:
 
 - [x] `rm -f ~/.local/bin/noctalia-v4-cleanup.sh ~/.local/bin/hyprland-conf-cleanup.sh`
+
+---
+
+## 8. QuickShell Overview (`quickshell-overview-git`)
+
+Fully superseded by the native Hyprland plugin `scrolloverview` (hyprpm repo
+`hyprland-scroll-overview`, configured in `dot_config/hypr/lua/plugins.lua`), bound to `SUPER+TAB`.
+`quickshell-overview-git` is still installed, but nothing autostarts it (no autostart.lua entry, no
+systemd unit, no running process) — the only thing left calling it is a dead keybind.
+
+- [ ] Remove the `SUPER+SHIFT+TAB` bind in `dot_config/hypr/lua/keybindings.lua`
+      (`hl.dsp.exec_cmd("qs ipc -c overview call overview toggle")`) — it invokes the old QuickShell
+      overview via its `qs` CLI, which isn't running, so the bind silently does nothing (the same
+      exec_cmd trap as `CLAUDE.md` §6b/6g). `SUPER+TAB` already covers this via the real plugin.
+- [ ] Drop the `paru -S --needed --noconfirm quickshell-overview-git` line from
+      `.chezmoiscripts/run_onchange_before_04-hyprland-noctalia.sh.tmpl`
+- [ ] `sudo pacman -Rns quickshell-overview-git`
+
+**What breaks:** nothing — `SUPER+TAB` already shows the workspace overview via `scrolloverview`.
+
+**Package footprint:** only owns `/etc/xdg/quickshell/overview/**` and `/usr/bin/qs-overview` — no
+user `~/.config` residue to clean up separately.
+
+**Note:** removing this leaves `noctalia-qs` required only by `noctalia-shell` (§2's v4 fallback) —
+see the updated note there.

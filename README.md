@@ -330,7 +330,6 @@ Hit **Start Streaming** in OBS. That's it :)
 
 - [ ] Move to shelly
 - [ ] Solve TODOs around the codebase and move to Lua (optimize for gaming performances)
-- [ ] Try to rice [quickshell overview](https://github.com/Shanu-Kumawat/quickshell-overview#%EF%B8%8F-configuration)
 - [ ] Try to rice [scroll overview](https://github.com/yayuuu/hyprland-scroll-overview)
 - [ ] Remove unused AUR packages
 - [ ] Explore new plugins and remove unused

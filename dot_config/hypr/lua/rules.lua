@@ -32,8 +32,8 @@ hl.window_rule({
 
 -- System Monitor workspace
 hl.window_rule({
-	name = "sysmon-workspace-title",
-	match = { title = "^(btop|nvtop|htop|top)$" },
+	name = "sysmon-workspace-class",
+	match = { class = "^sysmon\\.btop$" },
 	workspace = "special:sysmon",
 })
 
