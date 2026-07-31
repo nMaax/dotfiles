@@ -1,4 +1,4 @@
--- WINDOWS
+-- WINDOW RULES
 -- See https://wiki.hypr.land/Configuring/Window-Rules/ for more
 
 -- Ignore maximize requests from all apps. You'll probably like this.
@@ -29,6 +29,29 @@ hl.window_rule({
 	move = "20 monitor_h-120",
 	float = true,
 })
+
+-- NOCTALIA RULES
+-- See https://docs.noctalia.dev/v5/compositor-settings/hyprland/
+
+-- Noctalia windows float
+hl.window_rule({
+	name = "noctalia-settings",
+	match = { class = "^dev\\.noctalia\\.Noctalia$" },
+	float = true,
+	size = { 1080, 920 },
+})
+
+-- Blur Noctalia's own surfaces (bar, panels, dock, osd, window switcher, etc.)
+hl.layer_rule({
+	name = "noctalia",
+	match = { namespace = "^noctalia-(bar-.+|notification|dock|panel|attached-panel|osd|window-switcher)$" },
+	no_anim = true,
+	ignore_alpha = 0.5,
+	blur = true,
+	blur_popups = true,
+})
+
+--- CUSTOM WORKSPACES
 
 -- System Monitor workspace
 hl.window_rule({
@@ -94,59 +117,17 @@ hl.window_rule({
 -- Game Launchers Workspace
 hl.window_rule({
 	name = "games-launchers-workspace-class",
-	-- Matches Steam, Lutris, and Heroic (com.heroicgameslauncher.hgl)
 	match = { class = "^(steam|lutris|com\\.heroicgameslauncher\\.hgl|heroic)$" },
 	workspace = "special:games",
 })
 
--- Games always go to Workspace 11
+-- Games
 hl.window_rule({
 	name = "games-workspace",
 	match = {
-		content = "game",
 		class = "^(steam_app_.*|.*\\.exe|wine|Wine|lutris_.*|heroic_.*|love)$", -- love is VRRTest
 	},
-	workspace = "11",
+	workspace = "10", -- Fix to a unused workspace
 	no_vrr = false, -- Always try to enable VRR
 	idle_inhibit = "always", -- Do not sleep
-})
-
--- Remove effects
-hl.window_rule({
-	name = "no-effect-overwatch",
-	match = { title = "^(Overwatch)$" },
-
-	-- Disable effects
-	no_anim = true,
-	no_blur = true,
-	no_shadow = true,
-	no_dim = true,
-	rounding = 0,
-	border_size = 0,
-	decorate = false,
-})
-
--- Noctalia settings window
--- See https://docs.noctalia.dev/v5/compositor-settings/hyprland/
-hl.window_rule({
-	name = "noctalia-settings",
-	match = { class = "^dev\\.noctalia\\.Noctalia$" },
-	float = true,
-	size = { 1080, 920 },
-})
-
--- Blur Noctalia's own surfaces (bar, panels, dock, osd, window switcher, etc.)
--- See https://docs.noctalia.dev/v5/compositor-settings/hyprland/
--- Verified against v5 with `hyprctl layers` while opening each surface: all seven
--- alternatives exist as noctalia-{bar-default,notification,dock,panel,
--- attached-panel,osd,window-switcher}. noctalia-screen-corner and
--- noctalia-wallpaper are the two v5 layers deliberately left out -- blurring the
--- wallpaper layer in particular would be wrong.
-hl.layer_rule({
-	name = "noctalia",
-	match = { namespace = "^noctalia-(bar-.+|notification|dock|panel|attached-panel|osd|window-switcher)$" },
-	no_anim = true,
-	ignore_alpha = 0.5,
-	blur = true,
-	blur_popups = true,
 })
