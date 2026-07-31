@@ -232,7 +232,7 @@ hl.bind("SUPER+F11", hl.dsp.force_renderer_reload(), { description = "Reload mon
 
 -- Search, clipboard, and pickers
 hl.bind("ALT+RETURN", hl.dsp.exec_cmd(ipc("panel-toggle launcher")), { description = "Search for apps" })
-hl.bind("ALT+TAB", hl.dsp.exec_cmd(ipc("panel-toggle window-switcher")), { description = "Switch windows" })
+hl.bind("ALT+TAB", hl.dsp.exec_cmd(ipc("window-switcher")), { description = "Switch windows" })
 hl.bind("SUPER+V", hl.dsp.exec_cmd(ipc("panel-toggle clipboard")), { description = "Open clipboard" })
 hl.bind("SUPER+period", hl.dsp.exec_cmd(ipc('panel-toggle launcher "/emo"')), { description = "Open emoji picker" })
 hl.bind(
