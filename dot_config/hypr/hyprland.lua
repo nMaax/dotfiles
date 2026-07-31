@@ -14,3 +14,5 @@ require("lua.misc")
 require("noctalia").apply_theme()
 
 -- TODO: we should move many function in dedicated files and re-organize the code overall
+-- TODO: update all links to hyprland documentation
+-- TODO: ask for finding QoL features online

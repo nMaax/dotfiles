@@ -49,8 +49,7 @@ hl.window_rule({
 	workspace = "special:telegram",
 })
 
--- Password managers workspace. Only KeePassXC is installed; the rest are here so
--- the rule keeps working if one gets added later.
+-- Password managers workspace.
 hl.window_rule({
 	name = "password-workspace-class",
 	match = {
@@ -59,9 +58,7 @@ hl.window_rule({
 	workspace = "special:password",
 })
 
--- AI workspace: webapps only. The Claude Code and Antigravity CLIs used to be
--- placed here via `ghostty --class=ai.*`, but they work better as ordinary
--- terminal windows, so they are opened by hand now.
+-- AI workspace
 hl.window_rule({
 	name = "ai-workspace-class",
 	match = {
