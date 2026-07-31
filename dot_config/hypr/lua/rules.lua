@@ -127,7 +127,7 @@ hl.window_rule({
 	match = {
 		class = "^(steam_app_.*|.*\\.exe|wine|Wine|lutris_.*|heroic_.*|love)$", -- love is VRRTest
 	},
-	workspace = "11", -- GAMES_WORKSPACE in monitors.lua: dedicated, zero-gap/border
+	workspace = "11", -- GAMES_WORKSPACE (see monitors.lua)
 	no_vrr = false, -- Always try to enable VRR
 	idle_inhibit = "always", -- Do not sleep
 	content = "game", -- Force it: many games never self-report via the content-type protocol,

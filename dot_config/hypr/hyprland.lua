@@ -14,5 +14,9 @@ require("lua.misc")
 require("noctalia").apply_theme()
 
 -- TODO: we should move many function in dedicated files and re-organize the code overall
+-- TODO: also constants should be moved, ideally here, and we should find some around (e.g. Dolphin is replaced by FileManager, Ghostty is replaced by Terminal etc.)
 -- TODO: update all links to hyprland documentation
 -- TODO: ask for finding QoL features online
+-- TODO: fix various colorings from noctalia, also for community themes (e.g. Ghostty, FastFetch, heroic etc.)
+-- TODO: make claude fix direct scanout on overwatch
+-- TODO: make claude find the best prefix for game launching in steam for cachyos

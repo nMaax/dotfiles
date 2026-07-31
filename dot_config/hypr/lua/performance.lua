@@ -1,6 +1,6 @@
 -- PERFORMANCE
---
--- NOTE: Tearing v. Adaptive Sync
+
+-- NOTE: Tearing v. VRR
 --
 --   Tearing (experimental): GPU goes as fast as possible, the monitor grabs the most recent frame.
 --     You should idealy set unlimited framerete in your games to benefit from this.
@@ -13,12 +13,14 @@
 --
 --   ==> taxonomy: GSync is a type of Adaptive Sync, FreeSync is a type of Adaptive Sync.
 --                 Adaptive Sync is a type of VRR (Variable Refresh Rate)
---                 Even if the above holds, generally speaking we refer to all 4 as the same concept.
+--                 The above always holds, however, generally speaking we refer to all 4 as the
+--                 same concept.
+--
 --                 V-Sync is the old way to fix tearing, which introduced much latency
---                 and is now mostly replaced by VRR.
+--                 and is now mostly replaced by VRR. TURN IT OFF!
 --
 --   Generally, I recomend VRR over tearing, as the input latency is negligible and it provides the massive
---   improvement of a smoother framtime curve.
+--   improvement of a smoother frametime curve.
 
 hl.config({
 	general = {
