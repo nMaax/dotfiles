@@ -3,6 +3,8 @@
 -- see https://wiki.hypr.land/Configuring/Binds/ for more
 -- See https://docs.noctalia.dev/v5/ipc/ for the full `noctalia msg` command list
 
+-- TODO: reorder code and make better descrioptions
+
 local function ipc(args)
 	return "noctalia msg " .. args
 end
@@ -51,12 +53,6 @@ hl.bind(
 	{ description = "Reload hyprland and restart noctalia" }
 )
 
--- TODO : improve scrolling and dwindle related keybinds, discover QoL features and find the right keybinds
--- among issues found so far:
---  1. When moving windows in scrolling mode, they all get down the other window creating a vertical split; I think it should be more intuitive
---  such that every new window spawns in full width and height, and then one can move it to the left where it will behave just like any other workspace split: both vertically and horizonally splitting
---  2. SUPER+SHIFT+X and SUPER+Z do not seem to work, or maybe they simply cannot trigger in the specific layour I naturally end up into, we should review what would be their use and better keubinds anyway
-
 -- Scrolling only
 hl.bind(
 	"SUPER+SHIFT+X",
@@ -64,10 +60,13 @@ hl.bind(
 	{ description = "Expand column into free space (scrolling only)" }
 )
 hl.bind(
-	"SUPER+Z",
-	hl.dsp.layout("fit_into_view"),
-	{ description = "Scroll active column fully into view (scrolling only)" }
+	"SUPER+ALT+Equal",
+	hl.dsp.layout("colresize +conf"),
+	{ description = "Widen active column to next width preset (scrolling only)" }
 )
+hl.bind("SUPER+ALT+Minus", hl.dsp.layout("colresize -conf"), {
+	description = "Narrow active column to next width preset -- share space with the next column (scrolling only)",
+})
 
 -- Dwindle only
 hl.bind("SUPER+Y", hl.dsp.layout("togglesplit"), { description = "Switch split orientation (dwindle only)" })
