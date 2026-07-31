@@ -45,10 +45,10 @@ hl.bind(
 hl.bind(
 	"SUPER+ALT+Equal",
 	hl.dsp.layout("colresize +conf"),
-	{ description = "Widen active column to next width preset (scrolling only)" }
+	{ description = "Widen active column width (scrolling only)" }
 )
 hl.bind("SUPER+ALT+Minus", hl.dsp.layout("colresize -conf"), {
-	description = "Narrow active column to next width preset, sharing space with the next column (scrolling only)",
+	description = "Narrow active column width (scrolling only)",
 })
 
 -- Dwindle only
@@ -221,12 +221,12 @@ hl.bind(
 			.. " && "
 			.. ipc("plugin kenn/keybind-cheatsheet:data all refresh")
 	),
-	{ description = "Reload hyprland and noctalia" }
+	{ description = "Reload hyprland, soft-reload noctalia" }
 )
 hl.bind(
 	"SUPER+ALT+CTRL+T",
 	hl.dsp.exec_cmd("hyprctl reload && hyprpm reload -n && killall noctalia && noctalia"),
-	{ description = "Reload hyprland and restart noctalia" }
+	{ description = "Reload hyprland, restart noctalia" }
 )
 hl.bind("SUPER+F11", hl.dsp.force_renderer_reload(), { description = "Reload monitor configs" })
 
@@ -295,42 +295,43 @@ hl.bind("SUPER+ALT+down", hl.dsp.focus({ monitor = "d" }), { description = "Move
 hl.bind("SUPER+ALT+left", hl.dsp.focus({ monitor = "l" }), { description = "Move focus on monitor left" })
 hl.bind("SUPER+ALT+right", hl.dsp.focus({ monitor = "r" }), { description = "Move focus on monitor right" })
 
--- Scroll workspaces with arrows and vim-keys
+-- Scroll workspaces with K/J (vim-keys, workspaces stack vertically) and CTRL+up/down
+-- (CTRL disambiguates the arrow twin from SUPER+up/down = window-focus-up/down)
 hl.bind(
 	"SUPER+K",
 	hl.dsp.focus({ workspace = "-1" }),
-	{ repeating = true, description = "Scroll workspaces to the left" }
+	{ repeating = true, description = "Scroll workspaces up (previous)" }
 )
 hl.bind("SUPER+CTRL+up", hl.dsp.focus({ workspace = "-1" }), { repeating = true })
 hl.bind(
 	"SUPER+J",
 	hl.dsp.focus({ workspace = "+1" }),
-	{ repeating = true, description = "Scroll workspaces to the right" }
+	{ repeating = true, description = "Scroll workspaces down (next)" }
 )
 hl.bind("SUPER+CTRL+down", hl.dsp.focus({ workspace = "+1" }), { repeating = true })
 
 -- Scroll workspaces with mouse wheel
 hl.bind(
 	"SUPER+mouse_up",
-	hl.dsp.focus({ workspace = "e+1" }),
-	{ description = "Scroll right workspaces with mouse scroll wheel" }
+	hl.dsp.focus({ workspace = "e-1" }),
+	{ description = "Scroll left workspaces with mouse scroll wheel" }
 )
 hl.bind(
 	"SUPER+mouse_down",
-	hl.dsp.focus({ workspace = "e-1" }),
-	{ description = "Scroll left workspaces with mouse scroll wheel" }
+	hl.dsp.focus({ workspace = "e+1" }),
+	{ description = "Scroll right workspaces with mouse scroll wheel" }
 )
 
 -- Move focus horizontally with mouse side buttons (M4 and M5)
 hl.bind(
 	"SUPER+mouse:275",
-	hl.dsp.focus({ direction = "right" }),
-	{ repeating = true, description = "Move focus right (mouse 4)" }
+	hl.dsp.focus({ direction = "left" }),
+	{ repeating = true, description = "Move focus left (mouse 4)" }
 )
 hl.bind(
 	"SUPER+mouse:276",
-	hl.dsp.focus({ direction = "left" }),
-	{ repeating = true, description = "Move focus left (mouse 5)" }
+	hl.dsp.focus({ direction = "right" }),
+	{ repeating = true, description = "Move focus right (mouse 5)" }
 )
 
 -- Scrolling overview
@@ -395,23 +396,24 @@ end
 for key = 0, 9 do
 	local target = key == 0 and 10 or key
 	hl.bind(
-		"SUPER+ALT+" .. key,
+		"SUPER+ALT+CTRL+" .. key,
 		move_workspace_windows(target),
 		{ description = key == 0 and "Move all windows of this workspace to workspace [0-9]" or nil }
 	)
 end
 
--- Move windows with SUPER+CTRL+SHIFT arrows and vim keys
+-- Move windows to adjacent workspace with SHIFT+K/J (vim-keys) and CTRL+SHIFT+up/down
+-- (CTRL disambiguates the arrow twin from SUPER+SHIFT+up/down = move-window-up/down)
 hl.bind(
-	"SUPER+CTRL+SHIFT+K",
+	"SUPER+SHIFT+K",
 	hl.dsp.window.move({ workspace = "-1" }),
-	{ repeating = true, description = "Move window to left workspace (vim, or arrows)" }
+	{ repeating = true, description = "Move window to previous workspace (vim, or arrows)" }
 )
 hl.bind("SUPER+CTRL+SHIFT+up", hl.dsp.window.move({ workspace = "-1" }), { repeating = true })
 hl.bind(
-	"SUPER+CTRL+SHIFT+J",
+	"SUPER+SHIFT+J",
 	hl.dsp.window.move({ workspace = "+1" }),
-	{ repeating = true, description = "Move window to right workspace (vim, or arrows)" }
+	{ repeating = true, description = "Move window to next workspace (vim, or arrows)" }
 )
 hl.bind("SUPER+CTRL+SHIFT+down", hl.dsp.window.move({ workspace = "+1" }), { repeating = true })
 
@@ -467,13 +469,12 @@ hl.bind(
 -- 7. MULTIMEDIA
 
 -- Panels and audio device switching
--- Moved off SUPER+SHIFT+A, which now throws a window into the AI workspace.
 hl.bind(
-	"SUPER+CTRL+A",
+	"SUPER+F1",
 	hl.dsp.exec_cmd(ipc("panel-toggle control-center audio")),
 	{ description = "Open audio devices panel" }
 )
-hl.bind("SUPER+ALT+A", hl.dsp.exec_cmd(ipc("panel-toggle control-center media")), { description = "Open media panel" })
+hl.bind("SUPER+F2", hl.dsp.exec_cmd(ipc("panel-toggle control-center media")), { description = "Open media panel" })
 hl.bind(
 	"SUPER+XF86AudioMute",
 	hl.dsp.exec_cmd('fish -c "audio-cycle --output"'),
