@@ -69,6 +69,11 @@ widget_order = [ "lockscreen-login-box@DP-1" ]
         show_session_buttons = true
         show_weather = true
 
+[plugin_settings."kenn/keybind-cheatsheet"]
+compositor = "hyprland"
+hyprland_parser = "lua"
+show_undescribed = false
+
 [plugins]
 enabled = [ "noctalia/kaomoji", "noctalia/mpvpaper", "noctalia/bongocat", "tadomika_ari/w-engine", "kenn/keybind-cheatsheet" ]
 
@@ -112,7 +117,7 @@ wallpaper_scheme = "m3-fruit-salad"
 
     [theme.templates]
     builtin_ids = [ "btop", "cava", "gtk3", "gtk4", "ghostty", "hyprland", "kcolorscheme", "qt", "starship" ]
-    community_ids = [ "neovim" ]
+    community_ids = [ "neovim", "heroiclauncher", "prismlauncher", "yazi" ]
 
 [wallpaper]
 directory = "/home/massimiliano/Pictures/Wallpapers"
