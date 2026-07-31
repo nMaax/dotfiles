@@ -31,6 +31,14 @@ hl.monitor({
 	bitdepth = 8,
 })
 hl.monitor({
+	output = "desc:AOC Q27G41ZDF RK2S3JA009971",
+	mode = "2560x1440@240.00",
+	position = "auto-up",
+	scale = 1,
+	vrr = 1,
+	bitdepth = 8,
+})
+hl.monitor({
 	output = "desc:Samsung Electric Company LC32G7xT HNATC01677",
 	mode = "2560x1440@240.00",
 	position = "auto",
