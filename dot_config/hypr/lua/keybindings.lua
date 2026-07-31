@@ -232,6 +232,7 @@ hl.bind("SUPER+F11", hl.dsp.force_renderer_reload(), { description = "Reload mon
 
 -- Search, clipboard, and pickers
 hl.bind("ALT+RETURN", hl.dsp.exec_cmd(ipc("panel-toggle launcher")), { description = "Search for apps" })
+hl.bind("ALT+TAB", hl.dsp.exec_cmd(ipc("panel-toggle window-switcher")), { description = "Switch windows" })
 hl.bind("SUPER+V", hl.dsp.exec_cmd(ipc("panel-toggle clipboard")), { description = "Open clipboard" })
 hl.bind("SUPER+period", hl.dsp.exec_cmd(ipc('panel-toggle launcher "/emo"')), { description = "Open emoji picker" })
 hl.bind(
@@ -239,6 +240,7 @@ hl.bind(
 	hl.dsp.exec_cmd(ipc('panel-toggle launcher "/kao"')),
 	{ description = "Open kaomoji picker" }
 )
+hl.bind("SUPER+comma", hl.dsp.exec_cmd(ipc("settings-toggle")), { description = "Open Noctalia settings" })
 
 -- Wallpapers and colorscheme
 hl.bind(
@@ -505,6 +507,18 @@ hl.bind(
 	"XF86MonBrightnessDown",
 	hl.dsp.exec_cmd(ipc("brightness-down")),
 	{ repeating = true, locked = true, description = "Lower screen brightness" }
+)
+
+-- Brightness via volume keys, for keyboards with no dedicated brightness keys
+hl.bind(
+	"ALT+XF86AudioRaiseVolume",
+	hl.dsp.exec_cmd(ipc("brightness-up")),
+	{ repeating = true, locked = true, description = "Raise screen brightness (volume keys)" }
+)
+hl.bind(
+	"ALT+XF86AudioLowerVolume",
+	hl.dsp.exec_cmd(ipc("brightness-down")),
+	{ repeating = true, locked = true, description = "Lower screen brightness (volume keys)" }
 )
 
 -- Standard multimedia keys for play/pause and next/prev
