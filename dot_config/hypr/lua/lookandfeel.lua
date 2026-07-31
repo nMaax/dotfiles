@@ -23,7 +23,7 @@ hl.config({
 
         -- See https://wiki.hypr.land/Configuring/Variables/#variable-types for info about colors
         col = {
-            active_border = { colors = { colors.primary, colors.tertiary }, angle = 90 },
+            active_border = { colors = { colors.primary, colors.secondary, colors.tertiary }, angle = 45 },
             inactive_border = { colors = { colors.surface, colors.surface_lowest }, angle = 90 },
         },
 
@@ -138,3 +138,4 @@ hl.animation({ leaf = "specialWorkspaceOut", enabled = true, speed = 4, bezier =
 -- Aesthetics
 hl.animation({ leaf = "fade", enabled = true, speed = 3, bezier = "standard" })
 hl.animation({ leaf = "border", enabled = true, speed = 5, bezier = "standard" })
+hl.animation({ leaf = "borderangle", enabled = true, speed = 1.4, bezier = "default", style = "loop" })
