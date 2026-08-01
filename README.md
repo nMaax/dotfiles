@@ -43,6 +43,9 @@ chezmoi init --apply nMaax
 
 If you would like to tweak CachyOS before running 🥮, but CachyOS Hello won't accept your password on a Hyprland-only installation (i.e., no Plasma), the polkit-kde-agent is likely missing from your background processes. You must ensure this agent is running so CachyOS Hello can trigger the authentication pop-up required to apply your changes.
 
+> [!NOTE]
+> This is only needed for this one-off, pre-install tweak, on the stock `hyprland.conf` CachyOS ships before 🥮 is applied. Once 🥮 is applied, the same agent is started automatically (see `autostart.lua`) — no manual step needed afterwards.
+
 To fix, do the following:
 
 1. Open your hyprland.conf: `vim ~/.config/hypr/hyprland.conf`.
@@ -148,7 +151,7 @@ Set them up manually after installation:
 
 ### Theming
 
-Noctalia presents a standard approach to sync apps colorschemes with its own theme, each app requires its own procedure, part of it can be automated via code, and some other not. Further information at [docs.noctalia.dev/theming](https://docs.noctalia.dev/theming/basic-app-theming/).
+Noctalia presents a standard approach to sync apps colorschemes with its own theme, each app requires its own procedure, part of it can be automated via code, and some other not. Further information at [docs.noctalia.dev/v5/theming](https://docs.noctalia.dev/v5/theming/app-theming/).
 
 You can retrieve the list of apps on which automatic theming is set on the Noctalia settings themselves. Note however that part of those may still require some in-app manual intervention, here below are some steps you shall take to complete the theming:
 
@@ -168,7 +171,16 @@ You can retrieve the list of apps on which automatic theming is set on the Nocta
 - **VSCode:** Install the `NoctaliaTheme` extension from the marketplace, then select it via `Ctrl+Shift+P` → *Preferences: Color Theme*.
 - **Telegram:** Open Settings → Chat Settings → scroll to the bottom and enable the custom color theme.
 - **Steam**: Install [Material-Theme](https://steambrew.app/theme?id=ipYjqODds05KMcvh7QJn) and add it in Millenium Settings > Theme, then click the three dots > configure > style > colors > select *Matugen* in the theme color dropdown.
-- All others apps should not require any intervention (e.g. neovim, btop etc.), hopefully.
+- **Heroic Games Launcher:** Settings → Advanced → set **Custom Themes Path** to `~/.config/heroic/themes`, then select **matugen** from the theme dropdown. One-time; the generated CSS updates in place on further theme changes.
+- **Prism Launcher:** Settings → Appearance → Theme → select **Matugen**. One-time; the generated theme JSON updates in place on further theme changes.
+- All other enabled apps (`btop`, `cava`, `ghostty`, `starship`, `hyprland`, `kcolorscheme`, `neovim`, `yazi`) apply fully automatically, no action needed.
+
+> [!NOTE]
+> **Ghostty** only reloads its theme file for *newly opened* windows — an already-open window (and
+> anything run inside it, e.g. `fastfetch`) keeps rendering the previous palette until you close and
+> reopen it, since noctalia's reload signal for Ghostty doesn't trigger a live re-read. If a terminal
+> looks off after a theme/wallpaper change, open a fresh Ghostty window rather than assuming the
+> palette itself is wrong.
 
 > [!NOTE]
 > If some apps do not properly fetch the color scheme even after having followed the noctalia guidelines, try to disable and re-enable them, as well as changing color-scheme as a whole.\
@@ -326,15 +338,55 @@ Hit **Start Streaming** in OBS. That's it :)
 
 ---
 
+## ⌨️ Keybinding Conventions
+
+`keybindings.lua` isn't ad hoc: every window/workspace-management bind lives under `SUPER`, and which
+extra modifier you add follows a consistent grammar rather than being memorized bind-by-bind.
+
+| Modifier | Meaning |
+| --- | --- |
+| `SUPER` | Focus / select / toggle |
+| `SUPER+SHIFT` | Move / throw the same object |
+| `SUPER+CTRL` | Direct-access shortcut (e.g. jump straight to the games workspace); also disambiguates an arrow key from its window-direction meaning (see vim-key note below) |
+| `SUPER+CTRL+SHIFT` | Same disambiguation, on the "move" tier |
+| `SUPER+ALT` | Alternative behavior for the same slot (different app, different granularity, different sensor) |
+| `SUPER+ALT+CTRL` | Rare/heavy/bulk action (reload configs, bulk workspace move) |
+
+A few notes on top of the table:
+
+- **Vim keys split along two axes, not one, because the active layout (`scrolling`) puts them at a
+  right angle to each other**: windows unroll *horizontally* within a workspace, while workspaces
+  themselves are a *vertical* stack. So `H`/`L` (left/right) are the window-direction family — focus
+  and move, mirroring the `left`/`right` arrows exactly — while `K`/`J` (up/down) are the
+  workspace-navigation family — scroll and move-to-workspace, mirroring `up`/`down`. The two families
+  share the arrow keys, which is exactly why `CTRL` shows up on `up`/`down`'s workspace-scroll/move
+  twins specifically: `SUPER+up` already means "focus window up," so `SUPER+CTRL+up` is needed to
+  reach "scroll workspace up" on the same physical key without a collision. The letters never need
+  that extra `CTRL`, since `H`/`L` and `K`/`J` don't overlap with each other.
+- **System panels are a separate axis**, not bound by the table above: clipboard, wallpaper pickers,
+  Noctalia settings, emoji/kaomoji, the cheatsheet, lock and the power menu each get their own
+  single-mnemonic key (`V`, `W`, `,`, `.`, `/`, `Backspace`, `Escape`) rather than fitting into the
+  focus/move/alternative grammar, since there's no "opposite" action to pair them against.
+- **Function keys are always `SUPER+Fx`, never bare** — this is deliberate so an in-app shortcut
+  (e.g. a game binding bare `F5` to a free camera) can never collide with the compositor.
+- A few limited, deliberate exceptions exist: `SUPER+ALT+arrows` (monitor-focus) stays even though
+  Hyprland has a native edge-of-monitor fallback, because the fallback only kicks in once
+  direction-focus finds nothing on the current monitor, not on demand; `SUPER+CTRL+G` jumps straight
+  to the games workspace since that's the one app-slot with both a launcher toggle *and* a real
+  numbered workspace behind it; `ALT+RETURN`/`ALT+TAB` stay off `SUPER` because `SUPER+RETURN`/
+  `SUPER+TAB` are already claimed (terminal, scrolling overview).
+- This table documents the *grammar*, not a full bind listing, since a duplicated enumeration here
+  would drift from the config. For the actual current binds, use the in-app keybind-cheatsheet
+  (`SUPER+slash`) or `hyprctl binds -j`.
+
+---
+
 ## 📝 TODOs
 
 - [ ] Move to shelly
-- [ ] Solve TODOs around the codebase and move to Lua (optimize for gaming performances)
-- [ ] Try to rice [quickshell overview](https://github.com/Shanu-Kumawat/quickshell-overview#%EF%B8%8F-configuration)
-- [ ] Try to rice [scroll overview](https://github.com/yayuuu/hyprland-scroll-overview)
+- [ ] Solve remaining TODOs around the codebase (see `hyprland.lua`)
 - [ ] Remove unused AUR packages
 - [ ] Explore new plugins and remove unused
-- [x] Make [paletter.py](https://pastebin.com/r0BzzEqK) a runnable script with, e.g., a fish function to automatically generate color palettes
 - [ ] Prepare 2K-4K WALLHACK Wallpapers -> Make a release for dotfiles-assets if files are too large
 - [ ] Once everything is finished, add screenshots and videos in this README
 

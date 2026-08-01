@@ -1,0 +1,21 @@
+-- PLUGINS
+-- See https://wiki.hypr.land/Plugins/Using-Plugins/
+
+hl.config({
+	plugin = {
+		scrolloverview = {
+			gesture_distance = 300, -- how far is the "max" for the gesture
+			scale = 0.7, -- preferred overview scale
+			workspace_gap = 100,
+			layout = "vertical", -- vertical or horizontal
+			wallpaper = 0, -- 0: global only, 1: per-workspace only, 2: both
+			blur = true, -- blur only the main overview wallpaper
+			shadow = {
+				enabled = true,
+				range = 50,
+				render_power = 3,
+				color = 0xee1a1a1a, -- rgba(1a1a1aee) as an AARRGGBB integer
+			},
+		},
+	},
+})

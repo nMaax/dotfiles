@@ -10,7 +10,10 @@
     }
   },
   "display": {
-    "separator": "  "
+    "separator": "  ",
+    "color": {
+      "keys": "default"
+    }
   },
   "modules": [
     "break",
@@ -21,72 +24,72 @@
     },
     {
       "type": "os",
-      "key": "│ 󰻀  {#35}distro{#}",
+      "key": "│ 󰻀  distro",
       "format": "{pretty-name>30} │"
     },
     {
       "type": "kernel",
-      "key": "│   {#35}kernel{#}",
+      "key": "│   kernel",
       "format": "{release>30} │"
     },
     {
       "type": "command",
-      "key": "│   {#35}uptime{#}",
+      "key": "│   uptime",
       "text": "uptime -p | cut -d ' ' -f 2-",
       "format": "{1>30} │"
     },
     {
       "type": "shell",
-      "key": "│   {#35}shell {#}",
+      "key": "│   shell ",
       "format": "{pretty-name>30} │"
     },
     {
       "type": "terminal",
-      "key": "│   {#35}term  {#}",
+      "key": "│   term  ",
       "format": "{pretty-name>30} │"
     },
     {
       "type": "wm",
-      "key": "│   {#35}wm    {#}",
+      "key": "│   wm    ",
       "format": "{pretty-name>30} │"
     },
     {
       "type": "cpu",
-      "key": "│   {#35}cpu   {#}",
+      "key": "│   cpu   ",
       "format": "{name>30} │"
     },
     {
       "type": "gpu",
-      "key": "│ 󰢮  {#35}gpu   {#}",
+      "key": "│ 󰢮  gpu   ",
       "hideType": "integrated",
       "format": "{name>30} │"
     },
     {
       "type": "command",
-      "key": "│   {#35}mem   {#}",
+      "key": "│   mem   ",
       "text": "free -m | awk 'NR==2{printf \"%.2f GiB / %.2f GiB\",$3/1024,$2/1024}'",
       "format": "{1>30} │"
     },
     {
       "type": "packages",
-      "key": "│   {#35}pkgs  {#}",
+      "key": "│   pkgs  ",
       "format": "{pacman>12} pacman, {flatpak-all} flatpak │"
     },
     {
       "type": "command",
-      "key": "│   {#35}aur   {#}",
+      "key": "│   aur   ",
       "text": "pacman -Qm | wc -l",
       "format": "{1>30} │"
     },
     {
       "type": "command",
-      "key": "│   {#35}user  {#}",
+      "key": "│   user  ",
       "text": "echo $USER",
       "format": "{1>30} │"
     },
     {
       "type": "command",
-      "key": "│   {#35}hname {#}",
+      "key": "│   hname ",
       "text": "hostnamectl hostname",
       "format": "{1>30} │"
     },
