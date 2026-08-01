@@ -171,7 +171,16 @@ You can retrieve the list of apps on which automatic theming is set on the Nocta
 - **VSCode:** Install the `NoctaliaTheme` extension from the marketplace, then select it via `Ctrl+Shift+P` → *Preferences: Color Theme*.
 - **Telegram:** Open Settings → Chat Settings → scroll to the bottom and enable the custom color theme.
 - **Steam**: Install [Material-Theme](https://steambrew.app/theme?id=ipYjqODds05KMcvh7QJn) and add it in Millenium Settings > Theme, then click the three dots > configure > style > colors > select *Matugen* in the theme color dropdown.
-- All others apps should not require any intervention (e.g. neovim, btop etc.), hopefully.
+- **Heroic Games Launcher:** Settings → Advanced → set **Custom Themes Path** to `~/.config/heroic/themes`, then select **matugen** from the theme dropdown. One-time; the generated CSS updates in place on further theme changes.
+- **Prism Launcher:** Settings → Appearance → Theme → select **Matugen**. One-time; the generated theme JSON updates in place on further theme changes.
+- All other enabled apps (`btop`, `cava`, `ghostty`, `starship`, `hyprland`, `kcolorscheme`, `neovim`, `yazi`) apply fully automatically, no action needed.
+
+> [!NOTE]
+> **Ghostty** only reloads its theme file for *newly opened* windows — an already-open window (and
+> anything run inside it, e.g. `fastfetch`) keeps rendering the previous palette until you close and
+> reopen it, since noctalia's reload signal for Ghostty doesn't trigger a live re-read. If a terminal
+> looks off after a theme/wallpaper change, open a fresh Ghostty window rather than assuming the
+> palette itself is wrong.
 
 > [!NOTE]
 > If some apps do not properly fetch the color scheme even after having followed the noctalia guidelines, try to disable and re-enable them, as well as changing color-scheme as a whole.\
