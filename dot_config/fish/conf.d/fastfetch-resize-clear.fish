@@ -1,20 +1,9 @@
 set -g __fastfetch_min_cols 80
+set -g __fastfetch_min_lines 24
 set -g __fastfetch_shown 0
 set -g __fastfetch_is_narrow 0
 
-function fish_greeting
-    # Only run fastfetch if the terminal width is greater than 80 characters
-    if test "$COLUMNS" -gt $__fastfetch_min_cols
-        set -g __fastfetch_shown 1
-        set -g __fastfetch_is_narrow 0
-        fastfetch
-    else
-        set -g __fastfetch_shown 0
-        set -g __fastfetch_is_narrow 1
-    end
-end
-
-function __auto_clear_fastfetch_on_resize --on-variable COLUMNS
+function __fastfetch_check_resize
     if not status is-interactive
         return
     end
@@ -23,7 +12,7 @@ function __auto_clear_fastfetch_on_resize --on-variable COLUMNS
         return
     end
 
-    if test "$COLUMNS" -le $__fastfetch_min_cols
+    if test "$COLUMNS" -le $__fastfetch_min_cols; or test "$LINES" -le $__fastfetch_min_lines
         if test "$__fastfetch_is_narrow" -ne 1
             clear
             set -g __fastfetch_is_narrow 1
@@ -31,4 +20,12 @@ function __auto_clear_fastfetch_on_resize --on-variable COLUMNS
     else
         set -g __fastfetch_is_narrow 0
     end
+end
+
+function __auto_clear_fastfetch_on_resize_cols --on-variable COLUMNS
+    __fastfetch_check_resize
+end
+
+function __auto_clear_fastfetch_on_resize_lines --on-variable LINES
+    __fastfetch_check_resize
 end
