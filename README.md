@@ -384,12 +384,9 @@ A few notes on top of the table:
 ## 📝 TODOs
 
 - [ ] Move to shelly
-- [x] Move to Lua (optimize for gaming performances)
-- [ ] Solve remaining TODOs around the codebase (see `hyprland.lua` and `performance.lua`)
-- [x] Try to rice [scroll overview](https://github.com/yayuuu/hyprland-scroll-overview)
+- [ ] Solve remaining TODOs around the codebase (see `hyprland.lua`)
 - [ ] Remove unused AUR packages
 - [ ] Explore new plugins and remove unused
-- [x] Make [paletter.py](https://pastebin.com/r0BzzEqK) a runnable script with, e.g., a fish function to automatically generate color palettes
 - [ ] Prepare 2K-4K WALLHACK Wallpapers -> Make a release for dotfiles-assets if files are too large
 - [ ] Once everything is finished, add screenshots and videos in this README
 
