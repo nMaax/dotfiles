@@ -20,3 +20,4 @@ require("lua.misc")
 -- TODO: fix various colorings from noctalia, also for community themes (e.g. Ghostty, FastFetch, heroic etc.)
 -- TODO: make claude fix direct scanout on overwatch
 -- TODO: make claude find the best prefix for game launching in steam for cachyos
+-- TOOD: make cluade optimize for battery and resources consumption
