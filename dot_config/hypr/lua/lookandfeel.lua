@@ -1,19 +1,9 @@
 -- LOOK AND FEEL
 -- Refer to https://wiki.hypr.land/Configuring/Variables/
---
+
 -- NOTE: Do not put performance-related settings here, they belong in performance.lua
 
--- Colors come from noctalia via its own documented templating mechanism
--- (~/.config/noctalia/user-templates.toml -> lua/colors-template.lua
--- -> lua/colors.lua, regenerated automatically on every theme/
--- wallpaper change, with `hyprctl reload` as the post_hook) -- same pattern
--- already used for the existing nvim-base16 colorscheme. This replaces the
--- earlier hardcoded-snapshot approach, which never updated on theme change.
 local colors = require("lua.colors")
-
--- NOTE: gradients need the { colors = {...}, angle = N } table shape (not a
--- flat "colorA colorB Ndeg" string like hyprlang) -- confirmed against the
--- official shipped example config at /usr/share/hypr/hyprland.lua.
 
 hl.config({
     general = {
@@ -27,18 +17,11 @@ hl.config({
             inactive_border = { colors = { colors.surface, colors.surface_lowest }, angle = 90 },
         },
 
-        -- Set to true to enable resizing windows by clicking and dragging on borders and gaps
         resize_on_border = true,
 
         layout = "scrolling", -- You can also switch to dwindle
     },
 
-    -- NOTE (bugfix): this group{} block was dropped entirely in the original
-    -- translation -- noctalia-colors.conf sets it via hyprlang `source`
-    -- merge, but our Lua config never required/reproduced it, so grouped
-    -- (tabbed) window borders were silently falling back to Hyprland
-    -- defaults instead of noctalia's palette. Re-added here from the same
-    -- live colors table used above.
     group = {
         col = {
             border_active = colors.secondary,
@@ -47,9 +30,6 @@ hl.config({
             border_locked_inactive = colors.surface,
         },
         groupbar = {
-            -- Hide the tab strip when a group holds only one window -- there is
-            -- nothing to switch between, so it is pure visual noise. (New in
-            -- Hyprland 0.56.)
             disable_when_only = true,
 
             col = {
@@ -66,15 +46,6 @@ hl.config({
     },
 
     scrolling = {
-        -- Niri-like behaviour: a new window takes the FULL screen width and the
-        -- tape scrolls horizontally, instead of splitting the screen 50/50 with
-        -- the previous window. The stock default is 0.5, which is exactly what
-        -- caused the half-screen split.
-        --
-        -- Note this is the *default* width only -- colresize and `fit active`
-        -- (SUPER+SHIFT+X) still resize columns freely afterwards, and
-        -- scrolling:explicit_column_widths (0.333/0.5/0.667/1.0) remains the
-        -- preset list for colresize +conf/-conf.
         column_width = 1.0,
     },
 
