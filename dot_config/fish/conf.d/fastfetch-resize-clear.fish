@@ -14,7 +14,8 @@ function __fastfetch_check_resize
 
     if test "$COLUMNS" -le $__fastfetch_min_cols; or test "$LINES" -le $__fastfetch_min_lines
         if test "$__fastfetch_is_narrow" -ne 1
-            clear
+            # -x: plain `clear` also wipes scrollback since ncurses 6.1
+            clear -x
             set -g __fastfetch_is_narrow 1
         end
     else
