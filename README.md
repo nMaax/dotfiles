@@ -26,7 +26,7 @@ Ideally you should have installed CachyOS selecting for Hyprland (optionally als
 
 During install, you will have the option to automatically wipe `tailscale_authkey` / `nordvpn_token` from `~/.config/chezmoi/chezmoi.toml` right after their use.
 
-1. Install chezmoi and apply the dotfiles
+2. Install chezmoi and apply the dotfiles
 
 ```fish
 pacman -S chezmoi
@@ -44,7 +44,7 @@ chezmoi init --apply nMaax
 If you would like to tweak CachyOS before running 🥮, but CachyOS Hello won't accept your password on a Hyprland-only installation (i.e., no Plasma), the polkit-kde-agent is likely missing from your background processes. You must ensure this agent is running so CachyOS Hello can trigger the authentication pop-up required to apply your changes.
 
 > [!NOTE]
-> This is only needed for this one-off, pre-install tweak, on the stock `hyprland.conf` CachyOS ships before 🥮 is applied. Once 🥮 is applied, the same agent is started automatically (see `autostart.lua`) — no manual step needed afterwards.
+> This is only needed one time, on the original `hyprland.lua` config CachyOS ships before 🥮 is applied. Once 🥮 is installed, the same agent will start automatically.
 
 To fix, do the following:
 
@@ -174,13 +174,6 @@ You can retrieve the list of apps on which automatic theming is set on the Nocta
 - **Heroic Games Launcher:** Settings → Advanced → set **Custom Themes Path** to `~/.config/heroic/themes`, then select **matugen** from the theme dropdown. One-time; the generated CSS updates in place on further theme changes.
 - **Prism Launcher:** Settings → Appearance → Theme → select **Matugen**. One-time; the generated theme JSON updates in place on further theme changes.
 - All other enabled apps (`btop`, `cava`, `ghostty`, `starship`, `hyprland`, `kcolorscheme`, `neovim`, `yazi`) apply fully automatically, no action needed.
-
-> [!NOTE]
-> **Ghostty** only reloads its theme file for *newly opened* windows — an already-open window (and
-> anything run inside it, e.g. `fastfetch`) keeps rendering the previous palette until you close and
-> reopen it, since noctalia's reload signal for Ghostty doesn't trigger a live re-read. If a terminal
-> looks off after a theme/wallpaper change, open a fresh Ghostty window rather than assuming the
-> palette itself is wrong.
 
 > [!NOTE]
 > If some apps do not properly fetch the color scheme even after having followed the noctalia guidelines, try to disable and re-enable them, as well as changing color-scheme as a whole.\
