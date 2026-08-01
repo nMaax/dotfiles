@@ -62,7 +62,7 @@ hl.bind(
 -- 2. APPS AND SPECIAL WORKSPACES
 
 -- Quick launches
-hl.bind("SUPER+B", hl.dsp.exec_cmd("zen-browser"), { description = "Open the zen browser" })
+hl.bind("SUPER+B", hl.dsp.exec_cmd("zen-browser"), { description = "Open Zen browser" })
 hl.bind("SUPER+N", hl.dsp.exec_cmd("ghostty -e nvim"), { description = "Open neovim" })
 hl.bind("SUPER+SHIFT+N", hl.dsp.exec_cmd("code"), { description = "Open VSCode" })
 hl.bind("SUPER+ALT+N", hl.dsp.exec_cmd("kate"), { description = "Open Kate" })
@@ -356,7 +356,11 @@ hl.define_submap("scrolloverview", function()
 		})
 	end
 	for _, key in ipairs({ "SUPER+TAB", "TAB", "RETURN", "Escape" }) do
-		hl.bind(key, scrolloverview("overview", "off"), { description = key == "Escape" and "Close the overview" or nil })
+		hl.bind(
+			key,
+			scrolloverview("overview", "off"),
+			{ description = key == "Escape" and "Close the overview" or nil }
+		)
 	end
 end)
 

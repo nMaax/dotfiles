@@ -119,6 +119,7 @@ hl.curve("standard", { type = "bezier", points = { { 0.2, 0 }, { 0, 1 } } }) -- 
 hl.curve("snappy", { type = "bezier", points = { { 0.3, 1 }, { 0, 1 } } }) -- High velocity start, instant lock-in
 hl.curve("fastOut", { type = "bezier", points = { { 0.3, 0 }, { 1, 1 } } }) -- Starts slow, then vanishes instantly
 hl.curve("fluid", { type = "bezier", points = { { 0.05, 0.7 }, { 0.1, 1 } } }) -- A cleaner version of MD3 without the bounce
+hl.curve("linear", { type = "bezier", points = { { 0, 0 }, { 1, 1 } } }) -- Constant velocity, for the looping borderangle
 
 -- Windows
 hl.animation({ leaf = "windowsIn", enabled = true, speed = 3, bezier = "snappy", style = "popin 80%" })
@@ -138,4 +139,4 @@ hl.animation({ leaf = "specialWorkspaceOut", enabled = true, speed = 4, bezier =
 -- Aesthetics
 hl.animation({ leaf = "fade", enabled = true, speed = 3, bezier = "standard" })
 hl.animation({ leaf = "border", enabled = true, speed = 5, bezier = "standard" })
-hl.animation({ leaf = "borderangle", enabled = true, speed = 1.4, bezier = "default", style = "loop" })
+hl.animation({ leaf = "borderangle", enabled = true, speed = 0.3, bezier = "linear", style = "loop" })
