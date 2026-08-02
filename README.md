@@ -172,14 +172,9 @@ Either way, sync still needs to be configured manually after installation:
 
 2. **Open KeePassXC** and point it at your database once the MEGA sync completes. Remember to place the key-file as well!
 
-### GRUB theme cleanup (optional, GRUB only)
+### GRUB theme cleanup
 
-🥮 no longer automates this — CachyOS's shipped `/etc/default/grub` format is an implementation detail
-that can change between releases, so it's a manual, one-time recipe instead of a script. Skip this
-entirely if you're on systemd-boot or Limine (check with `bootctl status` or look for
-`/boot/limine.conf`).
-
-If you do use GRUB and want CachyOS's themed boot menu replaced with plain console text:
+If you do use GRUB and want CachyOS's themed boot menu replaced with plain console text, run:
 
 ```bash
 sudo sed -i 's|^GRUB_THEME=|#GRUB_THEME=|' /etc/default/grub
@@ -285,9 +280,11 @@ The below is the common Steam format for launch options, however you can achive 
 - **NVIDIA:** `PROTON_ENABLE_WAYLAND=1 PROTON_DLSS_UPGRADE=1 PROTON_NVIDIA_LIBS_NO_32BIT=1 game-performance %command%`
 - **AMD:** `PROTON_ENABLE_WAYLAND=1 PROTON_FSR4_UPGRADE=1 ENABLE_LAYER_MESA_ANTI_LAG=1 game-performance %command%`
 
-> [!WARNING] If you encounter a black screen it probably is a conflict between direct scanout and native wayland compositor for the game. In such case set `PROTON_ENABLE_WAYLAND=0` or disable `direct_scanout` in Hyprland settings.
+> [!WARNING]
+> If you encounter a black screen it probably is a conflict between direct scanout and native wayland compositor for the game. In such case set `PROTON_ENABLE_WAYLAND=0` or disable `direct_scanout` in Hyprland settings.
 
-> [!WARNING] If you see a "Comping shaders (xx%)..." on the bottom left, you can remove it by adding `DXVK_HUD=0`
+> [!WARNING]
+> If you see a "Comping shaders (xx%)..." on the bottom left, you can remove it by adding `DXVK_HUD=0`
 
 For Lutris specifically, remind to enable **Disable Lutris Runtime** and **Prefer system libraries**
 
@@ -298,28 +295,22 @@ For Lutris specifically, remind to enable **Disable Lutris Runtime** and **Prefe
   - "Enable Shader Pre-caching"
   - "Allow background processing of Vulkan shaders"
 
-#### Temporarily switching to Hyprland on a deck-ified/gamescope boot
+#### Temporarily switching to Hyprland on a deckified/gamescope boot
 
-On CachyOS handheld images that boot into gamescope (Big Picture) and fall back to Plasma via
-Steam's "Switch to Desktop", the boot session is controlled by `steamos-session-select`, which
-writes to `/etc/plasmalogin.conf.d/zz-steamos-autologin.conf` through
-`/usr/lib/steamos/steam-set-session`. The `steamos-session-select` wrapper only recognizes
-`plasma`/`gamescope` as targets, but the underlying helper accepts any `.desktop` name — including
-`hyprland.desktop` / `hyprland-uwsm.desktop` once 🥮 is installed.
+On CachyOS handheld images that boot into gamescope (Big Picture) and fall back to Plasma via Steam's "Switch to Desktop", the boot session is controlled by `steamos-session-select`, which writes to `/etc/plasmalogin.conf.d/zz-steamos-autologin.conf` through `/usr/lib/steamos/steam-set-session`.
+
+The `steamos-session-select` wrapper only recognizes `plasma`/`gamescope` as targets, but the underlying helper accepts any `.desktop` name — including `hyprland.desktop` / `hyprland-uwsm.desktop` once 🥮 is installed.
 
 To boot into Hyprland instead of Plasma while keeping "persistent" desktop mode:
 
 ```bash
-steamos-session-select persistent   # remember last-used session across boots, instead of always booting to gamescope
-sudo /usr/lib/steamos/steam-set-session hyprland-uwsm.desktop
+steamos-session-select persistent # remember last-used session across boots
+sudo /usr/lib/steamos/steam-set-session hyprland-uwsm.desktop # set hyprland (UWSM) as main session
 ```
 
-Log out (or reboot) to land in Hyprland — `Relogin=true` re-triggers autologin into the new session
-immediately. Prefer `hyprland-uwsm.desktop` over the plain `hyprland.desktop`: it starts Hyprland
-under UWSM, giving it a proper systemd graphical session, consistent with how Plasma/gamescope are
-already integrated here.
+Then reboot and Hyprland will launch.
 
-To revert to stock handheld behavior (always boot to gamescope, "Switch to Desktop" goes to Plasma):
+To revert to stock handheld behavior (always boot to Big Picture) run:
 
 ```bash
 steamos-session-select oneshot
