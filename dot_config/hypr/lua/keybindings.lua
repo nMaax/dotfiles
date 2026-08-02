@@ -289,11 +289,15 @@ for key = 0, 9 do
 	})
 end
 
--- Move focus around external monitors
-hl.bind("SUPER+ALT+up", hl.dsp.focus({ monitor = "u" }), { description = "Move focus on monitor up" })
-hl.bind("SUPER+ALT+down", hl.dsp.focus({ monitor = "d" }), { description = "Move focus on monitor down" })
-hl.bind("SUPER+ALT+left", hl.dsp.focus({ monitor = "l" }), { description = "Move focus on monitor left" })
-hl.bind("SUPER+ALT+right", hl.dsp.focus({ monitor = "r" }), { description = "Move focus on monitor right" })
+-- Move focus around external monitors (vim, or arrows)
+hl.bind("SUPER+ALT+up", hl.dsp.focus({ monitor = "u" }), {})
+hl.bind("SUPER+ALT+K", hl.dsp.focus({ monitor = "u" }), { description = "Move focus on monitor up (vim, or arrows)" })
+hl.bind("SUPER+ALT+down", hl.dsp.focus({ monitor = "d" }), {})
+hl.bind("SUPER+ALT+J", hl.dsp.focus({ monitor = "d" }), { description = "Move focus on monitor down (vim, or arrows)" })
+hl.bind("SUPER+ALT+left", hl.dsp.focus({ monitor = "l" }), {})
+hl.bind("SUPER+ALT+H", hl.dsp.focus({ monitor = "l" }), { description = "Move focus on monitor left (vim, or arrows)" })
+hl.bind("SUPER+ALT+right", hl.dsp.focus({ monitor = "r" }), {})
+hl.bind("SUPER+ALT+L", hl.dsp.focus({ monitor = "r" }), { description = "Move focus on monitor right (vim, or arrows)" })
 
 -- K/J move focus within the current workspace first (dwindle: 2D split tree;
 -- scrolling: the column's stack) and only scroll to the previous/next
