@@ -23,7 +23,7 @@ info "Remaining app-specific steps: https://docs.noctalia.dev/v5/theming/app-the
 
 info "🩸 Setting hyprland plugins..."
 if ! hyprpm list | grep -q hyprland-scroll-overview; then
-  hyprpm add https://github.com/yayuuu/hyprland-scroll-overview.git
+  hyprpm add "$SCROLLOVERVIEW_REPO_URL"
   hyprpm update
   hyprpm enable scrolloverview
 else

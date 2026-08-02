@@ -2,34 +2,35 @@
 set -euo pipefail
 
 {{ template "utils.sh.tmpl" . }}
+{{ template "external_links.sh.tmpl" . }}
 
 echo ""
 info "🌐 [Installing Webapps] Starting..."
 echo ""
 
 info "♊ Installing Gemini Webapp..."
-~/.local/bin/install-webapp "Gemini" "https://gemini.google.com/app"
+~/.local/bin/install-webapp "Gemini" "$GEMINI_URL"
 
 info "🤖 Installing Copilot Webapp..."
-~/.local/bin/install-webapp "Copilot" "https://github.com/copilot" "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/github-copilot.png"
+~/.local/bin/install-webapp "Copilot" "$COPILOT_URL" "$COPILOT_ICON_URL"
 
 info "💬 Installing ChatGPT Webapp..."
-~/.local/bin/install-webapp "ChatGPT" "https://chatgpt.com" "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/chatgpt.png"
+~/.local/bin/install-webapp "ChatGPT" "$CHATGPT_URL" "$CHATGPT_ICON_URL"
 
 info "🧠 Installing Claude Webapp..."
-~/.local/bin/install-webapp "Claude" "https://claude.ai" "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/claude-ai.png"
+~/.local/bin/install-webapp "Claude" "$CLAUDE_WEBAPP_URL" "$CLAUDE_WEBAPP_ICON_URL"
 
 info "🦁 Installing Brave AI..."
-~/.local/bin/install-webapp "Ask Brave" "https://search.brave.com/ask"
+~/.local/bin/install-webapp "Ask Brave" "$BRAVE_ASK_URL"
 
 info "🖱️ Installing MCHOOSE HUB Webapp..."
-~/.local/bin/install-webapp "MCHOSE HUB" "https://www.mchose.com.cn/#/connectDevice"
+~/.local/bin/install-webapp "MCHOSE HUB" "$MCHOSE_HUB_URL"
 
 info "📝 Installing ddocs webapp..."
-~/.local/bin/install-webapp "ddocs" "https://ddocs.new"
+~/.local/bin/install-webapp "ddocs" "$DDOCS_URL"
 
 info "📞 Installing WhatsApp webapp..."
-~/.local/bin/install-webapp "WhatsApp" "https://web.whatsapp.com"
+~/.local/bin/install-webapp "WhatsApp" "$WHATSAPP_URL"
 
 echo ""
 success "✅ [Installing Webapps] Done."

@@ -25,8 +25,7 @@ info "☁️ Installing MEGA CMD..."
 if pacman -Qi "megacmd" >/dev/null 2>&1; then
   success "MEGA is already installed. Skipping..."
 else
-  # The way the documentation wants https://mega.io/en/cmd
-  wget https://mega.nz/linux/repo/Arch_Extra/x86_64/megacmd-x86_64.pkg.tar.zst
+  wget "$MEGACMD_URL"
   sudo pacman -U "$PWD/megacmd-x86_64.pkg.tar.zst"
 fi
 
