@@ -23,7 +23,8 @@ sudo pacman -S --needed --noconfirm easyeffects lsp-plugins zam-plugins calf mda
 
 # Fetched remotely, not from the local file — this script runs before dotfiles are applied.
 info "🎧 Installing Spotify & Spicetify..."
-curl -fsSL "$SPICETIFY_SETUP_URL" | sh
+curl -fsSL "$SPICETIFY_SETUP_URL" | sh -s -- \
+  "$SPICETIFY_COMFY_REPO_URL" "$SPICETIFY_MARKETPLACE_INSTALL_URL"
 
 echo ""
 success "✅ [Installing Apps: Media] Done."

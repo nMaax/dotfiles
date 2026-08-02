@@ -154,3 +154,20 @@ user `~/.config` residue to clean up separately.
 
 **Note:** removing this leaves `noctalia-qs` required only by `noctalia-shell` (§2's v4 fallback) —
 see the updated note there.
+
+---
+
+## 9. `linux-wallpaperengine` wrapper script
+
+`dot_local/bin/executable_linux-wallpaperengine` was a byte-identical duplicate of the wrapper the
+`linux-wallpaperengine-git` AUR package already installs to `/usr/bin/linux-wallpaperengine` (confirmed
+against the upstream PKGBUILD) — both set `LD_LIBRARY_PATH` and `exec` into `/opt/linux-wallpaperengine`.
+Nothing in the repo called it by path; the only reference, `keybindings.lua`'s `SUPER+F10` kill-all bind,
+matches by process name (`pkill -f linux-wallpaperengine`) and works identically against either copy.
+
+- [x] Removed from the chezmoi source: `git rm dot_local/bin/executable_linux-wallpaperengine`
+- [x] Removed the live copy: `rm -f ~/.local/bin/linux-wallpaperengine`
+- [x] Dropped `linux-wallpaperengine` from the `dot_local/bin/` helper-script list in `CLAUDE.md`
+
+**What breaks:** nothing — the AUR package's own `/usr/bin/linux-wallpaperengine` wrapper covers both the
+`SUPER+F10` `pkill` and whatever the Noctalia `tadomika_ari/w-engine` plugin shells out to.

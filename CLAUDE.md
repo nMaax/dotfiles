@@ -300,7 +300,7 @@ adding it to the unconditional package list, same caution as the AI script's ROC
 - KWallet is the keyring, and PAM auto-unlock only works for a wallet literally named `kdewallet`
   with Blowfish encryption and the login password. `autostart.lua` execs `pam_kwallet_init`.
 - `dot_local/bin/` holds the helper scripts the config calls (`install-webapp`, `launch-webapp.sh`,
-  `linux-wallpaperengine`, `spicetify-setup.sh`).
+  `spicetify-setup.sh`).
 - `dot_config/fish/functions/` is a large library of one-purpose media/document conversion functions
   (`pdf-*`, `vid2*`, `*2png`, …). Self-contained; add new ones as single files following the
   existing naming.
