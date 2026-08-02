@@ -10,7 +10,15 @@ info "🚀 [Installing Apps: Coding] Starting..."
 echo ""
 
 info "🐍 Installing tools for coding.."
-sudo pacman -S --needed --noconfirm uv lazygit neovim tmux nodejs npm jdk-openjdk github-cli gcc-fortran make python python-lsp-server pyright
+
+# `--needed` won't skip nodejs if an nodejs-lts-* variant is installed instead — it conflicts with
+# plain nodejs. `pacman -T` checks whether the dependency is already satisfied by anything.
+if pacman -T nodejs &>/dev/null; then
+  info "Node.js requirement already satisfied (e.g. by an installed nodejs-lts-* variant). Skipping the 'nodejs' package to avoid a pacman conflict."
+  sudo pacman -S --needed --noconfirm uv lazygit neovim tmux npm jdk-openjdk github-cli gcc-fortran make python python-lsp-server pyright
+else
+  sudo pacman -S --needed --noconfirm uv lazygit neovim tmux nodejs npm jdk-openjdk github-cli gcc-fortran make python python-lsp-server pyright
+fi
 paru -S --needed --noconfirm visual-studio-code-bin direnv
 
 echo ""

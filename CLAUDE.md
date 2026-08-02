@@ -263,6 +263,33 @@ provided. New optional features should follow the same "empty/false means skip c
 Bibata hyprcursor from the user's `nMaax/dotfiles-assets` and `nMaax/dotfiles-sddm` repos, with a
 168h `refreshPeriod`. Large binary assets live there, **not** in this repo.
 
+### `--needed` doesn't know about package providers — use `pacman -T` before forcing a name
+
+Real incident, found in `/var/log/pacman.log`: this machine had `nodejs-lts-krypton` installed
+manually (alongside `pnpm`, unrelated to these scripts) months before a `chezmoi apply`.
+`nodejs-lts-krypton` `Provides: nodejs=X` (so `npm`/`pyright`'s `Depends On: nodejs` was already
+satisfied) but also `Conflicts: nodejs`. `run_onchange_before_02-apps-coding.sh.tmpl` asked pacman
+for the literal `nodejs` package; `--needed` only skips a package already installed **under that
+exact name**, so it didn't skip, pacman hit the conflict, and — because `--noconfirm` doesn't cover
+conflict-resolution removals — the scripted `--noconfirm` transaction failed outright under
+`set -euo pipefail`, requiring the user to manually run `pacman -S nodejs` to resolve it themselves.
+
+The fix (and the pattern to reuse anywhere a script names a package that has known alternative
+providers): check `pacman -T <pkg>` first — it exits 0 silently if the dependency is already
+satisfied by *anything* (the named package or a provider), and prints the name with a non-zero exit
+if not. This is future-proof against new provider names (e.g. a future `nodejs-lts-*` codename)
+without hardcoding a list. See `run_onchange_before_02-apps-coding.sh.tmpl` for the guarded
+`nodejs` install.
+
+### btop/nvtop show no AMD GPU stats without `rocm-smi-lib`
+
+`pacman -Si btop` lists it as an optional dep ("AMD GPU support") — without it, btop/nvtop can't read
+AMD GPU usage/VRAM/temperature at all. It depends on `hsa-rocr`/`rocm-core` (the base HSA runtime),
+which is much lighter than the `rocm-hip-sdk`/`rocm-opencl-runtime`/`hip-runtime-amd` trio that caused
+the display blackout documented in the AI-tools section — but it's still ROCm-adjacent, so
+`run_once_before_01-cachyos-checks.sh.tmpl` gates it behind an `ask()` (default: install) rather than
+adding it to the unconditional package list, same caution as the AI script's ROCm prompt.
+
 ### Setup facts that affect config code
 
 - Login must be **systemd-owned Hyprland (UWSM)** in SDDM, or autostart entries (tray icons, agents)
@@ -546,6 +573,11 @@ remember are gone), assume it was intentional and ask — do not restore it.
 
 ## 9. Conventions
 
+> **Comments: max 1-2 lines, always.** Explain *why* (a pinned option, an empirically-discovered
+> gotcha), never *what* the code does. No mechanism narration, no listing every file/case it touches —
+> that belongs in the diff or commit message. If a comment runs past 2 lines, cut it, don't wrap it.
+> This applies to every file type in this repo: Lua, bash, TOML, everywhere.
+
 - Tabs for indentation in the Hyprland Lua files. (`dot_config/nvim/stylua.toml` specifies 2 spaces,
   but it governs the *nvim* tree only — don't apply it here.)
 - Shell scripts: `#!/bin/bash`, `set -euo pipefail`, shared templates included, user-facing output
@@ -556,10 +588,4 @@ remember are gone), assume it was intentional and ask — do not restore it.
   `SUPER+0` says `"Access workspace [0-9]"`. Media/`XF86*` keys and submap navigation binds are
   deliberately undescribed (self-evident, and they'd flood the sheet). Anything genuinely new and
   discoverable gets its own.
-- Comments explain *why*, especially for anything empirically discovered. A comment recording "this
-  option is pinned because the alternative breaks X" has already paid for itself several times here.
-  Prune comments that merely restate the code.
-- Keep comments short — one or two lines, not verbose. State the rule and the reason in as few
-  words as the fact allows; skip the mechanism narration and the full inventory of every file/case
-  it covers — that belongs in the diff or commit message, not living in a comment.
 - `git commit` messages are one-liners listing the changes, not verbose bodies.

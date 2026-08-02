@@ -60,6 +60,17 @@ info "🔧 Installing other utilities..."
 sudo pacman -S --needed --noconfirm curl zip 7zip sshfs caligula smartmontools grim slurp wl-clipboard ffmpeg resvg imagemagick perl-image-exiftool gifski zbar jq tesseract texlive-latex glow dust bat ripgrep fd btop fastfetch nvtop trash-cli transmission-cli ghostscript poppler qpdf ufw tealdeer ksshaskpass fzf zoxide translate-shell
 paru -S --needed --noconfirm pdfcpu-bin ocrmypdf tesseract-data-eng tesseract-data-ita pandoc-bin
 
+# rocm-smi-lib is btop/nvtop's optional dep for AMD GPU stats; lighter than the HIP/OpenCL SDK but
+# still ROCm-adjacent, so confirm rather than force it.
+detect_gpu_vendor
+if [ "$GPU_VENDOR" = "amd" ]; then
+  if ask "Install rocm-smi-lib so btop/nvtop can show AMD GPU usage, VRAM and temperature?"; then
+    sudo pacman -S --needed --noconfirm rocm-smi-lib
+  else
+    warn "Skipping rocm-smi-lib. btop/nvtop won't show AMD GPU stats."
+  fi
+fi
+
 info "🖥️ Installing KDE suite, Qt, GTK and utility apps..."
 paru -S --needed --noconfirm qt6ct-kde qt5ct-kde
 sudo pacman -S --needed --noconfirm \
