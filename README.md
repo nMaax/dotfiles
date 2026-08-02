@@ -21,13 +21,13 @@ Ideally you should have installed CachyOS selecting for Hyprland (optionally als
   email = "you@example.com"
   tailscale_authkey = "tskey-auth-XXXXXXXXXXXXX" # "" installs Tailscale without logging in, false skips it entirely
   nordvpn_authkey = "nvpnkey-auth-XXXXXXXXXXXXX" # "" installs NordVPN without logging in, false skips it entirely
-  mega_authkey = "your-mega-session-id" # "" installs MEGA without logging in, false skips it entirely
+  mega_authkey = "megakey-auth-XXXXXXXXXXXXX" # "" installs MEGA without logging in, false skips it entirely
   gaming = true # false to avoid installing Steam, Mango, OpenRGB etc.
-  coding = true # false to skip dev tooling (neovim, vscode, lazygit, nodejs, etc.)
-  ai = true # false to skip AI tools/CUDA/ROCm/Ollama entirely — recommended on GPUs ROCm doesn't support
-  media = true # false to skip kdenlive/OBS/EasyEffects/Spotify/yt-dlp/image-upscaler
-  office = true # false to skip LibreOffice/KeePassXC/qBittorrent/etc.
-  communication = true # false to skip Telegram/Signal/Discord/Element/LocalSend
+  coding = true # false to skip dev tooling neovim, vscode, lazygit, nodejs, etc.
+  ai = true # false to skip AI tools CUDA, ROCm, Ollama, Claude Code etc.
+  media = true # false to skip kdenlive, OBS, EasyEffects, Spotify etc.
+  office = true # false to skip LibreOffice, KeePassXC, qBittorrent etc.
+  communication = true # false to skip Telegram, Signal, Discord, Element etc.
 ```
 
 During install, you will have the option to automatically wipe `tailscale_authkey` / `nordvpn_authkey` / `mega_authkey` from `~/.config/chezmoi/chezmoi.toml` right after their use. Leaving any of them as `""` still installs and enables that integration, just without an auto-login; set it to `false` to skip installing it altogether.
@@ -142,37 +142,7 @@ Host myserver
 
 Then connect simply with `ssh myserver`.
 
-### MEGA & KeePassXC
-
-`megacmd` and `keepassxc` are installed as regular packages. MEGA login is handled by its own
-dedicated script, gated by `mega_authkey` in `chezmoi.toml` (see above) — if you set it, MEGA is
-already logged in by the time the install finishes. `mega_authkey` is a MEGA **session id**, not
-your account password: log in interactively once beforehand and grab it with
-
-```fish
-mega-login you@example.com
-mega-session
-```
-
-then paste that value into `mega_authkey`. If you left it as `""` (or skipped it), log in by hand
-after installation instead:
-
-```fish
-mega-login
-```
-
-Either way, sync still needs to be configured manually after installation:
-
-1. **Configure your MEGA sync:**
-
-   ```fish
-   mkdir -p ~/MEGA
-   mega-sync ~/MEGA/ /
-   ```
-
-2. **Open KeePassXC** and point it at your database once the MEGA sync completes. Remember to place the key-file as well!
-
-### GRUB theme cleanup
+### GRUB
 
 If you do use GRUB and want CachyOS's themed boot menu replaced with plain console text, run:
 
@@ -387,31 +357,12 @@ Hit **Start Streaming** in OBS. That's it :)
 
 ---
 
-## ⌨️ Keybinding Conventions
-
-🥮 follows some grammar in keybindings definitions, not different from most of the community's setups.
-
-🥮 is based on the following modifiers. Each modifier is then combined with some other key to produce some behaviour; often such key is choosed in such a way the final shortcut is easily memorizable
-
-| Modifier | Meaning |
-| --- | --- |
-| `SUPER` | Focus / select / toggle |
-| `SUPER+SHIFT` | Move |
-| `SUPER+CTRL` | Direct-access shortcut (e.g. jump straight to the gaming workspace) |
-| `SUPER+CTRL+SHIFT` | Direct-access move |
-| `SUPER+ALT` | Alternative behavior |
-| `SUPER+ALT+CTRL` | Rare/heavy/bulk actions (e.g. reload configs, move all windows from a workspace) |
-
-🥮 mainly supports vim-like keybinds for movement, with arrows available as a fallback or when the vim shortcuts are overloaded.
-
----
-
 ## 📝 TODOs
 
 - [ ] Move to shelly
-- [ ] Solve remaining TODOs around the codebase (see `hyprland.lua`)
 - [ ] Remove unused AUR packages
 - [ ] Explore new plugins and remove unused
+- [ ] Solve remaining TODOs around the codebase (see `hyprland.lua`)
 - [ ] Prepare 2K-4K WALLHACK Wallpapers -> Make a release for dotfiles-assets if files are too large
 - [ ] Once everything is finished, add screenshots and videos in this README
 
