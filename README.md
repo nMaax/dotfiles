@@ -52,9 +52,6 @@ chezmoi init --apply nMaax
 
 If you would like to tweak CachyOS before running 🥮, but CachyOS Hello won't accept your password on a Hyprland-only installation (i.e., no Plasma), the polkit-kde-agent is likely missing from your background processes. You must ensure this agent is running so CachyOS Hello can trigger the authentication pop-up required to apply your changes.
 
-> [!NOTE]
-> This is only needed one time, on the original `hyprland.lua` config CachyOS ships before 🥮 is applied. Once 🥮 is installed, the same agent will start automatically.
-
 To fix, do the following:
 
 1. Open your hyprland.lua: `vim ~/.config/hypr/hyprland.lua`.
@@ -154,7 +151,7 @@ sudo grub-mkconfig -o /boot/grub/grub.cfg
 
 ### Theming
 
-Noctalia presents a standard approach to sync apps colorschemes with its own theme, each app requires its own procedure, part of it can be automated via code, and some other not. Further information at [docs.noctalia.dev/v5/theming](https://docs.noctalia.dev/v5/theming/app-theming/).
+Noctalia presents a standard approach to sync apps colorschemes with its own theme, each app requires its own procedure, part of it can be automated via code, and some other not. Further information can be found in [official Noctalia documentation](https://docs.noctalia.dev/v5/theming/app-theming/).
 
 You can retrieve the list of apps on which automatic theming is set on the Noctalia settings themselves. Note however that part of those may still require some in-app manual intervention, here below are some steps you shall take to complete the theming:
 
