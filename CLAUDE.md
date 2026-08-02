@@ -530,9 +530,13 @@ a headless output can't produce, such as two equal-sized monitors differing only
    move-whole-workspace feature (`SUPER+ALT+<digit>`) therefore moves each window individually.
    `change_id` remains the right tool for *stashing* a layout at an unused high id.
 
-8. **Scrolling-layout niri behaviour is `scrolling.column_width = 1.0`** (the `0.5` default caused the
-   50/50 split). `fit_into_view`, `fit active` and `inhibit_scroll` are **layout messages**, not
-   config options — they go through `hl.dsp.layout(...)`, not `hl.config`.
+8. **`scrolling.column_width` was tried at `1.0`** (niri-like full-width-then-scroll) **and reverted
+   back to upstream's `0.5` default** — two windows now sit side-by-side as half-width columns again.
+   `K`/`J`/`SHIFT+K`/`SHIFT+J` in `keybindings.lua` do in-workspace focus/move first and only fall
+   back to workspace-scroll at the edge (the `smart_focus`/`smart_move` closures), so column_width no
+   longer needs to compensate for K/J being workspace-scroll-only. `fit_into_view`, `fit active` and
+   `inhibit_scroll` are **layout messages**, not config options — they go through `hl.dsp.layout(...)`,
+   not `hl.config`.
 
 ---
 

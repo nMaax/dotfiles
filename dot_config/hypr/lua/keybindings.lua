@@ -295,20 +295,48 @@ hl.bind("SUPER+ALT+down", hl.dsp.focus({ monitor = "d" }), { description = "Move
 hl.bind("SUPER+ALT+left", hl.dsp.focus({ monitor = "l" }), { description = "Move focus on monitor left" })
 hl.bind("SUPER+ALT+right", hl.dsp.focus({ monitor = "r" }), { description = "Move focus on monitor right" })
 
--- Scroll workspaces with K/J (vim-keys, workspaces stack vertically) and CTRL+up/down
--- (CTRL disambiguates the arrow twin from SUPER+up/down = window-focus-up/down)
+-- K/J move focus within the current workspace first (dwindle: 2D split tree;
+-- scrolling: the column's stack) and only scroll to the previous/next
+-- workspace once there's nothing left over there. CTRL+up/down are the arrow
+-- twins (CTRL disambiguates from SUPER+up/down = plain direction-focus).
+local function try_focus(window, direction)
+	hl.dispatch(hl.dsp.focus({ direction = direction }))
+	local after = hl.get_active_window()
+	if not after or after.address == window.address then
+		return nil
+	end
+	local same_workspace = window.workspace and after.workspace and after.workspace.name == window.workspace.name
+	if same_workspace then
+		return after
+	end
+	hl.dispatch(hl.dsp.focus({ window = window })) -- undo a cross-workspace/monitor jump
+	return nil
+end
+
+local function smart_focus(direction, workspace_delta)
+	return function()
+		local before = hl.get_active_window()
+		if not before or not try_focus(before, direction) then
+			hl.dispatch(hl.dsp.focus({ workspace = workspace_delta }))
+		end
+	end
+end
+
+local focus_up = smart_focus("up", "-1")
+local focus_down = smart_focus("down", "+1")
+
 hl.bind(
 	"SUPER+K",
-	hl.dsp.focus({ workspace = "-1" }),
-	{ repeating = true, description = "Scroll workspaces up (previous)" }
+	focus_up,
+	{ repeating = true, description = "Move focus up, or scroll workspaces up at the edge (vim, or arrows)" }
 )
-hl.bind("SUPER+CTRL+up", hl.dsp.focus({ workspace = "-1" }), { repeating = true })
+hl.bind("SUPER+CTRL+up", focus_up, { repeating = true })
 hl.bind(
 	"SUPER+J",
-	hl.dsp.focus({ workspace = "+1" }),
-	{ repeating = true, description = "Scroll workspaces down (next)" }
+	focus_down,
+	{ repeating = true, description = "Move focus down, or scroll workspaces down at the edge (vim, or arrows)" }
 )
-hl.bind("SUPER+CTRL+down", hl.dsp.focus({ workspace = "+1" }), { repeating = true })
+hl.bind("SUPER+CTRL+down", focus_down, { repeating = true })
 
 -- Scroll workspaces with mouse wheel
 hl.bind(
@@ -406,20 +434,38 @@ for key = 0, 9 do
 	)
 end
 
--- Move windows to adjacent workspace with SHIFT+K/J (vim-keys) and CTRL+SHIFT+up/down
--- (CTRL disambiguates the arrow twin from SUPER+SHIFT+up/down = move-window-up/down)
+-- SHIFT+K/J move the window within the current workspace first, same
+-- edge-fallback as K/J above; CTRL+SHIFT+up/down are the arrow twins.
+local function smart_move(focus_direction, move_direction, workspace_delta)
+	return function()
+		local window = hl.get_active_window()
+		if not window then
+			return
+		end
+		if try_focus(window, focus_direction) then
+			hl.dispatch(hl.dsp.focus({ window = window })) -- move acts on the active window
+			hl.dispatch(hl.dsp.window.move({ direction = move_direction }))
+		else
+			hl.dispatch(hl.dsp.window.move({ workspace = workspace_delta }))
+		end
+	end
+end
+
+local move_up = smart_move("up", "u", "-1")
+local move_down = smart_move("down", "d", "+1")
+
 hl.bind(
 	"SUPER+SHIFT+K",
-	hl.dsp.window.move({ workspace = "-1" }),
-	{ repeating = true, description = "Move window to previous workspace (vim, or arrows)" }
+	move_up,
+	{ repeating = true, description = "Move window up, or to previous workspace at the edge (vim, or arrows)" }
 )
-hl.bind("SUPER+CTRL+SHIFT+up", hl.dsp.window.move({ workspace = "-1" }), { repeating = true })
+hl.bind("SUPER+CTRL+SHIFT+up", move_up, { repeating = true })
 hl.bind(
 	"SUPER+SHIFT+J",
-	hl.dsp.window.move({ workspace = "+1" }),
-	{ repeating = true, description = "Move window to next workspace (vim, or arrows)" }
+	move_down,
+	{ repeating = true, description = "Move window down, or to next workspace at the edge (vim, or arrows)" }
 )
-hl.bind("SUPER+CTRL+SHIFT+down", hl.dsp.window.move({ workspace = "+1" }), { repeating = true })
+hl.bind("SUPER+CTRL+SHIFT+down", move_down, { repeating = true })
 
 -- Re-arrange windows with arrows
 hl.bind("SUPER+SHIFT+up", hl.dsp.window.move({ direction = "u" }), { description = "Move window up" })

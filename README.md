@@ -353,44 +353,20 @@ Hit **Start Streaming** in OBS. That's it :)
 
 ## ⌨️ Keybinding Conventions
 
-`keybindings.lua` isn't ad hoc: every window/workspace-management bind lives under `SUPER`, and which
-extra modifier you add follows a consistent grammar rather than being memorized bind-by-bind.
+🥮 follows some grammar in keybindings definitions, not different from most of the community's setups.
+
+🥮 is based on the following modifiers. Each modifier is then combined with some other key to produce some behaviour; often such key is choosed in such a way the final shortcut is easily memorizable
 
 | Modifier | Meaning |
 | --- | --- |
 | `SUPER` | Focus / select / toggle |
-| `SUPER+SHIFT` | Move / throw the same object |
-| `SUPER+CTRL` | Direct-access shortcut (e.g. jump straight to the games workspace); also disambiguates an arrow key from its window-direction meaning (see vim-key note below) |
-| `SUPER+CTRL+SHIFT` | Same disambiguation, on the "move" tier |
-| `SUPER+ALT` | Alternative behavior for the same slot (different app, different granularity, different sensor) |
-| `SUPER+ALT+CTRL` | Rare/heavy/bulk action (reload configs, bulk workspace move) |
+| `SUPER+SHIFT` | Move |
+| `SUPER+CTRL` | Direct-access shortcut (e.g. jump straight to the gaming workspace) |
+| `SUPER+CTRL+SHIFT` | Direct-access move |
+| `SUPER+ALT` | Alternative behavior |
+| `SUPER+ALT+CTRL` | Rare/heavy/bulk actions (e.g. reload configs, move all windows from a workspace) |
 
-A few notes on top of the table:
-
-- **Vim keys split along two axes, not one, because the active layout (`scrolling`) puts them at a
-  right angle to each other**: windows unroll *horizontally* within a workspace, while workspaces
-  themselves are a *vertical* stack. So `H`/`L` (left/right) are the window-direction family — focus
-  and move, mirroring the `left`/`right` arrows exactly — while `K`/`J` (up/down) are the
-  workspace-navigation family — scroll and move-to-workspace, mirroring `up`/`down`. The two families
-  share the arrow keys, which is exactly why `CTRL` shows up on `up`/`down`'s workspace-scroll/move
-  twins specifically: `SUPER+up` already means "focus window up," so `SUPER+CTRL+up` is needed to
-  reach "scroll workspace up" on the same physical key without a collision. The letters never need
-  that extra `CTRL`, since `H`/`L` and `K`/`J` don't overlap with each other.
-- **System panels are a separate axis**, not bound by the table above: clipboard, wallpaper pickers,
-  Noctalia settings, emoji/kaomoji, the cheatsheet, lock and the power menu each get their own
-  single-mnemonic key (`V`, `W`, `,`, `.`, `/`, `Backspace`, `Escape`) rather than fitting into the
-  focus/move/alternative grammar, since there's no "opposite" action to pair them against.
-- **Function keys are always `SUPER+Fx`, never bare** — this is deliberate so an in-app shortcut
-  (e.g. a game binding bare `F5` to a free camera) can never collide with the compositor.
-- A few limited, deliberate exceptions exist: `SUPER+ALT+arrows` (monitor-focus) stays even though
-  Hyprland has a native edge-of-monitor fallback, because the fallback only kicks in once
-  direction-focus finds nothing on the current monitor, not on demand; `SUPER+CTRL+G` jumps straight
-  to the games workspace since that's the one app-slot with both a launcher toggle *and* a real
-  numbered workspace behind it; `ALT+RETURN`/`ALT+TAB` stay off `SUPER` because `SUPER+RETURN`/
-  `SUPER+TAB` are already claimed (terminal, scrolling overview).
-- This table documents the *grammar*, not a full bind listing, since a duplicated enumeration here
-  would drift from the config. For the actual current binds, use the in-app keybind-cheatsheet
-  (`SUPER+slash`) or `hyprctl binds -j`.
+🥮 mainly supports vim-like keybinds for movement, with arrows available as a fallback or when the vim shortcuts are overloaded.
 
 ---
 
