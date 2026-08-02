@@ -19,11 +19,6 @@ info "💬 Installing ChatGPT Webapp..."
 info "🧠 Installing Claude Webapp..."
 ~/.local/bin/install-webapp "Claude" "https://claude.ai" "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/claude-ai.png"
 
-# NOTE: this line used to pass an extra leading "install-webapp" argument, which
-# made APP_NAME and APP_URL both "install-webapp" -- that is where the stray
-# ~/.local/share/applications/install-webapp.desktop came from, and why no
-# Ask-Brave entry was regenerated. Removing that argument is the fix; delete the
-# stray .desktop by hand (see CLEANUP.md).
 info "🦁 Installing Brave AI..."
 ~/.local/bin/install-webapp "Ask Brave" "https://search.brave.com/ask"
 
