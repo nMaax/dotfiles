@@ -110,14 +110,14 @@ telemetry_enabled = true
 [theme]
 builtin = "Rosé Pine"
 community_palette = "Heartbox"
-mode = "dark"
+mode = "auto"
 pure_black_dark = true
 source = "community"
 wallpaper_scheme = "m3-fruit-salad"
 
     [theme.templates]
     builtin_ids = [ "btop", "cava", "gtk3", "gtk4", "ghostty", "hyprland", "kcolorscheme", "qt", "starship" ]
-    community_ids = [ "neovim", "heroiclauncher", "prismlauncher", "yazi" ]
+    community_ids = [ "spicetify", "neovim", "heroiclauncher", "prismlauncher", "yazi" ]
 
 [wallpaper]
 directory = "/home/massimiliano/Pictures/Wallpapers"
