@@ -1,8 +1,4 @@
 #!/bin/bash
 set -euo pipefail
 
-# NOTE: this alone won't fix a Hyprland-rebuild-vs-plugin-ABI mismatch (same
-# version string, different pkgrel) -- see the comment in
-# run_onchange_before_04-hyprland-noctalia.sh.tmpl for the `hyprpm
-# purge-cache` fix if plugins start erroring after a system update.
 hyprpm update
