@@ -203,9 +203,16 @@ Understanding this requires reading `.chezmoiscripts/`, `.chezmoitemplates/` and
 chezmoi runs `before_` scripts, then applies regular files, then runs `after_` scripts. The numeric
 prefixes order scripts *within* each phase, and the two sequences are independent:
 
-- `before`: `01-cachyos-checks` → `02-apps` → `03-fonts-emoji` → `04-hyprland-noctalia`
-- `after`: `01-system-services` → `02-grub` → `03-sddm-PAM` → `04-sddm-themes` → `05-misc` →
-  `06-gaming` → `07-webapps` → `08-tailscale` → `09-nordvpn` → `10-finalize` → `99` (hyprpm update)
+- `before`: `01-cachyos-checks` → `02-apps-core` → `02-apps-coding` → `02-apps-ai` → `02-apps-media` →
+  `02-apps-office` → `02-apps-communication` → `03-fonts-emoji` → `04-hyprland-noctalia`. Order
+  *within* the `02-apps-*` group doesn't matter — none of the categories depend on packages installed
+  by another, and `paru`/`pacman -S --needed` are idempotent regardless of run order.
+- `after`: `01-system-services` → `03-sddm-PAM` → `04-sddm-themes` → `05-misc` →
+  `06-gaming` → `07-webapps` → `08-tailscale` → `09-nordvpn` → `10-finalize` → `99` (hyprpm update).
+  There is deliberately no `02-*` here — the old GRUB theme-sanitizer script was retired in favor of
+  a manual README recipe (its `grep`/`sed` patterns hardcoded CachyOS's current `/etc/default/grub`
+  layout and would silently no-op if that layout ever changed), and the gap in numbering was left
+  as-is rather than renumbering every later script.
 
 The `run_once_` / `run_onchange_` / bare `run_` prefix decides *when*: once ever, on content change,
 or every apply. **Renaming a script or editing an `onchange` one re-triggers it** — that is the
@@ -225,6 +232,12 @@ Follow that pattern; don't redefine what's already provided:
 - `utils.sh.tmpl` — logging (`info`, `success`, `warn`, `error`), `ask <question>` (Y/n prompt,
   Enter = yes), `reset_chezmoi_data_secret <key> <reminder>` (blanks a secret out of the user's
   `chezmoi.toml` after use), and `detect_gpu_vendor` which sets `GPU_VENDOR` to `nvidia`/`amd`/`""`.
+  `detect_gpu_vendor` is a **pure vendor check only** — it does not know whether the specific card is
+  ROCm-supported (ROCm's hardware support list is a narrow, moving allowlist, not something worth
+  hardcoding here). `run_onchange_before_02-apps-ai.sh.tmpl` compensates by `ask`-ing before
+  installing `rocm-hip-sdk` on any AMD GPU, defaulting (Enter) to skipping ROCm and falling back to
+  CPU-only Ollama — installing ROCm packages on an unsupported architecture (e.g. Polaris/gfx803, RX
+  400/500 series) has caused total display-output loss on at least one machine.
 - `external_links.sh.tmpl` — **all** external download URLs, versions and SHA256 hashes, as shell
   variables with "last checked" dates. When an upstream asset moves, edit this file; never inline a
   URL into a script.
@@ -232,8 +245,15 @@ Follow that pattern; don't redefine what's already provided:
 ### Template data
 
 Scripts gate on the user's `~/.config/chezmoi/chezmoi.toml` `[data]` block: `.name`, `.email`,
-`.gaming` (skip Steam/OpenRGB/etc.), `.tailscale_authkey`, `.nordvpn_token` (empty string = skip
-that integration entirely). Several also branch on
+`.gaming` (skip Steam/OpenRGB/etc.), `.coding` (skip dev tooling), `.ai` (skip
+CUDA/ROCm/Ollama/Claude Code/Antigravity/OpenCode entirely), `.media` (skip
+kdenlive/OBS/EasyEffects/Spotify/yt-dlp/image-upscaler), `.office` (skip
+LibreOffice/KeePassXC/qBittorrent/MEGA/etc.), `.communication` (skip
+Telegram/Signal/Discord/Element/LocalSend) — each one gates its own `02-apps-*` script (§3
+Ordering). `.tailscale_authkey` / `.nordvpn_token` accept `""`, boolean `false`, or the string
+`"false"` as "skip that integration entirely" — the conditionals stringify with `printf "%v"` before
+comparing (`{{- if and .field (ne (printf "%v" .field) "false") }}`) since Go templates panic
+comparing a bool to a string directly with `ne`/`eq`. Several scripts also branch on
 `{{- if ne .chezmoi.osRelease.id "cachyos" }}` to install what CachyOS would otherwise have
 provided. New optional features should follow the same "empty/false means skip cleanly" convention.
 

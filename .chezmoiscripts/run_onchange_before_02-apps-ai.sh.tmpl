@@ -1,0 +1,61 @@
+#!/bin/bash
+set -euo pipefail
+
+{{ template "utils.sh.tmpl" . }}
+{{ template "external_links.sh.tmpl" . }}
+
+{{ if .ai -}}
+echo ""
+info "🚀 [Installing Apps: AI] Starting..."
+echo ""
+
+info "🤖 Installing AI tools..."
+
+detect_gpu_vendor
+
+if [ -z "$GPU_VENDOR" ]; then
+  warn "No GPU detected via lspci. AI tools will run in CPU-only mode."
+fi
+
+# Install GPU-specific compute libraries / drivers
+INSTALL_GPU_COMPUTE=true
+if [ "$GPU_VENDOR" = "amd" ]; then
+  GPU_MODEL="$(lspci | grep -iE 'vga|3d|display' | head -1)"
+  warn "AMD GPU detected: $GPU_MODEL"
+  warn "ROCm officially supports only a narrow list of GPUs (mostly workstation/CDNA and recent RDNA2+ cards). Installing rocm-hip-sdk on unsupported hardware has caused a full display-output loss on at least one machine."
+  if ask "Skip ROCm/HIP and use CPU-only AI tools instead? (recommended unless you've confirmed your GPU is ROCm-supported)"; then
+    INSTALL_GPU_COMPUTE=false
+  fi
+fi
+
+if [ "$GPU_VENDOR" = "nvidia" ]; then
+  info "NVIDIA GPU configured. Installing CUDA toolkit for AI acceleration..."
+  sudo pacman -S --needed --noconfirm cuda cudnn
+elif [ "$GPU_VENDOR" = "amd" ] && [ "$INSTALL_GPU_COMPUTE" = "true" ]; then
+  info "AMD GPU configured. Installing ROCm/HIP for AI acceleration..."
+  sudo pacman -S --needed --noconfirm rocm-opencl-runtime rocm-hip-sdk hip-runtime-amd
+fi
+
+info "🦀 Installing Claude Code..."
+sudo pacman -S --needed --noconfirm claude-code # Available directly in the cachyos repo
+
+info "💎 Installing Antigravity CLI..."
+paru -S --needed --noconfirm antigravity-cli
+
+info "🦙 Installing Ollama..."
+if [ "$GPU_VENDOR" = "nvidia" ]; then
+  sudo pacman -S --needed --noconfirm ollama-cuda
+elif [ "$GPU_VENDOR" = "amd" ] && [ "$INSTALL_GPU_COMPUTE" = "true" ]; then
+  sudo pacman -S --needed --noconfirm ollama-rocm
+else
+  sudo pacman -S --needed --noconfirm ollama
+fi
+sudo systemctl enable --now ollama.service
+
+info "🔳 Installing OpenCode..."
+paru -S --needed --noconfirm opencode
+
+echo ""
+success "✅ [Installing Apps: AI] Done."
+echo ""
+{{- end }}

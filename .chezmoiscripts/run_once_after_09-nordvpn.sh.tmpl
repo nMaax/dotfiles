@@ -17,7 +17,7 @@ sudo usermod -aG nordvpn "$USER"
 sleep 2
 warn "[NORDVPN] A new system group was added. Reboot your system."
 
-{{- if .nordvpn_token }}
+{{- if and .nordvpn_token (ne (printf "%v" .nordvpn_token) "false") }}
 info "Logging into NordVPN using provided token..."
 if ! sg nordvpn -c "nordvpn account" &>/dev/null; then
   sg nordvpn -c "nordvpn login --token {{ .nordvpn_token }}"
@@ -34,8 +34,8 @@ if sg nordvpn -c "nordvpn status" | grep -E -q "Status: (Connected|Disconnected)
   success "NordVPN configured successfully."
 fi
 
-if ask "🧹 Remove 'nordvpn_token' from ~/.config/chezmoi/chezmoi.toml now? (under [data], set nordvpn_token = \"\")"; then
-  reset_chezmoi_data_secret "nordvpn_token" "Leave \"\" if you want to skip nordvpn"
+if ask "🧹 Remove 'nordvpn_token' from ~/.config/chezmoi/chezmoi.toml now? (under [data], set nordvpn_token = \"\" or false)"; then
+  reset_chezmoi_data_secret "nordvpn_token" "Leave \"\" or false if you want to skip nordvpn"
 fi
 {{- else }}
 warn "No 'nordvpn_token' found in chezmoi.toml. Skipping auto-login."

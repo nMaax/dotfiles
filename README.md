@@ -19,9 +19,14 @@ Ideally you should have installed CachyOS selecting for Hyprland (optionally als
 [data]
   name = "nMaax"
   email = "you@example.com"
-  tailscale_authkey = "tskey-auth-XXXXXXXXXXXXX" # Leave "" if you want to skip tailscale
-  nordvpn_token = "nvpnkey-auth-XXXXXXXXXXXXX" # Leave "" if you want to skip nordvpn
+  tailscale_authkey = "tskey-auth-XXXXXXXXXXXXX" # Leave "" or false if you want to skip tailscale
+  nordvpn_token = "nvpnkey-auth-XXXXXXXXXXXXX" # Leave "" or false if you want to skip nordvpn
   gaming = true # false to avoid installing Steam, Mango, OpenRGB etc.
+  coding = true # false to skip dev tooling (neovim, vscode, lazygit, nodejs, etc.)
+  ai = true # false to skip AI tools/CUDA/ROCm/Ollama entirely — recommended on GPUs ROCm doesn't support
+  media = true # false to skip kdenlive/OBS/EasyEffects/Spotify/yt-dlp/image-upscaler
+  office = true # false to skip LibreOffice/KeePassXC/qBittorrent/MEGA/etc.
+  communication = true # false to skip Telegram/Signal/Discord/Element/LocalSend
 ```
 
 During install, you will have the option to automatically wipe `tailscale_authkey` / `nordvpn_token` from `~/.config/chezmoi/chezmoi.toml` right after their use.
@@ -148,6 +153,21 @@ Set them up manually after installation:
    ```
 
 2. **Open KeePassXC** and point it at your database once the MEGA sync completes. Remember to place the key-file as well!
+
+### GRUB theme cleanup (optional, GRUB only)
+
+🥮 no longer automates this — CachyOS's shipped `/etc/default/grub` format is an implementation detail
+that can change between releases, so it's a manual, one-time recipe instead of a script. Skip this
+entirely if you're on systemd-boot or Limine (check with `bootctl status` or look for
+`/boot/limine.conf`).
+
+If you do use GRUB and want CachyOS's themed boot menu replaced with plain console text:
+
+```bash
+sudo sed -i 's|^GRUB_THEME=|#GRUB_THEME=|' /etc/default/grub
+sudo sed -i 's|^#GRUB_TERMINAL_OUTPUT=console|GRUB_TERMINAL_OUTPUT=console|' /etc/default/grub
+sudo grub-mkconfig -o /boot/grub/grub.cfg
+```
 
 ### Theming
 
