@@ -299,6 +299,18 @@ hl.bind("SUPER+ALT+right", hl.dsp.focus({ monitor = "r" }), { description = "Mov
 -- scrolling: the column's stack) and only scroll to the previous/next
 -- workspace once there's nothing left over there. CTRL+up/down are the arrow
 -- twins (CTRL disambiguates from SUPER+up/down = plain direction-focus).
+-- Hyprland's directional dispatch falls back to the only other window in the
+-- workspace when nothing is truly above/below (e.g. two side-by-side scrolling
+-- columns) -- reject that fallback so the edge-scroll behavior below still fires.
+local function vertically_aligned(before, after, direction)
+	local overlaps_x = before.at.x < after.at.x + after.size.x and after.at.x < before.at.x + before.size.x
+	if direction == "up" then
+		return overlaps_x and after.at.y < before.at.y
+	else
+		return overlaps_x and after.at.y > before.at.y
+	end
+end
+
 local function try_focus(window, direction)
 	hl.dispatch(hl.dsp.focus({ direction = direction }))
 	local after = hl.get_active_window()
@@ -306,10 +318,10 @@ local function try_focus(window, direction)
 		return nil
 	end
 	local same_workspace = window.workspace and after.workspace and after.workspace.name == window.workspace.name
-	if same_workspace then
+	if same_workspace and vertically_aligned(window, after, direction) then
 		return after
 	end
-	hl.dispatch(hl.dsp.focus({ window = window })) -- undo a cross-workspace/monitor jump
+	hl.dispatch(hl.dsp.focus({ window = window })) -- undo a cross-workspace jump or a bogus same-row match
 	return nil
 end
 
