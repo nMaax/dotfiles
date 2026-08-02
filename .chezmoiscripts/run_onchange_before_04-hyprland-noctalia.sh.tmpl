@@ -9,7 +9,9 @@ info "🌙 [Hyprland & Noctalia] Starting..."
 echo ""
 
 info "💧 Installing Hyprland core..."
-sudo pacman -S --needed --noconfirm hyprland xdg-desktop-portal-hyprland
+# hyprland ships hyprland-uwsm.desktop unconditionally but doesn't depend on uwsm, and
+# plasmalogin/sddm launch it regardless of whether uwsm is actually present.
+sudo pacman -S --needed --noconfirm hyprland xdg-desktop-portal-hyprland uwsm
 
 info "🌙 Installing Noctalia dependencies..."
 sudo pacman -S --needed --noconfirm ddcutil

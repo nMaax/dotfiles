@@ -208,11 +208,13 @@ prefixes order scripts *within* each phase, and the two sequences are independen
   *within* the `02-apps-*` group doesn't matter — none of the categories depend on packages installed
   by another, and `paru`/`pacman -S --needed` are idempotent regardless of run order.
 - `after`: `01-system-services` → `03-sddm-PAM` → `04-sddm-themes` → `05-misc` →
-  `06-gaming` → `07-webapps` → `08-tailscale` → `09-nordvpn` → `10-finalize` → `99` (hyprpm update).
-  There is deliberately no `02-*` here — the old GRUB theme-sanitizer script was retired in favor of
-  a manual README recipe (its `grep`/`sed` patterns hardcoded CachyOS's current `/etc/default/grub`
-  layout and would silently no-op if that layout ever changed), and the gap in numbering was left
-  as-is rather than renumbering every later script.
+  `06-gaming` → `07-webapps` → `08-tailscale` → `09-nordvpn` → `10-mega` → `11-finalize` →
+  `12-hyprland-plugins` → `99` (hyprpm update). There is deliberately no `02-*` here — the old GRUB
+  theme-sanitizer script was retired in favor of a manual README recipe (its `grep`/`sed` patterns
+  hardcoded CachyOS's current `/etc/default/grub` layout and would silently no-op if that layout
+  ever changed), and the gap in numbering was left as-is rather than renumbering every later script.
+  `10-mega` was inserted between NordVPN and finalize, which is why finalize/hyprland-plugins sit at
+  `11`/`12` rather than `10`/`11`.
 
 The `run_once_` / `run_onchange_` / bare `run_` prefix decides *when*: once ever, on content change,
 or every apply. **Renaming a script or editing an `onchange` one re-triggers it** — that is the
@@ -248,17 +250,30 @@ Scripts gate on the user's `~/.config/chezmoi/chezmoi.toml` `[data]` block: `.na
 `.gaming` (skip Steam/OpenRGB/etc.), `.coding` (skip dev tooling), `.ai` (skip
 CUDA/ROCm/Ollama/Claude Code/Antigravity/OpenCode entirely), `.media` (skip
 kdenlive/OBS/EasyEffects/Spotify/yt-dlp/image-upscaler), `.office` (skip
-LibreOffice/KeePassXC/qBittorrent/MEGA/etc.), `.communication` (skip
+LibreOffice/KeePassXC/qBittorrent/etc.), `.communication` (skip
 Telegram/Signal/Discord/Element/LocalSend) — each one gates its own `02-apps-*` script (§3
-Ordering). `.tailscale_authkey` / `.nordvpn_token` are three-state: boolean `false` (or the string
-`"false"`) skips installing that integration entirely; `""` installs and enables it but skips
-auto-login; any other string is used as the actual key/token to log in with. The install/enable block
-is gated by `{{- if ne (printf "%v" .field) "false" }}` (stringified with `printf "%v"` since Go
-templates panic comparing a bool to a string directly with `ne`/`eq`), and the login sub-block nested
-inside it is gated by the simpler `{{- if .field }}` (empty string is already falsy in Go templates,
-and `false` is excluded by the outer branch). Several scripts also branch on
+Ordering). `.tailscale_authkey` / `.nordvpn_token` / `.mega_authkey` are three-state: boolean `false`
+(or the string `"false"`) skips installing that integration entirely; `""` installs and enables it
+but skips auto-login; any other string is used as the actual key/token to log in with. The
+install/enable block is gated by `{{- if ne (printf "%v" .field) "false" }}` (stringified with
+`printf "%v"` since Go templates panic comparing a bool to a string directly with `ne`/`eq`), and the
+login sub-block nested inside it is gated by the simpler `{{- if .field }}` (empty string is already
+falsy in Go templates, and `false` is excluded by the outer branch). Several scripts also branch on
 `{{- if ne .chezmoi.osRelease.id "cachyos" }}` to install what CachyOS would otherwise have
 provided. New optional features should follow the same "empty/false means skip cleanly" convention.
+
+**Chezmoi errors out, rather than defaulting to empty, if a `[data]` key referenced by a template
+doesn't exist at all** — so adding any new `.field` here requires the user to add it to
+`~/.config/chezmoi/chezmoi.toml` (not just leave it unset) before their next apply, same as every
+existing key in this list.
+
+`10-mega` (`run_once_after_10-mega.sh.tmpl`) follows the tailscale/nordvpn pattern exactly, using a
+MEGA **session id** (obtained once via `mega-login <email>` then `mega-session`) as `.mega_authkey`
+rather than a raw account password — avoids storing a plaintext password in chezmoi.toml. Unlike
+NordVPN/Tailscale, MEGA is **not** gated by `.office` even though it's office-adjacent — it mirrors
+NordVPN/Tailscale's independence from any category flag instead. `megacmd` used to be installed
+unconditionally under `02-apps-office`, so existing users must add `mega_authkey` (even as `false`,
+to preserve "don't manage MEGA login") to `chezmoi.toml` before their next apply, per the point above.
 
 ### Externals
 

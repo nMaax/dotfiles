@@ -21,15 +21,16 @@ Ideally you should have installed CachyOS selecting for Hyprland (optionally als
   email = "you@example.com"
   tailscale_authkey = "tskey-auth-XXXXXXXXXXXXX" # "" installs Tailscale without logging in, false skips it entirely
   nordvpn_token = "nvpnkey-auth-XXXXXXXXXXXXX" # "" installs NordVPN without logging in, false skips it entirely
+  mega_authkey = "your-mega-session-id" # "" installs MEGA without logging in, false skips it entirely
   gaming = true # false to avoid installing Steam, Mango, OpenRGB etc.
   coding = true # false to skip dev tooling (neovim, vscode, lazygit, nodejs, etc.)
   ai = true # false to skip AI tools/CUDA/ROCm/Ollama entirely — recommended on GPUs ROCm doesn't support
   media = true # false to skip kdenlive/OBS/EasyEffects/Spotify/yt-dlp/image-upscaler
-  office = true # false to skip LibreOffice/KeePassXC/qBittorrent/MEGA/etc.
+  office = true # false to skip LibreOffice/KeePassXC/qBittorrent/etc.
   communication = true # false to skip Telegram/Signal/Discord/Element/LocalSend
 ```
 
-During install, you will have the option to automatically wipe `tailscale_authkey` / `nordvpn_token` from `~/.config/chezmoi/chezmoi.toml` right after their use. Leaving either field as `""` still installs and enables that integration, just without an auto-login; set it to `false` to skip installing it altogether.
+During install, you will have the option to automatically wipe `tailscale_authkey` / `nordvpn_token` / `mega_authkey` from `~/.config/chezmoi/chezmoi.toml` right after their use. Leaving any of them as `""` still installs and enables that integration, just without an auto-login; set it to `false` to skip installing it altogether.
 
 2. Install chezmoi and apply the dotfiles
 
@@ -140,14 +141,28 @@ Then connect simply with `ssh myserver`.
 
 ### MEGA & KeePassXC
 
-Both `megacmd-bin` and `keepassxc` are installed by the script as regular packages.
+`megacmd` and `keepassxc` are installed as regular packages. MEGA login is handled by its own
+dedicated script, gated by `mega_authkey` in `chezmoi.toml` (see above) — if you set it, MEGA is
+already logged in by the time the install finishes. `mega_authkey` is a MEGA **session id**, not
+your account password: log in interactively once beforehand and grab it with
 
-Set them up manually after installation:
+```fish
+mega-login you@example.com
+mega-session
+```
 
-1. **Log into MEGA** and configure your sync:
+then paste that value into `mega_authkey`. If you left it as `""` (or skipped it), log in by hand
+after installation instead:
+
+```fish
+mega-login
+```
+
+Either way, sync still needs to be configured manually after installation:
+
+1. **Configure your MEGA sync:**
 
    ```fish
-   mega-login
    mkdir -p ~/MEGA
    mega-sync ~/MEGA/ /
    ```
@@ -279,6 +294,33 @@ For Lutris specifically, remind to enable **Disable Lutris Runtime** and **Prefe
 - **Pre-caching:** If using Proton-CachyOS, navigate to **Steam -> Settings -> Downloads** and **UNCHECK**:
   - "Enable Shader Pre-caching"
   - "Allow background processing of Vulkan shaders"
+
+#### Temporarily switching to Hyprland on a deck-ified/gamescope boot
+
+On CachyOS handheld images that boot into gamescope (Big Picture) and fall back to Plasma via
+Steam's "Switch to Desktop", the boot session is controlled by `steamos-session-select`, which
+writes to `/etc/plasmalogin.conf.d/zz-steamos-autologin.conf` through
+`/usr/lib/steamos/steam-set-session`. The `steamos-session-select` wrapper only recognizes
+`plasma`/`gamescope` as targets, but the underlying helper accepts any `.desktop` name — including
+`hyprland.desktop` / `hyprland-uwsm.desktop` once 🥮 is installed.
+
+To boot into Hyprland instead of Plasma while keeping "persistent" desktop mode:
+
+```bash
+steamos-session-select persistent   # remember last-used session across boots, instead of always booting to gamescope
+sudo /usr/lib/steamos/steam-set-session hyprland-uwsm.desktop
+```
+
+Log out (or reboot) to land in Hyprland — `Relogin=true` re-triggers autologin into the new session
+immediately. Prefer `hyprland-uwsm.desktop` over the plain `hyprland.desktop`: it starts Hyprland
+under UWSM, giving it a proper systemd graphical session, consistent with how Plasma/gamescope are
+already integrated here.
+
+To revert to stock handheld behavior (always boot to gamescope, "Switch to Desktop" goes to Plasma):
+
+```bash
+steamos-session-select oneshot
+```
 
 ### Streaming (P2P)
 

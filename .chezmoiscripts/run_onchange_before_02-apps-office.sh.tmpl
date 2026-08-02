@@ -21,14 +21,6 @@ sudo pacman -S --needed --noconfirm gnome-calculator
 info "📊 Installing sc-im spreadsheet..."
 paru -S --needed --noconfirm sc-im
 
-info "☁️ Installing MEGA CMD..."
-if pacman -Qi "megacmd" >/dev/null 2>&1; then
-  success "MEGA is already installed. Skipping..."
-else
-  wget "$MEGACMD_URL"
-  sudo pacman -U "$PWD/megacmd-x86_64.pkg.tar.zst"
-fi
-
 info "📄 Installing LibreOffice and Xournal++..."
 sudo pacman -S --needed --noconfirm libreoffice-fresh xournalpp
 
