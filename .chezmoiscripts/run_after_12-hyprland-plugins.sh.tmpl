@@ -8,13 +8,13 @@ echo ""
 info "🩸 [Hyprland Plugins] Starting..."
 echo ""
 
-# name|repo_url — add a line here to track a new hyprpm plugin
+# Add all plugins you use here
 HYPRPM_PLUGINS=(
   "scrolloverview|$SCROLLOVERVIEW_REPO_URL"
 )
 
 if ! hyprland_is_running; then
-  warn "Hyprland is not currently running — skipping plugin setup. This will retry automatically on the next chezmoi apply once you're in a Hyprland session."
+  warn "Hyprland is not currently running — skipping plugin setup."
 else
   installed="$(hyprpm list)"
   for entry in "${HYPRPM_PLUGINS[@]}"; do
