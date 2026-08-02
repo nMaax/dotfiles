@@ -8,6 +8,7 @@ echo ""
 info "🏔️ [Nord VPN] Starting..."
 echo ""
 
+{{- if ne (printf "%v" .nordvpn_token) "false" }}
 info "🔒 Installing NordVPN from AUR..."
 paru -S --noconfirm --needed nordvpn-bin
 
@@ -17,7 +18,7 @@ sudo usermod -aG nordvpn "$USER"
 sleep 2
 warn "[NORDVPN] A new system group was added. Reboot your system."
 
-{{- if and .nordvpn_token (ne (printf "%v" .nordvpn_token) "false") }}
+{{- if .nordvpn_token }}
 info "Logging into NordVPN using provided token..."
 if ! sudo -g nordvpn -u "$USER" nordvpn account &>/dev/null; then
   sudo -g nordvpn -u "$USER" nordvpn login --token {{ .nordvpn_token }}
@@ -39,6 +40,9 @@ if ask "🧹 Remove 'nordvpn_token' from ~/.config/chezmoi/chezmoi.toml now? (un
 fi
 {{- else }}
 warn "No 'nordvpn_token' found in chezmoi.toml. Skipping auto-login."
+{{- end }}
+{{- else }}
+warn "'nordvpn_token' set to false. Skipping NordVPN entirely."
 {{- end }}
 
 echo ""

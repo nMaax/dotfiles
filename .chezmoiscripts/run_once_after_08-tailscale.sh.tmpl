@@ -8,6 +8,7 @@ echo ""
 info "🌐 [Tailscale] Starting..."
 echo ""
 
+{{- if ne (printf "%v" .tailscale_authkey) "false" }}
 info "📡 Installing Tailscale..."
 sudo pacman -S --noconfirm --needed tailscale
 
@@ -15,7 +16,7 @@ info "Enabling Tailscale daemon..."
 sudo systemctl enable --now tailscaled
 sleep 2
 
-{{- if and .tailscale_authkey (ne (printf "%v" .tailscale_authkey) "false") }}
+{{- if .tailscale_authkey }}
 info "Authenticating Tailscale using provided authkey..."
 if sudo tailscale status 2>/dev/null | grep -qE "^[0-9]+\.[0-9]"; then
   success "Tailscale already connected. Skipping."
@@ -29,6 +30,9 @@ if ask "🧹 Remove 'tailscale_authkey' from ~/.config/chezmoi/chezmoi.toml now?
 fi
 {{- else }}
 warn "No 'tailscale_authkey' found in chezmoi.toml. Skipping auto-login."
+{{- end }}
+{{- else }}
+warn "'tailscale_authkey' set to false. Skipping Tailscale entirely."
 {{- end }}
 
 echo ""

@@ -250,10 +250,13 @@ CUDA/ROCm/Ollama/Claude Code/Antigravity/OpenCode entirely), `.media` (skip
 kdenlive/OBS/EasyEffects/Spotify/yt-dlp/image-upscaler), `.office` (skip
 LibreOffice/KeePassXC/qBittorrent/MEGA/etc.), `.communication` (skip
 Telegram/Signal/Discord/Element/LocalSend) — each one gates its own `02-apps-*` script (§3
-Ordering). `.tailscale_authkey` / `.nordvpn_token` accept `""`, boolean `false`, or the string
-`"false"` as "skip that integration entirely" — the conditionals stringify with `printf "%v"` before
-comparing (`{{- if and .field (ne (printf "%v" .field) "false") }}`) since Go templates panic
-comparing a bool to a string directly with `ne`/`eq`. Several scripts also branch on
+Ordering). `.tailscale_authkey` / `.nordvpn_token` are three-state: boolean `false` (or the string
+`"false"`) skips installing that integration entirely; `""` installs and enables it but skips
+auto-login; any other string is used as the actual key/token to log in with. The install/enable block
+is gated by `{{- if ne (printf "%v" .field) "false" }}` (stringified with `printf "%v"` since Go
+templates panic comparing a bool to a string directly with `ne`/`eq`), and the login sub-block nested
+inside it is gated by the simpler `{{- if .field }}` (empty string is already falsy in Go templates,
+and `false` is excluded by the outer branch). Several scripts also branch on
 `{{- if ne .chezmoi.osRelease.id "cachyos" }}` to install what CachyOS would otherwise have
 provided. New optional features should follow the same "empty/false means skip cleanly" convention.
 

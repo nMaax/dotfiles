@@ -19,8 +19,8 @@ Ideally you should have installed CachyOS selecting for Hyprland (optionally als
 [data]
   name = "nMaax"
   email = "you@example.com"
-  tailscale_authkey = "tskey-auth-XXXXXXXXXXXXX" # Leave "" or false if you want to skip tailscale
-  nordvpn_token = "nvpnkey-auth-XXXXXXXXXXXXX" # Leave "" or false if you want to skip nordvpn
+  tailscale_authkey = "tskey-auth-XXXXXXXXXXXXX" # "" installs Tailscale without logging in, false skips it entirely
+  nordvpn_token = "nvpnkey-auth-XXXXXXXXXXXXX" # "" installs NordVPN without logging in, false skips it entirely
   gaming = true # false to avoid installing Steam, Mango, OpenRGB etc.
   coding = true # false to skip dev tooling (neovim, vscode, lazygit, nodejs, etc.)
   ai = true # false to skip AI tools/CUDA/ROCm/Ollama entirely — recommended on GPUs ROCm doesn't support
@@ -29,7 +29,7 @@ Ideally you should have installed CachyOS selecting for Hyprland (optionally als
   communication = true # false to skip Telegram/Signal/Discord/Element/LocalSend
 ```
 
-During install, you will have the option to automatically wipe `tailscale_authkey` / `nordvpn_token` from `~/.config/chezmoi/chezmoi.toml` right after their use.
+During install, you will have the option to automatically wipe `tailscale_authkey` / `nordvpn_token` from `~/.config/chezmoi/chezmoi.toml` right after their use. Leaving either field as `""` still installs and enables that integration, just without an auto-login; set it to `false` to skip installing it altogether.
 
 2. Install chezmoi and apply the dotfiles
 
