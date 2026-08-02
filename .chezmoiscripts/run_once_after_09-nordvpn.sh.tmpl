@@ -8,7 +8,7 @@ echo ""
 info "🏔️ [Nord VPN] Starting..."
 echo ""
 
-{{- if ne (printf "%v" .nordvpn_token) "false" }}
+{{- if ne (printf "%v" .nordvpn_authkey) "false" }}
 info "🔒 Installing NordVPN from AUR..."
 paru -S --noconfirm --needed nordvpn-bin
 
@@ -18,10 +18,10 @@ sudo usermod -aG nordvpn "$USER"
 sleep 2
 warn "[NORDVPN] A new system group was added. Reboot your system."
 
-{{- if .nordvpn_token }}
+{{- if .nordvpn_authkey }}
 info "Logging into NordVPN using provided token..."
 if ! sudo -g nordvpn -u "$USER" nordvpn account &>/dev/null; then
-  sudo -g nordvpn -u "$USER" nordvpn login --token {{ .nordvpn_token }}
+  sudo -g nordvpn -u "$USER" nordvpn login --token {{ .nordvpn_authkey }}
 else
   success "Already logged into NordVPN. Skipping login."
 fi
@@ -35,14 +35,14 @@ if sudo -g nordvpn -u "$USER" nordvpn status | grep -E -q "Status: (Connected|Di
   success "NordVPN configured successfully."
 fi
 
-if ask "🧹 Remove 'nordvpn_token' from ~/.config/chezmoi/chezmoi.toml now? (under [data], set nordvpn_token = \"\" or false)"; then
-  reset_chezmoi_data_secret "nordvpn_token" "Leave \"\" or false if you want to skip nordvpn"
+if ask "🧹 Remove 'nordvpn_authkey' from ~/.config/chezmoi/chezmoi.toml now? (under [data], set nordvpn_authkey = \"\" or false)"; then
+  reset_chezmoi_data_secret "nordvpn_authkey" "Leave \"\" or false if you want to skip nordvpn"
 fi
 {{- else }}
-warn "No 'nordvpn_token' found in chezmoi.toml. Skipping auto-login."
+warn "No 'nordvpn_authkey' found in chezmoi.toml. Skipping auto-login."
 {{- end }}
 {{- else }}
-warn "'nordvpn_token' set to false. Skipping NordVPN entirely."
+warn "'nordvpn_authkey' set to false. Skipping NordVPN entirely."
 {{- end }}
 
 echo ""

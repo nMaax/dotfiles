@@ -20,7 +20,7 @@ Ideally you should have installed CachyOS selecting for Hyprland (optionally als
   name = "nMaax"
   email = "you@example.com"
   tailscale_authkey = "tskey-auth-XXXXXXXXXXXXX" # "" installs Tailscale without logging in, false skips it entirely
-  nordvpn_token = "nvpnkey-auth-XXXXXXXXXXXXX" # "" installs NordVPN without logging in, false skips it entirely
+  nordvpn_authkey = "nvpnkey-auth-XXXXXXXXXXXXX" # "" installs NordVPN without logging in, false skips it entirely
   mega_authkey = "your-mega-session-id" # "" installs MEGA without logging in, false skips it entirely
   gaming = true # false to avoid installing Steam, Mango, OpenRGB etc.
   coding = true # false to skip dev tooling (neovim, vscode, lazygit, nodejs, etc.)
@@ -30,7 +30,7 @@ Ideally you should have installed CachyOS selecting for Hyprland (optionally als
   communication = true # false to skip Telegram/Signal/Discord/Element/LocalSend
 ```
 
-During install, you will have the option to automatically wipe `tailscale_authkey` / `nordvpn_token` / `mega_authkey` from `~/.config/chezmoi/chezmoi.toml` right after their use. Leaving any of them as `""` still installs and enables that integration, just without an auto-login; set it to `false` to skip installing it altogether.
+During install, you will have the option to automatically wipe `tailscale_authkey` / `nordvpn_authkey` / `mega_authkey` from `~/.config/chezmoi/chezmoi.toml` right after their use. Leaving any of them as `""` still installs and enables that integration, just without an auto-login; set it to `false` to skip installing it altogether.
 
 2. Install chezmoi and apply the dotfiles
 
@@ -57,11 +57,11 @@ If you would like to tweak CachyOS before running 🥮, but CachyOS Hello won't 
 
 To fix, do the following:
 
-1. Open your hyprland.conf: `vim ~/.config/hypr/hyprland.conf`.
-2. Add this line to your "exec-once" section (or anywhere at the bottom):
+1. Open your hyprland.lua: `vim ~/.config/hypr/hyprland.lua`.
+2. Add this line inside your `hl.on("hyprland.start", function() ... end)` block (or anywhere at the bottom):
 
-  ```conf
-  exec-once = /usr/lib/polkit-kde-authentication-agent-1
+  ```lua
+  hl.exec_cmd("/usr/lib/polkit-kde-authentication-agent-1")
   ```
 
 3. Save and restart Hyprland (Super + M or just log out and log back in).
