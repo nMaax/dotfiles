@@ -26,6 +26,7 @@ chezmoi diff                      # what would change in $HOME
 chezmoi status                    # short form; see the 99.sh note below
 chezmoi apply --exclude=scripts   # DEFAULT for config work: regular files only
 chezmoi apply                     # full run, EXECUTES install scripts (sudo prompts) -- user's call
+chezmoi add --exclude=externals <target>   # DEFAULT when re-adding config drift
 chezmoi cat <target>              # render one file as it would be applied
 chezmoi execute-template < .chezmoiscripts/run_onchange_after_07-webapps.sh.tmpl
 chezmoi doctor                    # environment sanity
@@ -280,6 +281,22 @@ to preserve "don't manage MEGA login") to `chezmoi.toml` before their next apply
 `.chezmoiexternal.toml` pulls wallpapers, propics (`~/.face`, `~/.logo`), the SDDM theme and the
 Bibata hyprcursor from the user's `nMaax/dotfiles-assets` and `nMaax/dotfiles-sddm` repos, with a
 168h `refreshPeriod`. Large binary assets live there, **not** in this repo.
+
+**Always `chezmoi add --exclude=externals`, never a bare `chezmoi add .`/`chezmoi add .config
+.local`.** These six targets are fetched content, not meant to be duplicated as literal source
+files, and a plain recursive `add` that walks into one of their directories hits a real chezmoi
+bug (upstream issue #1574: `add` crashes with `stat ...: no such file or directory` when it
+recurses into a directory an external created) instead of cleanly skipping it. `--exclude=externals`
+(plural — `external` singular is rejected as an unknown entry type) sidesteps this categorically,
+independent of `.chezmoiignore`.
+
+`.chezmoiignore`'s root-level `*` blanket-excludes everything except `.config/` and `.local/` by
+default (§2 has the full mangling table) — every external target outside those two trees needs an
+explicit `!` exception plus, if it's a directory, an immediate re-narrowing back down to just that
+target (mirroring the existing `.local/share/applications` / `.config/OpenRGB/...` pattern), or it
+silently never gets fetched. This bit real: `.face`/`.logo` were missing from `$HOME` entirely
+because they'd never been un-ignored, which is also why fastfetch fell back to the CachyOS ASCII
+logo instead of `~/.logo`.
 
 ### `--needed` doesn't know about package providers — use `pacman -T` before forcing a name
 

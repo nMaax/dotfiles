@@ -45,6 +45,9 @@ chezmoi init --apply nMaax
 > [!NOTE]
 > During log-in in SDDM choose **systemd-owned Hyprland** (UWSM) instead of the plain one, to ensure autostart scripts function correctly (e.g. cachy-update tray icon).
 
+> [!TIP]
+> If you ever re-sync local edits back into these dotfiles with `chezmoi add`, always pass `--exclude=externals`: wallpapers, profile pictures, the SDDM theme and the cursor theme are pulled from separate asset repos, not meant to be duplicated as literal files here.
+
 ### Handling missing polkit agent password prompt in CachyOS Hello
 
 If you would like to tweak CachyOS before running 🥮, but CachyOS Hello won't accept your password on a Hyprland-only installation (i.e., no Plasma), the polkit-kde-agent is likely missing from your background processes. You must ensure this agent is running so CachyOS Hello can trigger the authentication pop-up required to apply your changes.

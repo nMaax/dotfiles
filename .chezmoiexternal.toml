@@ -9,7 +9,7 @@ refreshPeriod = "168h"
 [".logo"]
 type = "archive-file"
 url = "https://github.com/nMaax/dotfiles-assets/archive/main.tar.gz"
-path = "dotfiles-assets-main/propics/kurose-tendo-fisheye.jpg"
+path = "dotfiles-assets-main/propics/kurose-tendo-fisheye.png"
 refreshPeriod = "168h"
 
 # Extract the wallpapers folder
