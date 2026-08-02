@@ -599,7 +599,7 @@ Known, deliberate TODOs. Non-trivial, and the user wants to scope them:
 - `monitors.lua` — dynamic monitor detection / primary switching when the external display connects
 - `input.lua` — conditional per-device input config
 - `performance.lua` — competitive-gaming latency tuning
-- `keybindings.lua` (~line 137) — split the communication workspace per app (telegram / discord /
+- `keybindings.lua` (~line 138) — split the communication workspace per app (telegram / discord /
   whatsapp separately)
 
 `README.md` also carries a user-facing TODO list; those are the user's own project ideas, not work
