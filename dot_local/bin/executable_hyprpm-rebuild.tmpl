@@ -1,0 +1,14 @@
+#!/bin/bash
+set -euo pipefail
+
+{{ template "utils.sh.tmpl" . }}
+
+if ! hyprland_is_running; then
+  error "Hyprland is not running — refusing to purge the plugin cache."
+  exit 1
+fi
+
+ask "This purges ALL built hyprpm plugins, settings and cached headers, then reinstalls everything from the registry in 12-hyprland-plugins. Continue?" || exit 1
+
+hyprpm purge-cache
+chezmoi execute-template <"$(chezmoi source-path)/.chezmoiscripts/run_after_12-hyprland-plugins.sh.tmpl" | bash

@@ -8,16 +8,32 @@ echo ""
 info "🩸 [Hyprland Plugins] Starting..."
 echo ""
 
+# name|repo_url — add a line here to track a new hyprpm plugin
+HYPRPM_PLUGINS=(
+  "scrolloverview|$SCROLLOVERVIEW_REPO_URL"
+)
+
 if ! hyprland_is_running; then
   warn "Hyprland is not currently running — skipping plugin setup. This will retry automatically on the next chezmoi apply once you're in a Hyprland session."
 else
-  if ! hyprpm list | grep -q hyprland-scroll-overview; then
-    hyprpm add "$SCROLLOVERVIEW_REPO_URL"
-    hyprpm update
-    hyprpm enable scrolloverview
-  else
-    success "hyprland-scroll-overview plugin already installed and enabled, skipping."
-  fi
+  installed="$(hyprpm list)"
+  for entry in "${HYPRPM_PLUGINS[@]}"; do
+    name="${entry%%|*}"
+    url="${entry#*|}"
+    if ! grep -q "$name" <<<"$installed"; then
+      hyprpm add "$url"
+    fi
+  done
+
+  hyprpm update
+
+  for entry in "${HYPRPM_PLUGINS[@]}"; do
+    hyprpm enable "${entry%%|*}"
+  done
+
+  hyprpm reload -n
+
+  success "hyprpm plugins installed, updated and reloaded."
 fi
 
 echo ""

@@ -23,7 +23,7 @@ Three docs at the root, with distinct jobs:
 
 ```bash
 chezmoi diff                      # what would change in $HOME
-chezmoi status                    # short form; see the 99.sh note below
+chezmoi status                    # short form; see the 12-hyprland-plugins.sh note below
 chezmoi apply --exclude=scripts   # DEFAULT for config work: regular files only
 chezmoi apply                     # full run, EXECUTES install scripts (sudo prompts) -- user's call
 chezmoi add --exclude=externals <target>   # DEFAULT when re-adding config drift
@@ -36,10 +36,11 @@ chezmoi doctor                    # environment sanity
 `{{ template "utils.sh.tmpl" . }}` inclusions, **without executing** anything. Use it on scripts
 rather than running them.
 
-`chezmoi status` will essentially always show `R .chezmoiscripts/99.sh` pending, and `chezmoi verify`
-will exit 1 because of it. That is expected, not a problem: `run_after_99.sh.tmpl` has neither
-`once` nor `onchange` in its name, so it is due on *every* apply, and `--exclude=scripts` never runs
-it. Ignore that one line; investigate anything else.
+`chezmoi status` will essentially always show `R .chezmoiscripts/12-hyprland-plugins.sh` pending, and
+`chezmoi verify` will exit 1 because of it. That is expected, not a problem:
+`run_after_12-hyprland-plugins.sh.tmpl` has neither `once` nor `onchange` in its name, so it is due
+on *every* apply, and `--exclude=scripts` never runs it. Ignore that one line; investigate anything
+else.
 
 ### Validating changes
 
@@ -210,17 +211,38 @@ prefixes order scripts *within* each phase, and the two sequences are independen
   by another, and `paru`/`pacman -S --needed` are idempotent regardless of run order.
 - `after`: `01-system-services` → `03-sddm-PAM` → `04-sddm-themes` → `05-misc` →
   `06-gaming` → `07-webapps` → `08-tailscale` → `09-nordvpn` → `10-mega` → `11-finalize` →
-  `12-hyprland-plugins` → `99` (hyprpm update). There is deliberately no `02-*` here — the old GRUB
-  theme-sanitizer script was retired in favor of a manual README recipe (its `grep`/`sed` patterns
-  hardcoded CachyOS's current `/etc/default/grub` layout and would silently no-op if that layout
-  ever changed), and the gap in numbering was left as-is rather than renumbering every later script.
-  `10-mega` was inserted between NordVPN and finalize, which is why finalize/hyprland-plugins sit at
-  `11`/`12` rather than `10`/`11`.
+  `12-hyprland-plugins`. There is deliberately no `02-*` here — the old GRUB theme-sanitizer script
+  was retired in favor of a manual README recipe (its `grep`/`sed` patterns hardcoded CachyOS's
+  current `/etc/default/grub` layout and would silently no-op if that layout ever changed), and the
+  gap in numbering was left as-is rather than renumbering every later script. `10-mega` was inserted
+  between NordVPN and finalize, which is why finalize/hyprland-plugins sit at `11`/`12` rather than
+  `10`/`11`.
 
 The `run_once_` / `run_onchange_` / bare `run_` prefix decides *when*: once ever, on content change,
 or every apply. **Renaming a script or editing an `onchange` one re-triggers it** — that is the
 intended mechanism for "reinstall these packages", but it also means a cosmetic edit to a script
 causes a real reinstall on the next full apply. Say so when you make one.
+
+### hyprpm plugin management
+
+`run_after_12-hyprland-plugins.sh.tmpl` is the single place that installs, updates, enables and
+reloads Hyprland plugins — it used to be split across this script (install-only, one hardcoded
+plugin) and a separate `run_after_99.sh.tmpl` (unconditional `hyprpm update`), which was folded in
+here since nothing else in the `after` phase touches Hyprland packages, so there was no ordering
+reason to keep them apart. Plugins are tracked in a `name|repo_url` `HYPRPM_PLUGINS` bash array at
+the top of the script — add a line there for a new plugin (with its URL in
+`external_links.sh.tmpl`, per the usual convention) rather than hand-rolling another install block.
+Every apply loops the registry to `add` anything missing, runs a single `hyprpm update`, `enable`s
+everything (idempotent even if already enabled), then `hyprpm reload -n` so the *running* session
+picks up the change immediately.
+
+For the case where `hyprpm`'s cached headers/build go stale against a newer Hyprland (plugin
+load failures after a Hyprland version bump), `~/.local/bin/hyprpm-rebuild`
+(`dot_local/bin/executable_hyprpm-rebuild.tmpl`) runs `hyprpm purge-cache` and then re-renders and
+re-runs `run_after_12-hyprland-plugins.sh.tmpl` via `chezmoi execute-template ... | bash`, so the
+plugin registry stays single-sourced. This is a manual command, not a chezmoi script — a full plugin
+purge shouldn't fire silently on some future `chezmoi apply`, same reasoning as `CLEANUP.md` staying
+a checklist instead of a script.
 
 ### Shared shell library
 
