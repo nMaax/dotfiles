@@ -73,7 +73,7 @@
     {
       "type": "packages",
       "key": "│   pkgs  ",
-      "format": "{pacman>12} pacman, {flatpak-all} flatpak │"
+      "format": "{pacman>9} pacman, {flatpak-all>4} flatpak │"
     },
     {
       "type": "command",
