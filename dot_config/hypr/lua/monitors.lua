@@ -1,6 +1,8 @@
 -- MONITORS
 -- See https://wiki.hypr.land/Configuring/Monitors/
 
+local C = require("lua.constants")
+
 local laptop = "eDP-1"
 
 -- Some monitor I saw in my life
@@ -65,7 +67,7 @@ hl.monitor({ output = "", mode = "preferred", position = "auto-up", scale = 1 })
 -- Workspace 12 and up are deliberately left unmanaged.
 
 local WORKSPACE_GROUPS = { { 1, 2, 3, 4, 5 }, { 6, 7, 8, 9, 10 } }
-local GAMES_WORKSPACE = "11"
+local GAMES_WORKSPACE = C.GAMES_WORKSPACE
 
 -- Physical size from EDID is the honest measure of "bigger", but some displays
 -- report nonsense for it, so the metric is picked once for the whole set:

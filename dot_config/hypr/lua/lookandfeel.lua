@@ -4,6 +4,7 @@
 -- NOTE: Do not put performance-related settings here, they belong in performance.lua
 
 local colors = require("lua.colors")
+local C = require("lua.constants")
 
 hl.config({
     general = {
@@ -69,7 +70,7 @@ hl.config({
             enabled = true,
             range = 4,
             render_power = 3,
-            color = "rgba(1a1a1aee)",
+            color = "rgba(" .. C.SHADOW_HEX .. "ee)",
         },
 
         blur = {

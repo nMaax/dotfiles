@@ -3,6 +3,8 @@
 -- see https://wiki.hypr.land/Configuring/Binds/ for more
 -- See https://docs.noctalia.dev/v5/ipc/ for the full `noctalia msg` command list
 
+local C = require("lua.constants")
+
 local function ipc(args)
 	return "noctalia msg " .. args
 end
@@ -22,44 +24,44 @@ local function scrolloverview(dispatcher, arg)
 end
 
 -- 1. WINDOW ACTIONS
-hl.bind("SUPER+Q", hl.dsp.window.close(), { description = "Kill active window" })
-hl.bind("SUPER+SHIFT+Q", hl.dsp.exec_cmd("hyprctl kill"), { description = "Kill (stubborn) window under crosshair" })
-hl.bind("SUPER+F", hl.dsp.window.fullscreen({ action = "toggle" }), { description = "Go fullscreen" })
-hl.bind("SUPER+ALT+F", hl.dsp.window.float({ action = "toggle" }), { description = "Make active window float" })
+hl.bind(C.MODKEY .. "+Q", hl.dsp.window.close(), { description = "Kill active window" })
+hl.bind(C.MODKEY .. "+SHIFT+Q", hl.dsp.exec_cmd("hyprctl kill"), { description = "Kill (stubborn) window under crosshair" })
+hl.bind(C.MODKEY .. "+F", hl.dsp.window.fullscreen({ action = "toggle" }), { description = "Go fullscreen" })
+hl.bind(C.MODKEY .. "+ALT+F", hl.dsp.window.float({ action = "toggle" }), { description = "Make active window float" })
 
 local function toggle_layout()
 	local current = hl.get_config("general.layout")
 	hl.config({ general = { layout = current == "scrolling" and "dwindle" or "scrolling" } })
 end
-hl.bind("SUPER+X", toggle_layout, { description = "Toggle scrolling/dwindle modes" })
+hl.bind(C.MODKEY .. "+X", toggle_layout, { description = "Toggle scrolling/dwindle modes" })
 
 -- Scrolling only
 hl.bind(
-	"SUPER+ALT+Equal",
+	C.MODKEY .. "+ALT+Equal",
 	hl.dsp.layout("colresize +conf"),
 	{ description = "Widen active column width (scrolling only)" }
 )
-hl.bind("SUPER+ALT+Minus", hl.dsp.layout("colresize -conf"), {
+hl.bind(C.MODKEY .. "+ALT+Minus", hl.dsp.layout("colresize -conf"), {
 	description = "Narrow active column width (scrolling only)",
 })
-hl.bind("SUPER+SHIFT+F", hl.dsp.layout("fit active"), { description = "Expand column into free space (scrolling only)" })
+hl.bind(C.MODKEY .. "+SHIFT+F", hl.dsp.layout("fit active"), { description = "Expand column into free space (scrolling only)" })
 
 -- Dwindle only
-hl.bind("SUPER+Y", hl.dsp.layout("togglesplit"), { description = "Switch split orientation (dwindle only)" })
+hl.bind(C.MODKEY .. "+Y", hl.dsp.layout("togglesplit"), { description = "Switch split orientation (dwindle only)" })
 hl.bind(
-	"SUPER+U",
+	C.MODKEY .. "+U",
 	hl.dsp.window.pseudo({ action = "toggle" }),
 	{ description = "Make active window pseudo (dwindle only)" }
 )
 
 -- 2. QUICK LAUNCHES
-hl.bind("SUPER+RETURN", hl.dsp.exec_cmd("ghostty"), { description = "Open terminal" })
-hl.bind("SUPER+B", hl.dsp.exec_cmd("zen-browser"), { description = "Open Zen browser" })
-hl.bind("SUPER+N", hl.dsp.exec_cmd("ghostty -e nvim"), { description = "Open neovim" })
-hl.bind("SUPER+SHIFT+N", hl.dsp.exec_cmd("code"), { description = "Open VSCode" })
-hl.bind("SUPER+ALT+N", hl.dsp.exec_cmd("kate"), { description = "Open Kate" })
-hl.bind("SUPER+E", hl.dsp.exec_cmd("dolphin"), { description = "Open dolphin file manager" })
-hl.bind("SUPER+SHIFT+E", hl.dsp.exec_cmd("ghostty -e yazi"), { description = "Open yazi file manager" })
+hl.bind(C.MODKEY .. "+RETURN", hl.dsp.exec_cmd(C.TERMINAL), { description = "Open terminal" })
+hl.bind(C.MODKEY .. "+B", hl.dsp.exec_cmd(C.BROWSER), { description = "Open browser" })
+hl.bind(C.MODKEY .. "+N", hl.dsp.exec_cmd(C.TERMINAL .. " -e nvim"), { description = "Open neovim" })
+hl.bind(C.MODKEY .. "+SHIFT+N", hl.dsp.exec_cmd("code"), { description = "Open VSCode" })
+hl.bind(C.MODKEY .. "+ALT+N", hl.dsp.exec_cmd("kate"), { description = "Open Kate" })
+hl.bind(C.MODKEY .. "+E", hl.dsp.exec_cmd(C.FILE_MANAGER), { description = "Open file manager" })
+hl.bind(C.MODKEY .. "+SHIFT+E", hl.dsp.exec_cmd(C.TERMINAL .. " -e yazi"), { description = "Open yazi file manager" })
 
 -- 3. SPECIAL WORKSPACES
 
@@ -115,29 +117,30 @@ end
 
 -- Toggle a special workspace
 hl.bind(
-	"SUPER+Delete",
-	toggle_app_special_workspace("sysmon", {
-		class = { "^sysmon%.btop$" },
-	}, "ghostty --class=sysmon.btop -e btop"),
+	C.MODKEY .. "+Delete",
+	toggle_app_special_workspace(C.SPECIAL_WORKSPACE.SYSMON, {
+		class = { "^sysmon%.btop$" }, -- C.SYSMON_CLASS, Lua-pattern escaped
+	}, C.TERMINAL .. " --class=" .. C.SYSMON_CLASS .. " -e btop"),
 	{ description = "Toggle system monitors workspace (btop)" }
 )
 hl.bind(
-	"SUPER+D",
-	toggle_app_special_workspace("discord", {
-		class = { "^discord$", "^equibop$", "^vesktop$" },
+	C.MODKEY .. "+D",
+	toggle_app_special_workspace(C.SPECIAL_WORKSPACE.DISCORD, {
+		class = { "^discord$", "^equibop$", "^vesktop$" }, -- keep in sync with rules.lua's discord-workspace-class matcher
 	}, "discord"),
 	{ description = "Toggle Discord workspace" }
 )
 hl.bind(
-	"SUPER+T",
-	toggle_app_special_workspace("telegram", {
-		class = { "^org%.telegram%.desktop$", "^TelegramDesktop$" },
+	C.MODKEY .. "+T",
+	toggle_app_special_workspace(C.SPECIAL_WORKSPACE.TELEGRAM, {
+		class = { "^org%.telegram%.desktop$", "^TelegramDesktop$" }, -- keep in sync with rules.lua's telegram-workspace-class matcher
 	}, "Telegram"),
 	{ description = "Toggle Telegram workspace" }
 )
 hl.bind(
-	"SUPER+M",
-	toggle_app_special_workspace("music", {
+	C.MODKEY .. "+M",
+	toggle_app_special_workspace(C.SPECIAL_WORKSPACE.MUSIC, {
+		-- keep in sync with rules.lua's music-workspace-class matcher
 		class = {
 			"^[Ss]potify$",
 			"^feishin$",
@@ -151,17 +154,18 @@ hl.bind(
 	{ description = "Toggle music workspace (Spotify)" }
 )
 hl.bind(
-	"SUPER+G",
-	toggle_app_special_workspace("games", {
-		class = { "^steam$", "^lutris$", "^com%.heroicgameslauncher%.hgl$", "^heroic$" },
+	C.MODKEY .. "+G",
+	toggle_app_special_workspace(C.SPECIAL_WORKSPACE.GAMES, {
+		class = { "^steam$", "^lutris$", "^com%.heroicgameslauncher%.hgl$", "^heroic$" }, -- keep in sync with rules.lua's games-launchers-workspace-class matcher
 		title = { "^Steam$" },
 	}, "steam"),
 	{ description = "Toggle game launchers workspace (Steam)" }
 )
-hl.bind("SUPER+CTRL+G", hl.dsp.focus({ workspace = "11" }), { description = "Go to games workspace" })
+hl.bind(C.MODKEY .. "+CTRL+G", hl.dsp.focus({ workspace = C.GAMES_WORKSPACE }), { description = "Go to games workspace" })
 hl.bind(
-	"SUPER+A",
-	toggle_app_special_workspace("ai", {
+	C.MODKEY .. "+A",
+	toggle_app_special_workspace(C.SPECIAL_WORKSPACE.AI, {
+		-- keep in sync with rules.lua's ai-workspace-class matcher
 		class = {
 			"^chrome%-gemini%.google%.com",
 			"^chrome%-github%.com__copilot",
@@ -172,44 +176,49 @@ hl.bind(
 	{ description = "Toggle AI workspace (Claude webapp)" }
 )
 hl.bind(
-	"SUPER+P",
-	toggle_app_special_workspace("password", {
+	C.MODKEY .. "+P",
+	toggle_app_special_workspace(C.SPECIAL_WORKSPACE.PASSWORD, {
+		-- keep in sync with rules.lua's password-workspace-class matcher
 		class = {
 			"^org%.keepassxc%.KeePassXC$",
 			"^keepassxc$",
 			"^KeePass2$",
 			"^[Bb]itwarden$",
 			"^1[Pp]assword$",
+			"^Enpass$",
 			"^proton%-pass$",
+			"^org%.kde%.kwalletmanager5$",
+			"^org%.gnome%.Seahorse$",
+			"^org%.gnome%.World%.Secrets$",
 		},
-	}, "keepassxc"),
-	{ description = "Toggle password workspace (KeePassXC)" }
+	}, C.PASSWORD_APP),
+	{ description = "Toggle password workspace" }
 )
-hl.bind("SUPER+S", hl.dsp.workspace.toggle_special("magic"), { description = "Toggle scratchpad" })
+hl.bind(C.MODKEY .. "+S", hl.dsp.workspace.toggle_special(C.SPECIAL_WORKSPACE.MAGIC), { description = "Toggle scratchpad" })
 
 local function throw_to_special_workspace(name)
 	return hl.dsp.window.move({ workspace = "special:" .. name })
 end
 
-hl.bind("SUPER+SHIFT+Delete", throw_to_special_workspace("sysmon"), { description = "Move window to system monitors workspace" })
-hl.bind("SUPER+SHIFT+D", throw_to_special_workspace("discord"), { description = "Move window to Discord workspace" })
-hl.bind("SUPER+SHIFT+T", throw_to_special_workspace("telegram"), { description = "Move window to Telegram workspace" })
-hl.bind("SUPER+SHIFT+M", throw_to_special_workspace("music"), { description = "Move window to music workspace" })
-hl.bind("SUPER+SHIFT+G", throw_to_special_workspace("games"), { description = "Move window to game launchers workspace" })
-hl.bind("SUPER+SHIFT+A", throw_to_special_workspace("ai"), { description = "Move window to AI workspace" })
-hl.bind("SUPER+SHIFT+P", throw_to_special_workspace("password"), { description = "Move window to password workspace" })
-hl.bind("SUPER+SHIFT+S", hl.dsp.window.move({ workspace = "special:magic" }), { description = "Move window to scratchpad" })
+hl.bind(C.MODKEY .. "+SHIFT+Delete", throw_to_special_workspace(C.SPECIAL_WORKSPACE.SYSMON), { description = "Move window to system monitors workspace" })
+hl.bind(C.MODKEY .. "+SHIFT+D", throw_to_special_workspace(C.SPECIAL_WORKSPACE.DISCORD), { description = "Move window to Discord workspace" })
+hl.bind(C.MODKEY .. "+SHIFT+T", throw_to_special_workspace(C.SPECIAL_WORKSPACE.TELEGRAM), { description = "Move window to Telegram workspace" })
+hl.bind(C.MODKEY .. "+SHIFT+M", throw_to_special_workspace(C.SPECIAL_WORKSPACE.MUSIC), { description = "Move window to music workspace" })
+hl.bind(C.MODKEY .. "+SHIFT+G", throw_to_special_workspace(C.SPECIAL_WORKSPACE.GAMES), { description = "Move window to game launchers workspace" })
+hl.bind(C.MODKEY .. "+SHIFT+A", throw_to_special_workspace(C.SPECIAL_WORKSPACE.AI), { description = "Move window to AI workspace" })
+hl.bind(C.MODKEY .. "+SHIFT+P", throw_to_special_workspace(C.SPECIAL_WORKSPACE.PASSWORD), { description = "Move window to password workspace" })
+hl.bind(C.MODKEY .. "+SHIFT+S", hl.dsp.window.move({ workspace = "special:" .. C.SPECIAL_WORKSPACE.MAGIC }), { description = "Move window to scratchpad" })
 
 -- 4. SYSTEM PANELS AND UTILITIES
 
 -- Cheathseet and session management
 hl.bind(
-	"SUPER+slash",
+	C.MODKEY .. "+slash",
 	hl.dsp.exec_cmd(ipc("panel-toggle kenn/keybind-cheatsheet:cheatsheet")),
 	{ description = "Show this helping cheatsheet" }
 )
-hl.bind("SUPER+BACKSPACE", hl.dsp.exec_cmd(ipc("session lock")), { description = "Lockscreen" })
-hl.bind("SUPER+Escape", hl.dsp.exec_cmd(ipc("panel-toggle session")), { description = "Open power/reboot menu" })
+hl.bind(C.MODKEY .. "+BACKSPACE", hl.dsp.exec_cmd(ipc("session lock")), { description = "Lockscreen" })
+hl.bind(C.MODKEY .. "+Escape", hl.dsp.exec_cmd(ipc("panel-toggle session")), { description = "Open power/reboot menu" })
 
 local function reload(level)
 	-- level: 1 = hyprctl only, 2 = + hyprpm and a soft noctalia reload, 3 = kill and relaunch noctalia
@@ -232,48 +241,48 @@ local soft_reload = reload(2)
 local hard_reload = reload(3)
 
 --- Reloading options
-hl.bind("SUPER+F9", xsoft_reload, { description = "Reload hyprland only" })
-hl.bind("SUPER+F10", soft_reload, { description = "Reload hyprland, soft-reload noctalia" })
-hl.bind("SUPER+F11", hl.dsp.force_renderer_reload(), { description = "Reload monitor configs" })
-hl.bind("SUPER+F12", hard_reload, { description = "Reload hyprland, restart noctalia" })
+hl.bind(C.MODKEY .. "+F9", xsoft_reload, { description = "Reload hyprland only" })
+hl.bind(C.MODKEY .. "+F10", soft_reload, { description = "Reload hyprland, soft-reload noctalia" })
+hl.bind(C.MODKEY .. "+F11", hl.dsp.force_renderer_reload(), { description = "Reload monitor configs" })
+hl.bind(C.MODKEY .. "+F12", hard_reload, { description = "Reload hyprland, restart noctalia" })
 
-hl.bind("SUPER+CTRL+ALT+R", soft_reload, { description="Reload hyprland, soft-reload noctalia" }) -- alias
+hl.bind(C.MODKEY .. "+CTRL+ALT+R", soft_reload, { description="Reload hyprland, soft-reload noctalia" }) -- alias
 
 -- Search, clipboard, and pickers
 hl.bind("ALT+RETURN", hl.dsp.exec_cmd(ipc("panel-toggle launcher")), { description = "Search for apps" })
 hl.bind("ALT+TAB", hl.dsp.exec_cmd(ipc("window-switcher")), { description = "Switch windows" })
-hl.bind("SUPER+V", hl.dsp.exec_cmd(ipc("panel-toggle clipboard")), { description = "Open clipboard" })
-hl.bind("SUPER+period", hl.dsp.exec_cmd(ipc('panel-toggle launcher "/emo"')), { description = "Open emoji picker" })
+hl.bind(C.MODKEY .. "+V", hl.dsp.exec_cmd(ipc("panel-toggle clipboard")), { description = "Open clipboard" })
+hl.bind(C.MODKEY .. "+period", hl.dsp.exec_cmd(ipc('panel-toggle launcher "/emo"')), { description = "Open emoji picker" })
 hl.bind(
-	"SUPER+SHIFT+period",
+	C.MODKEY .. "+SHIFT+period",
 	hl.dsp.exec_cmd(ipc('panel-toggle launcher "/kao"')),
 	{ description = "Open kaomoji picker" }
 )
-hl.bind("SUPER+comma", hl.dsp.exec_cmd(ipc("settings-toggle")), { description = "Open Noctalia settings" })
+hl.bind(C.MODKEY .. "+comma", hl.dsp.exec_cmd(ipc("settings-toggle")), { description = "Open Noctalia settings" })
 
 -- Wallpapers and colorscheme
 hl.bind(
-	"SUPER+W",
+	C.MODKEY .. "+W",
 	hl.dsp.exec_cmd(ipc("panel-toggle wallpaper")),
 	{ description = "Open wallpaper and colorscheme selector" }
 )
 hl.bind(
-	"SUPER+SHIFT+W",
+	C.MODKEY .. "+SHIFT+W",
 	hl.dsp.exec_cmd(ipc("panel-toggle noctalia/mpvpaper:picker")),
 	{ description = "Open animated wallpaper selector" }
 )
 hl.bind(
-	"SUPER+ALT+W",
+	C.MODKEY .. "+ALT+W",
 	hl.dsp.exec_cmd(ipc("panel-toggle tadomika_ari/w-engine:w-engine-panel")),
 	{ description = "Open wallpaper engine selector" }
 )
 hl.bind(
-  "SUPER+CTRL+W", 
+  C.MODKEY .. "+CTRL+W", 
   hl.dsp.exec_cmd(ipc("wallpaper-random")), 
   { description = "Switch to a random wallpaper" }
 )
 hl.bind(
-	"SUPER+CTRL+ALT+W",
+	C.MODKEY .. "+CTRL+ALT+W",
 	hl.dsp.exec_cmd(ipc("plugin noctalia/mpvpaper:service all clear-all") .. " ; pkill -f linux-wallpaperengine"),
 	{ description = "Disable all animated wallpapers" }
 )
@@ -316,67 +325,67 @@ local focus_up = smart_focus("up", "-1")
 local focus_down = smart_focus("down", "+1")
 
 --- Move focus around windows
-hl.bind("SUPER+up", hl.dsp.focus({ direction = "up" }), { description = "Move focus up" })
+hl.bind(C.MODKEY .. "+up", hl.dsp.focus({ direction = "up" }), { description = "Move focus up" })
 hl.bind(
-	"SUPER+K",
+	C.MODKEY .. "+K",
 	focus_up,
 	{ repeating = true, description = "Move focus up, or scroll workspaces up at the edge (vim, or arrows)" }
 )
-hl.bind("SUPER+down", hl.dsp.focus({ direction = "down" }), { description = "Move focus down" })
+hl.bind(C.MODKEY .. "+down", hl.dsp.focus({ direction = "down" }), { description = "Move focus down" })
 hl.bind(
-	"SUPER+J",
+	C.MODKEY .. "+J",
 	focus_down,
 	{ repeating = true, description = "Move focus down, or scroll workspaces down at the edge (vim, or arrows)" }
 )
-hl.bind("SUPER+left", hl.dsp.focus({ direction = "left" }), {})
-hl.bind("SUPER+H", hl.dsp.focus({ direction = "left" }), { description = "Move focus left (vim, or arrows)" })
-hl.bind("SUPER+right", hl.dsp.focus({ direction = "right" }), {})
-hl.bind("SUPER+L", hl.dsp.focus({ direction = "right" }), { description = "Move focus right (vim, or arrows)" })
+hl.bind(C.MODKEY .. "+left", hl.dsp.focus({ direction = "left" }), {})
+hl.bind(C.MODKEY .. "+H", hl.dsp.focus({ direction = "left" }), { description = "Move focus left (vim, or arrows)" })
+hl.bind(C.MODKEY .. "+right", hl.dsp.focus({ direction = "right" }), {})
+hl.bind(C.MODKEY .. "+L", hl.dsp.focus({ direction = "right" }), { description = "Move focus right (vim, or arrows)" })
 
 -- Move focus around workspaces with numbers
 for key = 0, 9 do
 	local id = key == 0 and 10 or key
-	hl.bind("SUPER+" .. key, hl.dsp.focus({ workspace = tostring(id) }), {
+	hl.bind(C.MODKEY .. "+" .. key, hl.dsp.focus({ workspace = tostring(id) }), {
 		description = key == 0 and "Access workspace [0-9]" or nil,
 	})
 end
 
 -- Move focus around external monitors
-hl.bind("SUPER+ALT+K", hl.dsp.focus({ monitor = "u" }), { description = "Move focus on monitor up (vim, or arrows)" })
-hl.bind("SUPER+ALT+up", hl.dsp.focus({ monitor = "u" }), {})
-hl.bind("SUPER+ALT+J", hl.dsp.focus({ monitor = "d" }), { description = "Move focus on monitor down (vim, or arrows)" })
-hl.bind("SUPER+ALT+down", hl.dsp.focus({ monitor = "d" }), {})
-hl.bind("SUPER+ALT+H", hl.dsp.focus({ monitor = "l" }), { description = "Move focus on monitor left (vim, or arrows)" })
-hl.bind("SUPER+ALT+left", hl.dsp.focus({ monitor = "l" }), {})
-hl.bind("SUPER+ALT+L", hl.dsp.focus({ monitor = "r" }), { description = "Move focus on monitor right (vim, or arrows)" })
-hl.bind("SUPER+ALT+right", hl.dsp.focus({ monitor = "r" }), {})
+hl.bind(C.MODKEY .. "+ALT+K", hl.dsp.focus({ monitor = "u" }), { description = "Move focus on monitor up (vim, or arrows)" })
+hl.bind(C.MODKEY .. "+ALT+up", hl.dsp.focus({ monitor = "u" }), {})
+hl.bind(C.MODKEY .. "+ALT+J", hl.dsp.focus({ monitor = "d" }), { description = "Move focus on monitor down (vim, or arrows)" })
+hl.bind(C.MODKEY .. "+ALT+down", hl.dsp.focus({ monitor = "d" }), {})
+hl.bind(C.MODKEY .. "+ALT+H", hl.dsp.focus({ monitor = "l" }), { description = "Move focus on monitor left (vim, or arrows)" })
+hl.bind(C.MODKEY .. "+ALT+left", hl.dsp.focus({ monitor = "l" }), {})
+hl.bind(C.MODKEY .. "+ALT+L", hl.dsp.focus({ monitor = "r" }), { description = "Move focus on monitor right (vim, or arrows)" })
+hl.bind(C.MODKEY .. "+ALT+right", hl.dsp.focus({ monitor = "r" }), {})
 
 -- Cycle window focus with mouse side buttons (M4/M5)
 hl.bind(
-	"SUPER+mouse:275",
+	C.MODKEY .. "+mouse:275",
 	hl.dsp.window.cycle_next({ next = false }),
 	{ mouse = true, description = "Cycle focus to the previous window (mouse M4)" }
 )
 hl.bind(
-	"SUPER+mouse:276",
+	C.MODKEY .. "+mouse:276",
 	hl.dsp.window.cycle_next({ next = true }),
 	{ mouse = true, description = "Cycle focus to the next window (mouse M5)" }
 )
 
 -- Scroll workspaces with mouse wheel
 hl.bind(
-	"SUPER+mouse_up",
+	C.MODKEY .. "+mouse_up",
 	hl.dsp.focus({ workspace = "e-1" }),
 	{ description = "Scroll left workspaces with mouse scroll wheel" }
 )
 hl.bind(
-	"SUPER+mouse_down",
+	C.MODKEY .. "+mouse_down",
 	hl.dsp.focus({ workspace = "e+1" }),
 	{ description = "Scroll right workspaces with mouse scroll wheel" }
 )
 
 -- Scrolling overview
-hl.bind("SUPER+TAB", scrolloverview("overview", "toggle"), { description = "Show the scrolling overview" })
+hl.bind(C.MODKEY .. "+TAB", scrolloverview("overview", "toggle"), { description = "Show the scrolling overview" })
 
 -- Submap for scrolloverview navigation
 hl.define_submap("scrolloverview", function()
@@ -396,7 +405,7 @@ hl.define_submap("scrolloverview", function()
 			description = vim_keys[key] and ("Move overview selection " .. direction .. " (vim, or arrows)") or nil,
 		})
 	end
-	for _, key in ipairs({ "SUPER+TAB", "TAB", "RETURN", "Escape" }) do
+	for _, key in ipairs({ C.MODKEY .. "+TAB", "TAB", "RETURN", "Escape" }) do
 		hl.bind(
 			key,
 			scrolloverview("overview", "off"),
@@ -427,22 +436,22 @@ local move_down = smart_move("down", "d", "+1")
 
 -- Move windows within workspaces
 hl.bind(
-	"SUPER+SHIFT+K",
+	C.MODKEY .. "+SHIFT+K",
 	move_up,
 	{ repeating = true, description = "Move window up, or to previous workspace at the edge (vim, or arrows)" }
 )
-hl.bind("SUPER+SHIFT+CTRL+up", move_up, { repeating = true })
+hl.bind(C.MODKEY .. "+SHIFT+CTRL+up", move_up, { repeating = true })
 hl.bind(
-	"SUPER+SHIFT+J",
+	C.MODKEY .. "+SHIFT+J",
 	move_down,
 	{ repeating = true, description = "Move window down, or to next workspace at the edge (vim, or arrows)" }
 )
-hl.bind("SUPER+SHIFT+CTRL+down", move_down, { repeating = true })
+hl.bind(C.MODKEY .. "+SHIFT+CTRL+down", move_down, { repeating = true })
 
 -- Move window to workspaces with numbers
 for key = 0, 9 do
 	local id = key == 0 and 10 or key
-	hl.bind("SUPER+SHIFT+" .. key, hl.dsp.window.move({ workspace = tostring(id) }), {
+	hl.bind(C.MODKEY .. "+SHIFT+" .. key, hl.dsp.window.move({ workspace = tostring(id) }), {
 		description = key == 0 and "Move window to workspace [0-9]" or nil,
 	})
 end
@@ -468,51 +477,51 @@ end
 for key = 0, 9 do
 	local target = key == 0 and 10 or key
 	hl.bind(
-		"SUPER+ALT+CTRL+" .. key,
+		C.MODKEY .. "+ALT+CTRL+" .. key,
 		bulk_move_windows(target),
 		{ description = key == 0 and "Move all windows of this workspace to workspace [0-9]" or nil }
 	)
 end
 
 -- Re-arrange windows with arrows
-hl.bind("SUPER+SHIFT+up", hl.dsp.window.move({ direction = "u" }), { description = "Move window up (vim, or arrows)" })
+hl.bind(C.MODKEY .. "+SHIFT+up", hl.dsp.window.move({ direction = "u" }), { description = "Move window up (vim, or arrows)" })
 hl.bind(
-	"SUPER+SHIFT+down",
+	C.MODKEY .. "+SHIFT+down",
 	hl.dsp.window.move({ direction = "d" }),
 	{ description = "Move window down (vim, or arrows)" }
 )
-hl.bind("SUPER+SHIFT+left", hl.dsp.window.move({ direction = "l" }), {})
-hl.bind("SUPER+SHIFT+H", hl.dsp.window.move({ direction = "l" }), { description = "Move window left (vim, or arrows)" })
-hl.bind("SUPER+SHIFT+right", hl.dsp.window.move({ direction = "r" }), {})
+hl.bind(C.MODKEY .. "+SHIFT+left", hl.dsp.window.move({ direction = "l" }), {})
+hl.bind(C.MODKEY .. "+SHIFT+H", hl.dsp.window.move({ direction = "l" }), { description = "Move window left (vim, or arrows)" })
+hl.bind(C.MODKEY .. "+SHIFT+right", hl.dsp.window.move({ direction = "r" }), {})
 hl.bind(
-	"SUPER+SHIFT+L",
+	C.MODKEY .. "+SHIFT+L",
 	hl.dsp.window.move({ direction = "r" }),
 	{ description = "Move window right (vim, or arrows)" }
 )
 
 -- Resize windows
 hl.bind(
-	"SUPER+Minus",
+	C.MODKEY .. "+Minus",
 	hl.dsp.window.resize({ x = -20, y = 0, relative = true }),
 	{ repeating = true, description = "Resize window to the left" }
 )
 hl.bind(
-	"SUPER+Equal",
+	C.MODKEY .. "+Equal",
 	hl.dsp.window.resize({ x = 20, y = 0, relative = true }),
 	{ repeating = true, description = "Resize window to the right" }
 )
 hl.bind(
-	"SUPER+SHIFT+Minus",
+	C.MODKEY .. "+SHIFT+Minus",
 	hl.dsp.window.resize({ x = 0, y = -20, relative = true }),
 	{ repeating = true, description = "Resize window up" }
 )
 hl.bind(
-	"SUPER+SHIFT+Equal",
+	C.MODKEY .. "+SHIFT+Equal",
 	hl.dsp.window.resize({ x = 0, y = 20, relative = true }),
 	{ repeating = true, description = "Resize window down" }
 )
-hl.bind("SUPER+mouse:272", hl.dsp.window.drag(), { mouse = true, description = "Re-arrange windows with mouse" })
-hl.bind("SUPER+mouse:273", hl.dsp.window.resize(), { mouse = true, description = "Resize windows with mouse" })
+hl.bind(C.MODKEY .. "+mouse:272", hl.dsp.window.drag(), { mouse = true, description = "Re-arrange windows with mouse" })
+hl.bind(C.MODKEY .. "+mouse:273", hl.dsp.window.resize(), { mouse = true, description = "Resize windows with mouse" })
 
 -- 7. SCREENSHOTS
 hl.bind(
@@ -521,12 +530,12 @@ hl.bind(
 	{ description = "Take screenshot of the entire screen" }
 )
 hl.bind(
-	"SUPER+PRINT",
+	C.MODKEY .. "+PRINT",
 	hl.dsp.exec_cmd(ipc("screenshot-region")),
 	{ description = "Take screenshot of a selected region" }
 )
 hl.bind(
-	"SUPER+SHIFT+PRINT",
+	C.MODKEY .. "+SHIFT+PRINT",
 	hl.dsp.exec_cmd(ipc("screenshot-fullscreen pick")),
 	{ description = "Pick a monitor to screenshot" }
 )
@@ -535,12 +544,12 @@ hl.bind(
 
 -- Panels and audio device switching
 hl.bind(
-	"SUPER+XF86AudioMute",
+	C.MODKEY .. "+XF86AudioMute",
 	hl.dsp.exec_cmd('fish -c "audio-cycle --output"'),
 	{ locked = true, description = "Switch audio output device" }
 )
 hl.bind(
-	"SUPER+SHIFT+XF86AudioMute",
+	C.MODKEY .. "+SHIFT+XF86AudioMute",
 	hl.dsp.exec_cmd('fish -c "audio-cycle --input"'),
 	{ locked = true, description = "Switch audio input device" }
 )

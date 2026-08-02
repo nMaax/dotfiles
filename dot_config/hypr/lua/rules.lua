@@ -1,6 +1,8 @@
 -- WINDOW RULES
 -- See https://wiki.hypr.land/Configuring/Window-Rules/ for more
 
+local C = require("lua.constants")
+
 -- Ignore maximize requests from all apps. You'll probably like this.
 hl.window_rule({
 	name = "suppress-maximize-events",
@@ -56,50 +58,52 @@ hl.layer_rule({
 -- System Monitor workspace
 hl.window_rule({
 	name = "sysmon-workspace-class",
-	match = { class = "^sysmon\\.btop$" },
-	workspace = "special:sysmon",
+	match = { class = "^sysmon\\.btop$" }, -- C.SYSMON_CLASS, Hyprland-regex escaped
+	workspace = "special:" .. C.SPECIAL_WORKSPACE.SYSMON,
 })
 
 -- Discord and Telegram get their own workspaces
 hl.window_rule({
 	name = "discord-workspace-class",
-	match = { class = "^(discord|equibop|vesktop)$" },
-	workspace = "special:discord",
+	match = { class = "^(discord|equibop|vesktop)$" }, -- keep in sync with keybindings.lua's SUPER+D matcher
+	workspace = "special:" .. C.SPECIAL_WORKSPACE.DISCORD,
 })
 hl.window_rule({
 	name = "telegram-workspace-class",
-	match = { class = "^(org\\.telegram\\.desktop|TelegramDesktop)$" },
-	workspace = "special:telegram",
+	match = { class = "^(org\\.telegram\\.desktop|TelegramDesktop)$" }, -- keep in sync with keybindings.lua's SUPER+T matcher
+	workspace = "special:" .. C.SPECIAL_WORKSPACE.TELEGRAM,
 })
 
 -- Password managers workspace.
 hl.window_rule({
 	name = "password-workspace-class",
 	match = {
+		-- keep in sync with keybindings.lua's SUPER+P matcher
 		class = "^(org\\.keepassxc\\.KeePassXC|keepassxc|KeePass2|[Bb]itwarden|1[Pp]assword|Enpass|proton-pass|org\\.kde\\.kwalletmanager5|org\\.gnome\\.Seahorse|org\\.gnome\\.World\\.Secrets)$",
 	},
-	workspace = "special:password",
+	workspace = "special:" .. C.SPECIAL_WORKSPACE.PASSWORD,
 })
 
 -- AI workspace
 hl.window_rule({
 	name = "ai-workspace-class",
 	match = {
+		-- keep in sync with keybindings.lua's SUPER+A matcher
 		class = "^chrome-(gemini\\.google\\.com|github\\.com__copilot|chatgpt\\.com|claude\\.ai).*$",
 	},
-	workspace = "special:ai",
+	workspace = "special:" .. C.SPECIAL_WORKSPACE.AI,
 })
 
 -- Music workspace
 hl.window_rule({
 	name = "music-workspace-class",
-	match = { class = "^([Ss]potify|feishin|Supersonic|Cider|com\\.github\\.th_ch\\.youtube_music|Plexamp)$" },
-	workspace = "special:music",
+	match = { class = "^([Ss]potify|feishin|Supersonic|Cider|com\\.github\\.th_ch\\.youtube_music|Plexamp)$" }, -- keep in sync with keybindings.lua's SUPER+M matcher
+	workspace = "special:" .. C.SPECIAL_WORKSPACE.MUSIC,
 })
 hl.window_rule({
 	name = "music-workspace-title",
 	match = { initial_title = "^Spotify( (Premium|Free))?$" },
-	workspace = "special:music",
+	workspace = "special:" .. C.SPECIAL_WORKSPACE.MUSIC,
 })
 
 -- Small utilities (only calculator for now)
@@ -117,8 +121,8 @@ hl.window_rule({
 -- Game Launchers Workspace
 hl.window_rule({
 	name = "games-launchers-workspace-class",
-	match = { class = "^(steam|lutris|com\\.heroicgameslauncher\\.hgl|heroic)$" },
-	workspace = "special:games",
+	match = { class = "^(steam|lutris|com\\.heroicgameslauncher\\.hgl|heroic)$" }, -- keep in sync with keybindings.lua's SUPER+G matcher
+	workspace = "special:" .. C.SPECIAL_WORKSPACE.GAMES,
 })
 
 -- Games
@@ -127,7 +131,7 @@ hl.window_rule({
 	match = {
 		class = "^(steam_app_.*|.*\\.exe|wine|Wine|lutris_.*|heroic_.*|love)$", -- love is VRRTest
 	},
-	workspace = "11", -- GAMES_WORKSPACE (see monitors.lua)
+	workspace = C.GAMES_WORKSPACE,
 	no_vrr = false, -- Always try to enable VRR
 	idle_inhibit = "always", -- Do not sleep
 	content = "game", -- Force it: many games never self-report via the content-type protocol,

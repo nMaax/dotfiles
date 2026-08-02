@@ -1,6 +1,8 @@
 -- PLUGINS
 -- See https://wiki.hypr.land/Plugins/Using-Plugins/
 
+local C = require("lua.constants")
+
 hl.config({
 	plugin = {
 		scrolloverview = {
@@ -14,7 +16,7 @@ hl.config({
 				enabled = true,
 				range = 50,
 				render_power = 3,
-				color = 0xee1a1a1a, -- rgba(1a1a1aee) as an AARRGGBB integer
+				color = tonumber("ee" .. C.SHADOW_HEX, 16), -- rgba(1a1a1aee) as an AARRGGBB integer
 			},
 		},
 	},
