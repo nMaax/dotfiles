@@ -21,15 +21,6 @@ sudo pacman -S --needed --noconfirm noctalia # Available directly in the cachyos
 info "[NOCTALIA] Built-in app theming is pre-enabled for common apps."
 info "Remaining app-specific steps: https://docs.noctalia.dev/v5/theming/app-theming/"
 
-info "🩸 Setting hyprland plugins..."
-if ! hyprpm list | grep -q hyprland-scroll-overview; then
-  hyprpm add "$SCROLLOVERVIEW_REPO_URL"
-  hyprpm update
-  hyprpm enable scrolloverview
-else
-  success "hyprland-scroll-overview plugin already installed and enabled, skipping."
-fi
-
 info "🖼️ Installing mpvpaper for Video Wallpaper alternative backend..."
 paru -S --needed --noconfirm mpvpaper
 

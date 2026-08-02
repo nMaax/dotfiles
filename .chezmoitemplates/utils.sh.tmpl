@@ -78,3 +78,9 @@ detect_gpu_vendor() {
     GPU_VENDOR=""
   fi
 }
+
+# --- Hyprland Session Detection ---
+# True if a live Hyprland compositor session is available for hyprctl/hyprpm.
+hyprland_is_running() {
+  [[ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]]
+}

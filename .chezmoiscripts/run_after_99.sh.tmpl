@@ -1,4 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
-hyprpm update
+{{ template "utils.sh.tmpl" . }}
+
+if hyprland_is_running; then
+  hyprpm update
+fi

@@ -5,7 +5,7 @@ set -euo pipefail
 {{ template "external_links.sh.tmpl" . }}
 
 echo ""
-info "🤗 [Fonts & Emoji] Starting..."
+info "🤗 [Fonts and Emoji] Starting..."
 echo ""
 
 info "🤓 Installing Nerd Fonts..."
@@ -15,29 +15,16 @@ info "🐧 Installing Linux Libertine Fonts..."
 sudo pacman -S --needed --noconfirm ttf-linux-libertine
 
 info "🍎 Installing Apple Fonts..."
-paru -S --needed --noconfirm apple-fonts
+# Skipped: AUR apple-fonts sha256sums are stale (Apple updated the SF-Pro/SF-Compact dmgs
+# without bumping the version) - re-enable once upstream re-hashes the PKGBUILD.
+warn "Skipping apple-fonts (upstream checksum mismatch as of 2 Aug 2026, see AUR comments)."
 
-# Install Apple Emoji
-EMOJI_FILE="/tmp/ttf-apple-emoji.pkg.tar.zst"
+info "😀 Installing Apple Emoji..."
+paru -S --needed --noconfirm ttf-apple-emoji
 
-if ! pacman -Qs ttf-apple-emoji >/dev/null; then
-  info "📥 Downloading verified Apple Emoji package..."
-  curl -L "$APPLE_EMOJI_URL" -o "$EMOJI_FILE"
-
-  # Verify hash before installing, since this is not taken from pacman repo or AUR
-  if echo "$APPLE_EMOJI_SHA256  $EMOJI_FILE" | sha256sum -c -; then
-    if pacman -Qs noto-fonts-emoji >/dev/null; then
-      info "Removing conflicting package: noto-fonts-emoji"
-      sudo pacman -Rns --noconfirm noto-fonts-emoji
-    fi
-    sudo pacman -U --noconfirm "$EMOJI_FILE"
-    success "Apple Emoji installed successfully."
-  else
-    error "SHA256 checksum mismatch for Apple Emoji! Aborting font installation."
-  fi
-  rm -f "$EMOJI_FILE"
-else
-  success "Apple Emoji is already installed."
+if pacman -Qs noto-fonts-emoji >/dev/null; then
+  info "Removing conflicting package: noto-fonts-emoji"
+  sudo pacman -Rns --noconfirm noto-fonts-emoji noto-color-emoji-fontconfig
 fi
 
 echo ""
