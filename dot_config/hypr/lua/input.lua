@@ -8,6 +8,7 @@ hl.config({
 		kb_options = "compose:caps, grp:win_space_toggle",
 		resolve_binds_by_sym = false,
 		follow_mouse = 1,
+		numlock_by_default = true,
 
 		sensitivity = 0.2,
 		accel_profile = "adaptive",
@@ -20,6 +21,7 @@ hl.config({
 			natural_scroll = true,
 			tap_to_click = true,
 			disable_while_typing = true,
+			drag_lock = true,
 		},
 	},
 })
@@ -43,6 +45,13 @@ hl.device({
 
 -- GESTURES
 -- See https://wiki.hypr.land/Configuring/Basics/Variables/#gestures
+
+hl.config({
+	gestures = {
+		-- don't clamp touchpad workspace swipe at the neighboring workspace
+		workspace_swipe_forever = true,
+	},
+})
 
 -- 3 fingers horizontal: Switch workspaces
 hl.gesture({ fingers = 3, direction = "horizontal", action = "workspace" })

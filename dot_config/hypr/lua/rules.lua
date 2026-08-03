@@ -32,6 +32,21 @@ hl.window_rule({
 	float = true,
 })
 
+-- Don't let the screen sleep while anything is fullscreen (video, calls, games)
+hl.window_rule({
+	name = "idle-inhibit-fullscreen",
+	match = { class = ".*", fullscreen = true },
+	idle_inhibit = "fullscreen",
+})
+
+-- Float small utility apps
+hl.window_rule({
+	name = "float-transient-utilities",
+	-- confirmed live: pavucontrol's real class is org.pulseaudio.pavucontrol, not "pavucontrol"
+	match = { class = "^(org\\.pulseaudio\\.pavucontrol|nm-connection-editor|blueman-manager|file-roller)$" },
+	float = true,
+})
+
 -- NOCTALIA RULES
 -- See https://docs.noctalia.dev/v5/compositor-settings/hyprland/
 

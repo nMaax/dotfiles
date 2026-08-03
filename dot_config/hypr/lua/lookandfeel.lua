@@ -23,6 +23,11 @@ hl.config({
         layout = "scrolling", -- You can also switch to dwindle
     },
 
+    binds = {
+        -- pressing the current workspace's key returns to the previous one
+        workspace_back_and_forth = true,
+    },
+
     group = {
         col = {
             border_active = colors.secondary,
@@ -56,6 +61,9 @@ hl.config({
 
     cursor = {
         enable_hyprcursor = true,
+        hide_on_key_press = true,
+        inactive_timeout = 5,
+        persistent_warps = true,
     },
 
     decoration = {
