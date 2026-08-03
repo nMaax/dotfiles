@@ -160,9 +160,10 @@ hl.bind(
 			"^chrome%-github%.com__copilot",
 			"^chrome%-chatgpt%.com",
 			"^chrome%-claude%.ai",
+			"^Claude$",
 		},
-	}, 'launch-webapp.sh "https://claude.ai"'),
-	{ description = "Toggle AI workspace (Claude webapp)" }
+	}, "claude-desktop"),
+	{ description = "Toggle AI workspace (Claude desktop)" }
 )
 hl.bind(
 	C.MODKEY .. "+P",

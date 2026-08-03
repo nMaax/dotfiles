@@ -89,7 +89,7 @@ hl.window_rule({
 	name = "ai-workspace-class",
 	match = {
 		-- keep in sync with keybindings.lua's SUPER+A matcher
-		class = "^chrome-(gemini\\.google\\.com|github\\.com__copilot|chatgpt\\.com|claude\\.ai).*$",
+		class = "^(chrome-(gemini\\.google\\.com|github\\.com__copilot|chatgpt\\.com|claude\\.ai).*|Claude)$",
 	},
 	workspace = "special:" .. C.SPECIAL_WORKSPACE.AI,
 })
