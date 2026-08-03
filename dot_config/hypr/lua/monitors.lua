@@ -1,5 +1,5 @@
 -- MONITORS
--- See https://wiki.hypr.land/Configuring/Monitors/
+-- See https://wiki.hypr.land/Configuring/Basics/Monitors/
 
 local C = require("lua.constants")
 
@@ -52,7 +52,7 @@ hl.monitor({
 -- Fallback
 hl.monitor({ output = "", mode = "preferred", position = "auto-up", scale = 1 })
 
--- See https://wiki.hypr.land/Configuring/Workspace-Rules/ for workspace rules
+-- See https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/
 
 -- Workspaces are distributed over the connected monitors at runtime rather than
 -- pinned to specific outputs, because this machine is sometimes a laptop and

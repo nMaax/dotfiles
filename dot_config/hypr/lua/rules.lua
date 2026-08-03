@@ -1,5 +1,5 @@
 -- WINDOW RULES
--- See https://wiki.hypr.land/Configuring/Window-Rules/ for more
+-- See https://wiki.hypr.land/Configuring/Basics/Window-Rules/
 
 local C = require("lua.constants")
 

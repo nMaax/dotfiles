@@ -1,5 +1,5 @@
 -- MISC
--- https://wiki.hypr.land/Configuring/Variables/#misc
+-- See https://wiki.hypr.land/Configuring/Basics/Variables/#misc
 
 hl.config({
 	misc = {

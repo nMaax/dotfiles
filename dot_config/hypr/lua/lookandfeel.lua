@@ -1,5 +1,5 @@
 -- LOOK AND FEEL
--- Refer to https://wiki.hypr.land/Configuring/Variables/
+-- See https://wiki.hypr.land/Configuring/Basics/Variables/
 
 -- NOTE: Do not put performance-related settings here, they belong in performance.lua
 
@@ -12,7 +12,7 @@ hl.config({
         gaps_out = 20,
         border_size = 2,
 
-        -- See https://wiki.hypr.land/Configuring/Variables/#variable-types for info about colors
+        -- See https://wiki.hypr.land/Configuring/Basics/Variables#variable-types
         col = {
             active_border = { colors = { colors.primary, colors.secondary, colors.tertiary }, angle = 45 },
             inactive_border = { colors = { colors.surface, colors.surface_lowest }, angle = 90 },
@@ -86,7 +86,7 @@ hl.config({
     },
 })
 
--- https://wiki.hypr.land/Configuring/Animations/
+-- See https://wiki.hypr.land/Configuring/Advanced-and-Cool/Animations/
 hl.curve("standard", { type = "bezier", points = { { 0.2, 0 }, { 0, 1 } } }) -- A cleaner version of MD3 without the bounce
 hl.curve("snappy", { type = "bezier", points = { { 0.3, 1 }, { 0, 1 } } }) -- High velocity start, instant lock-in
 hl.curve("fastOut", { type = "bezier", points = { { 0.3, 0 }, { 1, 1 } } }) -- Starts slow, then vanishes instantly

@@ -25,7 +25,7 @@ hl.config({
 })
 
 -- PER-DEVICE INPUT CONFIGS
--- See https://wiki.hypr.land/Configuring/Keywords/#per-device-input-configs for more
+-- See https://wiki.hypr.land/Configuring/Basics/Variables/#per-device-input-config
 
 -- Gaming mouse
 hl.device({
@@ -42,7 +42,7 @@ hl.device({
 })
 
 -- GESTURES
--- See https://wiki.hypr.land/Configuring/Gestures
+-- See https://wiki.hypr.land/Configuring/Basics/Variables/#gestures
 
 -- 3 fingers horizontal: Switch workspaces
 hl.gesture({ fingers = 3, direction = "horizontal", action = "workspace" })

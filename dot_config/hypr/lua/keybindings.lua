@@ -1,6 +1,5 @@
 -- KEYBINDINGS
--- See https://wiki.hypr.land/Configuring/Keywords/
--- see https://wiki.hypr.land/Configuring/Binds/ for more
+-- See https://wiki.hypr.land/Configuring/Basics/Binds/
 -- See https://docs.noctalia.dev/v5/ipc/ for the full `noctalia msg` command list
 
 local C = require("lua.constants")
@@ -36,23 +35,13 @@ end
 hl.bind(C.MODKEY .. "+X", toggle_layout, { description = "Toggle scrolling/dwindle modes" })
 
 -- Scrolling only
-hl.bind(
-	C.MODKEY .. "+ALT+Equal",
-	hl.dsp.layout("colresize +conf"),
-	{ description = "Widen active column width (scrolling only)" }
-)
-hl.bind(C.MODKEY .. "+ALT+Minus", hl.dsp.layout("colresize -conf"), {
-	description = "Narrow active column width (scrolling only)",
-})
+hl.bind(C.MODKEY .. "+ALT+Equal", hl.dsp.layout("colresize +conf"), { description = "Widen active column width (scrolling only)" })
+hl.bind(C.MODKEY .. "+ALT+Minus", hl.dsp.layout("colresize -conf"), {description = "Narrow active column width (scrolling only)",})
 hl.bind(C.MODKEY .. "+SHIFT+F", hl.dsp.layout("fit active"), { description = "Expand column into free space (scrolling only)" })
 
 -- Dwindle only
 hl.bind(C.MODKEY .. "+Y", hl.dsp.layout("togglesplit"), { description = "Switch split orientation (dwindle only)" })
-hl.bind(
-	C.MODKEY .. "+U",
-	hl.dsp.window.pseudo({ action = "toggle" }),
-	{ description = "Make active window pseudo (dwindle only)" }
-)
+hl.bind(C.MODKEY .. "+U", hl.dsp.window.pseudo({ action = "toggle" }), { description = "Make active window pseudo (dwindle only)" })
 
 -- 2. QUICK LAUNCHES
 hl.bind(C.MODKEY .. "+RETURN", hl.dsp.exec_cmd(C.TERMINAL), { description = "Open terminal" })
@@ -212,11 +201,7 @@ hl.bind(C.MODKEY .. "+SHIFT+S", hl.dsp.window.move({ workspace = "special:" .. C
 -- 4. SYSTEM PANELS AND UTILITIES
 
 -- Cheathseet and session management
-hl.bind(
-	C.MODKEY .. "+slash",
-	hl.dsp.exec_cmd(ipc("panel-toggle kenn/keybind-cheatsheet:cheatsheet")),
-	{ description = "Show this helping cheatsheet" }
-)
+hl.bind(C.MODKEY .. "+slash", hl.dsp.exec_cmd(ipc("panel-toggle kenn/keybind-cheatsheet:cheatsheet")), { description = "Show this helping cheatsheet" })
 hl.bind(C.MODKEY .. "+BACKSPACE", hl.dsp.exec_cmd(ipc("session lock")), { description = "Lockscreen" })
 hl.bind(C.MODKEY .. "+Escape", hl.dsp.exec_cmd(ipc("panel-toggle session")), { description = "Open power/reboot menu" })
 

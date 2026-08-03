@@ -21,5 +21,6 @@ hl.env("QT_WAYLAND_DISABLE_WINDOWDECORATION", "1")
 hl.env("ELECTRON_OZONE_PLATFORM_HINT", "auto")
 
 -- NVIDIA settings for hardware acceleration
+-- See https://wiki.hypr.land/Nvidia/
 hl.env("LIBVA_DRIVER_NAME", "nvidia")
 hl.env("NVD_BACKEND", "direct")

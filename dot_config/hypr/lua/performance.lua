@@ -1,4 +1,6 @@
 -- PERFORMANCE
+-- See https://wiki.hypr.land/Configuring/Advanced-and-Cool/Tearing/
+-- See https://wiki.hypr.land/Configuring/Basics/Monitors/#vrr
 
 -- NOTE: Tearing v. VRR
 --
