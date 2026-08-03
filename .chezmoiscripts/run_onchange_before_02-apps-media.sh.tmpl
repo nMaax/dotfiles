@@ -21,7 +21,6 @@ sudo pacman -S --needed --noconfirm kdenlive obs-studio
 info "🎵 Installing EasyEffects and audio effect plugins..."
 sudo pacman -S --needed --noconfirm easyeffects lsp-plugins zam-plugins calf mda.lv2
 
-# Fetched remotely, not from the local file — this script runs before dotfiles are applied.
 info "🎧 Installing Spotify & Spicetify..."
 curl -fsSL "$SPICETIFY_SETUP_URL" | sh -s -- \
   "$SPICETIFY_COMFY_REPO_URL" "$SPICETIFY_MARKETPLACE_INSTALL_URL"
