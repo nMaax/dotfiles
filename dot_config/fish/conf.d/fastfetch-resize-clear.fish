@@ -1,5 +1,5 @@
 set -g __fastfetch_min_cols 80
-set -g __fastfetch_min_lines 24
+set -g __fastfetch_min_lines 20
 set -g __fastfetch_shown 0
 set -g __fastfetch_is_narrow 0
 
