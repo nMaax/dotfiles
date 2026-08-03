@@ -10,9 +10,7 @@ by asking the affected program whether it is happy.
 Three docs at the root, with distinct jobs:
 
 - `README.md` — user-facing install and post-install setup guide.
-- `CLEANUP.md` — read-first checklist of things safe to delete once fallbacks aren't wanted.
-  Deliberately **not** a script; it replaced two `*-cleanup.sh` scripts precisely so nothing
-  destructive gets run blindly.
+- `CLEANUP.md` — read-first checklist of things safe to delete once migration is completed and stable. Deliberately **not** a script
 - **This file** — how to change things without breaking them.
 
 ---
