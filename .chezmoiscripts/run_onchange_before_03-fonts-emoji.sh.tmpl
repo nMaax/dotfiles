@@ -15,9 +15,7 @@ info "🐧 Installing Linux Libertine Fonts..."
 sudo pacman -S --needed --noconfirm ttf-linux-libertine
 
 info "🍎 Installing Apple Fonts..."
-# Skipped: AUR apple-fonts sha256sums are stale (Apple updated the SF-Pro/SF-Compact dmgs
-# without bumping the version) - re-enable once upstream re-hashes the PKGBUILD.
-warn "Skipping apple-fonts (upstream checksum mismatch as of 2 Aug 2026, see AUR comments)."
+paru -S --needed --noconfirm apple-fonts
 
 info "😀 Installing Apple Emoji..."
 paru -S --needed --noconfirm ttf-apple-emoji
