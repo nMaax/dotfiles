@@ -14,8 +14,17 @@ sudo pacman -S --needed --noconfirm ttf-jetbrains-mono-nerd ttf-iosevka-nerd ttf
 info "🐧 Installing Linux Libertine Fonts..."
 sudo pacman -S --needed --noconfirm ttf-linux-libertine
 
-info "🍎 Installing Apple Fonts..."
-paru -S --needed --noconfirm apple-fonts
+INSTALL_APPLE_FONTS=true
+warn "The apple-fonts AUR package currently fails to build (upstream build issue)."
+if ask "Skip installing Apple Fonts until the build is fixed? (recommended)"; then
+  INSTALL_APPLE_FONTS=false
+fi
+if [ "$INSTALL_APPLE_FONTS" = "true" ]; then
+  info "🍎 Installing Apple Fonts..."
+  paru -S --needed --noconfirm apple-fonts
+else
+  warn "Skipped Apple Fonts install."
+fi
 
 info "😀 Installing Apple Emoji..."
 paru -S --needed --noconfirm ttf-apple-emoji
