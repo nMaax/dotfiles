@@ -25,4 +25,4 @@ else
 fi
 
 # Launch the browser in standalone app mode
-exec "$BROWSER" --app="$URL"
+exec "$BROWSER" --app="$URL" --password-store=kwallet6
