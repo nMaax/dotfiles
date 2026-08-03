@@ -289,7 +289,7 @@ hl.bind(C.MODKEY .. "+Escape", hl.dsp.exec_cmd(ipc("panel-toggle session")), { d
 -- Power profile
 local function toggle_power_profile()
 	io.popen(ipc("power-cycle")):close() -- block until the cycle actually lands, so the read below isn't stale
-	local handle = io.popen("powerprofilesctl get")
+	local handle = assert(io.popen("powerprofilesctl get"))
 	local profile = handle:read("*l")
 	handle:close()
 	local low_power = profile == "power-saver"

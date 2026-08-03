@@ -17,7 +17,7 @@ hl.monitor({
 hl.monitor({
 	output = "desc:Ancor Communications Inc ASUS VN247 F1LMTF033327",
 	mode = "1920x1080@60.00",
-	position = "auto-right",
+	position = "auto-up",
 	scale = 1,
 })
 hl.monitor({ output = "desc:AOC 27B36X 2RRRAHA013122", mode = "1920x1080@144.00", position = "auto-up", scale = 1 })
@@ -43,7 +43,7 @@ hl.monitor({
 hl.monitor({
 	output = "desc:Samsung Electric Company LC32G7xT HNATC01677",
 	mode = "2560x1440@240.00",
-	position = "auto",
+	position = "auto-up",
 	scale = 1,
 	vrr = 1,
 	bitdepth = 8,

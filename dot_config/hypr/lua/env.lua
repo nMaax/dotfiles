@@ -23,7 +23,7 @@ hl.env("ELECTRON_OZONE_PLATFORM_HINT", "auto")
 -- NVIDIA settings for hardware acceleration
 -- See https://wiki.hypr.land/Nvidia/
 local function is_nvidia_gpu()
-	local handle = io.popen("lspci | grep -iE 'vga|3d|display'")
+	local handle = assert(io.popen("lspci | grep -iE 'vga|3d|display'"))
 	local output = handle:read("*a")
 	handle:close()
 	return output:lower():find("nvidia") ~= nil
