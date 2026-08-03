@@ -350,6 +350,45 @@ without hardcoding a list. See `run_onchange_before_02-apps-coding.sh.tmpl` for 
   (`pdf-*`, `vid2*`, `*2png`, …). Self-contained; add new ones as single files following the
   existing naming.
 
+### Code style within the Lua config
+
+`keybindings.lua` is the largest file and the clearest reference for all of the below; `rules.lua`
+follows the same grouping/comment conventions at smaller scale.
+
+- **Define helpers before their first use, top to bottom.** Every `local function` (or
+  `local X = function(...) ... end` factory) appears above the `hl.bind()`/`hl.window_rule()` call
+  that references it — never forward-referenced, never defined inline at the call site once the
+  logic is more than a one-liner. `toggle_layout` (line 32) sits directly above the one bind that
+  uses it; `smart_focus`/`try_focus`/`vertically_aligned` (§5 NAVIGATE) are built bottom-up, each
+  depending only on helpers already defined earlier in the file.
+- **No nested named functions.** A factory (`smart_focus`, `smart_move`, `toggle_app_special_workspace`,
+  `bulk_move_windows`, `scrolloverview`, `reload`) returns an **anonymous** `function() ... end`
+  closure — it never declares a second `local function` inside its own body. If a closure needs a
+  sub-step, that step is its own top-level `local function` defined earlier, and the closure just
+  calls it (e.g. `smart_focus` calls the top-level `try_focus`, it doesn't redefine it). This keeps
+  every named function reachable and single-purpose instead of buried inside another one.
+- **Formatting.** Tabs for indentation (not the 2-space stylua rule, which is nvim-tree-only — see
+  §9). Spaces around `=` and `..`. A call that fits on one line stays on one line
+  (`hl.bind(C.MODKEY .. "+Q", hl.dsp.window.close(), { description = "Kill active window" })`); once
+  it doesn't, every argument to `hl.bind`/`hl.window_rule` drops to its own line, each on its own
+  indent level, closing paren on its own line — never a half-wrapped call. If you touch a bind and
+  notice it drifted from this (a stray 2-space indent, trailing whitespace, or `key=value` with no
+  spaces — both have crept in before), fix it as part of the edit rather than matching the drift.
+- **Semantic blocks, not chronological ones.** Top-level groups are numbered comment headers in
+  ALL CAPS (`-- 1. WINDOW ACTIONS`, `-- 2. QUICK LAUNCHES`, ... through `-- 7. MULTIMEDIA`) that
+  group binds by what they *do*, not by when they were added — a new bind goes into the matching
+  numbered section, not appended at the end of the file. Within a section, related binds are
+  clustered under a short lowercase comment (`-- Scrolling only`, `-- Cheathseet and session
+  management`, `-- Wallpapers and colorscheme`), separated from the next cluster by a blank line.
+- **Collapse repetition into a loop, don't hand-write it.** The ten workspace-number binds, the ten
+  move-to-workspace binds and the ten bulk-move binds are each a single `for key = 0, 9 do ... end`
+  producing the description only on the `key == 0` case (per the e in
+  §9), not ten near-identical `hl.bind()` calls.
+- **No hardcoded literals for values `constants.lua` already names.** Modkey, terminal/browser/file
+  manager commands, special-workspace names, the games workspace
+  `C.TERMINAL`, `C.SPECIAL_WORKSPACE.MUSIC`, etc., never the litedd a
+  new constant there before introducing a second copy of a literal.
+
 ---
 
 ## 4. Hyprland Lua config
