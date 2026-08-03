@@ -25,10 +25,10 @@ info "📄 Installing LibreOffice and Xournal++..."
 sudo pacman -S --needed --noconfirm libreoffice-fresh xournalpp
 
 info "🖨️ Installing CUPS printing system..."
-sudo pacman -S --needed --noconfirm cups cups-filters ghostscript gsfonts cups-pdf
+sudo pacman -S --needed --noconfirm cups cups-filters cups-browsed ghostscript gsfonts cups-pdf
 
 info "🖨️ Installing broad printer driver coverage (Gutenprint, Foomatic, HPLIP)..."
-sudo pacman -S --needed --noconfirm gutenprint foomatic-db-engine foomatic-db foomatic-db-nonfree foomatic-db-nonfree-ppds foomatic-filters hplip
+sudo pacman -S --needed --noconfirm gutenprint foomatic-db-engine foomatic-db foomatic-db-nonfree foomatic-db-nonfree-ppds hplip
 
 info "📡 Installing network printer discovery (Avahi/mDNS)..."
 sudo pacman -S --needed --noconfirm avahi nss-mdns
