@@ -1,4 +1,14 @@
-function scrub-file
+function scrub-file -d "Wipe metadata and reset timestamps on files"
+    if contains -- -h $argv; or contains -- --help $argv
+        echo "Usage: scrub-file <file1> [file2 ...]"
+        return 0
+    end
+
+    if test (count $argv) -eq 0
+        echo "Usage: scrub-file <file1> [file2 ...]" >&2
+        return 1
+    end
+
     for file in $argv
         if test -f $file
             echo "Scrubbing $file..."

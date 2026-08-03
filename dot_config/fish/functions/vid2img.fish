@@ -1,14 +1,20 @@
 function vid2img --description "Extract a frame from a video"
-    # Check if input file is provided
-    if test (count $argv) -lt 1
+    if contains -- -h $argv; or contains -- --help $argv
         echo "Usage: vid2img <video_file> [timestamp]"
         echo "Example: vid2img movie.mp4 00:02:30"
+        return 0
+    end
+
+    # Check if input file is provided
+    if test (count $argv) -lt 1
+        echo "Usage: vid2img <video_file> [timestamp]" >&2
+        echo "Example: vid2img movie.mp4 00:02:30" >&2
         return 1
     end
 
     set -l input $argv[1]
     set -l time "00:00:00"
-    
+
     # Use second argument for time if provided
     if test (count $argv) -gt 1
         set time $argv[2]

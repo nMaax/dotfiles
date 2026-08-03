@@ -1,6 +1,11 @@
 function lanczos_upscale -d "Upscale an image by 200% using Lanczos filtering"
+    if contains -- -h $argv; or contains -- --help $argv
+        echo "Usage: lanczos_upscale <input_file>"
+        return 0
+    end
+
     if test (count $argv) -eq 0
-        echo "Usage: img_upscale <input_file>"
+        echo "Usage: lanczos_upscale <input_file>" >&2
         return 1
     end
 

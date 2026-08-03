@@ -1,7 +1,13 @@
 function ai_upscale -d "Upscale an image using GPU-accelerated Real-ESRGAN"
-    if test (count $argv) -eq 0
+    if contains -- -h $argv; or contains -- --help $argv
         echo "Usage: ai_upscale <input_file> [scale_factor]"
         echo "Example: ai_upscale photo.jpg 4"
+        return 0
+    end
+
+    if test (count $argv) -eq 0
+        echo "Usage: ai_upscale <input_file> [scale_factor]" >&2
+        echo "Example: ai_upscale photo.jpg 4" >&2
         return 1
     end
 

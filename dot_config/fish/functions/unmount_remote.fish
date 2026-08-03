@@ -1,7 +1,12 @@
-function unmount_remote
+function unmount_remote -d "Unmount a folder previously mounted with mount_remote"
+    if contains -- -h $argv; or contains -- --help $argv
+        echo "Usage: unmount_remote <path_to_mount>"
+        return 0
+    end
+
     set -l target $argv[1]
     if test -z "$target"
-        echo "Usage: unmount_remote [path_to_mount]"
+        echo "Usage: unmount_remote <path_to_mount>" >&2
         return 1
     end
 

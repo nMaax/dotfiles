@@ -1,7 +1,14 @@
 function img_effect -d "Apply center crop or effects to an image"
-    if test (count $argv) -lt 2
+    if contains -- -h $argv; or contains -- --help $argv
         echo "Usage: img_effect <effect> <input_file> [crop_dimensions]"
         echo "Effects: crop (requires dimensions like 500x500), blur, frosted, fisheye"
+        echo "Example: img_effect crop photo.jpg 800x800"
+        return 0
+    end
+
+    if test (count $argv) -lt 2
+        echo "Usage: img_effect <effect> <input_file> [crop_dimensions]" >&2
+        echo "Effects: crop (requires dimensions like 500x500), blur, frosted, fisheye" >&2
         return 1
     end
 

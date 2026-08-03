@@ -1,8 +1,13 @@
-function mount_remote
+function mount_remote -d "Mount a remote folder over SSHFS under ~/mounts"
+    if contains -- -h $argv; or contains -- --help $argv
+        echo "Usage: mount_remote user@host remote_folder"
+        return 0
+    end
+
     # 1. Validation: Ensure we have two args and an '@' in the first arg
     if test (count $argv) -lt 2; or not string match -q "*@*" "$argv[1]"
-        echo "Error: Missing arguments or invalid format."
-        echo "Usage: mount_remote user@host remote_folder"
+        echo "Error: Missing arguments or invalid format." >&2
+        echo "Usage: mount_remote user@host remote_folder" >&2
         return 1
     end
 
