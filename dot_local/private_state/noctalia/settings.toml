@@ -70,8 +70,6 @@ widget_order = [ "lockscreen-login-box@DP-1" ]
         show_weather = true
 
 [plugin_settings."kenn/keybind-cheatsheet"]
-compositor = "hyprland"
-hyprland_parser = "lua"
 show_undescribed = false
 
 [plugins]
