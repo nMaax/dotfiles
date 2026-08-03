@@ -22,5 +22,14 @@ hl.env("ELECTRON_OZONE_PLATFORM_HINT", "auto")
 
 -- NVIDIA settings for hardware acceleration
 -- See https://wiki.hypr.land/Nvidia/
-hl.env("LIBVA_DRIVER_NAME", "nvidia")
-hl.env("NVD_BACKEND", "direct")
+local function is_nvidia_gpu()
+	local handle = io.popen("lspci | grep -iE 'vga|3d|display'")
+	local output = handle:read("*a")
+	handle:close()
+	return output:lower():find("nvidia") ~= nil
+end
+
+if is_nvidia_gpu() then
+	hl.env("LIBVA_DRIVER_NAME", "nvidia")
+	hl.env("NVD_BACKEND", "direct")
+end

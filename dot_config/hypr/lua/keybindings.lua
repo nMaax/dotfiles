@@ -206,6 +206,21 @@ hl.bind(C.MODKEY .. "+slash", hl.dsp.exec_cmd(ipc("panel-toggle kenn/keybind-che
 hl.bind(C.MODKEY .. "+BACKSPACE", hl.dsp.exec_cmd(ipc("session lock")), { description = "Lockscreen" })
 hl.bind(C.MODKEY .. "+Escape", hl.dsp.exec_cmd(ipc("panel-toggle session")), { description = "Open power/reboot menu" })
 
+-- Power profile
+local function toggle_power_profile()
+	io.popen(ipc("power-cycle")):close() -- block until the cycle actually lands, so the read below isn't stale
+	local handle = io.popen("powerprofilesctl get")
+	local profile = handle:read("*l")
+	handle:close()
+	local low_power = profile == "power-saver"
+	hl.config({ decoration = { blur = { enabled = not low_power }, shadow = { enabled = not low_power } } })
+end
+hl.bind(
+	C.MODKEY .. "+ALT+B",
+	toggle_power_profile,
+	{ description = "Cycle power profile (blur/shadow off on power-saver)" }
+)
+
 local function reload(level)
 	-- level: 1 = hyprctl only, 2 = + hyprpm and a soft noctalia reload, 3 = kill and relaunch noctalia
 	if level == 1 then
