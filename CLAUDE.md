@@ -271,7 +271,7 @@ Scripts gate on the user's `~/.config/chezmoi/chezmoi.toml` `[data]` block: `.na
 `.gaming` (skip Steam/OpenRGB/etc.), `.coding` (skip dev tooling), `.ai` (skip
 CUDA/ROCm/Ollama/Claude Code/Antigravity/OpenCode entirely), `.media` (skip
 kdenlive/OBS/EasyEffects/Spotify/yt-dlp/image-upscaler), `.office` (skip
-LibreOffice/KeePassXC/qBittorrent/etc.), `.communication` (skip
+LibreOffice/KeePassXC/qBittorrent/CUPS printing etc.), `.communication` (skip
 Telegram/Signal/Discord/Element/LocalSend) — each one gates its own `02-apps-*` script (§3
 Ordering). `.tailscale_authkey` / `.nordvpn_authkey` / `.mega_authkey` are three-state: boolean `false`
 (or the string `"false"`) skips installing that integration entirely; `""` installs and enables it

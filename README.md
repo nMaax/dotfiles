@@ -26,7 +26,7 @@ Ideally you should have installed CachyOS selecting for Hyprland (optionally als
   coding = true # false to skip dev tooling neovim, vscode, lazygit, nodejs, etc.
   ai = true # false to skip AI tools CUDA, ROCm, Ollama, Claude Code etc.
   media = true # false to skip kdenlive, OBS, EasyEffects, Spotify etc.
-  office = true # false to skip LibreOffice, KeePassXC, qBittorrent etc.
+  office = true # false to skip LibreOffice, KeePassXC, qBittorrent, CUPS printing etc.
   communication = true # false to skip Telegram, Signal, Discord, Element etc.
 ```
 

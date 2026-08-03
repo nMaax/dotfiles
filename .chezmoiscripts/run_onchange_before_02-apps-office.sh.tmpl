@@ -24,6 +24,52 @@ paru -S --needed --noconfirm sc-im
 info "📄 Installing LibreOffice and Xournal++..."
 sudo pacman -S --needed --noconfirm libreoffice-fresh xournalpp
 
+info "🖨️ Installing CUPS printing system..."
+sudo pacman -S --needed --noconfirm cups cups-filters ghostscript gsfonts cups-pdf
+
+info "🖨️ Installing broad printer driver coverage (Gutenprint, Foomatic, HPLIP)..."
+sudo pacman -S --needed --noconfirm gutenprint foomatic-db-engine foomatic-db foomatic-db-nonfree foomatic-db-nonfree-ppds foomatic-filters hplip
+
+info "📡 Installing network printer discovery (Avahi/mDNS)..."
+sudo pacman -S --needed --noconfirm avahi nss-mdns
+
+info "🖥️ Installing CUPS GUI (system-config-printer)..."
+sudo pacman -S --needed --noconfirm system-config-printer cups-pk-helper
+
+info "🔎 Enabling .local hostname resolution for mDNS..."
+if ! grep -q "mdns4_minimal" /etc/nsswitch.conf; then
+  sudo sed -i '/^hosts:/s/resolve/mdns4_minimal [NOTFOUND=return] resolve/' /etc/nsswitch.conf
+  success "nss-mdns wired into /etc/nsswitch.conf"
+else
+  info "nss-mdns already wired into /etc/nsswitch.conf"
+fi
+
+info "🔓 Granting the wheel group password-less printer administration..."
+POLKIT_RULE_PATH="/etc/polkit-1/rules.d/50-cupspkhelper-wheel.rules"
+POLKIT_RULE_TMP="$(mktemp)"
+
+cat >"$POLKIT_RULE_TMP" <<'EOF'
+polkit.addRule(function(action, subject) {
+	if (action.id == "org.opensuse.cupspkhelper.mechanism.all-edit" &&
+	    subject.isInGroup("wheel")) {
+		return polkit.Result.YES;
+	}
+});
+EOF
+
+if [ ! -f "$POLKIT_RULE_PATH" ] || ! cmp -s "$POLKIT_RULE_TMP" "$POLKIT_RULE_PATH"; then
+  sudo cp "$POLKIT_RULE_TMP" "$POLKIT_RULE_PATH"
+  sudo chmod 644 "$POLKIT_RULE_PATH"
+  success "Polkit printer rule installed"
+else
+  info "Polkit printer rule already present"
+fi
+
+rm -f "$POLKIT_RULE_TMP"
+
+info "🖨️ Enabling CUPS/Avahi services..."
+sudo systemctl enable --now cups.service avahi-daemon.service cups-browsed.service
+
 echo ""
 success "✅ [Installing Apps: Office] Done."
 echo ""
