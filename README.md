@@ -287,14 +287,6 @@ steamos-session-select oneshot
 
 If you are not satisfyied with the Wayland screenshare when streaming gaming on your Electron app (e.g. Discord) then 🥮 brings some plugins to stream your games with low latency and low added input latency on the game. Namely using `obs-vkcapture`, `lib32-obs-vkcapture`, `obs-pipewire-audio-capture`.
 
-```bash
-# Install the Vulkan/OpenGL video capture plugin
-paru -S obs-vkcapture lib32-obs-vkcapture
-
-# Install the PipeWire application audio capture plugin
-paru -S obs-pipewire-audio-capture
-```
-
 1. Launch your game, so its audio and video hooks are active in your system.
 2. Open OBS Studio. Under the **Sources** dock, click the **`+`** icon.
 3. Add a **Game Capture (Vulkan/OpenGL)** source. Leave its properties on default; it will automatically hook into your game's engine.
