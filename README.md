@@ -244,7 +244,7 @@ Of course 🥮 is designed with gaming in mind too, 🥮 will apply some common 
 
 The below is the common Steam format for launch options, however you can achive an equivalent setup also in other launchers like Heroic and Lutris.
 
-- **NVIDIA:** `PROTON_ENABLE_WAYLAND=1 PROTON_DLSS_UPGRADE=1 PROTON_NVIDIA_LIBS_NO_32BIT=1 game-performance %command%`
+- **NVIDIA:** `__GL_SHADER_DISK_CACHE_SKIP_CLEANUP=1 PROTON_ENABLE_WAYLAND=1 PROTON_DLSS_UPGRADE=1 PROTON_NVIDIA_LIBS_NO_32BIT=1 game-performance %command%`
 - **AMD:** `PROTON_ENABLE_WAYLAND=1 PROTON_FSR4_UPGRADE=1 ENABLE_LAYER_MESA_ANTI_LAG=1 game-performance %command%`
 
 > [!WARNING]
