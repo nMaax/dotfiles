@@ -32,7 +32,7 @@ Ideally you should have installed CachyOS selecting for Hyprland (optionally als
 
 During install, you will have the option to automatically wipe `tailscale_authkey` / `nordvpn_authkey` / `mega_authkey` from `~/.config/chezmoi/chezmoi.toml` right after their use. Leaving any of them as `""` still installs and enables that integration, just without an auto-login; set it to `false` to skip installing it altogether.
 
-2. Install chezmoi and apply the dotfiles
+1. Install chezmoi and apply the dotfiles
 
 ```fish
 pacman -S chezmoi
@@ -61,8 +61,8 @@ To fix, do the following:
   hl.exec_cmd("/usr/lib/polkit-kde-authentication-agent-1")
   ```
 
-3. Save and restart Hyprland (Super + M or just log out and log back in).
-4. Now you should be able to tweak cachy as you like, and proceed with 🥮 installation.
+1. Save and restart Hyprland (Super + M or just log out and log back in).
+2. Now you should be able to tweak cachy as you like, and proceed with 🥮 installation.
 
 ## Post-Installation
 
@@ -356,6 +356,11 @@ Hit **Start Streaming** in OBS. That's it :)
 
 ## 📝 TODOs
 
+- [ ] Clean shader cache from Steam and make claude fix the annonying shader re-compilation in overwatch
+- [ ] Make claude fix direct scanout on games, my suspicioun are, in order:
+- - the problem may be wallpaper engine
+- - the problem may be combination with vrr
+- - the problem may be using scrolling mode instead of dwindle
 - [ ] Move to shelly
 - [ ] Remove unused AUR packages
 - [ ] Explore new plugins and remove unused
