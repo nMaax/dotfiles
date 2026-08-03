@@ -336,16 +336,7 @@ providers): check `pacman -T <pkg>` first — it exits 0 silently if the depende
 satisfied by *anything* (the named package or a provider), and prints the name with a non-zero exit
 if not. This is future-proof against new provider names (e.g. a future `nodejs-lts-*` codename)
 without hardcoding a list. See `run_onchange_before_02-apps-coding.sh.tmpl` for the guarded
-`nodejs` install.
-
-### btop/nvtop show no AMD GPU stats without `rocm-smi-lib`
-
-`pacman -Si btop` lists it as an optional dep ("AMD GPU support") — without it, btop/nvtop can't read
-AMD GPU usage/VRAM/temperature at all. It depends on `hsa-rocr`/`rocm-core` (the base HSA runtime),
-which is much lighter than the `rocm-hip-sdk`/`rocm-opencl-runtime`/`hip-runtime-amd` trio that caused
-the display blackout documented in the AI-tools section — but it's still ROCm-adjacent, so
-`run_once_before_01-cachyos-checks.sh.tmpl` gates it behind an `ask()` (default: install) rather than
-adding it to the unconditional package list, same caution as the AI script's ROCm prompt.
+`nodejs` install..
 
 ### Setup facts that affect config code
 
@@ -393,14 +384,6 @@ Queries (all verified live): `hl.get_config(key)`, `hl.get_windows(filters)` —
 `hl.get_active_workspace()`, `hl.get_workspace_windows(id)`, `hl.get_active_window()`,
 `hl.get_workspaces()`. An `HL.Window` exposes `class`, `title`, `initial_class`, `initial_title`,
 `address`, `workspace`, `pid`.
-
-Two capabilities justify the migration off hyprlang:
-
-- **`hl.bind` accepts a plain Lua function.** This is how `hypr-scrolling.sh` and `hypr-toggle.py`
-  became in-process closures (`toggle_ws`, `move_workspace_windows` in `keybindings.lua`) with no
-  shell round-trip.
-- **`hl.config` works at runtime**, not just at load. `SUPER+X` flips `general.layout` between
-  `scrolling` and `dwindle` by reading `hl.get_config` and writing `hl.config` back.
 
 ---
 
@@ -494,6 +477,27 @@ open-time workspace rule).
    scrolloverview bind for the entire hyprlang-to-Lua transition — the plugin was loaded and the
    binds were registered, they just never did anything.
 
+6c. **Workspace window rules are evaluated on window *open* only.** A window moved out of its special
+   workspace afterwards stays out — verified by moving a rule-matched window to workspace 7 and
+   watching it remain. That's what makes manual placement overridable, and it's why the throw-in
+   binds (`SUPER+SHIFT+<key>`) can park *any* app in a special workspace and have it stick.
+   Corollary: an app that closes to tray and reopens gets the rule applied afresh.
+
+6d. **`hl.dsp.focus({ window = w })` reveals a hidden special workspace** as it focuses, and there is
+   no `hl.dsp.window.focus` — focusing is always `hl.dsp.focus`. That single call is what lets a
+   keybind reach an app whether it's tucked away or dragged out somewhere else.
+
+6e. **`m[N]` is a *workspace* selector, not a monitor identifier.** A workspace rule's `monitor` field
+   takes a monitor name or `desc:...`. Passing `m[1]` fails to resolve *silently*: the workspace loses
+   its pin but keeps `persistent`, so it gets created on whatever monitor happens to exist. This was a
+   real bug in `monitors.lua` for the whole hyprlang era.
+
+6f. **A workspace rule's `monitor` cannot be un-set.** Re-issuing the rule with `monitor = ""` leaves
+   the previous monitor in place — rules merge rather than replace for that field. `persistent` *does*
+   update, and dropping it destroys the empty workspace. So to "unpin", assign the monitor you do want
+   rather than trying to clear it; `monitors.lua` pins everything to the sole monitor when there's
+   only one, which is equivalent and never leaves a rule naming a disconnected output.
+
 6g. **Plugin dispatchers live at `hl.plugin.<name>.<dispatcher>(arg)`**, not behind `hyprctl`. They
    return an ordinary dispatcher, exactly like `hl.dsp.*`, so
    `hl.dispatch(hl.plugin.scrolloverview.overview("toggle"))` works and reports `{ ok = true }`.
@@ -520,27 +524,6 @@ open-time workspace rule).
 6h. **`hl.dsp.exec_raw` is not a dispatcher runner** — it `spawnRaw`s a process (exec without a
    shell). For "re-apply my monitors" the dispatcher is `hl.dsp.force_renderer_reload()`; note
    `monitor` is a config *keyword*, never a dispatcher.
-
-6c. **Workspace window rules are evaluated on window *open* only.** A window moved out of its special
-   workspace afterwards stays out — verified by moving a rule-matched window to workspace 7 and
-   watching it remain. That's what makes manual placement overridable, and it's why the throw-in
-   binds (`SUPER+SHIFT+<key>`) can park *any* app in a special workspace and have it stick.
-   Corollary: an app that closes to tray and reopens gets the rule applied afresh.
-
-6d. **`hl.dsp.focus({ window = w })` reveals a hidden special workspace** as it focuses, and there is
-   no `hl.dsp.window.focus` — focusing is always `hl.dsp.focus`. That single call is what lets a
-   keybind reach an app whether it's tucked away or dragged out somewhere else.
-
-6e. **`m[N]` is a *workspace* selector, not a monitor identifier.** A workspace rule's `monitor` field
-   takes a monitor name or `desc:...`. Passing `m[1]` fails to resolve *silently*: the workspace loses
-   its pin but keeps `persistent`, so it gets created on whatever monitor happens to exist. This was a
-   real bug in `monitors.lua` for the whole hyprlang era.
-
-6f. **A workspace rule's `monitor` cannot be un-set.** Re-issuing the rule with `monitor = ""` leaves
-   the previous monitor in place — rules merge rather than replace for that field. `persistent` *does*
-   update, and dropping it destroys the empty workspace. So to "unpin", assign the monitor you do want
-   rather than trying to clear it; `monitors.lua` pins everything to the sole monitor when there's
-   only one, which is equivalent and never leaves a rule naming a disconnected output.
 
 ### Editor support for the `hl` global
 
@@ -614,30 +597,13 @@ a headless output can't produce, such as two equal-sized monitors differing only
 
 ---
 
-## 8. Deferred work — do not start without asking
+## 8. Conventions
 
-Known, deliberate TODOs. Non-trivial, and the user wants to scope them:
-
-- `monitors.lua` — dynamic monitor detection / primary switching when the external display connects
-- `input.lua` — conditional per-device input config
-- `performance.lua` — competitive-gaming latency tuning
-- `keybindings.lua` (~line 138) — split the communication workspace per app (telegram / discord /
-  whatsapp separately)
-
-`README.md` also carries a user-facing TODO list; those are the user's own project ideas, not work
-queued for Claude.
-
-Also: the user edits these files between sessions. If something looks like it regressed (binds you
-remember are gone), assume it was intentional and ask — do not restore it.
-
----
-
-## 9. Conventions
-
-> **Comments: max 1-2 lines, always.** Explain *why* (a pinned option, an empirically-discovered
-> gotcha), never *what* the code does. No mechanism narration, no listing every file/case it touches —
-> that belongs in the diff or commit message. If a comment runs past 2 lines, cut it, don't wrap it.
-> This applies to every file type in this repo: Lua, bash, TOML, everywhere.
+> ![IMPORTANT]
+> Avoid commenting obvious lines, this should be 80% of times, for that 20% where comments
+> are needed **DO NOT BE VERBOSE**.
+> No mechanism narration, no listing every file/case it touches. If a comment runs past 2 lines,
+> cut it, don't wrap it. This applies to every file type in this repo: Lua, bash, TOML, everywhere.
 
 - Tabs for indentation in the Hyprland Lua files. (`dot_config/nvim/stylua.toml` specifies 2 spaces,
   but it governs the *nvim* tree only — don't apply it here.)
