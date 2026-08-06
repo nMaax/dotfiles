@@ -193,16 +193,20 @@ now ship them directly (verified against a freshly-`pacman -Syu`'d database on 2
 - [x] Checked `~/.cache/paru/clone/` for leftover build directories of these 17 names — one hit,
       `mpvpaper`, removed. (An earlier check on another machine found none, hence the original
       "already clean" note.)
-- [ ] The clone cache also keeps directories for AUR packages that were never installed or have since
-      been removed — 16 of them here (`dropbox`, `megasync-bin`, `equicord-installer-bin`,
+- [x] The clone cache also keeps directories for AUR packages that were never installed or have
+      since been removed — 16 of them here (`dropbox`, `megasync-bin`, `equicord-installer-bin`,
       `ttf-google-fonts-git`, `electron40-bin`, five stray `ttf-*`, …), none referenced by any current
       script, plus two more added by this file's own later removals (`megacmd-bin` from §13,
-      `quickshell-overview-git` from §8). Tried both `paru -Sc` and CachyOS's own
-      `cachyos-hello fix clear-cache` (same underlying AUR-helper cache-clean call) on 2026-08-06:
-      either one frees real space (~6G here) but **neither removes the stray top-level directories
-      themselves** — the directory listing was identical before and after, only build artifacts
-      *inside* each clone got purged. Still needs a direct `rm -rf` of the confirmed-orphaned names
-      above; not a one-command fix as originally assumed.
+      `quickshell-overview-git` from §8). Both `paru -Sc` and CachyOS's own
+      `cachyos-hello fix clear-cache` free real space (~6G here) but **neither removes the stray
+      top-level directories themselves**, only build artifacts *inside* each clone. `cachyos-hello
+      fix clear-cache` clears the pacman package cache, not `~/.cache/paru/clone/` specifically —
+      confirmed against `cachyos-hello fix --help`; `remove-orphans` is unrelated too, it targets
+      orphan *packages* (`pacman -Qtdq`). There is no builtin/distro command that prunes stray AUR
+      clone directories, so **`cachyos-hello fix clear-cache` is the standing recommendation** for
+      routine maintenance here — leftover top-level clone directories are an accepted, low-cost
+      byproduct (a handful of MB–GB of disk, self-resolving if `paru` ever needs the package again),
+      not something to hand-delete with `rm -rf`.
 
 **Do not confuse with:** the AUR packages that are *still* genuinely AUR-only and still install via
 `paru` — see `CLAUDE.md` §1 for that list (`pdfcpu-bin`, `ocrmypdf`, `pandoc-bin`, `qt6ct-kde`,
