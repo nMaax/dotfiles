@@ -7,12 +7,6 @@ Personal dotfiles for a **CachyOS + Hyprland + Noctalia** desktop, managed with
 "application" is the user's machine, and the closest thing to a test run is `chezmoi apply` followed
 by asking the affected program whether it is happy.
 
-Three docs at the root, with distinct jobs:
-
-- `README.md` — user-facing install and post-install setup guide.
-- `CLEANUP.md` — read-first checklist of things safe to delete once migration is completed and stable. Deliberately **not** a script
-- **This file** — how to change things without breaking them.
-
 ---
 
 ## 1. Commands
@@ -637,7 +631,7 @@ a headless output can't produce, such as two equal-sized monitors differing only
 
 ## 8. Conventions
 
-> ![IMPORTANT]
+> [!IMPORTANT]
 > Avoid commenting obvious lines, this should be 80% of times, for that 20% where comments
 > are needed **DO NOT BE VERBOSE**.
 > No mechanism narration, no listing every file/case it touches. If a comment runs past 2 lines,
@@ -657,17 +651,12 @@ a headless output can't produce, such as two equal-sized monitors differing only
 
 ---
 
-## 9. Commands that must never be run without checking first
-
-Operations that look like the obvious fix, or are the standard incantation you'd reach for on any
-Arch box, but are wrong here specifically, or have already caused a real incident on this machine.
+## 9. Commands that must never be run
 
 - **`pacman -Rdd <pkg>`** — skips *both* the dependency check and the conflict check. It exists to
   force-remove a package that something else still depends on, which leaves that something else
   installed but broken. Check first: `pacman -Qi <pkg> | grep 'Required By'`. `None` means a plain
-  `-Rns` is enough and safe; anything listed there breaks the moment `-Rdd` succeeds instead. This
-  came up for real deciding how to remove `megacmd-bin` — `Required By: None`, so `-Rns` alone was
-  correct and `-Rdd` would have been pure risk for no benefit.
+  `-Rns` is enough and safe; anything listed there breaks the moment `-Rdd` succeeds instead. 
 
 - **`pacman -Sy` without an immediate `-u`** — refreshes the package database without upgrading
   installed packages. Arch (and CachyOS) explicitly do not support this: newer repo metadata against
@@ -675,18 +664,4 @@ Arch box, but are wrong here specifically, or have already caused a real inciden
   Always `pacman -Syu` together, never a bare `-Sy` left sitting before some other step runs against
   the now-refreshed database.
 
-- **Manually touching `~/.megaCmd/`** — holds the live login session (`session`), the sync config
-  (`megaclient_syncconfig_*`) and the local state cache (`megaclient_statecache*.db*`); chezmoi does
-  not and should not track it. Real incident, 2026-08-06: swapping `megacmd-bin` → `megacmd` (§3's
-  provider-alias trap again — `megacmd-bin` `Provides: megacmd`, so `run_once_after_10-mega.sh.tmpl`'s
-  own `pacman -Qi megacmd` guard silently skipped the intended install) looked like it had logged the
-  account out. It hadn't — pacman never touches `$HOME`, so the session file was untouched throughout.
-  The actual damage was `mega-cmd-server` left running against a *deleted* binary
-  (`/proc/<pid>/exe -> ... (deleted)`) once its package was removed, which just needed a plain
-  `kill <pid>`; the next `mega-*` command respawns its own server and resumes the on-disk session
-  automatically — `mega-whoami`/`mega-sync` confirmed the account and full sync state intact within a
-  minute, no re-login. Do not `mega-logout`, delete `~/.megaCmd/session`, or run a fresh `mega-login`
-  in response to what looks like a lost session without first checking that file's mtime against
-  when the "break" happened. A real re-login needs the actual account password — not recoverable from
-  the browser, and *not* the same thing as `chezmoi.toml`'s `mega_authkey`, which is routinely an
-  empty string by design (§3) meaning auto-login was deliberately skipped, not that a key was lost.
+- **Manually touching files that should not be touched**: ...
