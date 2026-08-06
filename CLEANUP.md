@@ -1,13 +1,5 @@
 # Cleanup checklist
 
-Things that are safe to remove, but only once you're sure you no longer want the fallback. This
-replaces the two `*-cleanup.sh` scripts that used to live in `dot_local/bin/` — a list you read is
-better than a script you run blindly, especially when half the steps touch packages or the chezmoi
-source tree.
-
-Nothing here is automated. Nothing here is urgent. Everything here is reversible *before* you run it
-and mostly not after, so read the "what breaks" line first.
-
 Two recurring gotchas, worth internalising once:
 
 - **Removing a file from the chezmoi source does not delete the copy already in `$HOME`.** You need
@@ -115,33 +107,7 @@ capture regularly, keep hyprshot and re-bind it to a spare key instead.
 
 ---
 
-## 5. Manual settings that chezmoi cannot manage
-
-Noctalia v5 keeps its settings in `~/.local/state/noctalia/settings.toml`, which this repo does not
-track. These have to be set through the Settings UI by hand, and will need redoing on a fresh install.
-
-- [ ] Set `[shell.screenshot]` → `directory` to `~/Pictures/Screenshots`. Left empty it defaults to
-      `~/Pictures`, so screenshots land somewhere different from where hyprshot used to put them.
-- [ ] While you're there, `freeze_screen`, `copy_to_clipboard` and `pipe_command` (e.g. `swappy -f -`
-      for annotation) are worth a look — they're the features hyprshot didn't have.
-- [ ] Re-add the bar widgets for the v5 plugins if you haven't: `mpvpaper`, `w-engine-widget`,
-      `keybinds` (cheatsheet), `cat` (bongo cat). The mpvpaper picker panel is `placement = "attached"`
-      and may need its bar widget present as an anchor to open via keybind at all.
-- [ ] The tracked `settings.toml` currently makes v5 log two warnings at startup — `widget.cat:
-      unrecognized widget type "noctalia/bongocat:cat"` and `plugin_settings.kenn/keybind-cheatsheet:
-      no loaded plugin with this id`. Both are the same root cause: the enabled plugins in
-      `[plugins]` aren't actually installed yet, so their widget types don't resolve. Install them
-      from the Settings UI, then re-add the file with
-      `chezmoi add --exclude=externals ~/.local/state/noctalia/settings.toml`.
-
-**Still open on this machine:** `~/.config/noctalia/plugins/` (eight v4 plugin directories) and
-`~/.config/noctalia/colors.json` were left in place. They are almost certainly v4 residue, but v5 has
-not completed a startup here yet, so where it stores plugins on disk is unconfirmed — check after the
-next login and delete whatever v5 left untouched. `user-templates.toml` stays regardless.
-
----
-
-## 6. Stray files from old bugs
+## 5. Stray files from old bugs
 
 - [x] `rm ~/.local/share/applications/install-webapp.desktop` — created by a bug in
       `run_onchange_after_07-webapps.sh.tmpl` that passed an extra `install-webapp` argument, so the
@@ -154,7 +120,7 @@ next login and delete whatever v5 left untouched. `user-templates.toml` stays re
 
 ---
 
-## 7. The scripts this file replaced
+## 6. The scripts this file replaced
 
 `executable_noctalia-v4-cleanup.sh` and `executable_hyprland-conf-cleanup.sh` were removed from the
 chezmoi source when this file was written. Per the gotcha at the top, the already-applied copies are
