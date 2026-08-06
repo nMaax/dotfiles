@@ -1,0 +1,9 @@
+-- Generated from lua/keybindings.lua. Scanned by keybind-cheatsheet for categories only;
+-- the full config walk blows the plugin's 100 ms Luau budget. Not loaded by Hyprland.
+return {
+{{ range (include "dot_config/hypr/lua/keybindings.lua" | splitList "\n") -}}
+{{ if regexMatch "^-- [0-9]+\\. " . }}{{ . }}
+{{ else if regexMatch "description = \"" . }}{ {{ regexFind "description = \"[^\"]*\"" . }} },
+{{ end -}}
+{{ end -}}
+}

@@ -654,7 +654,7 @@ hl.bind(
 	{ description = "Pick a monitor to screenshot" }
 )
 
--- 7. MULTIMEDIA
+-- 8. MULTIMEDIA
 
 -- Panels and audio device switching
 hl.bind(

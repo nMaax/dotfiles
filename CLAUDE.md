@@ -440,6 +440,18 @@ ever needed. v5 is the `noctalia` binary, TOML at `~/.local/state/noctalia/`.
   `shell.launcher.provider_prefix` char: `/emo`, `/kao`, `/calc`, `/wall`, `/session`, `/win`.
 - **Not every plugin has IPC.** W Engine has no handler, so its kill path is
   `pkill -f linux-wallpaperengine` alongside mpvpaper's real `clear-all` event.
+- **A plugin's top-level Luau chunk gets 100 ms of CPU, its callbacks 25 ms** — hardcoded in
+  Noctalia, no setting raises it. keybind-cheatsheet scans its config inside that chunk, and the
+  default root `hyprland.lua` (15 modules, 48 KB) overruns it, leaving the panel spinning on
+  "Reading keybindings..." forever with nothing in the log but a `'chunk' … CPU budget` error.
+  `hyprland_lua_config` therefore points at `dot_config/hypr/cheatsheet.lua.tmpl`, which renders
+  *only* the `-- N. SECTION` headers and literal `description = "..."` strings out of
+  `keybindings.lua` — 5.7 KB, no `require`, so one file is read instead of fifteen. Bindings
+  themselves come from `hyprctl binds -j`; the scan supplies categories only. Pointing the plugin
+  straight at `lua/keybindings.lua` was tried and still overran.
+- The generated file has no `..` on any line, so every rule registers as an *exact* match rather
+  than the plugin's `..`-means-prefix guess. Keep it that way — prefix rules also make the 25 ms
+  `hyprctl binds` callback slower, and it has overrun before.
 - Screenshots use Noctalia native (`screenshot-region`,
   `screenshot-fullscreen [pick|monitor|all]`). There is **no per-window** mode — `pick` picks a
   monitor. `hyprshot` was removed (`CLEANUP.md` §4), so per-window capture is gone — reinstalling it
