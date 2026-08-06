@@ -171,3 +171,32 @@ matches by process name (`pkill -f linux-wallpaperengine`) and works identically
 
 **What breaks:** nothing — the AUR package's own `/usr/bin/linux-wallpaperengine` wrapper covers both the
 `SUPER+F10` `pkill` and whatever the Noctalia `tadomika_ari/w-engine` plugin shells out to.
+
+---
+
+## 10. Packages moved from `paru` (AUR) to `pacman` (official repo)
+
+17 packages across 8 `.chezmoiscripts/` files were installed via `paru` even though CachyOS's own repos
+now ship them directly (verified against a freshly-`pacman -Syu`'d database on 2026-08-06 — see
+`git log` for the commit that moved them): `tesseract-data-eng`, `tesseract-data-ita`, `mangojuice`,
+`obs-vkcapture`, `lib32-obs-vkcapture`, `direnv`, `localsend`, `nyancat`, `tty-clock`, `zen-browser-bin`,
+`claude-desktop`, `opencode`, `cliphist`, `wlsunset`, `xdg-desktop-portal`, `evolution-data-server`,
+`mpvpaper`. Scripts now install them via `pacman -S`.
+
+- [x] Nothing to remove package-wise: `pacman -S --needed` on a package already installed under the
+      same name is a no-op (or a transparent version swap to the repo build) — ownership in
+      `pacman -Qi` doesn't change, there's no separate "installed via AUR" flag to unset.
+- [x] Checked `~/.cache/paru/clone/` for leftover build directories of these 17 names — already clean
+      on this machine (paru had no cached clones for any of them at the time of writing).
+- [ ] If you ever see stale clone dirs for these names later (e.g. on another machine that hasn't run
+      the updated scripts yet), `paru -Sc` prunes unneeded AUR build cache interactively.
+
+**Do not confuse with:** the AUR packages that are *still* genuinely AUR-only and still install via
+`paru` — see `CLAUDE.md` §1 for that list (`pdfcpu-bin`, `ocrmypdf`, `pandoc-bin`, `qt6ct-kde`,
+`qt5ct-kde`, `sddm-silent-theme`, `millennium`, `linux-wallpaperengine-git`, `vrrtest`,
+`obs-pipewire-audio-capture-bin`, `visual-studio-code-bin`, `antigravity-cli`,
+`realesrgan-ncnn-vulkan-bin`, `sc-im`, `apple-fonts`, `ttf-apple-emoji`, `nordvpn-bin`, `pipes.sh`,
+`cbonsai`).
+
+**What breaks:** nothing — these are the same packages under the same names, just sourced from a repo
+mirror instead of built from AUR. No config, keybind or path depends on install origin.
