@@ -16,6 +16,16 @@ HYPRPM_PLUGINS=(
 if ! hyprland_is_running; then
   warn "Hyprland is not currently running — skipping plugin setup."
 else
+  # hyprland-protocols and glaze are pacman's own "Optional Deps ... to build and
+  # install plugins using hyprpm" for the hyprland package, but pacman never pulls
+  # them in on their own.
+  sudo pacman -S --needed --noconfirm hyprland-protocols glaze
+
+  # update bootstraps/refreshes hyprpm's header cache, which add depends on already
+  # existing -- on a fresh machine or right after `hyprpm purge-cache`, that cache is
+  # empty and add fails with "Headers outdated" if run first.
+  hyprpm update
+
   installed="$(hyprpm list)"
   for entry in "${HYPRPM_PLUGINS[@]}"; do
     name="${entry%%|*}"
@@ -24,8 +34,6 @@ else
       hyprpm add "$url"
     fi
   done
-
-  hyprpm update
 
   for entry in "${HYPRPM_PLUGINS[@]}"; do
     hyprpm enable "${entry%%|*}"

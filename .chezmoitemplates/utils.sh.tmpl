@@ -81,6 +81,22 @@ detect_gpu_vendor() {
 
 # --- Hyprland Session Detection ---
 # True if a live Hyprland compositor session is available for hyprctl/hyprpm.
+# HYPRLAND_INSTANCE_SIGNATURE isn't always inherited (e.g. a shell detached from
+# the graphical session) even while Hyprland is running, so fall back to asking
+# hyprctl directly -- it enumerates instances without needing the var -- and
+# export the signature so the hyprctl/hyprpm calls that follow can find it too.
 hyprland_is_running() {
-  [[ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]]
+  if [[ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]]; then
+    return 0
+  fi
+
+  local instances sig
+  instances="$(hyprctl instances -j 2>/dev/null)" || return 1
+  if [[ "$(jq 'length' <<<"$instances" 2>/dev/null)" != "1" ]]; then
+    return 1
+  fi
+
+  sig="$(jq -r '.[0].instance' <<<"$instances")"
+  [[ -n "$sig" ]] || return 1
+  export HYPRLAND_INSTANCE_SIGNATURE="$sig"
 }
