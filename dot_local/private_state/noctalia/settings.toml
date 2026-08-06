@@ -102,6 +102,9 @@ telemetry_enabled = true
     [shell.screen_corners]
     enabled = true
 
+    [shell.screenshot]
+    directory = "/home/massimiliano/Pictures/Screenshots"
+
     [shell.shadow]
     direction = "down_left"
 

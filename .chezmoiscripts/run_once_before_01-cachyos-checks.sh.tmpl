@@ -41,8 +41,9 @@ fi
 success "✅ CachyOS gaming packages are now installed."
 {{- end }}
 
-info "📁 Creating home directories..."
+info "📁 Creating common directories..."
 mkdir -p "$HOME/Work"
+mkdir -p "$HOME/Pictures/Screenshots/"
 xdg-user-dirs-update
 
 info "📦 Checking for missing base packages..."
