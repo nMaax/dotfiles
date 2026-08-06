@@ -426,9 +426,10 @@ Queries (all verified live): `hl.get_config(key)`, `hl.get_windows(filters)` —
 
 ## 5. Noctalia v5
 
-**Invariant: Hyprland Lua ⟺ Noctalia v5; Hyprland `.conf` ⟺ Noctalia v4.** Both are installed, v4 as
-a fallback (they don't conflict — v4 is JSON at `~/.config/noctalia/`, v5 is TOML at
-`~/.local/state/noctalia/`). We use Lua + v5. Do not mix.
+**Invariant: Hyprland Lua ⟺ Noctalia v5; Hyprland `.conf` ⟺ Noctalia v4.** We use Lua + v5. Do not
+mix. v4 (`noctalia-shell`, JSON at `~/.config/noctalia/`, run as `qs -c noctalia-shell`) was kept as
+a fallback for a while and removed per `CLEANUP.md` §2 — `paru -S noctalia-shell` brings it back if
+ever needed. v5 is the `noctalia` binary, TOML at `~/.local/state/noctalia/`.
 
 - IPC is `noctalia msg <command>`, and **`noctalia msg --help` is authoritative** — prefer it over
   the docs. `keybindings.lua` wraps it in a local `ipc()` helper.
@@ -447,8 +448,8 @@ a fallback (they don't conflict — v4 is JSON at `~/.config/noctalia/`, v5 is T
   `pkill -f linux-wallpaperengine` alongside mpvpaper's real `clear-all` event.
 - Screenshots use Noctalia native (`screenshot-region`,
   `screenshot-fullscreen [pick|monitor|all]`). There is **no per-window** mode — `pick` picks a
-  monitor. `hyprshot` is consequently unused and listed for removal; if per-window capture is ever
-  wanted back, hyprshot has to stay.
+  monitor. `hyprshot` was removed (`CLEANUP.md` §4), so per-window capture is gone — reinstalling it
+  and binding a spare key is the only way back.
 
 ### Webapps
 
