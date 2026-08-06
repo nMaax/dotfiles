@@ -654,3 +654,39 @@ a headless output can't produce, such as two equal-sized monitors differing only
   deliberately undescribed (self-evident, and they'd flood the sheet). Anything genuinely new and
   discoverable gets its own.
 - `git commit` messages are one-liners listing the changes, not verbose bodies.
+
+---
+
+## 9. Commands that must never be run without checking first
+
+Operations that look like the obvious fix, or are the standard incantation you'd reach for on any
+Arch box, but are wrong here specifically, or have already caused a real incident on this machine.
+
+- **`pacman -Rdd <pkg>`** — skips *both* the dependency check and the conflict check. It exists to
+  force-remove a package that something else still depends on, which leaves that something else
+  installed but broken. Check first: `pacman -Qi <pkg> | grep 'Required By'`. `None` means a plain
+  `-Rns` is enough and safe; anything listed there breaks the moment `-Rdd` succeeds instead. This
+  came up for real deciding how to remove `megacmd-bin` — `Required By: None`, so `-Rns` alone was
+  correct and `-Rdd` would have been pure risk for no benefit.
+
+- **`pacman -Sy` without an immediate `-u`** — refreshes the package database without upgrading
+  installed packages. Arch (and CachyOS) explicitly do not support this: newer repo metadata against
+  stale installed packages can resolve dependencies onto incompatible library versions system-wide.
+  Always `pacman -Syu` together, never a bare `-Sy` left sitting before some other step runs against
+  the now-refreshed database.
+
+- **Manually touching `~/.megaCmd/`** — holds the live login session (`session`), the sync config
+  (`megaclient_syncconfig_*`) and the local state cache (`megaclient_statecache*.db*`); chezmoi does
+  not and should not track it. Real incident, 2026-08-06: swapping `megacmd-bin` → `megacmd` (§3's
+  provider-alias trap again — `megacmd-bin` `Provides: megacmd`, so `run_once_after_10-mega.sh.tmpl`'s
+  own `pacman -Qi megacmd` guard silently skipped the intended install) looked like it had logged the
+  account out. It hadn't — pacman never touches `$HOME`, so the session file was untouched throughout.
+  The actual damage was `mega-cmd-server` left running against a *deleted* binary
+  (`/proc/<pid>/exe -> ... (deleted)`) once its package was removed, which just needed a plain
+  `kill <pid>`; the next `mega-*` command respawns its own server and resumes the on-disk session
+  automatically — `mega-whoami`/`mega-sync` confirmed the account and full sync state intact within a
+  minute, no re-login. Do not `mega-logout`, delete `~/.megaCmd/session`, or run a fresh `mega-login`
+  in response to what looks like a lost session without first checking that file's mtime against
+  when the "break" happened. A real re-login needs the actual account password — not recoverable from
+  the browser, and *not* the same thing as `chezmoi.toml`'s `mega_authkey`, which is routinely an
+  empty string by design (§3) meaning auto-login was deliberately skipped, not that a key was lost.
