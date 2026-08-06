@@ -73,7 +73,7 @@ widget_order = [ "lockscreen-login-box@DP-1" ]
 show_undescribed = false
 
 [plugins]
-enabled = [ "noctalia/kaomoji", "noctalia/mpvpaper", "noctalia/bongocat", "tadomika_ari/w-engine", "kenn/keybind-cheatsheet" ]
+enabled = [ "noctalia/kaomoji", "noctalia/mpvpaper", "tadomika_ari/w-engine", "kenn/keybind-cheatsheet" ]
 
 [shell]
 button_borders = false
