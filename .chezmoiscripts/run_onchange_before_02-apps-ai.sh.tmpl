@@ -40,7 +40,7 @@ info "🦀 Installing Claude Code..."
 sudo pacman -S --needed --noconfirm claude-code # Available directly in the cachyos repo
 
 info "🖥️ Installing Claude Desktop..."
-paru -S --needed --noconfirm claude-desktop
+sudo pacman -S --needed --noconfirm claude-desktop # Available directly in the cachyos repo
 
 info "💎 Installing Antigravity CLI..."
 paru -S --needed --noconfirm antigravity-cli
@@ -56,7 +56,7 @@ fi
 sudo systemctl enable --now ollama.service
 
 info "🔳 Installing OpenCode..."
-paru -S --needed --noconfirm opencode
+sudo pacman -S --needed --noconfirm opencode
 
 echo ""
 success "✅ [Installing Apps: AI] Done."

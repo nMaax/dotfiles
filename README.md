@@ -354,7 +354,7 @@ Hit **Start Streaming** in OBS. That's it :)
   - the problem may be combination with vrr
   - the problem may be using scrolling mode instead of dwindle
 - [ ] Move to shelly
-- [ ] Remove unused AUR packages
+- [x] Remove unused AUR packages
 - [ ] Explore new plugins and remove unused
 - [ ] Prepare 2K-4K WALLHACK Wallpapers -> Make a release for dotfiles-assets if files are too large
 - [ ] Once everything is finished, add screenshots and videos in this README

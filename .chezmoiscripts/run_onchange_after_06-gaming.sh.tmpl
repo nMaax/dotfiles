@@ -30,14 +30,14 @@ sudo pacman -S --needed --noconfirm prismlauncher
 sudo pacman -S --needed --noconfirm jdk8-openjdk jdk17-openjdk jdk21-openjdk
 
 info "🥭 Installing mango and mangojuice..."
-sudo pacman -S --needed --noconfirm mangohud
-paru -S --needed --noconfirm mangojuice
+sudo pacman -S --needed --noconfirm mangohud mangojuice
 
 info "💓 Installing vrrtest..."
 paru -S --needed --noconfirm vrrtest
 
 info "📹 Installing OBS Plugins for game capture and streaming..."
-paru -S --needed --noconfirm obs-vkcapture lib32-obs-vkcapture obs-pipewire-audio-capture-bin
+sudo pacman -S --needed --noconfirm obs-vkcapture lib32-obs-vkcapture
+paru -S --needed --noconfirm obs-pipewire-audio-capture-bin
 
 if pacman -Q gamemode >/dev/null 2>&1; then
   info "Feral's gamemode detected. Checking for ananicy-cpp conflicts..."
