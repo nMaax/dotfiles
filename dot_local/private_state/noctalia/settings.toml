@@ -111,6 +111,7 @@ telemetry_enabled = true
 [theme]
 builtin = "Rosé Pine"
 community_palette = "Heartbox"
+mode = "dark"
 pure_black_dark = true
 source = "community"
 wallpaper_scheme = "m3-fruit-salad"
