@@ -468,9 +468,11 @@ open-time workspace rule).
 
 1. **Hyprland registers duplicate keybinds silently.** No `configerrors` entry, no warning — both
    exist and one shadows the other. *Always* sweep after adding binds:
+
    ```bash
    hyprctl binds -j | jq -r '.[]|"\(.modmask)|\(.key)|\(.submap)"' | sort | uniq -d
    ```
+
    Anything printed is a conflict. This caught a real one (Antigravity landed on the media panel's
    `SUPER+ALT+A`).
 
@@ -597,12 +599,12 @@ single monitor. Note a headless output reports `physical_width/height = 0`, whic
 exercises any EDID-missing fallback. Combine with a stubbed-`hl` harness (§1) for the geometry cases
 a headless output can't produce, such as two equal-sized monitors differing only in position.
 
-7. **`change_id` (Hyprland 0.56) cannot target workspaces 1–10 here.** It rejects an already-occupied
+1. **`change_id` (Hyprland 0.56) cannot target workspaces 1–10 here.** It rejects an already-occupied
    target id, and `monitors.lua` declares 1–10 `persistent = true`, so all ten always exist. The
    move-whole-workspace feature (`SUPER+ALT+<digit>`) therefore moves each window individually.
    `change_id` remains the right tool for *stashing* a layout at an unused high id.
 
-8. **`scrolling.column_width` was tried at `1.0`** (niri-like full-width-then-scroll) **and reverted
+2. **`scrolling.column_width` was tried at `1.0`** (niri-like full-width-then-scroll) **and reverted
    back to upstream's `0.5` default** — two windows now sit side-by-side as half-width columns again.
    `K`/`J`/`SHIFT+K`/`SHIFT+J` in `keybindings.lua` do in-workspace focus/move first and only fall
    back to workspace-scroll at the edge (the `smart_focus`/`smart_move` closures), so column_width no
@@ -656,12 +658,10 @@ a headless output can't produce, such as two equal-sized monitors differing only
 - **`pacman -Rdd <pkg>`** — skips *both* the dependency check and the conflict check. It exists to
   force-remove a package that something else still depends on, which leaves that something else
   installed but broken. Check first: `pacman -Qi <pkg> | grep 'Required By'`. `None` means a plain
-  `-Rns` is enough and safe; anything listed there breaks the moment `-Rdd` succeeds instead. 
+  `-Rns` is enough and safe; anything listed there breaks the moment `-Rdd` succeeds instead.
 
 - **`pacman -Sy` without an immediate `-u`** — refreshes the package database without upgrading
   installed packages. Arch (and CachyOS) explicitly do not support this: newer repo metadata against
   stale installed packages can resolve dependencies onto incompatible library versions system-wide.
   Always `pacman -Syu` together, never a bare `-Sy` left sitting before some other step runs against
   the now-refreshed database.
-
-- **Manually touching files that should not be touched**: ...
