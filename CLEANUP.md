@@ -253,11 +253,13 @@ covered by §2/§4/§8. Widening the window to April 2026 adds two more that are
 
 - [ ] `gemini-cli` — no script has installed it since June 2026; `02-apps-ai` now covers Claude Code,
       Antigravity and OpenCode. `sudo pacman -Rns gemini-cli` if you don't use it by hand.
-- [ ] `megacmd-bin` — the AUR build. `run_once_after_10-mega.sh.tmpl` installs the official
+- [x] `megacmd-bin` — the AUR build. `run_once_after_10-mega.sh.tmpl` installs the official
       `megacmd` package, but `megacmd-bin` `Provides: megacmd`, so the script's `pacman -Qi megacmd`
-      guard passes and the swap never happens. To move over:
-      `sudo pacman -Rdd megacmd-bin` then re-run the script — they `Conflict`, so it must be removed
-      first. Purely cosmetic; both ship the same `mega-*` binaries.
+      guard passed and the swap never happened on its own. Fixed here: `sudo pacman -Rns megacmd-bin`
+      (plain `-Rns` — nothing depended on it, `-dd` would have been overkill and is genuinely
+      dangerous when it *is* needed elsewhere) then re-ran the script's download+`pacman -U` step.
+      The MEGA login session lives in `~/.megaCmd/session` on disk, untouched by either package's
+      removal, so `mega-whoami`/`mega-sync` resumed immediately with zero re-login or re-sync.
 
 Everything else that left the scripts is accounted for: `spotify` and `spicetify-cli` moved into
 `dot_local/bin/executable_spicetify-setup.sh`, `caligula-bin`/`pandoc`/`megacmd-bin` were AUR→repo or
