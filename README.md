@@ -348,6 +348,7 @@ Hit **Start Streaming** in OBS. That's it :)
 
 ## 📝 TODOs
 
+- [ ] Move to noctalia greeter as done by CachyOS
 - [ ] Clean shader cache from Steam and make claude fix the annonying shader re-compilation in overwatch
 - [ ] Make claude fix direct scanout on games, my suspicioun are, in order:
   - the problem may be wallpaper engine
