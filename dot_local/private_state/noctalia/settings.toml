@@ -117,7 +117,7 @@ community_palette = "Heartbox"
 mode = "dark"
 pure_black_dark = true
 source = "community"
-wallpaper_scheme = "m3-fruit-salad"
+wallpaper_scheme = "m3-content"
 
     [theme.templates]
     builtin_ids = [ "btop", "cava", "gtk3", "gtk4", "ghostty", "hyprland", "kcolorscheme", "qt", "starship" ]
@@ -148,10 +148,10 @@ transition_on_startup = true
     theme_mode = "dark"
 
     [[wallpaper.favorite]]
-    builtin_palette = "Rosé Pine"
-    palette_source = "builtin"
+    community_palette = "Zenbones"
+    palette_source = "community"
     path = "/home/massimiliano/Pictures/Wallpapers/eclipse.jpg"
-    theme_mode = "auto"
+    theme_mode = "dark"
 
     [[wallpaper.favorite]]
     builtin_palette = "Kanagawa"
@@ -169,6 +169,30 @@ transition_on_startup = true
     community_palette = "Cyberpunk"
     palette_source = "community"
     path = "/home/massimiliano/Pictures/Wallpapers/lucy1.png"
+    theme_mode = "dark"
+
+    [[wallpaper.favorite]]
+    community_palette = "Osaka jade"
+    palette_source = "community"
+    path = "/home/massimiliano/Pictures/Wallpapers/cachy-premium.jpg"
+    theme_mode = "dark"
+
+    [[wallpaper.favorite]]
+    community_palette = "Heartbox"
+    palette_source = "community"
+    path = "/home/massimiliano/Pictures/Wallpapers/red1.jpg"
+    theme_mode = "dark"
+
+    [[wallpaper.favorite]]
+    community_palette = "Heartbox"
+    palette_source = "community"
+    path = "/home/massimiliano/Pictures/Wallpapers/rei1.jpg"
+    theme_mode = "dark"
+
+    [[wallpaper.favorite]]
+    community_palette = "Paradise"
+    palette_source = "community"
+    path = "/home/massimiliano/Pictures/Wallpapers/rei2.jpg"
     theme_mode = "dark"
 
 [widget.cat]
