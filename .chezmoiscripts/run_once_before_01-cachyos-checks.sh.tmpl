@@ -56,7 +56,7 @@ for pkg in "${BASE_PACKAGES[@]}"; do
 done
 
 info "🔧 Installing other utilities..."
-sudo pacman -S --needed --noconfirm curl zip 7zip sshfs caligula smartmontools grim slurp wl-clipboard ffmpeg resvg imagemagick perl-image-exiftool gifski zbar jq tesseract tesseract-data-eng tesseract-data-ita texlive-latex glow dust bat ripgrep fd btop fastfetch nvtop trash-cli transmission-cli ghostscript poppler qpdf ufw tealdeer ksshaskpass fzf zoxide translate-shell
+sudo pacman -S --needed --noconfirm curl zip 7zip sshfs caligula smartmontools grim slurp wl-clipboard ffmpeg resvg imagemagick perl-image-exiftool gifski zbar jq tesseract tesseract-data-eng tesseract-data-ita texlive-latex glow dust bat ripgrep fd htop btop fastfetch nvtop trash-cli transmission-cli ghostscript poppler qpdf ufw tealdeer ksshaskpass fzf zoxide translate-shell
 paru -S --needed --noconfirm pdfcpu-bin ocrmypdf pandoc-bin
 
 # rocm-smi-lib is btop/nvtop's optional dep for showing AMD GPU stats
