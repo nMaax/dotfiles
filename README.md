@@ -358,6 +358,7 @@ Hit **Start Streaming** in OBS. That's it :)
 - [ ] Move to shelly
 - [ ] Move to noctalia greeter as done by CachyOS
 - [ ] Explore new plugins
+- [ ] Try [Hyprglass](https://github.com/hyprnux/hyprglass)
 - [x] Remove unused AUR packages
 - [x] Remove unused plugins
 - [ ] Prepare 2K-4K WALLHACK Wallpapers -> Make a release for dotfiles-assets if files are too large
