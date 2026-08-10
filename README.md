@@ -348,15 +348,18 @@ Hit **Start Streaming** in OBS. That's it :)
 
 ## 📝 TODOs
 
-- [ ] Move to noctalia greeter as done by CachyOS
+
+- [ ] Check new gaming guide in CachyOS documentation and updated launch options
 - [ ] Clean shader cache from Steam and make claude fix the annonying shader re-compilation in overwatch
 - [ ] Make claude fix direct scanout on games, my suspicioun are, in order:
   - the problem may be wallpaper engine
   - the problem may be combination with vrr
   - the problem may be using scrolling mode instead of dwindle
 - [ ] Move to shelly
+- [ ] Move to noctalia greeter as done by CachyOS
+- [ ] Explore new plugins
 - [x] Remove unused AUR packages
-- [ ] Explore new plugins and remove unused
+- [x] Remove unused plugins
 - [ ] Prepare 2K-4K WALLHACK Wallpapers -> Make a release for dotfiles-assets if files are too large
 - [ ] Once everything is finished, add screenshots and videos in this README
 
