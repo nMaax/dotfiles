@@ -197,7 +197,7 @@ Understanding this requires reading `.chezmoiscripts/`, `.chezmoitemplates/` and
 chezmoi runs `before_` scripts, then applies regular files, then runs `after_` scripts. The numeric
 prefixes order scripts *within* each phase, and the two sequences are independent:
 
-- `before`: `01-cachyos-checks` → `02-apps-core` → `02-apps-coding` → `02-apps-ai` → `02-apps-media` →
+- `before`: `01-cachyos-checks` (interactive prompts, every apply) → `01b-cachyos-packages` (prerequisites & base apps, once) → `02-apps-core` → `02-apps-coding` → `02-apps-ai` → `02-apps-media` →
   `02-apps-office` → `02-apps-communication` → `03-fonts-emoji` → `04-hyprland-noctalia`. Order
   *within* the `02-apps-*` group doesn't matter — none of the categories depend on packages installed
   by another, and `paru`/`pacman -S --needed` are idempotent regardless of run order.

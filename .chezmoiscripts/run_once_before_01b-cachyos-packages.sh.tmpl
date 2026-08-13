@@ -4,33 +4,9 @@ set -euo pipefail
 {{ template "utils.sh.tmpl" . }}
 {{ template "external_links.sh.tmpl" . }}
 
-{{- if ne .chezmoi.osRelease.id "cachyos" }}
-error "This script is intended to run on CachyOS. But you are running it on $(
-  . /etc/os-release
-  echo "$NAME $VERSION"
-)."
-error "Please, use 🥮 dotfiles on CachyOS only."
-exit 1
-{{- end }}
-
 echo ""
-info "📦 [Checks & Prerequisites] Starting..."
+info "📦 [Prerequisites & Base Packages] Starting..."
 echo ""
-
-if ! ask "⚠️  This is an interactive install — you will need to respond to prompts throughout. Are you ready to proceed?"; then
-  error "Come back when you are ready. Closing."
-  exit 1
-fi
-
-if ! ask "Have you run a full system update before starting this installation?"; then
-  error "A full system update is required before installation to prevent package conflicts or dependency resolution failure. Run cachy-update or paru -Syu"
-  exit 1
-fi
-
-if ! ask "Did you place the chezmoi.toml at ~/.config/chezmoi/?"; then
-  error "Please place the chezmoi.toml in its proper location before proceeding. Closing, come back later."
-  exit 1
-fi
 
 {{ if .gaming -}}
 info "🎮 gaming = true detected, ensuring CachyOS gaming packages are installed..."
@@ -85,5 +61,5 @@ git config --global user.email "$GIT_EMAIL"
 info "Git identity set: $GIT_NAME <$GIT_EMAIL>"
 
 echo ""
-success "✅ [CachyOS Checks & Prerequisites] Done."
+success "✅ [Prerequisites & Base Packages] Done."
 echo ""
