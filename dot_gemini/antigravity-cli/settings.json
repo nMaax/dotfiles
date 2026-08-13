@@ -1,0 +1,9 @@
+{
+  "enableTelemetry": false,
+  "toolPermission": "always-proceed",
+  "trustedWorkspaces": [
+    "/home/massimiliano/.local/share/chezmoi",
+    "/home/massimiliano/Work/crispy-waffle",
+    "/home/massimiliano/Work/ManiSkill"
+  ]
+}
