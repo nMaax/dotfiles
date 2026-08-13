@@ -1,0 +1,24 @@
+{
+  "model": "sonnet",
+  "enabledPlugins": {
+    "pyright-lsp@claude-plugins-official": true,
+    "i-have-adhd@i-have-adhd": true,
+    "arxiv-mcp-server@arxiv-mcp": true,
+    "claude-md-management@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "i-have-adhd": {
+      "source": {
+        "source": "github",
+        "repo": "ayghri/i-have-adhd"
+      }
+    },
+    "arxiv-mcp": {
+      "source": {
+        "source": "github",
+        "repo": "blazickjp/arxiv-mcp-server"
+      }
+    }
+  },
+  "theme": "dark"
+}

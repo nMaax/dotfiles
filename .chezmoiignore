@@ -1,6 +1,8 @@
 # --- ROOT ---
 *
 !.config/
+!.gemini/
+!.claude/
 !.local/
 !.face
 !.logo
@@ -15,6 +17,24 @@
 Pictures/*
 !Pictures/Wallpapers/
 !Pictures/Propics/
+
+# --- CLAUDE ---
+.claude/*
+!.claude/settings.json
+!.claude/commands/
+!.claude/agents/
+!.claude/rules/
+!.claude/skills/
+
+# --- GEMINI / ANTIGRAVITY ---
+.gemini/*
+!.gemini/config/
+.gemini/config/*
+!.gemini/config/rules/
+!.gemini/config/skills/
+!.gemini/antigravity-cli/
+.gemini/antigravity-cli/*
+!.gemini/antigravity-cli/settings.json
 
 # --- CONFIG ---
 .config/*
