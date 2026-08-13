@@ -18,6 +18,9 @@ Pictures/*
 
 # --- CONFIG ---
 .config/*
+!.config/antigravity/
+.config/antigravity/*
+!.config/antigravity/config.toml
 !.config/environment.d/
 !.config/fastfetch/
 !.config/fish/
