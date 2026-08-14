@@ -355,17 +355,16 @@ Hit **Start Streaming** in OBS. That's it :)
   - the problem may be wallpaper engine
   - the problem may be combination with vrr
   - the problem may be using scrolling mode instead of dwindle
+- [ ] Explore new plugins (e.g. calculator, poolkit agent)
 - [ ] Move to shelly
 - [ ] Move to noctalia greeter as done by CachyOS
-- [ ] Explore new plugins
-- [ ] Try [Hyprglass](https://github.com/hyprnux/hyprglass)
+- [ ] Make plugins optional via chezmoi.toml
+  - [ ] Try [Hyprglass](https://github.com/hyprnux/hyprglass)
 - [x] Remove unused AUR packages
 - [x] Remove unused plugins
 - [ ] Prepare 2K-4K WALLHACK Wallpapers -> Make a release for dotfiles-assets if files are too large
 - [ ] Once everything is finished, add screenshots and videos in this README
 
 ### For the future
-
-- [ ] Try out [Noctalia Polkit Agent](https://noctalia.dev/plugins/polkit-agent) (you must uninstall kde polking agent, maybe this is not the right choice in cachy)
 - [ ] Enhance assets by introducing a GitHub CI action that autogenerates README with gallery, like [dharmx](https://github.com/dharmx/walls)
 - [ ] Generalize for pure Arch by reproducing what Cachy installs, including fundamentals like bluetooth, networkmanager, fish, cachyos fish setup, gpu drivers etc.
