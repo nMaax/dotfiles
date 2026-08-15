@@ -94,6 +94,12 @@
       "format": "{1>30} │"
     },
     {
+      "type": "command",
+      "key": "│   os age",
+      "text": "echo \"$(( ($(date +%s) - $(date -d \"$(head -n1 /var/log/pacman.log | awk '{print $1}' | tr -d '[]')\" +%s)) / 86400 )) days\"",
+      "format": "{1>30} │"
+    },
+    {
       "type": "custom",
       "key": "╰───────────────────────────────────────────╯"
     },
