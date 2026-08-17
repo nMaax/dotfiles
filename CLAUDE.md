@@ -197,7 +197,7 @@ Understanding this requires reading `.chezmoiscripts/`, `.chezmoitemplates/` and
 chezmoi runs `before_` scripts, then applies regular files, then runs `after_` scripts. The numeric
 prefixes order scripts *within* each phase, and the two sequences are independent:
 
-- `before`: `01-cachyos-checks` (interactive prompts, every apply) → `01b-cachyos-packages` (prerequisites & base apps, once) → `02-apps-core` → `02-apps-coding` → `02-apps-ai` → `02-apps-media` →
+- `before`: `01-cachyos-checks` (interactive prompts, every apply) → `01b-cachyos-packages` (prerequisites & base apps, once) → `02-apps-core` → `02-apps-coding` → `02-apps-ai-dev` → `02-apps-agents` → `02-apps-media` →
   `02-apps-office` → `02-apps-communication` → `03-fonts-emoji` → `04-hyprland-noctalia`. Order
   *within* the `02-apps-*` group doesn't matter — none of the categories depend on packages installed
   by another, and `paru`/`pacman -S --needed` are idempotent regardless of run order.
@@ -251,7 +251,7 @@ Follow that pattern; don't redefine what's already provided:
   `chezmoi.toml` after use), and `detect_gpu_vendor` which sets `GPU_VENDOR` to `nvidia`/`amd`/`""`.
   `detect_gpu_vendor` is a **pure vendor check only** — it does not know whether the specific card is
   ROCm-supported (ROCm's hardware support list is a narrow, moving allowlist, not something worth
-  hardcoding here). `run_onchange_before_02-apps-ai.sh.tmpl` compensates by `ask`-ing before
+  hardcoding here). `run_onchange_before_02-apps-ai-dev.sh.tmpl` compensates by `ask`-ing before
   installing `rocm-hip-sdk` on any AMD GPU, defaulting (Enter) to skipping ROCm and falling back to
   CPU-only Ollama — installing ROCm packages on an unsupported architecture (e.g. Polaris/gfx803, RX
   400/500 series) has caused total display-output loss on at least one machine.
@@ -262,8 +262,8 @@ Follow that pattern; don't redefine what's already provided:
 ### Template data
 
 Scripts gate on the user's `~/.config/chezmoi/chezmoi.toml` `[data]` block: `.name`, `.email`,
-`.gaming` (skip Steam/OpenRGB/etc.), `.coding` (skip dev tooling), `.ai` (skip
-CUDA/ROCm/Ollama/Claude Code/Antigravity/OpenCode entirely), `.media` (skip
+`.gaming` (skip Steam/OpenRGB/etc.), `.coding` (skip dev tooling), `.ai_dev` (skip CUDA/ROCm/Ollama),
+`.agents` (skip Claude Code/Antigravity CLI/OpenCode), `.media` (skip
 kdenlive/OBS/EasyEffects/Spotify/yt-dlp/image-upscaler), `.office` (skip
 LibreOffice/KeePassXC/qBittorrent/CUPS printing etc.), `.communication` (skip
 Telegram/Signal/Discord/Element/LocalSend) — each one gates its own `02-apps-*` script (§3

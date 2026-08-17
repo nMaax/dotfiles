@@ -24,7 +24,8 @@ Ideally you should have installed CachyOS selecting for Hyprland (optionally als
   mega_authkey = "megakey-auth-XXXXXXXXXXXXX" # "" installs MEGA without logging in, false skips it entirely
   gaming = true # false to avoid installing Steam, Mango, OpenRGB etc.
   coding = true # false to skip dev tooling neovim, vscode, lazygit, nodejs, etc.
-  ai = true # false to skip AI tools CUDA, ROCm, Ollama, Claude Code etc.
+  ai_dev = true # false to skip AI dev tools CUDA, ROCm, Ollama etc.
+  agents = true # false to skip AI agents Claude Code, Antigravity, OpenCode etc.
   media = true # false to skip kdenlive, OBS, EasyEffects, Spotify etc.
   office = true # false to skip LibreOffice, KeePassXC, qBittorrent, CUPS printing etc.
   communication = true # false to skip Telegram, Signal, Discord, Element etc.
@@ -360,7 +361,7 @@ Hit **Start Streaming** in OBS. That's it :)
 - [ ] Move to noctalia greeter as done by CachyOS
 - [ ] Make plugins optional via chezmoi.toml
   - [ ] Try [Hyprglass](https://github.com/hyprnux/hyprglass)
-- [ ] Split AI dev (ollama, cuda etc.) from agent (claude-code, agy -- using native install scripts)
+- [x] Split AI dev (ollama, cuda etc.) from agent (claude-code, agy -- using native install scripts)
 - [x] Remove unused AUR packages
 - [x] Remove unused plugins
 - [ ] Prepare 2K-4K WALLHACK Wallpapers -> Make a release for dotfiles-assets if files are too large

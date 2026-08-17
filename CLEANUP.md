@@ -211,9 +211,8 @@ now ship them directly (verified against a freshly-`pacman -Syu`'d database on 2
 **Do not confuse with:** the AUR packages that are *still* genuinely AUR-only and still install via
 `paru` — see `CLAUDE.md` §1 for that list (`pdfcpu-bin`, `ocrmypdf`, `pandoc-bin`, `qt6ct-kde`,
 `qt5ct-kde`, `sddm-silent-theme`, `millennium`, `linux-wallpaperengine-git`, `vrrtest`,
-`obs-pipewire-audio-capture-bin`, `visual-studio-code-bin`, `antigravity-cli`,
-`realesrgan-ncnn-vulkan-bin`, `sc-im`, `apple-fonts`, `ttf-apple-emoji`, `nordvpn-bin`, `pipes.sh`,
-`cbonsai`).
+`obs-pipewire-audio-capture-bin`, `visual-studio-code-bin`, `realesrgan-ncnn-vulkan-bin`,
+`sc-im`, `apple-fonts`, `ttf-apple-emoji`, `nordvpn-bin`, `pipes.sh`, `cbonsai`).
 
 **What breaks:** nothing — these are the same packages under the same names, just sourced from a repo
 mirror instead of built from AUR. No config, keybind or path depends on install origin.
@@ -260,8 +259,8 @@ Diffing every `pacman -S` / `paru -S` line between the pre-migration tree and `H
 three packages that were dropped — `noctalia-shell`, `quickshell-overview-git`, `hyprshot`, all
 covered by §2/§4/§8. Widening the window to April 2026 adds two more that are still installed here:
 
-- [x] `gemini-cli` — no script has installed it since June 2026; `02-apps-ai` now covers Claude Code,
-      Antigravity and OpenCode. Removed via `sudo pacman -Rns gemini-cli` on 2026-08-06.
+- [x] `gemini-cli` — no script has installed it since June 2026; `02-apps-agents` covers modern agents. Removed via `sudo pacman -Rns gemini-cli` on 2026-08-06.
+- [x] `antigravity-cli` — moved from AUR (`paru`) to upstream native installer (`curl -fsSL https://antigravity.google/cli/install.sh | bash`) in `02-apps-agents`. If the AUR package is still installed: `sudo pacman -Rns antigravity-cli`.
 - [x] `megacmd-bin` — the AUR build. `run_once_after_10-mega.sh.tmpl` installs the official
       `megacmd` package, but `megacmd-bin` `Provides: megacmd`, so the script's `pacman -Qi megacmd`
       guard passed and the swap never happened on its own. Fixed here: `sudo pacman -Rns megacmd-bin`

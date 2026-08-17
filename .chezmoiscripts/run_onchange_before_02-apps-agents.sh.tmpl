@@ -1,0 +1,31 @@
+#!/bin/bash
+set -euo pipefail
+
+{{ template "utils.sh.tmpl" . }}
+{{ template "external_links.sh.tmpl" . }}
+
+{{- $agents := false -}}
+{{- if hasKey . "agents" }}{{ $agents = .agents }}{{ else if hasKey . "ai" }}{{ $agents = .ai }}{{ end -}}
+{{- if $agents }}
+echo ""
+info "🚀 [Installing Apps: Agents] Starting..."
+echo ""
+
+info "🤖 Installing AI agents..."
+
+info "🦀 Installing Claude Code..."
+sudo pacman -S --needed --noconfirm claude-code # Available directly in the cachyos repo
+
+info "🖥️ Installing Claude Desktop..."
+sudo pacman -S --needed --noconfirm claude-desktop # Available directly in the cachyos repo
+
+info "💎 Installing Antigravity CLI..."
+curl -fsSL "$ANTIGRAVITY_INSTALL_URL" | bash
+
+info "🔳 Installing OpenCode..."
+sudo pacman -S --needed --noconfirm opencode
+
+echo ""
+success "✅ [Installing Apps: Agents] Done."
+echo ""
+{{- end }}
