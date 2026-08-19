@@ -1,4 +1,4 @@
-config_version = 8
+config_version = 12
 
 [bar.default]
 center = [ "media", "cat" ]
@@ -132,10 +132,10 @@ transition_on_startup = true
     path = "/home/massimiliano/Pictures/Wallpapers/sora-drive.jpg"
 
     [wallpaper.last]
-    path = "/home/massimiliano/.local/share/Steam/steamapps/workshop/content/431960/3684118271/preview.gif"
+    path = "/home/massimiliano/Pictures/Wallpapers/sora-drive.jpg"
 
     [wallpaper.monitors.DP-1]
-    path = "/home/massimiliano/.local/share/Steam/steamapps/workshop/content/431960/3684118271/preview.gif"
+    path = "/home/massimiliano/Pictures/Wallpapers/sora-drive.jpg"
 
     [[wallpaper.favorite]]
     path = "/home/massimiliano/Pictures/Wallpapers/hokusai2.jpg"
