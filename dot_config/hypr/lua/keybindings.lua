@@ -181,7 +181,20 @@ hl.bind(
 hl.bind(
 	C.MODKEY .. "+G",
 	toggle_app_special_workspace(C.SPECIAL_WORKSPACE.GAMES, {
-		class = { "^steam$", "^lutris$", "^com%.heroicgameslauncher%.hgl$", "^heroic$" }, -- keep in sync with rules.lua's games-launchers-workspace-class matcher
+		-- keep in sync with rules.lua's games-launchers-workspace-class matcher
+		class = {
+			"^steam$",
+			"^lutris$",
+			"^com%.heroicgameslauncher%.hgl$",
+			"^heroic$",
+			"^org%.prismlauncher%.PrismLauncher$",
+			"^PrismLauncher$",
+			"^com%.modrinth%.theseus$",
+			"^ModrinthApp$",
+			"^com%.atlauncher%.ATLauncher$",
+			"^ATLauncher$",
+			"^minecraft%-launcher$",
+		},
 		title = { "^Steam$" },
 	}, "steam"),
 	{ description = "Toggle game launchers workspace (Steam)" }

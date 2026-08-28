@@ -136,7 +136,9 @@ hl.window_rule({
 -- Game Launchers Workspace
 hl.window_rule({
 	name = "games-launchers-workspace-class",
-	match = { class = "^(steam|lutris|com\\.heroicgameslauncher\\.hgl|heroic)$" }, -- keep in sync with keybindings.lua's SUPER+G matcher
+	match = {
+		class = "^(steam|lutris|com\\.heroicgameslauncher\\.hgl|heroic|org\\.prismlauncher\\.PrismLauncher|PrismLauncher|com\\.modrinth\\.theseus|ModrinthApp|com\\.atlauncher\\.ATLauncher|ATLauncher|minecraft-launcher)$",
+	}, -- keep in sync with keybindings.lua's SUPER+G matcher
 	workspace = "special:" .. C.SPECIAL_WORKSPACE.GAMES,
 })
 
@@ -144,7 +146,7 @@ hl.window_rule({
 hl.window_rule({
 	name = "games-workspace",
 	match = {
-		class = "^(steam_app_.*|.*\\.exe|wine|Wine|lutris_.*|heroic_.*|love)$", -- love is VRRTest
+		class = "^(steam_app_.*|.*\\.exe|wine|Wine|lutris_.*|heroic_.*|love|[Mm]inecraft(\\\\*.*| .*)?|net\\.minecraft\\.client\\.main\\.Main)$", -- love is VRRTest
 	},
 	workspace = C.GAMES_WORKSPACE,
 	no_vrr = false, -- Always try to enable VRR
