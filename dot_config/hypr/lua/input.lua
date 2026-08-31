@@ -8,6 +8,7 @@ hl.config({
 		kb_options = "compose:caps, grp:win_space_toggle",
 		resolve_binds_by_sym = false,
 		follow_mouse = 1,
+		mouse_refocus = false,
 		numlock_by_default = true,
 
 		sensitivity = 0.2,
