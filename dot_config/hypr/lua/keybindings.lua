@@ -87,6 +87,7 @@ hl.bind(C.MODKEY .. "+SHIFT+N", hl.dsp.exec_cmd("code"), { description = "Open V
 hl.bind(C.MODKEY .. "+ALT+N", hl.dsp.exec_cmd("kate"), { description = "Open Kate" })
 hl.bind(C.MODKEY .. "+E", hl.dsp.exec_cmd(C.FILE_MANAGER), { description = "Open file manager" })
 hl.bind(C.MODKEY .. "+SHIFT+E", hl.dsp.exec_cmd(C.TERMINAL .. " -e yazi"), { description = "Open yazi file manager" })
+hl.bind(C.MODKEY .. "+ALT+G", hl.dsp.exec_cmd("heroic"), { description = "Open Heroic" })
 
 -- 3. SPECIAL WORKSPACES
 
