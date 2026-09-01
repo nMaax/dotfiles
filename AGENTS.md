@@ -201,9 +201,9 @@ prefixes order scripts *within* each phase, and the two sequences are independen
   `02-apps-office` → `02-apps-communication` → `03-fonts-emoji` → `04-hyprland-noctalia`. Order
   *within* the `02-apps-*` group doesn't matter — none of the categories depend on packages installed
   by another, and `paru`/`pacman -S --needed` are idempotent regardless of run order.
-- `after`: `01-system-services` → `03-sddm-PAM` → `04-sddm-themes` → `05-misc` →
+- `after`: `01-system-services` → `04-noctalia-greeter` → `05-misc` →
   `06-gaming` → `07-webapps` → `08-tailscale` → `09-nordvpn` → `10-mega` → `11-finalize` →
-  `12-hyprland-plugins`. There is deliberately no `02-*` here — the old GRUB theme-sanitizer script
+  `12-hyprland-plugins`. There is deliberately no `02-*`/`03-*` here — the old GRUB theme-sanitizer script
   was retired in favor of a manual README recipe (its `grep`/`sed` patterns hardcoded CachyOS's
   current `/etc/default/grub` layout and would silently no-op if that layout ever changed), and the
   gap in numbering was left as-is rather than renumbering every later script. `10-mega` was inserted
@@ -290,14 +290,26 @@ NordVPN/Tailscale's independence from any category flag instead. `megacmd` used 
 unconditionally under `02-apps-office`, so existing users must add `mega_authkey` (even as `false`,
 to preserve "don't manage MEGA login") to `chezmoi.toml` before their next apply, per the point above.
 
+`hyprpolkitagent` replaced `polkit-kde-agent` as the polkit authentication agent (§4's `autostart.lua`
+now execs `/usr/lib/hyprpolkitagent/hyprpolkitagent`, installed by `run_onchange_before_02-apps-core.sh.tmpl`)
+because it's Hyprland's own agent and fits the rice better than KDE's Breeze-styled dialog. The
+scripts never reference `polkit-kde-agent` at all — no uninstall, no disable, no assumption it's
+even present — since a fresh CachyOS+Hyprland+Noctalia install may not have it, and a script that
+assumed otherwise wouldn't be idempotent. It only ever ran on this machine because `autostart.lua`
+manually `exec_cmd`'d it (its own XDG autostart entry is `OnlyShowIn=KDE;`, inert under Hyprland), so
+swapping that one line was sufficient. An **existing** user with the old exec line who happens to
+have `polkit-kde-agent` installed (e.g. pulled in as a `plasma-desktop` dependency) should not expect
+the scripts to remove it — that's a manual, per-machine call, same as the `mega_authkey` migration
+above: install `hyprpolkitagent`, apply, `hyprctl reload`, confirm no duplicate agent is running.
+
 ### Externals
 
-`.chezmoiexternal.toml` pulls wallpapers, propics (`~/.face`, `~/.logo`), the SDDM theme and the
-Bibata hyprcursor from the user's `nMaax/dotfiles-assets` and `nMaax/dotfiles-sddm` repos, with a
-168h `refreshPeriod`. Large binary assets live there, **not** in this repo.
+`.chezmoiexternal.toml` pulls wallpapers, propics (`~/.face`, `~/.logo`) and the Bibata hyprcursor
+from the user's `nMaax/dotfiles-assets` repo, with a 168h `refreshPeriod`. Large binary assets live
+there, **not** in this repo.
 
 **Always `chezmoi add --exclude=externals`, never a bare `chezmoi add .`/`chezmoi add .config
-.local`.** These six targets are fetched content, not meant to be duplicated as literal source
+.local`.** These five targets are fetched content, not meant to be duplicated as literal source
 files, and a plain recursive `add` that walks into one of their directories hits a real chezmoi
 bug (upstream issue #1574: `add` crashes with `stat ...: no such file or directory` when it
 recurses into a directory an external created) instead of cleanly skipping it. `--exclude=externals`
@@ -332,12 +344,20 @@ without hardcoding a list. See `run_onchange_before_02-apps-coding.sh.tmpl` for 
 
 ### Setup facts that affect config code
 
-- Login must be **systemd-owned Hyprland (UWSM)** in SDDM, or autostart entries (tray icons, agents)
-  misbehave. `dot_config/hypr/lua/autostart.lua` assumes it.
-- KWallet is the keyring, and PAM auto-unlock only works for a wallet literally named `kdewallet`
-  with Blowfish encryption and the login password. `autostart.lua` execs `pam_kwallet_init`.
+- Login must launch **systemd-owned Hyprland (UWSM)** — session name `Hyprland (uwsm-managed)` in
+  the greeter's session picker — or autostart entries (tray icons, agents) misbehave.
+  `dot_config/hypr/lua/autostart.lua` assumes it.
+- KWallet is the keyring; PAM auto-unlock (when configured) only works for a wallet literally named
+  `kdewallet` with Blowfish encryption and the login password. **Auto-unlock is currently not
+  configured** (see the Greeter subsection below), so `autostart.lua` has no `pam_kwallet_init` exec
+  either — it would be a no-op without a `pam_kwallet5.so` line feeding it, so it was removed rather
+  than left as dead weight. KWallet instead unlocks manually via a one-time-per-session prompt the
+  first time an app needs a secret. If auto-unlock is ever wired up again, that exec needs to come
+  back too — PAM alone doesn't finish the unlock outside Plasma; see the Greeter subsection.
 - `dot_local/bin/` holds the helper scripts the config calls (`install-webapp`, `launch-webapp.sh`,
-  `spicetify-setup.sh`).
+  `spicetify-setup.sh`, `hyprpm-rebuild`). `linux-wallpaperengine` is not one of these — it's an AUR
+  package (`linux-wallpaperengine-git`, installed via `run_onchange_after_06-gaming.sh.tmpl`), not a
+  chezmoi-managed script.
 - `dot_config/fish/functions/` is a large library of one-purpose media/document conversion functions
   (`pdf-*`, `vid2*`, `*2png`, …). Self-contained; add new ones as single files following the
   existing naming.
@@ -473,6 +493,61 @@ opened by hand now, but the sysmon workspace (`SUPER+Delete` → btop) uses exac
 class `sysmon.btop`, matched in both `keybindings.lua` and `rules.lua` — after title matching proved
 unreliable (ghostty's title only updates after the window is already mapped, too late for an
 open-time workspace rule).
+
+### Greeter (noctalia-greeter + greetd, replaces SDDM)
+
+Login manager of choice is **greetd** running **noctalia-greeter**, not SDDM — see
+`run_onchange_after_04-noctalia-greeter.sh.tmpl`. Both packages come from CachyOS's own repos
+(`cachyos`/`cachyos-extra-v3`) via plain `pacman`, not the AUR, despite `noctalia-greeter`'s upstream
+docs describing a from-source build. A fresh CachyOS install with Hyprland selected in Calamares
+already ships `greetd`/`noctalia-greeter` by default (confirmed via the CachyOS `cachyos-hypr-noctalia`
+rootfs-overlay repo), so on those machines this script is a no-op.
+
+**The script only adds — it never assumes or removes anything.** It installs the two packages
+(`--needed`, safe to rerun) and points `/etc/greetd/config.toml` at `noctalia-greeter-session`, but
+deliberately does **not** uninstall SDDM/`sddm-silent-theme`, disable whatever display manager is
+currently enabled, or enable `greetd.service` itself — flipping the live login manager is exactly
+the kind of thing that shouldn't happen silently on some future unattended `chezmoi apply`. Existing
+dotfiles users migrating from SDDM (or Plasma's login, or anything else) get the packages/config
+staged, then do the actual switch by hand:
+```
+sudo systemctl disable <current-display-manager>.service
+sudo systemctl enable greetd.service
+sudo reboot
+```
+SDDM is intentionally left alone as a fallback, not force-removed.
+
+- The package's own `post_install`/`post_upgrade` scriptlet runs `setup_greeter_system.sh`
+  automatically on every `pacman -S`/`-U` — it creates the `greeter` system user, chowns
+  `/var/lib/noctalia-greeter/`, and seeds `greeter.toml`/`sync.toml` via
+  `noctalia-greeter-apply-appearance --setup-system`. Never call that script manually.
+- Two config files, both under `/var/lib/noctalia-greeter/` (root/`greeter`-owned, `0750`, not
+  chezmoi-managed — machine-local state like `monitors.lua`, edited by hand):
+  **`sync.toml`** is written by `noctalia msg greeter-sync` (polkit-escalated) and mirrors whatever
+  the live Noctalia desktop is currently themed with — wallpaper, full color palette (works for
+  `community`/`custom` palettes too, not just built-ins — confirmed with the `Heartbox` community
+  palette), and `[output] scales`/`transforms`. It is **not** a live watcher — re-run `greeter-sync`
+  by hand after any desktop theme change; nothing pushes it automatically.
+  **`greeter.toml`** is declarative and never touched by sync/UI. This is where per-machine
+  overrides go — most importantly `[output] name/width/height`, since `greeter-sync` does **not**
+  carry the actual monitor mode (only scale/transform), so a greeter left on its default output
+  config renders at 1080p regardless of the monitor's native resolution.
+- `/etc/greetd/config.toml`'s `default_session.command` must point at
+  `/usr/bin/noctalia-greeter-session`, not the stock `agreety` (greetd's bundled bare-tty fallback,
+  pulled in as a hard dependency of the `greetd` package itself — harmless to leave installed, just
+  not what boots by default once this is set).
+- **KWallet auto-unlock is deliberately not configured for greetd** — no `pam_kwallet5.so` lines in
+  `/etc/pam.d/greetd` (unlike the old `/etc/pam.d/sddm`), a conscious choice to keep the migration
+  "vanilla" rather than re-adding the SDDM-era LUKS/autologin PAM patching. See "Setup facts" above.
+- No autologin. SDDM's `[Autologin]` stanza on this machine was already inert (`Session=` with no
+  paired `User=`), so nothing was actually lost by dropping it.
+- LUKS and the greeter are unrelated on this machine: root (`nvme0n1p2`) is plain btrfs, not
+  LUKS-encrypted, despite a non-empty `/etc/crypttab` (an unrelated/inactive device entry — `lsblk
+  -f` shows no `crypto_LUKS` layer anywhere). More generally, disk decryption always happens in the
+  initramfs before any greeter starts, regardless of which one is installed — the only place a login
+  manager and LUKS actually interact is the autologin-only trick of inheriting the boot-time LUKS
+  passphrase via `pam_systemd_loadkey.so` + `KeyringMode=inherit`, moot here since there's no
+  autologin.
 
 ---
 

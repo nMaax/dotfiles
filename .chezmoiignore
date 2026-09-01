@@ -6,12 +6,7 @@
 !.local/
 !.face
 !.logo
-!.cache/
 !Pictures/
-
-# --- CACHE: only the SDDM theme external ---
-.cache/*
-!.cache/silent-sddm-themes/
 
 # --- PICTURES: only the externally-managed folders ---
 Pictures/*

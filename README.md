@@ -2,7 +2,7 @@
 
 Personal dotfiles and system configurations, just the way I like it.
 
-These dotfiles are heavily based on **CachyOS** (not just Arch), specifically the various packages that Cachy ships with it's own base installation (fish, sddm, various KDE bloat etc.).
+These dotfiles are heavily based on **CachyOS** (not just Arch), specifically the various packages that Cachy ships with it's own base installation (fish, various KDE bloat etc.).
 
 Ideally you should have installed CachyOS selecting for Hyprland (optionally also Plasma as a fallback) during the Calamares installation, or without any DE/WM (in such case 🥮 will install Hyprland automatically).
 
@@ -44,10 +44,10 @@ chezmoi init --apply nMaax
 > `ddcutil` will been installed, which may cause instability with certain monitors. You can remove it via `sudo pacman -Rns ddcutil` if you encounter any issue.
 
 > [!NOTE]
-> During log-in in SDDM choose **systemd-owned Hyprland** (UWSM) instead of the plain one, to ensure autostart scripts function correctly (e.g. cachy-update tray icon).
+> During log-in in the greeter choose **systemd-owned Hyprland** (`Hyprland (uwsm-managed)`) instead of the plain one, to ensure autostart scripts function correctly (e.g. cachy-update tray icon).
 
 > [!TIP]
-> If you ever re-sync local edits back into these dotfiles with `chezmoi add`, always pass `--exclude=externals`: wallpapers, profile pictures, the SDDM theme and the cursor theme are pulled from separate asset repos, not meant to be duplicated as literal files here.
+> If you ever re-sync local edits back into these dotfiles with `chezmoi add`, always pass `--exclude=externals`: wallpapers, profile pictures and the cursor theme are pulled from separate asset repos, not meant to be duplicated as literal files here.
 
 ### Handling missing polkit agent password prompt in CachyOS Hello
 
@@ -69,15 +69,13 @@ To fix, do the following:
 
 ### Keyring (KWallet)
 
-KWallet is the password manager of choice in 🥮, due to the already wide presence of KDE-ecosystem tools by CachyOS itself. However, KWallet often presents some issues in non-Plasma environments, the install scripts will try to cleanly patch these issues out of the box, togheter pre-setted config files; however some may still be present, especially with Electron apps that rely on the Electron safe-storage feature.
+KWallet is the password manager of choice in 🥮, due to the already wide presence of KDE-ecosystem tools by CachyOS itself. The install scripts pull in the `kwallet`/`kwalletmanager`/`kwallet-pam` packages automatically, but **PAM auto-unlock at login is not configured out of the box** for the Noctalia greeter (`greetd`) — KWallet stays locked at session start, and unlocks via a one-time manual password prompt the first time an app needs a secret each session. Electron apps relying on the Electron safe-storage feature may still show their own separate prompts regardless.
 
-Crucially, remind that **when you are prompted to create a wallet** (i.e. the first time an application requests one), use **exactly** these settings:
+If you'd rather have KWallet auto-unlock at login, you'll need to patch `/etc/pam.d/greetd` yourself with the same `pam_kwallet5.so` lines KDE ships for SDDM (see the Arch Wiki link below). Whether or not you do, when you're first prompted to create a wallet, use these settings so auto-unlock (now or later) actually works:
 
 - **Name:** `kdewallet` (the default; any other name will not be unlocked automatically by PAM)
 - **Encryption:** `Blowfish` (required for `kwallet-pam` auto-unlock; GnuPG encryption is incompatible)
 - **Password:** your current **user login password** (PAM unlocks the wallet by matching it against the login password)
-
-Or simply do it by yourself after installing 🥮.
 
 Further information can be found at [Arch Wiki: KDE Wallet](https://wiki.archlinux.org/title/KDE_Wallet) and [Electron Safe Storage Info](https://www.electronjs.org/docs/latest/api/safe-storage).
 

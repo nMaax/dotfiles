@@ -1,0 +1,43 @@
+#!/bin/bash
+set -euo pipefail
+
+{{ template "utils.sh.tmpl" . }}
+{{ template "external_links.sh.tmpl" . }}
+
+echo ""
+info "🖥️ [Noctalia Greeter] Starting..."
+echo ""
+
+info "📦 Installing greetd and noctalia-greeter..."
+sudo pacman -S --needed --noconfirm greetd noctalia-greeter
+
+GREETD_CONFIG="/etc/greetd/config.toml"
+if grep -q "noctalia-greeter-session" "$GREETD_CONFIG" 2>/dev/null; then
+  success "$GREETD_CONFIG already points at noctalia-greeter-session. Skipping."
+else
+  info "Pointing greetd at the Noctalia greeter session..."
+  sudo cp -a "$GREETD_CONFIG" "$GREETD_CONFIG.bak" 2>/dev/null || true
+  sudo tee "$GREETD_CONFIG" >/dev/null <<'EOF'
+[terminal]
+vt = 1
+
+[default_session]
+command = "/usr/bin/noctalia-greeter-session"
+user = "greeter"
+EOF
+fi
+
+if systemctl is-enabled --quiet greetd.service 2>/dev/null; then
+  success "greetd.service is already the enabled display manager. Skipping."
+else
+  warn "[Greeter] greetd is installed and configured, but this script won't touch whatever display"
+  warn "[Greeter] manager you're currently using (SDDM, Plasma login, etc.) — switch over yourself"
+  warn "[Greeter] when ready:"
+  warn "[Greeter]   sudo systemctl disable <your-current-display-manager>.service"
+  warn "[Greeter]   sudo systemctl enable greetd.service"
+  warn "[Greeter]   sudo reboot"
+fi
+
+echo ""
+success "✅ [Noctalia Greeter] Done."
+echo ""
