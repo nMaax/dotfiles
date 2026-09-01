@@ -13,6 +13,7 @@ video/mp4=org.kde.haruna.desktop;
 x-scheme-handler/chrome=zen.desktop;
 x-scheme-handler/http=zen.desktop;
 x-scheme-handler/https=zen.desktop;
+x-scheme-handler/ror2mm=amethystmodmanager-ror2mm.desktop
 
 [Default Applications]
 application/pdf=org.kde.okular.desktop;
@@ -40,3 +41,5 @@ x-scheme-handler/http=zen.desktop
 x-scheme-handler/https=zen.desktop
 x-scheme-handler/claude-cli=claude-code-url-handler.desktop
 x-scheme-handler/claude=com.anthropic.Claude.desktop
+x-scheme-handler/ror2mm=amethystmodmanager-ror2mm.desktop
+x-scheme-handler/nxm=amethystmodmanager-nxm.desktop
