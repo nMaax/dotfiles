@@ -47,6 +47,36 @@ hl.window_rule({
 	float = true,
 })
 
+-- Center and remember the size of any floating window, as a baseline for the
+-- more specific float rules below
+hl.window_rule({
+	name = "float-center-persistent-size",
+	match = { float = true },
+	center = true,
+	persistent_size = true,
+})
+
+-- Float common file/auth dialogs regardless of which app spawns them
+local modalMatches = {
+	{ title = "^(Open|Save As|Authentication Required|Choose Files|File Upload|Confirm to replace files)(.*)$" },
+	{ class = "^([Xx]dg-desktop-portal-gtk)$" },
+	{ class = "^(.*[Dd]ialog.*)$" },
+	{ title = "^(.*[Dd]ialog.*)$" },
+}
+for i, m in ipairs(modalMatches) do
+	hl.window_rule({ name = "float-common-modal-" .. i, match = m, float = true })
+end
+
+-- Picture-in-Picture: small, pinned, corner-sized float
+hl.window_rule({
+	name = "picture-in-picture",
+	match = { title = "^([Pp]icture[-\\s]?[Ii]n[-\\s]?[Pp]icture)(.*)$" },
+	float = true,
+	keep_aspect_ratio = true,
+	size = { "max(monitor_w, monitor_h)*0.25", "min(monitor_w, monitor_h)*0.25" },
+	pin = true,
+})
+
 -- NOCTALIA RULES
 -- See https://docs.noctalia.dev/v5/compositor-settings/hyprland/
 
