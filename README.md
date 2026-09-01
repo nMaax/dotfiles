@@ -4,7 +4,7 @@ Personal dotfiles and system configurations, just the way I like it.
 
 These dotfiles are heavily based on **CachyOS** (not just Arch), specifically the various packages that Cachy ships with it's own base installation (fish, various KDE bloat etc.).
 
-Ideally you should have installed CachyOS selecting for Hyprland (optionally also Plasma as a fallback) during the Calamares installation, or without any DE/WM (in such case 🥮 will install Hyprland automatically).
+Ideally you should have installed CachyOS selecting for Hyprland during the Calamares installation. If you didn't, 🥮 will install everything needed but some manual changes could be necessary (e.g. enabling noctalia-greetr)
 
 > Managed using [chezmoi](https://www.chezmoi.io/). Code written with the help of Gemini, Claude and Copilot.
 
@@ -347,21 +347,17 @@ Hit **Start Streaming** in OBS. That's it :)
 
 ## 📝 TODOs
 
-
-- [ ] Check new gaming guide in CachyOS documentation and updated launch options
-- [ ] Clean shader cache from Steam and make claude fix the annonying shader re-compilation in overwatch
-- [ ] Make claude fix direct scanout on games, my suspicioun are, in order:
-  - the problem may be wallpaper engine
-  - the problem may be combination with vrr
-  - the problem may be using scrolling mode instead of dwindle
-- [ ] Explore new plugins (e.g. calculator, poolkit agent)
-- [ ] Move to shelly
-- [ ] Move to noctalia greeter as done by CachyOS
+- [ ] Fix gaming issues
+  - [ ] Check new gaming guide in CachyOS documentation and updated launch options
+  - [ ] Clean shader cache from Steam and make claude fix the annonying shader re-compilation in Overwatch
+  - [ ] Make claude fix direct scanout on games, my suspicioun are, in order:
+    - the problem may be wallpaper engine
+    - the problem may be the combination of direct scanout with vrr
+    - the problem may be using scrolling mode instead of dwindle
+  - [ ] Make claude fix the cursor loosing focus on games
 - [ ] Make plugins optional via chezmoi.toml
   - [ ] Try [Hyprglass](https://github.com/hyprnux/hyprglass)
-- [x] Split AI dev (ollama, cuda etc.) from agent (claude-code, agy -- using native install scripts)
-- [x] Remove unused AUR packages
-- [x] Remove unused plugins
+- [ ] Move to shelly
 - [ ] Prepare 2K-4K WALLHACK Wallpapers -> Make a release for dotfiles-assets if files are too large
 - [ ] Once everything is finished, add screenshots and videos in this README
 
