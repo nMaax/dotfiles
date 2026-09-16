@@ -10,5 +10,7 @@ fi
 
 ask "This purges ALL built hyprpm plugins, settings and cached headers, then reinstalls everything from the registry in 12-hyprland-plugins. Continue?" || exit 1
 
-hyprpm purge-cache
+if command -v hyprpm &>/dev/null; then
+  hyprpm purge-cache
+fi
 chezmoi execute-template <"$(chezmoi source-path)/.chezmoiscripts/run_after_12-hyprland-plugins.sh.tmpl" | bash

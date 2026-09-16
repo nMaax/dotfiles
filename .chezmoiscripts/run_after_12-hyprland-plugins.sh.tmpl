@@ -16,10 +16,9 @@ HYPRPM_PLUGINS=(
 if ! hyprland_is_running; then
   warn "Hyprland is not currently running — skipping plugin setup."
 else
-  # hyprland-protocols and glaze are pacman's own "Optional Deps ... to build and
-  # install plugins using hyprpm" for the hyprland package, but pacman never pulls
-  # them in on their own.
-  sudo pacman -S --needed --noconfirm hyprland-protocols glaze
+  # hyprpm was split out into its own package in Arch/CachyOS (hyprland 0.56.2-3+),
+  # and requires hyprland-protocols and glaze (hyprpm dependencies).
+  sudo pacman -S --needed --noconfirm hyprpm hyprland-protocols glaze
 
   # update bootstraps/refreshes hyprpm's header cache, which add depends on already
   # existing -- on a fresh machine or right after `hyprpm purge-cache`, that cache is
