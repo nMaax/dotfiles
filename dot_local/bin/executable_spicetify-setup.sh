@@ -34,6 +34,7 @@ rm -rf ./ComfyRepo/
 
 spicetify config current_theme Comfy color_scheme Comfy
 spicetify config inject_css 1 replace_colors 1 overwrite_assets 1 inject_theme_js 1
+spicetify config spotify_launch_flags -- "--enable-features=UseOzonePlatform|--ozone-platform=wayland"
 spicetify apply --no-restart
 
 echo "Installing Spicetify Marketplace... (⚠️ not really the Arch way, but it doesnt touch anything outside home/)"

@@ -85,6 +85,7 @@ Pictures/*
 .config/Code - OSS/*
 
 !.config/chromium-flags.conf
+!.config/spotify-flags.conf
 
 # --- LOCAL ---
 .local/*
