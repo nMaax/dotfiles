@@ -355,6 +355,7 @@ Hit **Start Streaming** in OBS. That's it :)
     - the problem may be the combination of direct scanout with vrr
     - the problem may be using scrolling mode instead of dwindle
   - [ ] Make claude fix the cursor loosing focus on games
+  - [ ] Move rules / performance / keybinds for gaming in a gaming.lua file, and let it work only if gaming is enabled in chezmoi.toml
 - [ ] Make plugins optional via chezmoi.toml
   - [ ] Try [Hyprglass](https://github.com/hyprnux/hyprglass)
 - [ ] Move to shelly
@@ -362,5 +363,6 @@ Hit **Start Streaming** in OBS. That's it :)
 - [ ] Once everything is finished, add screenshots and videos in this README
 
 ### For the future
+
 - [ ] Enhance assets by introducing a GitHub CI action that autogenerates README with gallery, like [dharmx](https://github.com/dharmx/walls)
 - [ ] Generalize for pure Arch by reproducing what Cachy installs, including fundamentals like bluetooth, networkmanager, fish, cachyos fish setup, gpu drivers etc.
