@@ -239,7 +239,7 @@ If you want to re-run just the Spicetify setup without `chezmoi apply`, run:
 
 Of course 🥮 is designed with gaming in mind too, 🥮 will apply some common installations and tweaks if cachyos gaming packages are detected. For more details, visit the [CachyOS Gaming Wiki](https://wiki.cachyos.org/configuration/gaming). Here is quick guidance to complete your gaming experience:
 
-The sched-ext scheduler is set to `scx_lavd` in Gaming mode (`/etc/scx_loader/config.toml`, `scx_loader` enabled at boot). Check it with `scxctl get`, or change it from **SCX Manager**. Shader caches (NVIDIA and Mesa) are raised to 12 GB in `~/.config/environment.d/gaming.conf`, which also sets globally: `PROTON_DLSS_UPGRADE=1` and `PROTON_NVIDIA_LIBS_NO_32BIT=1` (Proton-CachyOS only), NVIDIA's DLSS overrides (`PROTON_ENABLE_NGX_UPDATER` + `DXVK_NVAPI_DRS_NGX_DLSS_*`, any Proton; set one to `off` in a game's launch options to opt out) and `DXVK_HUD=0`.
+The sched-ext scheduler is set to `scx_lavd` in Gaming mode (`/etc/scx_loader/config.toml`, `scx_loader` enabled at boot). Check it with `scxctl get`, or change it from **SCX Manager**. Shader caches (NVIDIA and Mesa) are raised to 12 GB in `~/.config/environment.d/gaming.conf`, which also sets globally: `PROTON_DLSS_UPGRADE=1` and `PROTON_NVIDIA_LIBS_NO_32BIT=1` (Proton-CachyOS only), NVIDIA's DLSS overrides (`PROTON_ENABLE_NGX_UPDATER` + `DXVK_NVAPI_DRS_NGX_DLSS_*`, any Proton; set one to `off` in a game's launch options to opt out), AMD's `FSR4_UPGRADE=1` (RDNA4) and `ENABLE_LAYER_MESA_ANTI_LAG=1` (layer installed on AMD by the gaming script), and `DXVK_HUD=0`.
 
 #### Launch Options
 
@@ -247,7 +247,7 @@ The below is the common Steam format for launch options, however you can achive 
 
 - **NVIDIA:** `game-performance %command%`
   - For HDR, also add `PROTON_ENABLE_HDR=1 ENABLE_HDR_WSI=1`.
-- **AMD:** `PROTON_ENABLE_WAYLAND=1 PROTON_FSR4_UPGRADE=1 ENABLE_LAYER_MESA_ANTI_LAG=1 game-performance %command%`
+- **AMD:** `game-performance %command%`
 
 > [!WARNING]
 > Native Wayland is opt-in per game with `PROTON_ENABLE_WAYLAND=1` (Proton-CachyOS only). If you encounter a black screen it probably is a conflict between direct scanout and native wayland compositor for the game. In such case drop it or disable `direct_scanout` in Hyprland settings.
