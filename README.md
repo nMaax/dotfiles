@@ -239,7 +239,7 @@ If you want to re-run just the Spicetify setup without `chezmoi apply`, run:
 
 Of course 🥮 is designed with gaming in mind too, 🥮 will apply some common installations and tweaks if cachyos gaming packages are detected. For more details, visit the [CachyOS Gaming Wiki](https://wiki.cachyos.org/configuration/gaming). Here is quick guidance to complete your gaming experience:
 
-Shader caches (NVIDIA and Mesa) are raised to 12 GB in `~/.config/environment.d/gaming.conf`.
+The sched-ext scheduler is set to `scx_lavd` in Gaming mode (`/etc/scx_loader/config.toml`, `scx_loader` enabled at boot). Check it with `scxctl get`, or change it from **SCX Manager**. Shader caches (NVIDIA and Mesa) are raised to 12 GB in `~/.config/environment.d/gaming.conf`.
 
 #### Launch Options
 
@@ -254,14 +254,24 @@ The below is the common Steam format for launch options, however you can achive 
 > [!WARNING]
 > If you see a "Comping shaders (xx%)..." on the bottom left, you can remove it by adding `DXVK_HUD=0`
 
+> [!TIP]
+> **NVIDIA Smooth Motion** (RTX 40+, Vulkan/DXVK only): add `NVPRESENT_ENABLE_SMOOTH_MOTION=1` per game for driver-level frame generation. Worth it on single-player games that are FPS-locked (e.g. 60 FPS caps) or CPU-bound, with no native frame gen, running at ~60-120 FPS. Skip it for competitive games, games with native DLSS FG, or games already at your refresh rate. If overlays glitch, add `NVPRESENT_QUEUE_FAMILY=1`.
+
 For Lutris specifically, remind to enable **Disable Lutris Runtime** and **Prefer system libraries**
+
+#### Gaming mouse
+
+Mouse acceleration is `flat` for the device named in `~/.config/hypr/lua/input.lua` (default `realtek-mchose-l7-pro+`). Set yours with the name from `hyprctl devices`.
 
 #### Steam/Proton Settings
 
-- **Compatibility:** Set `proton-cachyos (slr)` as your default Proton layer.
+- **Compatibility:** Keep Valve's Proton (latest stable or Experimental) as the global default in **Steam -> Settings -> Compatibility**. Switch single games to `proton-cachyos-slr` (**Properties -> Compatibility**) when they need its fixes/FSR, or when EAC/BattlEye refuses to log in. Lutris/Heroic: use `proton-cachyos-slr`.
 - **Pre-caching:** If using Proton-CachyOS, navigate to **Steam -> Settings -> Downloads** and **UNCHECK**:
   - "Enable Shader Pre-caching"
   - "Allow background processing of Vulkan shaders"
+
+> [!NOTE]
+> If in-game videos don't play or show color bars, run `steam steam://unlockh264/` once, wait for it to load, then restart Steam normally.
 
 #### Temporarily switching to Hyprland on a deckified/gamescope boot
 
@@ -366,5 +376,6 @@ Hit **Start Streaming** in OBS. That's it :)
 
 ### For the future
 
+- [ ] Try the [ADIOS I/O scheduler](https://github.com/firelzrd/adios) once it's stable (CachyOS defaults NVMe to `kyber`)
 - [ ] Enhance assets by introducing a GitHub CI action that autogenerates README with gallery, like [dharmx](https://github.com/dharmx/walls)
 - [ ] Generalize for pure Arch by reproducing what Cachy installs, including fundamentals like bluetooth, networkmanager, fish, cachyos fish setup, gpu drivers etc.

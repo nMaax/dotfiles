@@ -46,15 +46,23 @@ else
   info "Feral's gamemode not installed. Skipping ananicy-cpp conflict check."
 fi
 
-info "[GAMING] Shader cache is configured via ~/.config/environment.d/gaming.conf."
+info "⚡ Setting scx_lavd (Gaming mode) as the default sched-ext scheduler..."
+if command -v scx_loader >/dev/null 2>&1; then
+  SCX_CONFIG="/etc/scx_loader/config.toml"
+  SCX_WANTED='default_sched = "scx_lavd"
+default_mode = "Gaming"'
+  sudo systemctl enable --now scx_loader
+  if [[ "$(cat "$SCX_CONFIG" 2>/dev/null)" == "$SCX_WANTED" ]]; then
+    success "$SCX_CONFIG already set. Skipping."
+  else
+    sudo cp -a "$SCX_CONFIG" "$SCX_CONFIG.bak" 2>/dev/null || true
+    sudo mkdir -p "$(dirname "$SCX_CONFIG")"
+    sudo tee "$SCX_CONFIG" >/dev/null <<<"$SCX_WANTED"
+    sudo systemctl restart scx_loader
+  fi
+else
+  warn "scx_loader not found (install scx-scheds and scx-tools). Skipping sched-ext setup."
+fi
 
-info "[GAMING] Mouse acceleration is set to 'flat' in ~/.config/hypr/hyprland/input.conf."
-info "[GAMING] Update the device 'name' there using \`hyprctl devices\` (default is \`realtek-mchose-l7-pro+\`)."
-
-info "[GAMING] Steam launch options:"
-info "  NVIDIA: PROTON_ENABLE_WAYLAND=1 PROTON_DLSS_UPGRADE=1 PROTON_NVIDIA_LIBS_NO_32BIT=1 PROTON_ENABLE_HDR=1 ENABLE_HDR_WSI=1 game-performance %command%"
-info "  AMD: ENABLE_LAYER_MESA_ANTI_LAG=1 PROTON_FSR4_UPGRADE=1 game-performance %command%"
-info "[GAMING] Steam/Proton: set \`proton-cachyos-slr\` and disable shader pre-caching options."
-info "[GAMING] Lutris/Heroic: enable 'Disable Lutris Runtime' + 'Prefer system libraries', and use \`proton-cachyos\`."
-info "More info: https://wiki.cachyos.org/configuration/gaming"
+info "[GAMING] Launch options, Proton and Steam settings are manual: see the README's Gaming section."
 {{- end }}

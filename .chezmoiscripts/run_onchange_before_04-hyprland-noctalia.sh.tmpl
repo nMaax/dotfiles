@@ -13,13 +13,10 @@ sudo pacman -S --needed --noconfirm hyprland hyprpm xdg-desktop-portal-hyprland 
 
 info "🌙 Installing Noctalia dependencies..."
 sudo pacman -S --needed --noconfirm ddcutil
-warn "[NOCTALIA] ddcutil may cause instability on some monitors; remove it if needed with: sudo pacman -Rns ddcutil"
 sudo pacman -S --needed --noconfirm cliphist wlsunset xdg-desktop-portal evolution-data-server
 
 info "🦉 Installing Noctalia..."
 sudo pacman -S --needed --noconfirm noctalia # Available directly in the cachyos repo
-info "[NOCTALIA] Built-in app theming is pre-enabled for common apps."
-info "Remaining app-specific steps: https://docs.noctalia.dev/v5/theming/app-theming/"
 
 info "🖼️ Installing mpvpaper for Video Wallpaper alternative backend..."
 sudo pacman -S --needed --noconfirm mpvpaper
