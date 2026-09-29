@@ -246,6 +246,7 @@ The sched-ext scheduler is set to `scx_lavd` in Gaming mode (`/etc/scx_loader/co
 The below is the common Steam format for launch options, however you can achive an equivalent setup also in other launchers like Heroic and Lutris.
 
 - **NVIDIA:** `PROTON_ENABLE_WAYLAND=1 PROTON_DLSS_UPGRADE=1 PROTON_NVIDIA_LIBS_NO_32BIT=1 game-performance %command%`
+  - For HDR, also add `PROTON_ENABLE_HDR=1 ENABLE_HDR_WSI=1`.
 - **AMD:** `PROTON_ENABLE_WAYLAND=1 PROTON_FSR4_UPGRADE=1 ENABLE_LAYER_MESA_ANTI_LAG=1 game-performance %command%`
 
 > [!WARNING]
