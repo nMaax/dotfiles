@@ -246,7 +246,6 @@ The sched-ext scheduler is set to `scx_lavd` in Gaming mode (`/etc/scx_loader/co
 The below is the common Steam format for launch options, however you can achive an equivalent setup also in other launchers like Heroic and Lutris.
 
 - **NVIDIA:** `game-performance %command%`
-  - For HDR, also add `PROTON_ENABLE_HDR=1 ENABLE_HDR_WSI=1`.
 - **AMD:** `game-performance %command%`
 
 > [!WARNING]
@@ -374,6 +373,7 @@ Hit **Start Streaming** in OBS. That's it :)
 
 ### For the future
 
+- [ ] Try HDR gaming: needs a Proton with native Wayland + HDR ([GE-Proton](https://github.com/GloriousEggroll/proton-ge-custom): `PROTON_ENABLE_WAYLAND=1 PROTON_ENABLE_HDR=1`, Valve's Proton can't) and a 10-bit HDR monitor config (`bitdepth = 10`, `cm = edid`, `render:cm_auto_hdr`), see [Hyprland #11083](https://github.com/hyprwm/Hyprland/discussions/11083). Check direct scanout still works (`monitors.lua` forces 8-bit for it)
 - [ ] Try the [ADIOS I/O scheduler](https://github.com/firelzrd/adios) once it's stable (CachyOS defaults NVMe to `kyber`)
 - [ ] Enhance assets by introducing a GitHub CI action that autogenerates README with gallery, like [dharmx](https://github.com/dharmx/walls)
 - [ ] Generalize for pure Arch by reproducing what Cachy installs, including fundamentals like bluetooth, networkmanager, fish, cachyos fish setup, gpu drivers etc.
