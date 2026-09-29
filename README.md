@@ -239,11 +239,13 @@ If you want to re-run just the Spicetify setup without `chezmoi apply`, run:
 
 Of course 🥮 is designed with gaming in mind too, 🥮 will apply some common installations and tweaks if cachyos gaming packages are detected. For more details, visit the [CachyOS Gaming Wiki](https://wiki.cachyos.org/configuration/gaming). Here is quick guidance to complete your gaming experience:
 
+Shader caches (NVIDIA and Mesa) are raised to 12 GB in `~/.config/environment.d/gaming.conf`.
+
 #### Launch Options
 
 The below is the common Steam format for launch options, however you can achive an equivalent setup also in other launchers like Heroic and Lutris.
 
-- **NVIDIA:** `__GL_SHADER_DISK_CACHE_SKIP_CLEANUP=1 PROTON_ENABLE_WAYLAND=1 PROTON_DLSS_UPGRADE=1 PROTON_NVIDIA_LIBS_NO_32BIT=1 game-performance %command%`
+- **NVIDIA:** `PROTON_ENABLE_WAYLAND=1 PROTON_DLSS_UPGRADE=1 PROTON_NVIDIA_LIBS_NO_32BIT=1 game-performance %command%`
 - **AMD:** `PROTON_ENABLE_WAYLAND=1 PROTON_FSR4_UPGRADE=1 ENABLE_LAYER_MESA_ANTI_LAG=1 game-performance %command%`
 
 > [!WARNING]
