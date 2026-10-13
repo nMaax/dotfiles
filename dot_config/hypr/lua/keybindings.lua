@@ -323,15 +323,22 @@ hl.bind(
 -- Game mode (mutes OSD and notifications, switches to dwindle to prevent focus/pointer loss in games).
 -- Any layer surface mapping (toast, OSD, launcher) makes a hidden *scrolling* workspace drop the
 -- game's pointer lock: https://github.com/hyprwm/Hyprland/issues/16326, so no scrolling while gaming.
-local layout_before_game_mode
-local function toggle_game_mode()
+-- Turns on by itself when a game window (content type "game", see rules.lua) opens, and off when the
+-- last one closes -- unless it was already on (e.g. toggled by hand), then it's left alone.
+local function dnd_on()
 	local handle = io.popen(ipc("notification-dnd-status"))
 	local status = handle and handle:read("*l")
 	if handle then
 		handle:close()
 	end
-	local enabling = status ~= "on"
-	if enabling then
+	return status == "on"
+end
+
+local game_mode_auto = false -- whether game mode was turned on by a game opening
+local layout_before_game_mode
+
+local function set_game_mode(on)
+	if on then
 		io.popen(ipc("osd-disable")):close()
 		io.popen(ipc("notification-dnd-set true")):close()
 		layout_before_game_mode = hl.get_config("general.layout")
@@ -346,6 +353,41 @@ local function toggle_game_mode()
 		hl.notification.create({ text = "🎮 Game Mode: OFF (OSD & Notifications enabled)", timeout = 2500 })
 	end
 end
+
+local function toggle_game_mode()
+	game_mode_auto = false
+	set_game_mode(not dnd_on())
+end
+
+local function game_running(except)
+	for _, window in ipairs(hl.get_windows()) do
+		if window.content_type == "game" and window.address ~= except then
+			return true
+		end
+	end
+	return false
+end
+
+hl.on("window.open", function(window)
+	if window.content_type == "game" and not dnd_on() then
+		game_mode_auto = true
+		set_game_mode(true)
+	end
+end)
+
+hl.on("window.close", function(window)
+	if game_mode_auto and window.content_type == "game" and not game_running(window.address) then
+		game_mode_auto = false
+		set_game_mode(false)
+	end
+end)
+
+-- A config reload resets the layout to scrolling: put dwindle back if a game is still running
+if game_running() and dnd_on() then
+	game_mode_auto = true
+	hl.config({ general = { layout = "dwindle" } })
+end
+
 hl.bind(
 	C.MODKEY .. "+ALT+Z",
 	toggle_game_mode,
