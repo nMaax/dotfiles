@@ -23,6 +23,9 @@
 --
 --   Generally, I recomend VRR over tearing, as the input latency is negligible and it provides the massive
 --   improvement of a smoother frametime curve.
+--
+--   BUT on OLED/VA panels VRR flickers dark scenes whenever FPS fluctuates (the refresh rate follows it).
+--   So games default to VRR off (fixed refresh, still no tearing), see rules.lua; SUPER+ALT+V toggles it.
 
 hl.config({
 	general = {
@@ -35,9 +38,9 @@ hl.config({
 	},
 
 	cursor = {
-		-- Force hardware cursors OFF. Hardware cursors make the GPU generate a second layer dedicated
-		-- to the cursor, which theoretically reduces latency, as the software doesn't have to
-		-- artificially remove pixels where the cursor is sitting -- however, in practice this creates
+		-- Keep hardware cursors ON (required for direct scanout). Hardware cursors make the GPU generate a
+		-- second layer dedicated to the cursor, which theoretically reduces latency, as the software doesn't
+		-- have to artificially remove pixels where the cursor is sitting -- however, in practice this creates
 		-- issues with tearing (due to experimentality of such feature)
 		-- 0 - use hw cursors if possible, 1 - don't use hw cursors, 2 - auto (disable when tearing)
 		no_hardware_cursors = 0,
@@ -59,8 +62,8 @@ hl.config({
 		-- It is also recommended to set this to false if the fullscreen application shows
 		-- graphical glitches --- A known issue consists in games on native Wayland presenting a
 		-- black screen (e.g Overwatch) when direct_scanout is enabled. In such cases use
-		-- XWayland (PROTON_WAYLAND=0), among the two (losing Wayland native v. losing direct_scanout)
-		-- losing direct_scanout is much worse
+		-- XWayland (don't set PROTON_ENABLE_WAYLAND=1), among the two (losing Wayland native v. losing
+		-- direct_scanout) losing direct_scanout is much worse. Overwatch on XWayland + direct scanout works.
 		-- 0 - off, 1 - on, 2 - auto (on with content type 'game')
 		direct_scanout = 2,
 	},
