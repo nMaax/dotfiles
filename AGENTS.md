@@ -1,6 +1,6 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for coding agents working in this repository. `CLAUDE.md` is a symlink to this file.
 
 Personal dotfiles for a **CachyOS + Hyprland + Noctalia** desktop, managed with
 [chezmoi](https://www.chezmoi.io/). There is no build system, no test suite and no CI — the
@@ -666,6 +666,8 @@ EDID-missing fallbacks. Use the stubbed-`hl` harness (§1) for geometry a headle
   deliberately undescribed (self-evident, and they'd flood the sheet). Anything genuinely new and
   discoverable gets its own.
 - `git commit` messages are one-liners listing the changes, not verbose bodies.
+- This file is `AGENTS.md`; `CLAUDE.md` is only a symlink to it. Keep it agent-neutral: never retitle it
+  `CLAUDE.md` or add Claude-specific boilerplate (e.g. from `/init`).
 
 ---
 
