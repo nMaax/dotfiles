@@ -2,6 +2,7 @@
 -- Always deployed, but only required with gaming = true in chezmoi.toml (hyprland.lua.tmpl).
 
 local C = require("lua.constants")
+local toggle_app_special_workspace = require("lua.special").toggle_app_special_workspace
 
 local function ipc(args)
 	return "noctalia msg " .. args
@@ -195,3 +196,48 @@ hl.bind(
 	hl.dsp.window.set_prop({ prop = "no_vrr", value = "toggle" }),
 	{ description = "Toggle VRR for the active window (games default to VRR off)" }
 )
+
+-- GAME LAUNCHERS
+hl.window_rule({
+	name = "games-launchers-workspace-class",
+	match = {
+		class = "^(steam|lutris|com\\.heroicgameslauncher\\.hgl|heroic|org\\.prismlauncher\\.PrismLauncher|PrismLauncher|com\\.modrinth\\.theseus|ModrinthApp|com\\.atlauncher\\.ATLauncher|ATLauncher|minecraft-launcher)$",
+	}, -- keep in sync with the SUPER+G matcher below
+	workspace = "special:" .. C.SPECIAL_WORKSPACE.GAMES,
+})
+
+hl.bind(
+	C.MODKEY .. "+G",
+	toggle_app_special_workspace(C.SPECIAL_WORKSPACE.GAMES, {
+		-- keep in sync with the games-launchers-workspace-class rule above
+		class = {
+			"^steam$",
+			"^lutris$",
+			"^com%.heroicgameslauncher%.hgl$",
+			"^heroic$",
+			"^org%.prismlauncher%.PrismLauncher$",
+			"^PrismLauncher$",
+			"^com%.modrinth%.theseus$",
+			"^ModrinthApp$",
+			"^com%.atlauncher%.ATLauncher$",
+			"^ATLauncher$",
+			"^minecraft%-launcher$",
+		},
+		title = { "^Steam$" },
+	}, "steam"),
+	{ description = "Toggle game launchers workspace (Steam)" }
+)
+
+hl.bind(
+	C.MODKEY .. "+CTRL+G",
+	hl.dsp.focus({ workspace = C.GAMES_WORKSPACE }),
+	{ description = "Go to games workspace" }
+)
+
+hl.bind(
+	C.MODKEY .. "+SHIFT+G",
+	hl.dsp.window.move({ workspace = "special:" .. C.SPECIAL_WORKSPACE.GAMES }),
+	{ description = "Move window to game launchers workspace" }
+)
+
+hl.bind(C.MODKEY .. "+ALT+G", hl.dsp.exec_cmd("heroic"), { description = "Open Heroic" })

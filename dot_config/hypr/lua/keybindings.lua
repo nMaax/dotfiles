@@ -73,59 +73,11 @@ hl.bind(C.MODKEY .. "+SHIFT+N", hl.dsp.exec_cmd("code"), { description = "Open V
 hl.bind(C.MODKEY .. "+ALT+N", hl.dsp.exec_cmd("gnome-text-editor"), { description = "Open Text Editor" })
 hl.bind(C.MODKEY .. "+E", hl.dsp.exec_cmd(C.FILE_MANAGER), { description = "Open file manager" })
 hl.bind(C.MODKEY .. "+SHIFT+E", hl.dsp.exec_cmd(C.TERMINAL .. " -e yazi"), { description = "Open yazi file manager" })
-hl.bind(C.MODKEY .. "+ALT+G", hl.dsp.exec_cmd("heroic"), { description = "Open Heroic" })
 
 -- 3. SPECIAL WORKSPACES
 
-local function is_window_on_special_workspace(window, special)
-	return window.workspace ~= nil and window.workspace.name == special
-end
-
-local function toggle_app_special_workspace(name, matchers, command)
-	local special = "special:" .. name
-	return function()
-		local target
-		for _, window in ipairs(hl.get_windows()) do
-			local hit = false
-			for _, pattern in ipairs(matchers.class or {}) do
-				if (window.class or ""):match(pattern) then
-					hit = true
-				end
-			end
-			for _, pattern in ipairs(matchers.title or {}) do
-				if (window.title or ""):match(pattern) then
-					hit = true
-				end
-			end
-			if hit then
-				-- Prefer a window still on its own workspace, so a second window
-				-- left elsewhere doesn't hijack the bind.
-				if is_window_on_special_workspace(window, special) then
-					target = window
-					break
-				end
-				target = target or window
-			end
-		end
-
-		if not target then
-			if command then
-				hl.exec_cmd(command)
-			end
-			-- Toggle unconditionally, so the workspace slides in immediately even if
-			-- the app we just spawned takes a couple of seconds to map.
-			hl.dispatch(hl.dsp.workspace.toggle_special(name))
-			return
-		end
-
-		local active = hl.get_active_window()
-		if is_window_on_special_workspace(target, special) and active and active.address == target.address then
-			hl.dispatch(hl.dsp.workspace.toggle_special(name))
-			return
-		end
-		hl.dispatch(hl.dsp.focus({ window = target }))
-	end
-end
+local special = require("lua.special")
+local toggle_app_special_workspace = special.toggle_app_special_workspace
 
 -- Toggle a special workspace
 hl.bind(
@@ -164,32 +116,6 @@ hl.bind(
 		title = { "^Spotify$", "^Spotify Premium$", "^Spotify Free$" },
 	}, "spotify"),
 	{ description = "Toggle music workspace (Spotify)" }
-)
-hl.bind(
-	C.MODKEY .. "+G",
-	toggle_app_special_workspace(C.SPECIAL_WORKSPACE.GAMES, {
-		-- keep in sync with rules.lua's games-launchers-workspace-class matcher
-		class = {
-			"^steam$",
-			"^lutris$",
-			"^com%.heroicgameslauncher%.hgl$",
-			"^heroic$",
-			"^org%.prismlauncher%.PrismLauncher$",
-			"^PrismLauncher$",
-			"^com%.modrinth%.theseus$",
-			"^ModrinthApp$",
-			"^com%.atlauncher%.ATLauncher$",
-			"^ATLauncher$",
-			"^minecraft%-launcher$",
-		},
-		title = { "^Steam$" },
-	}, "steam"),
-	{ description = "Toggle game launchers workspace (Steam)" }
-)
-hl.bind(
-	C.MODKEY .. "+CTRL+G",
-	hl.dsp.focus({ workspace = C.GAMES_WORKSPACE }),
-	{ description = "Go to games workspace" }
 )
 hl.bind(
 	C.MODKEY .. "+A",
@@ -253,11 +179,6 @@ hl.bind(
 	C.MODKEY .. "+SHIFT+M",
 	throw_to_special_workspace(C.SPECIAL_WORKSPACE.MUSIC),
 	{ description = "Move window to music workspace" }
-)
-hl.bind(
-	C.MODKEY .. "+SHIFT+G",
-	throw_to_special_workspace(C.SPECIAL_WORKSPACE.GAMES),
-	{ description = "Move window to game launchers workspace" }
 )
 hl.bind(
 	C.MODKEY .. "+SHIFT+A",

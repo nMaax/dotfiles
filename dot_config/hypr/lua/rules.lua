@@ -162,12 +162,3 @@ hl.window_rule({
 	center = true,
 	pin = true,
 })
-
--- Game Launchers Workspace
-hl.window_rule({
-	name = "games-launchers-workspace-class",
-	match = {
-		class = "^(steam|lutris|com\\.heroicgameslauncher\\.hgl|heroic|org\\.prismlauncher\\.PrismLauncher|PrismLauncher|com\\.modrinth\\.theseus|ModrinthApp|com\\.atlauncher\\.ATLauncher|ATLauncher|minecraft-launcher)$",
-	}, -- keep in sync with keybindings.lua's SUPER+G matcher
-	workspace = "special:" .. C.SPECIAL_WORKSPACE.GAMES,
-})

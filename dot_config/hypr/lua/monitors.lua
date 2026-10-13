@@ -127,7 +127,7 @@ local function apply_workspace_layout()
 		end
 	end
 
-	-- Games (see the games-workspace rule in rules.lua) follow the largest screen
+	-- Games (see the games-launchers rule in gaming.lua) follow the largest screen
 	if monitors[1] then
 		hl.workspace_rule({
 			workspace = GAMES_WORKSPACE,
