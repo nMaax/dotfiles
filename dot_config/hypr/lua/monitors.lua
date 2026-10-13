@@ -34,7 +34,7 @@ hl.monitor({
 	position = "auto-up",
 	scale = 1,
 	vrr = 3,
-	bitdepth = 8,
+	bitdepth = 10,
 })
 hl.monitor({
 	output = "desc:AOC Q27G41ZDF RK2S3JA009971",
