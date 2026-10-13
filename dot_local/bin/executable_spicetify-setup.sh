@@ -39,9 +39,10 @@ spicetify apply --no-restart
 
 echo "Installing Spicetify Marketplace... (⚠️ not really the Arch way, but it doesnt touch anything outside home/)"
 
-curl -fsSL "$MARKETPLACE_INSTALL_URL" -o /tmp/install_marketplace.sh
-sed -i 's/spicetify apply/spicetify apply --no-restart/g' /tmp/install_marketplace.sh
-sh /tmp/install_marketplace.sh
-rm /tmp/install_marketplace.sh
+MARKETPLACE_SCRIPT="$(mktemp)"
+trap 'rm -f "$MARKETPLACE_SCRIPT"' EXIT
+curl -fsSL "$MARKETPLACE_INSTALL_URL" -o "$MARKETPLACE_SCRIPT"
+sed -i 's/spicetify apply/spicetify apply --no-restart/g' "$MARKETPLACE_SCRIPT"
+sh "$MARKETPLACE_SCRIPT"
 
 echo "Spotify, Spicetify, Comfy, and Marketplace cleanly installed!"

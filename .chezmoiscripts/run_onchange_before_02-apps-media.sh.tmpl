@@ -22,8 +22,12 @@ info "🎵 Installing EasyEffects and audio effect plugins..."
 sudo pacman -S --needed --noconfirm easyeffects lsp-plugins zam-plugins calf mda.lv2
 
 info "🎧 Installing Spotify & Spicetify..."
-curl -fsSL "$SPICETIFY_SETUP_URL" | sh -s -- \
-  "$SPICETIFY_COMFY_REPO_URL" "$SPICETIFY_MARKETPLACE_INSTALL_URL"
+SPICETIFY_SETUP="$(mktemp)"
+trap 'rm -f "$SPICETIFY_SETUP"' EXIT
+cat >"$SPICETIFY_SETUP" <<'SPICETIFY_SETUP_EOF'
+{{ include "dot_local/bin/executable_spicetify-setup.sh" }}
+SPICETIFY_SETUP_EOF
+bash "$SPICETIFY_SETUP" "$SPICETIFY_COMFY_REPO_URL" "$SPICETIFY_MARKETPLACE_INSTALL_URL"
 
 echo ""
 success "✅ [Installing Apps: Media] Done."
