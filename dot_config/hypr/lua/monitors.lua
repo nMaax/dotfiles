@@ -3,10 +3,13 @@
 
 local C = require("lua.constants")
 
-local laptop = "eDP-1"
-
--- Some monitor I saw in my life
-hl.monitor({ output = laptop, mode = "1920x1080@144", position = "0x0", scale = 1 })
+-- Some monitors I saw in my life
+hl.monitor({
+	output = "desc:Najing CEC Panda FPD Technology CO. ltd 0x004D",
+	mode = "1920x1080@144",
+	position = "0x0",
+	scale = 1,
+})
 hl.monitor({ output = "desc:OOO YZ2748", mode = "1920x1080@60.00", position = "auto-up", scale = 1 })
 hl.monitor({
 	output = "desc:Ancor Communications Inc ASUS VN247 G2LMTF057181",
@@ -54,7 +57,7 @@ hl.monitor({
 })
 
 -- Fallback
-hl.monitor({ output = "", mode = "preferred", position = "auto-up", scale = 1 })
+hl.monitor({ output = "", mode = "highrr", position = "auto-up", scale = "auto" })
 
 -- See https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/
 
