@@ -665,7 +665,9 @@ EDID-missing fallbacks. Use the stubbed-`hl` harness (§1) for geometry a headle
   `SUPER+0` says `"Access workspace [0-9]"`. Media/`XF86*` keys and submap navigation binds are
   deliberately undescribed (self-evident, and they'd flood the sheet). Anything genuinely new and
   discoverable gets its own.
-- `git commit` messages are one-liners listing the changes, not verbose bodies.
+- **No backward compatibility or migration code for renamed/removed paths.** When a directory, file or
+  setting changes (e.g. `Work` → `Projects`), update the source only: no scripts that move user data,
+  no compat symlinks. Existing users migrate their own files by hand.
 - This file is `AGENTS.md`; `CLAUDE.md` is only a symlink to it. Keep it agent-neutral: never retitle it
   `CLAUDE.md` or add Claude-specific boilerplate (e.g. from `/init`).
 
