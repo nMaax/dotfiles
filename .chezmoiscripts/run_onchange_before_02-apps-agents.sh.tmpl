@@ -4,9 +4,7 @@ set -euo pipefail
 {{ template "utils.sh.tmpl" . }}
 {{ template "external_links.sh.tmpl" . }}
 
-{{- $agents := false -}}
-{{- if hasKey . "agents" }}{{ $agents = .agents }}{{ else if hasKey . "ai" }}{{ $agents = .ai }}{{ end -}}
-{{- if $agents }}
+{{- if .agents }}
 echo ""
 info "🚀 [Installing Apps: Agents] Starting..."
 echo ""

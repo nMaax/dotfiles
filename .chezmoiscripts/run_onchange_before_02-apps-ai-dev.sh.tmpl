@@ -4,9 +4,7 @@ set -euo pipefail
 {{ template "utils.sh.tmpl" . }}
 {{ template "external_links.sh.tmpl" . }}
 
-{{- $ai_dev := false -}}
-{{- if hasKey . "ai_dev" }}{{ $ai_dev = .ai_dev }}{{ else if hasKey . "ai" }}{{ $ai_dev = .ai }}{{ end -}}
-{{- if $ai_dev }}
+{{- if .ai_dev }}
 echo ""
 info "🚀 [Installing Apps: AI Dev] Starting..."
 echo ""

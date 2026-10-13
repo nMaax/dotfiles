@@ -29,9 +29,11 @@ fi
 info "😀 Installing Apple Emoji..."
 paru -S --needed --noconfirm ttf-apple-emoji
 
-if pacman -Qs noto-fonts-emoji >/dev/null; then
-  info "Removing conflicting package: noto-fonts-emoji"
-  sudo pacman -Rns --noconfirm noto-fonts-emoji noto-color-emoji-fontconfig
+NOTO_EMOJI_PKGS="$(pacman -Qq noto-fonts-emoji noto-color-emoji-fontconfig 2>/dev/null || true)"
+if [ -n "$NOTO_EMOJI_PKGS" ]; then
+  info "Removing Noto emoji packages: $NOTO_EMOJI_PKGS"
+  # shellcheck disable=SC2086
+  sudo pacman -Rns --noconfirm $NOTO_EMOJI_PKGS
 fi
 
 echo ""
