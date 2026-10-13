@@ -2,11 +2,11 @@
 
 Personal dotfiles and system configurations, just the way I like it.
 
-These dotfiles are heavily based on **CachyOS** (not just Arch), specifically the various packages that Cachy ships with it's own base installation (fish, various KDE bloat etc.).
+These dotfiles are heavily based on **CachyOS** (not just Arch), specifically the various packages that Cachy ships with its own base installation (fish, various KDE bloat, etc.).
 
-Ideally you should have installed CachyOS selecting for Hyprland during the Calamares installation. If you didn't, 🥮 will install everything needed but some manual changes could be necessary (e.g. enabling noctalia-greetr)
+Ideally, you should have installed CachyOS selecting Hyprland during the Calamares installation. If you didn't, 🥮 will install everything needed, but some manual changes could be necessary (e.g., enabling noctalia-greetr)
 
-> Managed using [chezmoi](https://www.chezmoi.io/). Code written with the help of Gemini, Claude and Copilot.
+> Managed using [chezmoi](https://www.chezmoi.io/). Code written with the help of Gemini, Claude, and Copilot.
 
 ## Installation
 
@@ -17,18 +17,18 @@ Ideally you should have installed CachyOS selecting for Hyprland during the Cala
 
 ```toml
 [data]
-  name = "nMaax"
+  name = "uname"
   email = "you@example.com"
-  tailscale_authkey = "tskey-auth-XXXXXXXXXXXXX" # "" installs Tailscale without logging in, false skips it entirely
-  nordvpn_authkey = "nvpnkey-auth-XXXXXXXXXXXXX" # "" installs NordVPN without logging in, false skips it entirely
-  mega_authkey = "megakey-auth-XXXXXXXXXXXXX" # "" installs MEGA without logging in, false skips it entirely
-  gaming = true # false to avoid installing Steam, Mango, OpenRGB etc.
-  coding = true # false to skip dev tooling neovim, vscode, lazygit, nodejs, etc.
-  ai_dev = true # false to skip AI dev tools CUDA, ROCm, Ollama etc.
-  agents = true # false to skip AI agents Claude Code, Antigravity, OpenCode etc.
-  media = true # false to skip kdenlive, OBS, EasyEffects, Spotify etc.
-  office = true # false to skip LibreOffice, KeePassXC, qBittorrent, CUPS printing etc.
-  communication = true # false to skip Telegram, Signal, Discord, Element etc.
+  tailscale_authkey = "tskey-auth-XXXXXXXXXXXXX" # "" installs Tailscale without logging in; false skips it entirely
+  nordvpn_authkey = "nvpnkey-auth-XXXXXXXXXXXXX" # "" installs NordVPN without logging in; false skips it entirely
+  mega_authkey = "megakey-auth-XXXXXXXXXXXXX" # "" installs MEGA without logging in; false skips it entirely
+  gaming = true # false to avoid installing Steam, Mango, OpenRGB, etc.
+  coding = true # false to skip dev tooling: Neovim, VS Code, lazygit, nodejs, etc.
+  ai_dev = true # false to skip AI dev tools: CUDA, ROCm, Ollama, etc.
+  agents = true # false to skip AI agents: Claude Code, Antigravity, OpenCode, etc.
+  media = true # false to skip kdenlive, OBS, EasyEffects, Spotify, etc.
+  office = true # false to skip LibreOffice, KeePassXC, qBittorrent, CUPS printing, etc.
+  communication = true # false to skip Telegram, Signal, Discord, Element, etc.
   plugins = true # false to skip Hyprland plugins (hyprpm, scrolloverview)
 ```
 
@@ -42,13 +42,13 @@ chezmoi init --apply nMaax
 ```
 
 > [!WARNING]
-> `ddcutil` will been installed, which may cause instability with certain monitors. You can remove it via `sudo pacman -Rns ddcutil` if you encounter any issue.
+> `ddcutil` will be installed, which may cause instability with certain monitors. You can remove it via `sudo pacman -Rns ddcutil` if you encounter any issues.
 
 > [!NOTE]
-> During log-in in the greeter choose **systemd-owned Hyprland** (`Hyprland (uwsm-managed)`) instead of the plain one, to ensure autostart scripts function correctly (e.g. cachy-update tray icon).
+> During log-in in the greeter, choose **systemd-owned Hyprland** (`Hyprland (uwsm-managed)`) instead of the plain one, to ensure autostart scripts function correctly (e.g. cachy-update tray icon).
 
 > [!TIP]
-> If you ever re-sync local edits back into these dotfiles with `chezmoi add`, always pass `--exclude=externals`: wallpapers, profile pictures and the cursor theme are pulled from separate asset repos, not meant to be duplicated as literal files here.
+> If you ever re-sync local edits back into these dotfiles with `chezmoi add`, always pass `--exclude=externals`: wallpapers, profile pictures, and the cursor theme are pulled from separate asset repos, not meant to be duplicated as literal files here.
 
 ### Handling missing polkit agent password prompt in CachyOS Hello
 
@@ -72,7 +72,7 @@ To fix, do the following:
 
 ### Keyring (KWallet)
 
-KWallet is the password manager of choice in 🥮, due to the already wide presence of KDE-ecosystem tools by CachyOS itself. The install scripts pull in the `kwallet`/`kwalletmanager`/`kwallet-pam` packages automatically, but **PAM auto-unlock at login is not configured out of the box** for the Noctalia greeter (`greetd`) — KWallet stays locked at session start, and unlocks via a one-time manual password prompt the first time an app needs a secret each session. Electron apps relying on the Electron safe-storage feature may still show their own separate prompts regardless.
+KWallet is the password manager of choice in 🥮, due to the already wide presence of KDE ecosystem tools by CachyOS itself. The install scripts pull in the `kwallet`/`kwalletmanager`/`kwallet-pam` packages automatically, but **PAM auto-unlock at login is not configured out of the box** for the Noctalia greeter (`greetd`) — KWallet stays locked at session start, and unlocks via a one-time manual password prompt the first time an app needs a secret each session. Electron apps relying on the Electron safe-storage feature may still show their own separate prompts regardless.
 
 If you'd rather have KWallet auto-unlock at login, you'll need to patch `/etc/pam.d/greetd` yourself with the same `pam_kwallet5.so` lines KDE ships for SDDM (see the Arch Wiki link below). Whether or not you do, when you're first prompted to create a wallet, use these settings so auto-unlock (now or later) actually works:
 
@@ -155,32 +155,32 @@ sudo grub-mkconfig -o /boot/grub/grub.cfg
 
 Noctalia presents a standard approach to sync apps colorschemes with its own theme, each app requires its own procedure, part of it can be automated via code, and some other not. Further information can be found in [official Noctalia documentation](https://docs.noctalia.dev/v5/theming/app-theming/).
 
-You can retrieve the list of apps on which automatic theming is set on the Noctalia settings themselves. Note however that part of those may still require some in-app manual intervention, here below are some steps you shall take to complete the theming:
+You can retrieve the list of apps on which automatic theming is set in the Noctalia settings themselves. Note, however, that some of those may still require some in-app manual intervention; below are some steps you shall take to complete the theming:
 
 #### GTK and Qt
 
 - **qt5ct** (`qt5ct` command): Set **Color scheme** to `noctalia`, **General font** to `SF Pro`, **Fixed-width font** to `CaskaydiaCove Nerd Font Mono`
 - **qt6ct** (`qt6ct` command): Same as above.
-  - Qt theming via `qt6ct` with `QT_QPA_PLATFORMTHEME` has been already set in Hyprland config files for environment variables (`~/.config/hypr/lua/env.lua`).
-- **GTK** (`nwg-look`): Set general font to `SF Pro Regular`, then ensure Preferences > .config/gtk-4.0 is disabled, eventually clear if you found it enabled.
+  - Qt theming via `qt6ct` with `QT_QPA_PLATFORMTHEME` has already been set in Hyprland config files for environment variables (`~/.config/hypr/lua/env.lua`).
+- **GTK** (`nwg-look`): Set the general font to `SF Pro Regular`, then ensure Preferences > .config/gtk-4.0 is disabled; eventually, clear it if you found it enabled.
   - `adw-gtk3` + `prefer-dark` was already applied via `gsettings` during the install script.
-- GTK apps will automatically fetch the color scheme from the above, while Qt apps must be configured separately going inside app-settings and finding the colorscheme item.
+- GTK apps will automatically fetch the color scheme from the above, while Qt apps must be configured separately by going into app settings and finding the colorscheme item.
 
 #### Specific apps
 
-- **Zen Browser:** Open `about:config` → set `toolkit.legacyUserProfileCustomizations.stylesheets` to `true`; then open Settings → General → set Website Appearance to Auto; finally Restart Zen Browser.
+- **Zen Browser:** Open `about: config` → set `toolkit.legacyUserProfileCustomizations.stylesheets` to `true`; then open Settings → General → set Website Appearance to Auto; finally, restart Zen Browser.
 - **Discord:** Open Equibop → Settings → Themes → enable one of the two Noctalia themes.
 - **VSCode:** Install the `NoctaliaTheme` extension from the marketplace, then select it via `Ctrl+Shift+P` → *Preferences: Color Theme*.
 - **Telegram:** Open Settings → Chat Settings → scroll to the bottom and enable the custom color theme.
 - **Steam**: Install [Material-Theme](https://steambrew.app/theme?id=ipYjqODds05KMcvh7QJn) and add it in Millenium Settings > Theme, then click the three dots > configure > style > colors > select *Matugen* in the theme color dropdown.
 - **Heroic Games Launcher:** Settings → Advanced → set **Custom Themes Path** to `~/.config/heroic/themes`, then select **matugen** from the theme dropdown. One-time; the generated CSS updates in place on further theme changes.
 - **Prism Launcher:** Settings → Appearance → Theme → select **Matugen**. One-time; the generated theme JSON updates in place on further theme changes.
-- All other enabled apps (`btop`, `cava`, `ghostty`, `starship`, `hyprland`, `kcolorscheme`, `neovim`, `yazi`) apply fully automatically, no action needed.
+- All other enabled apps (`btop`, `cava`, `ghostty`, `starship`, `hyprland`, `kcolorscheme`, `neovim`, `yazi`) apply fully automatically; no action needed.
 
 > [!NOTE]
-> If some apps do not properly fetch the color scheme even after having followed the noctalia guidelines, try to disable and re-enable them, as well as changing color-scheme as a whole.
+> If some apps do not properly fetch the color scheme even after having followed the noctalia guidelines, try to disable and re-enable them, as well as changing the color scheme as a whole.
 
-Furthermore, you can install other themes for apps yourself, have a look at:
+Furthermore, you can install other themes for apps yourself; have a look at:
 
 - [ZenZero](https://sameerasw.com/zen)
 - [BetterDiscord](https://betterdiscord.app/themes)
@@ -190,7 +190,7 @@ Furthermore, you can install other themes for apps yourself, have a look at:
 
 ### Browsing
 
-The stuff that I usually use during my browsing experience, these are completely optional and at your preference, do what you want with them:
+The stuff that I usually use during my browsing experience is completely optional and up to your preference; do what you want with them:
 
 - **Extensions**:
   - [uBlock Origin](https://ublockorigin.com/) – content & ad blocker
@@ -212,11 +212,11 @@ Furthermore, here is a list of some good misc websites for assets in case you wa
 - [Pinterest](https://it.pinterest.com/): for propics
 - [Wallhaven](https://wallhaven.cc/): for static backgrounds
 - [MotionBGs](https://motionbgs.com/): for animated wallpapers
-- Guide on how to convert WallpaperEngine backgrounds into video files: from [WallapaperEngine itself](https://help.wallpaperengine.io/en/functionality/export.html), from [Steam community](https://steamcommunity.com/sharedfiles/filedetails/?id=2277828676)
+- Guide on how to convert Wallpaper Engine backgrounds into video files: from [Wallpaper Engine itself](https://help.wallpaperengine.io/en/functionality/export.html), from [Steam community](https://steamcommunity.com/sharedfiles/filedetails/?id=2277828676)
 
 ### Spicetify extensions
 
-Other stuff I use on Spicetify, I warmly advice is to use the marketplace as much as possible to install them! Spicetify and Spicetify marketplace are automatically installed with 🥮.
+Other stuff I use on Spicetify, I warmly advice is to use the marketplace as much as possible to install them! Spicetify and the Spicetify marketplace are automatically installed with 🥮.
 
 If you want to re-run just the Spicetify setup without `chezmoi apply`, run:
 
@@ -224,10 +224,10 @@ If you want to re-run just the Spicetify setup without `chezmoi apply`, run:
 ~/.local/bin/spicetify-setup.sh
 ```
 
-- [Spicy Lyrics](https://github.com/Spikerko/spicy-lyrics) (instead of Beautiful Lyrics, which seem to be deprecated!)
+- [Spicy Lyrics](https://github.com/Spikerko/spicy-lyrics) (instead of Beautiful Lyrics, which seems to be deprecated!)
 - Global Stats for songs, to fetch info on different songs.
-- Shuffle+ for a fisher-yates randomization with zero bias.
-- [Lucid Theme](https://github.com/sanoojes/spicetify-lucid) (instead of the Confy default one, tho this one looks quite heavy, bloated and dirty, ngl.)
+- Shuffle+ for a Fisher-Yates randomization with zero bias.
+- [Lucid Theme](https://github.com/sanoojes/spicetify-lucid) (instead of the Confy default one, tho this one looks quite heavy, bloated, and dirty, ngl.)
 
 > [!WARNING]
 > Disable Comfy theme via spicetify cli if you want to install a different one!
@@ -240,7 +240,7 @@ If you want to re-run just the Spicetify setup without `chezmoi apply`, run:
 
 ### Gaming
 
-Of course 🥮 is designed with gaming in mind too, 🥮 will apply some common installations and tweaks when `gaming = true` is set in `chezmoi.toml`. For more details, visit the [CachyOS Gaming Wiki](https://wiki.cachyos.org/configuration/gaming). Here is quick guidance to complete your gaming experience:
+Of course 🥮 is designed with gaming in mind too; 🥮 will apply some common installations and tweaks when `gaming = true` is set in `chezmoi.toml`. For more details, visit the [CachyOS Gaming Wiki](https://wiki.cachyos.org/configuration/gaming). Here is quick guidance to complete your gaming experience:
 
 The sched-ext scheduler is set to `scx_lavd` in Gaming mode (`/etc/scx_loader/config.toml`, `scx_loader` enabled at boot). Check it with `scxctl get`, or change it from **SCX Manager**. Shader caches (NVIDIA and Mesa) are raised to 12 GB in `~/.config/environment.d/gaming.conf`, which also sets globally: `PROTON_DLSS_UPGRADE=1` and `PROTON_NVIDIA_LIBS_NO_32BIT=1` (Proton-CachyOS only), NVIDIA's DLSS overrides (`PROTON_ENABLE_NGX_UPDATER` + `DXVK_NVAPI_DRS_NGX_DLSS_*`, any Proton; set one to `off` in a game's launch options to opt out), AMD's `FSR4_UPGRADE=1` (RDNA4) and `ENABLE_LAYER_MESA_ANTI_LAG=1` (layer installed on AMD by the gaming script), and `DXVK_HUD=0`.
 
@@ -253,12 +253,12 @@ Everything else is global in `gaming.conf`, so every game only needs the `game-p
 - **Lutris:** `game-performance` as **Command prefix** under **System options**.
 
 > [!WARNING]
-> Native Wayland is opt-in per game with `PROTON_ENABLE_WAYLAND=1` (Proton-CachyOS only). If you encounter a black screen it probably is a conflict between direct scanout and native wayland compositor for the game. In such case drop it or disable `direct_scanout` in Hyprland settings.
+> Native Wayland is opt-in per game with `PROTON_ENABLE_WAYLAND=1` (Proton-CachyOS only). If you encounter a black screen, it probably is a conflict between direct scanout and the native Wayland compositor for the game. In such a case, drop it or disable `direct_scanout` in Hyprland settings.
 
 > [!TIP]
 > **NVIDIA Smooth Motion** (RTX 40+, Vulkan/DXVK only): add `NVPRESENT_ENABLE_SMOOTH_MOTION=1` per game for driver-level frame generation. Worth it on single-player games that are FPS-locked (e.g. 60 FPS caps) or CPU-bound, with no native frame gen, running at ~60-120 FPS. Skip it for competitive games, games with native DLSS FG, or games already at your refresh rate. If overlays glitch, add `NVPRESENT_QUEUE_FAMILY=1`.
 
-For Lutris specifically, remind to enable **Disable Lutris Runtime** and **Prefer system libraries**
+For Lutris specifically, remember to enable **Disable Lutris Runtime** and **Prefer system libraries**
 
 #### Gaming mouse
 
@@ -287,9 +287,9 @@ steamos-session-select persistent # remember last-used session across boots
 sudo /usr/lib/steamos/steam-set-session hyprland-uwsm.desktop # set hyprland (UWSM) as main session
 ```
 
-Then reboot and Hyprland will launch.
+Then reboot, and Hyprland will launch.
 
-To revert to stock handheld behavior (always boot to Big Picture) run:
+To revert to stock handheld behavior (always boot to Big Picture), run:
 
 ```bash
 steamos-session-select oneshot
@@ -297,15 +297,15 @@ steamos-session-select oneshot
 
 ### Streaming (P2P)
 
-If you are not satisfied with the Wayland screenshare when streaming gaming on your Electron app (e.g. Discord) then 🥮 brings some plugins to stream your games with low latency and low added input latency on the game. Namely using `obs-vkcapture`, `lib32-obs-vkcapture`, `obs-pipewire-audio-capture`.
+If you are not satisfied with the Wayland screenshare when streaming games on your Electron app (e.g., Discord), then 🥮 brings some plugins to stream your games with low latency and low added input latency on the game. Namely using `obs-vkcapture`, `lib32-obs-vkcapture`, and `obs-pipewire-audio-capture`.
 
 1. Launch your game, so its audio and video hooks are active in your system.
 2. Open OBS Studio. Under the **Sources** dock, click the **`+`** icon.
-3. Add a **Game Capture (Vulkan/OpenGL)** source. Leave its properties on default; it will automatically hook into your game's engine.
+3. Add a **Game Capture (Vulkan/OpenGL)** source. Leave its properties at default; it will automatically hook into your game's engine.
 4. Click **`+`** again and add an **Application Audio Capture (PipeWire)** source.
 5. Inside its properties, find the **Application** dropdown menu and select **`wine64-preloader`** (this represents your Steam Proton / Wine game process).
 
-Because you are explicitly capturing the game audio now, you must turn off OBS's global desktop capture so your friend don't hear everything twice:
+Because you are explicitly capturing the game audio now, you must turn off OBS's global desktop capture so your friend doesn't hear everything twice:
 
 - Go to **Settings** $\rightarrow$ **Audio**.
 - Under **Global Audio Devices**, change **Desktop Audio** to **Disabled**. Click **Apply**.
@@ -338,7 +338,7 @@ Go to the **Output** tab and flip the **Output Mode** at the very top from *Simp
 
 Finally, go to the **Advanced** tab on the left sidebar. Under **General**, change **Process Priority** from *Normal* to **`Above Normal`** or **`High`**. This stops the Linux kernel from starving OBS of resources when your game hits an intense scene.
 
-Now we are ready to run the Meshcast Stream
+Now we are ready to run the Meshcast Stream.
 
 1. Open your web browser and navigate to **[Meshcast.io](https://meshcast.io/)**.
 2. Scroll to the **Stream using WHIP** section, type a unique ID, select your closest regional server location, and click the link generation button.
@@ -370,7 +370,7 @@ Hit **Start Streaming** in OBS. That's it :)
 
 ### For the future
 
-- [ ] Try HDR gaming: needs a Proton with native Wayland + HDR ([GE-Proton](https://github.com/GloriousEggroll/proton-ge-custom): `PROTON_ENABLE_WAYLAND=1 PROTON_ENABLE_HDR=1`, Valve's Proton can't) and a 10-bit HDR monitor config (`bitdepth = 10`, `cm = edid`, `render:cm_auto_hdr`), see [Hyprland #11083](https://github.com/hyprwm/Hyprland/discussions/11083). The AOC already runs at 10 bit with direct scanout working
+- [ ] Try HDR gaming: needs a Proton with native Wayland + HDR ([GE-Proton](https://github.com/GloriousEggroll/proton-ge-custom): `PROTON_ENABLE_WAYLAND=1 PROTON_ENABLE_HDR=1`, Valve's Proton can't) and a 10-bit HDR monitor config (`bitdepth = 10`, `cm = edid`, `render:cm_auto_hdr`), see [Hyprland #11083](https://github.com/hyprwm/Hyprland/discussions/11083). The AOC already runs at 10-bit with direct scanout working
 - [ ] Try the [ADIOS I/O scheduler](https://github.com/firelzrd/adios) once it's stable (CachyOS defaults NVMe to `kyber`)
-- [ ] Enhance assets by introducing a GitHub CI action that autogenerates README with gallery, like [dharmx](https://github.com/dharmx/walls)
-- [ ] Generalize for pure Arch by reproducing what Cachy installs, including fundamentals like bluetooth, networkmanager, fish, cachyos fish setup, gpu drivers etc.
+- [ ] Enhance assets by introducing a GitHub CI action that autogenerates a README with a gallery, like [dharmx](https://github.com/dharmx/walls)
+- [ ] Generalize for pure Arch by reproducing what Cachy installs, including fundamentals like Bluetooth, NetworkManager, fish, CachyOS fish setup, GPU drivers, etc.
