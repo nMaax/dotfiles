@@ -21,14 +21,8 @@ info "📁 Creating common directories..."
 mkdir -p "$HOME/Pictures/Screenshots/"
 xdg-user-dirs-update
 
-info "📦 Checking for missing base packages..."
-BASE_PACKAGES=(binutils base-devel git vim cmake cpio appmenu-gtk-module libdbusmenu-glib)
-for pkg in "${BASE_PACKAGES[@]}"; do
-  if ! pacman -Qi "$pkg" &>/dev/null; then
-    info "    Installing missing package: $pkg"
-    sudo pacman -S --needed --noconfirm "$pkg"
-  fi
-done
+info "📦 Installing base packages..."
+sudo pacman -S --needed --noconfirm binutils base-devel git vim cmake cpio appmenu-gtk-module libdbusmenu-glib
 
 info "🔧 Installing other utilities..."
 sudo pacman -S --needed --noconfirm paru curl zip 7zip sshfs caligula smartmontools grim slurp wl-clipboard ffmpeg resvg imagemagick perl-image-exiftool gifski zbar jq tesseract tesseract-data-eng tesseract-data-ita texlive-latex glow dust bat ripgrep fd htop btop fastfetch nvtop trash-cli transmission-cli ghostscript poppler qpdf ufw tealdeer ksshaskpass fzf zoxide translate-shell

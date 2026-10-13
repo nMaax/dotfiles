@@ -17,17 +17,13 @@ tldr --update
 
 info "💾 Enable smartmontools to check for SSD health"
 sudo systemctl enable --now smartd
-sleep 2
 
 info "🧱 Setup Uncomplicated Firewall"
 sudo ufw enable
-sleep 2
 
 info "🔐 Enable SSH daemon and agent"
 sudo systemctl enable --now sshd
-sleep 2
 systemctl --user enable --now ssh-agent
-sleep 2
 
 echo ""
 success "✅ [System Services] Done."

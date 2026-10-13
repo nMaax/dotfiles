@@ -600,7 +600,7 @@ SDDM is intentionally left alone as a fallback, not force-removed.
    `monitor` is a config *keyword*, never a dispatcher.
 
 6i. **`change_id` (Hyprland 0.56) cannot target workspaces 1–10 here.** It rejects an occupied id, and
-   `monitors.lua` makes 1–10 `persistent`, so all ten always exist. `SUPER+ALT+<digit>` therefore
+   `monitors.lua` makes 1–10 `persistent`, so all ten always exist. `SUPER+ALT+CTRL+<digit>` therefore
    moves each window individually; `change_id` is still right for *stashing* a layout at an unused
    high id.
 
