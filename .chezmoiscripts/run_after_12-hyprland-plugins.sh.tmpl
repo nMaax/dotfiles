@@ -1,3 +1,4 @@
+{{- if .plugins -}}
 #!/bin/bash
 set -euo pipefail
 
@@ -46,3 +47,4 @@ fi
 echo ""
 success "✅ [Hyprland Plugins] Done."
 echo ""
+{{ end -}}

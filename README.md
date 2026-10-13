@@ -29,6 +29,7 @@ Ideally you should have installed CachyOS selecting for Hyprland during the Cala
   media = true # false to skip kdenlive, OBS, EasyEffects, Spotify etc.
   office = true # false to skip LibreOffice, KeePassXC, qBittorrent, CUPS printing etc.
   communication = true # false to skip Telegram, Signal, Discord, Element etc.
+  plugins = true # false to skip Hyprland plugins (hyprpm, scrolloverview)
 ```
 
 During install, you will have the option to automatically wipe `tailscale_authkey` / `nordvpn_authkey` / `mega_authkey` from `~/.config/chezmoi/chezmoi.toml` right after their use. Leaving any of them as `""` still installs and enables that integration, just without an auto-login; set it to `false` to skip installing it altogether.
@@ -359,17 +360,20 @@ Hit **Start Streaming** in OBS. That's it :)
 
 ## 📝 TODOs
 
-- [ ] Fix gaming issues
+- [x] Fix gaming issues
   - [x] Shader re-compilation in Overwatch: only after driver/Proton/game updates, otherwise cached (<15s load)
   - [x] Make claude fix direct scanout on games (works with `vrr = 3` and VRR off by default for games, also at 10 bit)
   - [x] Make claude fix the cursor loosing focus on games (Game Mode switches to dwindle, automatic on game launch or `SUPER+ALT+Z`, see [Hyprland #16326](https://github.com/hyprwm/Hyprland/issues/16326))
   - [x] Move rules / performance / keybinds for gaming in a gaming.lua file, and let it work only if gaming is enabled in chezmoi.toml
-- [ ] Make plugins optional via chezmoi.toml
-  - [ ] Try [Hyprglass](https://github.com/hyprnux/hyprglass)
+- [x] Make plugins optional via chezmoi.toml
 - [ ] Move to shelly
 - [ ] Prepare 2K-4K WALLHACK Wallpapers -> Make a release for dotfiles-assets if files are too large
 - [ ] Once everything is finished, add screenshots and videos in this README
 - [ ] Repo QoL: git hooks (e.g. a pre-commit spell check with `typos`, `luac -p` and `bash -n` on staged files) and similar small guardrails, without bloating the repo
+
+### New features to try
+
+- [ ] Try [Hyprglass](https://github.com/hyprnux/hyprglass) (add it to `HYPRPM_PLUGINS`)
 
 ### For the future
 

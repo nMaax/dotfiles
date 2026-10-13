@@ -1,8 +1,9 @@
--- Generated from lua/keybindings.lua (and lua/gaming.lua). Scanned by keybind-cheatsheet for categories only;
+-- Generated from lua/keybindings.lua (plus lua/gaming.lua, lua/plugins.lua). Scanned by keybind-cheatsheet for categories only;
 -- the full config walk blows the plugin's 100 ms Luau budget. Not loaded by Hyprland.
 return {
 {{ $src := include "dot_config/hypr/lua/keybindings.lua" -}}
 {{ if .gaming }}{{ $src = print $src "\n" (include "dot_config/hypr/lua/gaming.lua") }}{{ end -}}
+{{ if .plugins }}{{ $src = print $src "\n" (include "dot_config/hypr/lua/plugins.lua") }}{{ end -}}
 {{ range ($src | splitList "\n") -}}
 {{ if regexMatch "^-- [0-9]+\\. " . }}{{ . }}
 {{ else if regexMatch "description = \"" . }}{ {{ regexFind "description = \"[^\"]*\"" . }} },

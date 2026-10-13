@@ -252,7 +252,8 @@ Scripts gate on the user's `~/.config/chezmoi/chezmoi.toml` `[data]` block: `.na
 kdenlive/OBS/EasyEffects/Spotify/yt-dlp/image-upscaler), `.office` (skip
 LibreOffice/KeePassXC/qBittorrent/CUPS printing etc.), `.communication` (skip
 Telegram/Signal/Discord/Element/LocalSend) — each one gates its own `02-apps-*` script (§3
-Ordering). `.tailscale_authkey` / `.nordvpn_authkey` / `.mega_authkey` are three-state: boolean `false`
+Ordering). `.plugins` gates `12-hyprland-plugins`, `require("lua.plugins")` and `hyprpm-rebuild`.
+`.tailscale_authkey` / `.nordvpn_authkey` / `.mega_authkey` are three-state: boolean `false`
 (or the string `"false"`) skips installing that integration entirely; `""` installs and enables it
 but skips auto-login; any other string is used as the actual key/token to log in with. The
 install/enable block is gated by `{{- if ne (printf "%v" .field) "false" }}` (stringified with
@@ -370,7 +371,8 @@ merged. There is no `.conf` fallback anymore.
 
 `require("lua.foo")` replaces `source =`, resolved relative to `~/.config/hypr/`. Module order in
 `hyprland.lua` mirrors the old source chain. It is a template (`hyprland.lua.tmpl`) only to drop
-`require("lua.gaming")` when `gaming = false` (`gaming.lua` itself is always deployed).
+`require("lua.gaming")` / `require("lua.plugins")` when `gaming` / `plugins` is `false` (both files are
+always deployed).
 
 | Module | Holds |
 |---|---|
@@ -382,7 +384,7 @@ merged. There is no `.conf` fallback anymore.
 | `input.lua` | keyboard/touchpad/per-device |
 | `keybindings.lua` | all `hl.bind()`, plus the native Lua helper closures |
 | `rules.lua` | `hl.window_rule()`, `hl.layer_rule()` |
-| `plugins.lua` | plugin *options* only — loading stays with `hyprpm` |
+| `plugins.lua` | plugin options, `hyprpm reload` at start, plugin binds (scrolloverview). `plugins = true` only |
 | `gaming.lua` | latency/rendering tuning (tearing, direct scanout, VRR), the games window rule, competitive-games VRR, game mode + its binds. `gaming = true` only |
 | `misc.lua` | the `misc` block |
 
