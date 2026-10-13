@@ -41,7 +41,7 @@ Validation is per-subsystem:
 
 ```bash
 # Hyprland Lua -- syntax
-luac5.4 -p dot_config/hypr/lua/*.lua dot_config/hypr/hyprland.lua
+luac5.4 -p dot_config/hypr/lua/*.lua && chezmoi cat ~/.config/hypr/hyprland.lua | luac5.4 -p -
 
 # Hyprland -- did it actually load?
 hyprctl reload && hyprctl configerrors     # MUST print nothing
@@ -59,7 +59,7 @@ Do all five steps. Steps 1–2 catch typos; only step 5 catches semantic errors,
 alarmingly tolerant of nonsense (§6).
 
 ```bash
-luac5.4 -p dot_config/hypr/lua/*.lua dot_config/hypr/hyprland.lua   # 1. syntax
+luac5.4 -p dot_config/hypr/lua/*.lua && chezmoi cat ~/.config/hypr/hyprland.lua | luac5.4 -p -   # 1. syntax
 git diff                                                            # 2. review the real diff
 chezmoi diff                                                        # 3. what changes in $HOME
 chezmoi apply --exclude=scripts                                     # 4. apply
@@ -410,7 +410,8 @@ merged. The legacy `hyprland.conf` and `hyprland/*.conf` were removed per `CLEAN
 source and live copies) once the Lua config proved itself; there is no `.conf` fallback anymore.
 
 `require("lua.foo")` replaces `source =`, resolved relative to `~/.config/hypr/`. Module order in
-`hyprland.lua` mirrors the old source chain.
+`hyprland.lua` mirrors the old source chain. It is a template (`hyprland.lua.tmpl`) only to drop
+`require("lua.gaming")` when `gaming = false`; `.chezmoiignore` also skips deploying `gaming.lua`.
 
 | Module | Holds |
 |---|---|
@@ -423,7 +424,7 @@ source and live copies) once the Lua config proved itself; there is no `.conf` f
 | `keybindings.lua` | all `hl.bind()`, plus the native Lua helper closures |
 | `rules.lua` | `hl.window_rule()`, `hl.layer_rule()` |
 | `plugins.lua` | plugin *options* only — loading stays with `hyprpm` |
-| `performance.lua` | latency/rendering tuning |
+| `gaming.lua` | latency/rendering tuning (tearing, direct scanout, VRR), the games window rule, competitive-games VRR, game mode + its binds. `gaming = true` only |
 | `misc.lua` | the `misc` block |
 
 Setters: `hl.config`, `hl.bind`, `hl.monitor`, `hl.workspace_rule`, `hl.window_rule`, `hl.layer_rule`,
@@ -466,7 +467,7 @@ ever needed. v5 is the `noctalia` binary, TOML at `~/.local/state/noctalia/`.
   "Reading keybindings..." forever with nothing in the log but a `'chunk' … CPU budget` error.
   `hyprland_lua_config` therefore points at `dot_config/hypr/cheatsheet.lua.tmpl`, which renders
   *only* the `-- N. SECTION` headers and literal `description = "..."` strings out of
-  `keybindings.lua` — 5.7 KB, no `require`, so one file is read instead of fifteen. Bindings
+  `keybindings.lua` (plus `gaming.lua` when `gaming = true`) — no `require`, so one file is read instead of fifteen. Bindings
   themselves come from `hyprctl binds -j`; the scan supplies categories only. Pointing the plugin
   straight at `lua/keybindings.lua` was tried and still overran.
 - The generated file has no `..` on any line, so every rule registers as an *exact* match rather

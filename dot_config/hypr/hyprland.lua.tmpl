@@ -10,6 +10,7 @@ require("lua.input")
 require("lua.keybindings")
 require("lua.rules")
 require("lua.plugins")
-require("lua.performance")
+{{ if .gaming }}require("lua.gaming")
+{{ end -}}
 require("lua.misc")
 

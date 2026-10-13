@@ -171,30 +171,3 @@ hl.window_rule({
 	}, -- keep in sync with keybindings.lua's SUPER+G matcher
 	workspace = "special:" .. C.SPECIAL_WORKSPACE.GAMES,
 })
-
--- Games
-hl.window_rule({
-	name = "games-workspace",
-	match = {
-		class = "^(steam_app_.*|.*\\.exe|wine|Wine|lutris_.*|heroic_.*|love|[Mm]inecraft(\\\\*.*| .*)?|net\\.minecraft\\.client\\.main\\.Main)$", -- love is VRRTest
-	},
-	workspace = C.GAMES_WORKSPACE,
-	-- VRR off by default: fluctuating FPS swings the refresh rate, which flickers dark scenes on OLED.
-	-- Fixed 240Hz, no tearing. SUPER+ALT+V re-enables it per game (best with a steady FPS cap).
-	no_vrr = true,
-	idle_inhibit = "always", -- Do not sleep
-	content = "game", -- Force it: many games never self-report via the content-type protocol,
-	-- which is what drives the "auto" direct_scanout/vrr/no_break_fs_vrr settings in performance.lua
-	confine_pointer = true, -- Keep the cursor on this monitor -- this is a multi-monitor rig
-})
-
--- Competitive games: VRR on by default (cap FPS in-game below what the GPU always holds).
--- Done via set_prop, not a window rule: a second rule can't reliably override no_vrr = true above.
-local COMPETITIVE_GAMES = {
-	steam_app_2357570 = true, -- Overwatch
-}
-hl.on("window.open", function(window)
-	if COMPETITIVE_GAMES[window.class] then
-		hl.dispatch(hl.dsp.window.set_prop({ prop = "no_vrr", value = "false", window = window }))
-	end
-end)
