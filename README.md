@@ -360,12 +360,6 @@ Hit **Start Streaming** in OBS. That's it :)
 
 ## 📝 TODOs
 
-- [x] Fix gaming issues
-  - [x] Shader re-compilation in Overwatch: only after driver/Proton/game updates, otherwise cached (<15s load)
-  - [x] Make claude fix direct scanout on games (works with `vrr = 3` and VRR off by default for games, also at 10 bit)
-  - [x] Make claude fix the cursor loosing focus on games (Game Mode switches to dwindle, automatic on game launch or `SUPER+ALT+Z`, see [Hyprland #16326](https://github.com/hyprwm/Hyprland/issues/16326))
-  - [x] Move rules / performance / keybinds for gaming in a gaming.lua file, and let it work only if gaming is enabled in chezmoi.toml
-- [x] Make plugins optional via chezmoi.toml
 - [ ] Move to shelly
 - [ ] Prepare 2K-4K WALLHACK Wallpapers -> Make a release for dotfiles-assets if files are too large
 - [ ] Once everything is finished, add screenshots and videos in this README
