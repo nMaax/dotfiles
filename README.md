@@ -25,7 +25,7 @@ Ideally, you should have installed CachyOS selecting Hyprland during the Calamar
   gaming = true # false to avoid installing Steam, Mango, OpenRGB, etc.
   coding = true # false to skip dev tooling: Neovim, VS Code, lazygit, nodejs, etc.
   ai_dev = true # false to skip AI dev tools: CUDA, ROCm, Ollama, etc.
-  agents = true # false to skip AI agents: Claude Code, Antigravity, OpenCode, etc.
+  agents = true # false to skip AI agents: Claude Code, Antigravity, OpenCode, Codex, etc.
   media = true # false to skip kdenlive, OBS, EasyEffects, Spotify, etc.
   office = true # false to skip LibreOffice, KeePassXC, qBittorrent, CUPS printing, etc.
   communication = true # false to skip Telegram, Signal, Discord, Element, etc.

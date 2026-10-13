@@ -25,6 +25,9 @@ curl -fsSL "$ANTIGRAVITY_INSTALL_URL" | bash
 info "🔳 Installing OpenCode..."
 sudo pacman -S --needed --noconfirm opencode
 
+info "🧠 Installing Codex CLI..."
+sudo pacman -S --needed --noconfirm openai-codex # Available directly in the cachyos repo
+
 echo ""
 success "✅ [Installing Apps: Agents] Done."
 echo ""
