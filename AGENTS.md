@@ -212,6 +212,7 @@ prefixes order scripts *within* each phase, and the two sequences are independen
   `02-apps-office` → `02-apps-communication` → `03-fonts-emoji` → `04-hyprland-noctalia`. Order
   *within* the `02-apps-*` group doesn't matter — none of the categories depend on packages installed
   by another, and `paru`/`pacman -S --needed` are idempotent regardless of run order.
+  CachyOS stopped shipping `paru` in June 2026, so `01b` installs it from the `cachyos` repo before any script calls it.
 - `after`: `01-system-services` → `04-noctalia-greeter` → `05-misc` →
   `06-gaming` → `07-webapps` → `08-tailscale` → `09-nordvpn` → `10-mega` → `11-finalize` →
   `12-hyprland-plugins`. The `02-*`/`03-*` gap is deliberate (a retired GRUB script, now a README
