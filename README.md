@@ -364,6 +364,7 @@ Hit **Start Streaming** in OBS. That's it :)
 ### New features to try
 
 - [ ] Try [Hyprglass](https://github.com/hyprnux/hyprglass) (add it to `HYPRPM_PLUGINS`)
+- [ ] Try [HyprMon](https://github.com/erans/hyprmon) (`hyprmon-bin`) for multi-monitor layout and profiles, alongside a slimmed-down `monitors.lua`
 
 ### For the future
 
