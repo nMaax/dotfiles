@@ -18,7 +18,11 @@ info "🖥️ Installing Claude Desktop..."
 sudo pacman -S --needed --noconfirm claude-desktop # Available directly in the cachyos repo
 
 info "💎 Installing Antigravity CLI..."
-curl -fsSL "$ANTIGRAVITY_INSTALL_URL" | bash
+if [ -x "$HOME/.local/bin/agy" ]; then
+  success "Antigravity CLI is already installed (it self-updates). Skipping."
+else
+  curl -fsSL "$ANTIGRAVITY_INSTALL_URL" | bash
+fi
 
 info "🔳 Installing OpenCode..."
 sudo pacman -S --needed --noconfirm opencode
