@@ -50,7 +50,7 @@ hl.monitor({
 	position = "auto-up",
 	scale = 1,
 	vrr = 3,
-	bitdepth = 8,
+	bitdepth = 10, -- 8 bit + FRC panel: back to 8 if dark gradients shimmer
 })
 
 -- Fallback
