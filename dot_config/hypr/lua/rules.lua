@@ -187,3 +187,14 @@ hl.window_rule({
 	-- which is what drives the "auto" direct_scanout/vrr/no_break_fs_vrr settings in performance.lua
 	confine_pointer = true, -- Keep the cursor on this monitor -- this is a multi-monitor rig
 })
+
+-- Competitive games: VRR on by default (cap FPS in-game below what the GPU always holds).
+-- Done via set_prop, not a window rule: a second rule can't reliably override no_vrr = true above.
+local VRR_GAMES = {
+	steam_app_2357570 = true, -- Overwatch
+}
+hl.on("window.open", function(window)
+	if VRR_GAMES[window.class] then
+		hl.dispatch(hl.dsp.window.set_prop({ prop = "no_vrr", value = "false", window = window }))
+	end
+end)
