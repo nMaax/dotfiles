@@ -33,7 +33,7 @@ Ideally you should have installed CachyOS selecting for Hyprland during the Cala
 
 During install, you will have the option to automatically wipe `tailscale_authkey` / `nordvpn_authkey` / `mega_authkey` from `~/.config/chezmoi/chezmoi.toml` right after their use. Leaving any of them as `""` still installs and enables that integration, just without an auto-login; set it to `false` to skip installing it altogether.
 
-1. Install chezmoi and apply the dotfiles
+2. Install chezmoi and apply the dotfiles
 
 ```fish
 pacman -S chezmoi
@@ -51,19 +51,21 @@ chezmoi init --apply nMaax
 
 ### Handling missing polkit agent password prompt in CachyOS Hello
 
-If you would like to tweak CachyOS before running 🥮, but CachyOS Hello won't accept your password on a Hyprland-only installation (i.e., no Plasma), the polkit-kde-agent is likely missing from your background processes. You must ensure this agent is running so CachyOS Hello can trigger the authentication pop-up required to apply your changes.
+If you would like to tweak CachyOS before running 🥮, but CachyOS Hello won't accept your password on a Hyprland-only installation (i.e., no Plasma), no polkit agent is likely running. You must ensure one is running so CachyOS Hello can trigger the authentication pop-up required to apply your changes.
 
 To fix, do the following:
 
-1. Open your hyprland.lua: `vim ~/.config/hypr/hyprland.lua`.
+1. Open your autostart config: `vim ~/.config/hypr/lua/autostart.lua`.
 2. Add this line inside your `hl.on("hyprland.start", function() ... end)` block (or anywhere at the bottom):
 
-  ```lua
-  hl.exec_cmd("/usr/lib/polkit-kde-authentication-agent-1")
-  ```
+   ```lua
+   hl.exec_cmd("/usr/lib/polkit-kde-authentication-agent-1")
+   ```
 
-1. Save and restart Hyprland (Super + M or just log out and log back in).
-2. Now you should be able to tweak cachy as you like, and proceed with 🥮 installation.
+   🥮 itself uses `hyprpolkitagent` (`/usr/lib/hyprpolkitagent/hyprpolkitagent`), installed during the apply, so this is only a stopgap for the first run.
+
+3. Save and restart Hyprland (Super + M or just log out and log back in).
+4. Now you should be able to tweak cachy as you like, and proceed with 🥮 installation.
 
 ## Post-Installation
 
@@ -111,7 +113,7 @@ Accept the default path (`~/.ssh/id_ed25519`) and optionally choose a passphrase
 > [!NOTE]
 > You could be prompted to either create a new wallet, or to unlock the current one, refer to the above section for details.
 
-1. Tell Git to use SSH for GitHub remotes (optional, but recommended):
+4. Tell Git to use SSH for GitHub remotes (optional, but recommended):
 
    ```fish
    git config --global url."git@github.com:".insteadOf "https://github.com/"
@@ -156,9 +158,9 @@ You can retrieve the list of apps on which automatic theming is set on the Nocta
 
 #### GTK and Qt
 
-- **qt5ct** (`qt5ct` command): Set **Color scriptheme** to `noctalia`, **General font** to `SF Pro`, **Fixed-width font** to `CaskaydiaCove Nerd Font Mono`
+- **qt5ct** (`qt5ct` command): Set **Color scheme** to `noctalia`, **General font** to `SF Pro`, **Fixed-width font** to `CaskaydiaCove Nerd Font Mono`
 - **qt6ct** (`qt6ct` command): Same as above.
-  - Qt theming via `qt6ct` with `QT_QPA_PLATFORMTHEME` has been already set in Hyprland config files for environment variables (`env.conf`).
+  - Qt theming via `qt6ct` with `QT_QPA_PLATFORMTHEME` has been already set in Hyprland config files for environment variables (`~/.config/hypr/lua/env.lua`).
 - **GTK** (`nwg-look`): Set general font to `SF Pro Regular`, then ensure Preferences > .config/gtk-4.0 is disabled, eventually clear if you found it enabled.
   - `adw-gtk3` + `prefer-dark` was already applied via `gsettings` during the install script.
 - GTK apps will automatically fetch the color scheme from the above, while Qt apps must be configured separately going inside app-settings and finding the colorscheme item.
@@ -175,7 +177,7 @@ You can retrieve the list of apps on which automatic theming is set on the Nocta
 - All other enabled apps (`btop`, `cava`, `ghostty`, `starship`, `hyprland`, `kcolorscheme`, `neovim`, `yazi`) apply fully automatically, no action needed.
 
 > [!NOTE]
-> If some apps do not properly fetch the color scheme even after having followed the noctalia guidelines, try to disable and re-enable them, as well as changing color-scheme as a whole.\
+> If some apps do not properly fetch the color scheme even after having followed the noctalia guidelines, try to disable and re-enable them, as well as changing color-scheme as a whole.
 
 Furthermore, you can install other themes for apps yourself, have a look at:
 
@@ -294,7 +296,7 @@ steamos-session-select oneshot
 
 ### Streaming (P2P)
 
-If you are not satisfyied with the Wayland screenshare when streaming gaming on your Electron app (e.g. Discord) then 🥮 brings some plugins to stream your games with low latency and low added input latency on the game. Namely using `obs-vkcapture`, `lib32-obs-vkcapture`, `obs-pipewire-audio-capture`.
+If you are not satisfied with the Wayland screenshare when streaming gaming on your Electron app (e.g. Discord) then 🥮 brings some plugins to stream your games with low latency and low added input latency on the game. Namely using `obs-vkcapture`, `lib32-obs-vkcapture`, `obs-pipewire-audio-capture`.
 
 1. Launch your game, so its audio and video hooks are active in your system.
 2. Open OBS Studio. Under the **Sources** dock, click the **`+`** icon.
@@ -344,10 +346,10 @@ Now we are ready to run the Meshcast Stream
 5. Set **Service** to **WHIP**.
 6. Split your Meshcast link across the two input boxes like this:
 
-- **Server:** `https://cae2.meshcast.io/whip/`
-- **Bearer Token:** `MadaMada1234` *(The unique string at the very end of your link)* (or just skip the token and put the whole link in the server field)
+   - **Server:** `https://cae2.meshcast.io/whip/`
+   - **Bearer Token:** `MadaMada1234` *(The unique string at the very end of your link)* (or just skip the token and put the whole link in the server field)
 
-1. Click **Apply** and **OK**.
+7. Click **Apply** and **OK**.
 
 Now you can copy the **Watch Page Link** provided by the Meshcast interface (e.g., `https://meshcast.io/view.html?geo=cae2&id=MadaMada1234`) and send it over to your friends.
 
