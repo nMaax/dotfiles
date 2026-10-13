@@ -19,14 +19,11 @@ UDEV_RULE_TMP="$(mktemp)"
 
 cat >"$UDEV_RULE_TMP" <<'EOF'
 # MCHOSE Ace 68 Turbo 16K (Keyboard)
-KERNEL=="hidraw*", ATTRS{idVendor}=="3837", ATTRS{idProduct}=="3026", MODE="0666"
-SUBSYSTEM=="usb", ATTRS{idVendor}=="3837", ATTRS{idProduct}=="3026", MODE="0666"
+KERNEL=="hidraw*", ATTRS{idVendor}=="3837", ATTRS{idProduct}=="3026", TAG+="uaccess"
 # MCHOSE L7 Pro+ (Mouse Wired)
-KERNEL=="hidraw*", ATTRS{idVendor}=="3837", ATTRS{idProduct}=="4015", MODE="0666"
-SUBSYSTEM=="usb", ATTRS{idVendor}=="3837", ATTRS{idProduct}=="4015", MODE="0666"
+KERNEL=="hidraw*", ATTRS{idVendor}=="3837", ATTRS{idProduct}=="4015", TAG+="uaccess"
 # MCHOSE L7 Pro+ (Mouse Wireless Receiver)
-KERNEL=="hidraw*", ATTRS{idVendor}=="5253", ATTRS{idProduct}=="1020", MODE="0666"
-SUBSYSTEM=="usb", ATTRS{idVendor}=="5253", ATTRS{idProduct}=="1020", MODE="0666"
+KERNEL=="hidraw*", ATTRS{idVendor}=="5253", ATTRS{idProduct}=="1020", TAG+="uaccess"
 EOF
 
 if [ ! -f "$UDEV_RULE_PATH" ] || ! cmp -s "$UDEV_RULE_TMP" "$UDEV_RULE_PATH"; then
