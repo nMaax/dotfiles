@@ -360,7 +360,6 @@ Hit **Start Streaming** in OBS. That's it :)
 
 ## 📝 TODOs
 
-- [ ] Move to shelly
 - [ ] Prepare 2K-4K WALLHACK Wallpapers -> Make a release for dotfiles-assets if files are too large
 - [ ] Once everything is finished, add screenshots and videos in this README
 - [ ] Repo QoL: git hooks (e.g. a pre-commit spell check with `typos`, `luac -p` and `bash -n` on staged files) and similar small guardrails, without bloating the repo
