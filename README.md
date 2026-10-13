@@ -359,11 +359,8 @@ Hit **Start Streaming** in OBS. That's it :)
 
 - [ ] Fix gaming issues
   - [ ] Clean shader cache from Steam and make claude fix the annonying shader re-compilation in Overwatch
-  - [ ] Make claude fix direct scanout on games, my suspicioun are, in order:
-    - the problem may be wallpaper engine
-    - the problem may be the combination of direct scanout with vrr
-    - the problem may be using scrolling mode instead of dwindle
-  - [ ] Make claude fix the cursor loosing focus on games
+  - [x] Make claude fix direct scanout on games (works with `vrr = 3` and VRR off by default for games, also at 10 bit)
+  - [x] Make claude fix the cursor loosing focus on games (Game Mode `SUPER+ALT+Z` switches to dwindle, see [Hyprland #16326](https://github.com/hyprwm/Hyprland/issues/16326))
   - [ ] Move rules / performance / keybinds for gaming in a gaming.lua file, and let it work only if gaming is enabled in chezmoi.toml
 - [ ] Make plugins optional via chezmoi.toml
   - [ ] Try [Hyprglass](https://github.com/hyprnux/hyprglass)
@@ -373,7 +370,7 @@ Hit **Start Streaming** in OBS. That's it :)
 
 ### For the future
 
-- [ ] Try HDR gaming: needs a Proton with native Wayland + HDR ([GE-Proton](https://github.com/GloriousEggroll/proton-ge-custom): `PROTON_ENABLE_WAYLAND=1 PROTON_ENABLE_HDR=1`, Valve's Proton can't) and a 10-bit HDR monitor config (`bitdepth = 10`, `cm = edid`, `render:cm_auto_hdr`), see [Hyprland #11083](https://github.com/hyprwm/Hyprland/discussions/11083). Check direct scanout still works (`monitors.lua` forces 8-bit for it)
+- [ ] Try HDR gaming: needs a Proton with native Wayland + HDR ([GE-Proton](https://github.com/GloriousEggroll/proton-ge-custom): `PROTON_ENABLE_WAYLAND=1 PROTON_ENABLE_HDR=1`, Valve's Proton can't) and a 10-bit HDR monitor config (`bitdepth = 10`, `cm = edid`, `render:cm_auto_hdr`), see [Hyprland #11083](https://github.com/hyprwm/Hyprland/discussions/11083). The AOC already runs at 10 bit with direct scanout working
 - [ ] Try the [ADIOS I/O scheduler](https://github.com/firelzrd/adios) once it's stable (CachyOS defaults NVMe to `kyber`)
 - [ ] Enhance assets by introducing a GitHub CI action that autogenerates README with gallery, like [dharmx](https://github.com/dharmx/walls)
 - [ ] Generalize for pure Arch by reproducing what Cachy installs, including fundamentals like bluetooth, networkmanager, fish, cachyos fish setup, gpu drivers etc.

@@ -23,13 +23,17 @@ hl.monitor({
 hl.monitor({ output = "desc:AOC 27B36X 2RRRAHA013122", mode = "1920x1080@144.00", position = "auto-up", scale = 1 })
 hl.monitor({ output = "desc:AOC 27B36X 2RRRAHA013116", mode = "1920x1080@144.00", position = "auto-up", scale = 1 })
 
--- NOTE: for gaming we always enforce VRR, 8 bit depth is necessary to allow direct scanout to work
+-- NOTE: gaming monitors use vrr = 3 (fullscreen game/video only). Always-on VRR lets the desktop
+-- refresh rate swing with idle/redraw, which on OLED/VA panels shows as flicker in dark areas.
+-- Hyprland doesn't compare vrr when reloading a monitor rule: changing only vrr needs a restart
+-- (or a change in any other field) to take effect.
+-- 10 bit does NOT block direct scanout: the game's 8 bit buffer is scanned out as-is (tested).
 hl.monitor({
 	output = "desc:ASUSTek COMPUTER INC XG27AQDMGR T9LMTF126923",
 	mode = "2560x1440@240.00",
 	position = "auto-up",
 	scale = 1,
-	vrr = 1,
+	vrr = 3,
 	bitdepth = 8,
 })
 hl.monitor({
@@ -37,15 +41,15 @@ hl.monitor({
 	mode = "2560x1440@240.00",
 	position = "auto-up",
 	scale = 1,
-	vrr = 1,
-	bitdepth = 8,
+	vrr = 3,
+	bitdepth = 10,
 })
 hl.monitor({
 	output = "desc:Samsung Electric Company LC32G7xT HNATC01677",
 	mode = "2560x1440@240.00",
 	position = "auto-up",
 	scale = 1,
-	vrr = 1,
+	vrr = 3,
 	bitdepth = 8,
 })
 

@@ -67,9 +67,8 @@ hl.config({
 
 	misc = {
 		-- Controls the VRR (Adaptive Sync) of your monitors.
-		-- Here we set it up for video/games only, but on monitors (monitors.lua)
-		-- I will specify it on specific monitors I use for gaming. So that it is always forced.
-		-- And others will fallback on this.
+		-- Video/games only; gaming monitors set the same in monitors.lua. Games default to no_vrr
+		-- (rules.lua) because of OLED VRR flicker, toggle it per game with SUPER+ALT+V.
 		-- 0 - off, 1 - on, 2 - fullscreen only, 3 - fullscreen with video or game content type
 		vrr = 3,
 	},

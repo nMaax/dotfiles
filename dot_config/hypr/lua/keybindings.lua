@@ -320,33 +320,42 @@ hl.bind(
 	{ description = "Toggle caffeine (keep screen awake)" }
 )
 
-local function reload(level)
-	-- level: 1 = hyprctl only, 2 = + hyprpm and a soft noctalia reload, 3 = kill and relaunch noctalia
-	if level == 1 then
-		return hl.dsp.exec_cmd("hyprctl reload")
-	elseif level == 2 then
-		return hl.dsp.exec_cmd(
-			"hyprctl reload && hyprpm reload -n && "
-				.. ipc("config-reload")
-				.. " && "
-				.. ipc("plugin kenn/keybind-cheatsheet:data all refresh")
-		)
+-- Game mode (mutes OSD and notifications, switches to dwindle to prevent focus/pointer loss in games).
+-- Any layer surface mapping (toast, OSD, launcher) makes a hidden *scrolling* workspace drop the
+-- game's pointer lock: https://github.com/hyprwm/Hyprland/issues/16326, so no scrolling while gaming.
+local layout_before_game_mode
+local function toggle_game_mode()
+	local handle = io.popen(ipc("notification-dnd-status"))
+	local status = handle and handle:read("*l")
+	if handle then
+		handle:close()
+	end
+	local enabling = status ~= "on"
+	if enabling then
+		io.popen(ipc("osd-disable")):close()
+		io.popen(ipc("notification-dnd-set true")):close()
+		layout_before_game_mode = hl.get_config("general.layout")
+		hl.config({ general = { layout = "dwindle" } })
+		hl.notification.create({ text = "🎮 Game Mode: ON (OSD & Notifications disabled, dwindle)", timeout = 2500 })
 	else
-		return hl.dsp.exec_cmd("hyprctl reload && hyprpm reload -n && killall noctalia && noctalia")
+		io.popen(ipc("osd-enable")):close()
+		io.popen(ipc("notification-dnd-set false")):close()
+		if layout_before_game_mode then -- nil after a reload, which already restored the configured layout
+			hl.config({ general = { layout = layout_before_game_mode } })
+		end
+		hl.notification.create({ text = "🎮 Game Mode: OFF (OSD & Notifications enabled)", timeout = 2500 })
 	end
 end
-
-local xsoft_reload = reload(1)
-local soft_reload = reload(2)
-local hard_reload = reload(3)
-
---- Reloading options
-hl.bind(C.MODKEY .. "+F9", xsoft_reload, { description = "Reload hyprland only" })
-hl.bind(C.MODKEY .. "+F10", soft_reload, { description = "Reload hyprland, soft-reload noctalia" })
-hl.bind(C.MODKEY .. "+F11", hl.dsp.force_renderer_reload(), { description = "Reload monitor configs" })
-hl.bind(C.MODKEY .. "+F12", hard_reload, { description = "Reload hyprland, restart noctalia" })
-
-hl.bind(C.MODKEY .. "+CTRL+ALT+R", soft_reload, { description = "Reload hyprland, soft-reload noctalia" }) -- alias
+hl.bind(
+	C.MODKEY .. "+ALT+Z",
+	toggle_game_mode,
+	{ description = "Toggle game mode (mute OSD & notifications, dwindle layout)" }
+)
+hl.bind(
+	C.MODKEY .. "+ALT+V",
+	hl.dsp.window.set_prop({ prop = "no_vrr", value = "toggle" }),
+	{ description = "Toggle VRR for the active window (games default to VRR off)" }
+)
 
 -- Search, clipboard, and pickers
 hl.bind("ALT+RETURN", hl.dsp.exec_cmd(ipc("panel-toggle launcher")), { description = "Search for apps" })

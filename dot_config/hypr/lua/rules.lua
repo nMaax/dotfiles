@@ -179,7 +179,9 @@ hl.window_rule({
 		class = "^(steam_app_.*|.*\\.exe|wine|Wine|lutris_.*|heroic_.*|love|[Mm]inecraft(\\\\*.*| .*)?|net\\.minecraft\\.client\\.main\\.Main)$", -- love is VRRTest
 	},
 	workspace = C.GAMES_WORKSPACE,
-	no_vrr = false, -- Always try to enable VRR
+	-- VRR off by default: fluctuating FPS swings the refresh rate, which flickers dark scenes on OLED.
+	-- Fixed 240Hz, no tearing. SUPER+ALT+V re-enables it per game (best with a steady FPS cap).
+	no_vrr = true,
 	idle_inhibit = "always", -- Do not sleep
 	content = "game", -- Force it: many games never self-report via the content-type protocol,
 	-- which is what drives the "auto" direct_scanout/vrr/no_break_fs_vrr settings in performance.lua
