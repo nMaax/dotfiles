@@ -1,10 +1,11 @@
 {
-  "model": "sonnet",
+  "model": "opus",
   "enabledPlugins": {
     "pyright-lsp@claude-plugins-official": true,
     "i-have-adhd@i-have-adhd": true,
     "arxiv-mcp-server@arxiv-mcp": true,
-    "claude-md-management@claude-plugins-official": true
+    "claude-md-management@claude-plugins-official": true,
+    "ponytail@ponytail": true
   },
   "extraKnownMarketplaces": {
     "i-have-adhd": {
@@ -17,6 +18,12 @@
       "source": {
         "source": "github",
         "repo": "blazickjp/arxiv-mcp-server"
+      }
+    },
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "DietrichGebert/ponytail"
       }
     }
   },
