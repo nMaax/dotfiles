@@ -47,9 +47,6 @@ chezmoi init --apply nMaax
 > [!NOTE]
 > During log-in in the greeter, choose **systemd-owned Hyprland** (`Hyprland (uwsm-managed)`) instead of the plain one, to ensure autostart scripts function correctly (e.g. cachy-update tray icon).
 
-> [!TIP]
-> If you ever re-sync local edits back into these dotfiles with `chezmoi add`, always pass `--exclude=externals`: wallpapers, profile pictures, and the cursor theme are pulled from separate asset repos, not meant to be duplicated as literal files here.
-
 ### Handling missing polkit agent password prompt in CachyOS Hello
 
 If you would like to tweak CachyOS before running 🥮, but CachyOS Hello won't accept your password on a Hyprland-only installation (i.e., no Plasma), no polkit agent is likely running. You must ensure one is running so CachyOS Hello can trigger the authentication pop-up required to apply your changes.
