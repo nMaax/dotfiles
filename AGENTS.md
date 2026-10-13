@@ -411,7 +411,7 @@ source and live copies) once the Lua config proved itself; there is no `.conf` f
 
 `require("lua.foo")` replaces `source =`, resolved relative to `~/.config/hypr/`. Module order in
 `hyprland.lua` mirrors the old source chain. It is a template (`hyprland.lua.tmpl`) only to drop
-`require("lua.gaming")` when `gaming = false`; `.chezmoiignore` also skips deploying `gaming.lua`.
+`require("lua.gaming")` when `gaming = false` (`gaming.lua` itself is always deployed).
 
 | Module | Holds |
 |---|---|

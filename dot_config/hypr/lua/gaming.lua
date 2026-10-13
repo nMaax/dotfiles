@@ -1,5 +1,5 @@
 -- GAMING
--- Only deployed with gaming = true in chezmoi.toml (.chezmoiignore, hyprland.lua.tmpl).
+-- Always deployed, but only required with gaming = true in chezmoi.toml (hyprland.lua.tmpl).
 
 local C = require("lua.constants")
 
