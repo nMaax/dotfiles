@@ -1,7 +1,7 @@
 -- LOOK AND FEEL
 -- See https://wiki.hypr.land/Configuring/Basics/Variables/
 
--- NOTE: Do not put performance-related settings here, they belong in performance.lua
+-- NOTE: Do not put performance-related settings here, they belong in gaming.lua
 
 local colors = require("lua.colors")
 local C = require("lua.constants")
