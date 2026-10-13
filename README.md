@@ -358,7 +358,7 @@ Hit **Start Streaming** in OBS. That's it :)
 ## 📝 TODOs
 
 - [ ] Fix gaming issues
-  - [ ] Clean shader cache from Steam and make claude fix the annonying shader re-compilation in Overwatch
+  - [x] Shader re-compilation in Overwatch: only after driver/Proton/game updates, otherwise cached (<15s load)
   - [x] Make claude fix direct scanout on games (works with `vrr = 3` and VRR off by default for games, also at 10 bit)
   - [x] Make claude fix the cursor loosing focus on games (Game Mode switches to dwindle, automatic on game launch or `SUPER+ALT+Z`, see [Hyprland #16326](https://github.com/hyprwm/Hyprland/issues/16326))
   - [ ] Move rules / performance / keybinds for gaming in a gaming.lua file, and let it work only if gaming is enabled in chezmoi.toml
