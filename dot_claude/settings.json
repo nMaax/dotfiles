@@ -1,5 +1,5 @@
 {
-  "model": "opus",
+  "model": "sonnet",
   "enabledPlugins": {
     "pyright-lsp@claude-plugins-official": true,
     "i-have-adhd@i-have-adhd": true,

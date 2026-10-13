@@ -24,6 +24,17 @@ chezmoi execute-template < .chezmoiscripts/run_onchange_after_07-webapps.sh.tmpl
 chezmoi doctor                    # environment sanity
 ```
 
+**Agents have no TTY, so anything that prompts hangs or fails.** Safe without input: `diff`, `status`,
+`cat`, `execute-template`, `doctor`, `add --exclude=externals`, and `apply --exclude=scripts`.
+Not safe:
+
+- `apply` / `update` without `--exclude=scripts` — `01-cachyos-checks` asks Y/n every run and the
+  install scripts call `sudo` (password) and `paru`. Leave these to the user (`! chezmoi apply`).
+- `apply` onto a target edited since chezmoi last wrote it — chezmoi prompts overwrite/skip. Read
+  `chezmoi diff` first; only the user decides on `--force`.
+- `update` = `git pull` + `apply`, so it inherits both problems, plus network (externals, git auth).
+- `init` — prompts for `[data]` values.
+
 `chezmoi execute-template` is the way to test a `.tmpl` change: it renders the template, including
 `{{ template "utils.sh.tmpl" . }}` inclusions, **without executing** anything. Use it on scripts
 rather than running them.
