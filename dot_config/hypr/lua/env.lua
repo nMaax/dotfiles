@@ -25,15 +25,14 @@ hl.env("ELECTRON_OZONE_PLATFORM_HINT", "auto")
 
 -- NVIDIA settings for hardware acceleration
 -- See https://wiki.hypr.land/Nvidia/
--- Only when NVIDIA is the sole GPU: on hybrid laptops the compositor and VA-API run on the iGPU.
-local function is_nvidia_only()
+local function is_nvidia_gpu()
 	local handle = assert(io.popen("lspci | grep -iE 'vga|3d|display'"))
-	local output = handle:read("*a"):lower()
+	local output = handle:read("*a")
 	handle:close()
-	return output:find("nvidia") ~= nil and not output:find("intel") and not output:find("amd") and not output:find("radeon")
+	return output:lower():find("nvidia") ~= nil
 end
 
-if is_nvidia_only() then
+if is_nvidia_gpu() then
 	hl.env("LIBVA_DRIVER_NAME", "nvidia")
 	hl.env("NVD_BACKEND", "direct")
 end
