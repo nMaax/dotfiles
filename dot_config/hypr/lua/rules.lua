@@ -190,11 +190,11 @@ hl.window_rule({
 
 -- Competitive games: VRR on by default (cap FPS in-game below what the GPU always holds).
 -- Done via set_prop, not a window rule: a second rule can't reliably override no_vrr = true above.
-local VRR_GAMES = {
+local COMPETITIVE_GAMES = {
 	steam_app_2357570 = true, -- Overwatch
 }
 hl.on("window.open", function(window)
-	if VRR_GAMES[window.class] then
+	if COMPETITIVE_GAMES[window.class] then
 		hl.dispatch(hl.dsp.window.set_prop({ prop = "no_vrr", value = "false", window = window }))
 	end
 end)
