@@ -3,10 +3,7 @@
 -- See https://docs.noctalia.dev/v5/ipc/ for the full `noctalia msg` command list
 
 local C = require("lua.constants")
-
-local function ipc(args)
-	return "noctalia msg " .. args
-end
+local ipc = C.ipc
 
 -- 1. WINDOW ACTIONS
 hl.bind(C.MODKEY .. "+Q", hl.dsp.window.close(), { description = "Kill active window" })
@@ -83,70 +80,43 @@ local toggle_app_special_workspace = special.toggle_app_special_workspace
 hl.bind(
 	C.MODKEY .. "+Delete",
 	toggle_app_special_workspace(C.SPECIAL_WORKSPACE.SYSMON, {
-		class = { "^sysmon%.btop$" }, -- C.SYSMON_CLASS, Lua-pattern escaped
+		class = C.APP_CLASSES.SYSMON,
 	}, C.TERMINAL .. " --class=" .. C.SYSMON_CLASS .. " -e btop"),
 	{ description = "Toggle system monitors workspace (btop)" }
 )
 hl.bind(
 	C.MODKEY .. "+D",
 	toggle_app_special_workspace(C.SPECIAL_WORKSPACE.DISCORD, {
-		class = { "^discord$", "^equibop$", "^vesktop$" }, -- keep in sync with rules.lua's discord-workspace-class matcher
+		class = C.APP_CLASSES.DISCORD,
 	}, "discord"),
 	{ description = "Toggle Discord workspace" }
 )
 hl.bind(
 	C.MODKEY .. "+T",
 	toggle_app_special_workspace(C.SPECIAL_WORKSPACE.TELEGRAM, {
-		class = { "^org%.telegram%.desktop$", "^TelegramDesktop$" }, -- keep in sync with rules.lua's telegram-workspace-class matcher
+		class = C.APP_CLASSES.TELEGRAM,
 	}, "Telegram"),
 	{ description = "Toggle Telegram workspace" }
 )
 hl.bind(
 	C.MODKEY .. "+M",
 	toggle_app_special_workspace(C.SPECIAL_WORKSPACE.MUSIC, {
-		-- keep in sync with rules.lua's music-workspace-class matcher
-		class = {
-			"^[Ss]potify$",
-			"^feishin$",
-			"^Supersonic$",
-			"^Cider$",
-			"^com%.github%.th_ch%.youtube_music$",
-			"^Plexamp$",
-		},
-		title = { "^Spotify$", "^Spotify Premium$", "^Spotify Free$" },
+		class = C.APP_CLASSES.MUSIC,
+		title = C.MUSIC_TITLES,
 	}, "spotify"),
 	{ description = "Toggle music workspace (Spotify)" }
 )
 hl.bind(
 	C.MODKEY .. "+A",
 	toggle_app_special_workspace(C.SPECIAL_WORKSPACE.AI, {
-		-- keep in sync with rules.lua's ai-workspace-class matcher
-		class = {
-			"^chrome%-gemini%.google%.com",
-			"^chrome%-github%.com__copilot",
-			"^chrome%-chatgpt%.com",
-			"^chrome%-claude%.ai",
-			"^Claude$",
-		},
+		class = C.APP_CLASSES.AI,
 	}, "claude-desktop"),
 	{ description = "Toggle AI workspace (Claude desktop)" }
 )
 hl.bind(
 	C.MODKEY .. "+P",
 	toggle_app_special_workspace(C.SPECIAL_WORKSPACE.PASSWORD, {
-		-- keep in sync with rules.lua's password-workspace-class matcher
-		class = {
-			"^org%.keepassxc%.KeePassXC$",
-			"^keepassxc$",
-			"^KeePass2$",
-			"^[Bb]itwarden$",
-			"^1[Pp]assword$",
-			"^Enpass$",
-			"^proton%-pass$",
-			"^org%.kde%.kwalletmanager5$",
-			"^org%.gnome%.Seahorse$",
-			"^org%.gnome%.World%.Secrets$",
-		},
+		class = C.APP_CLASSES.PASSWORD,
 	}, C.PASSWORD_APP),
 	{ description = "Toggle password workspace" }
 )

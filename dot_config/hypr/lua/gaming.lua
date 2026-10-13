@@ -2,87 +2,41 @@
 -- Always deployed, but only required with gaming = true in chezmoi.toml (hyprland.lua.tmpl).
 
 local C = require("lua.constants")
-local toggle_app_special_workspace = require("lua.special").toggle_app_special_workspace
-
-local function ipc(args)
-	return "noctalia msg " .. args
-end
+local special = require("lua.special")
+local ipc = C.ipc
 
 -- PERFORMANCE
 -- See https://wiki.hypr.land/Configuring/Advanced-and-Cool/Tearing/
 -- See https://wiki.hypr.land/Configuring/Basics/Monitors/#vrr
 
--- NOTE: Tearing v. VRR
---
---   Tearing (experimental): GPU goes as fast as possible, the monitor grabs the most recent frame.
---     You should idealy set unlimited framerete in your games to benefit from this.
---
---   VRR: The monitor will wait for the GPU to finish rendering a frame,
---     and will display it when ready. This is better for a smooth experience (smoother frametime curve),
---     while introducing minimal input lag in games (~1ms --- according to Optimum, in a video of 4y ago!).
---     You should idealy set a framerate limit in your games to match your monitor's refresh rate,
---     e.g. minus 3~4 FPS w.r.t. refresh rate.
---
---   ==> taxonomy: GSync is a type of Adaptive Sync, FreeSync is a type of Adaptive Sync.
---                 Adaptive Sync is a type of VRR (Variable Refresh Rate)
---                 The above always holds, however, generally speaking we refer to all 4 as the
---                 same concept.
---
---                 V-Sync is the old way to fix tearing, which introduced much latency
---                 and is now mostly replaced by VRR. TURN IT OFF!
---
---   Generally, I recomend VRR over tearing, as the input latency is negligible and it provides the massive
---   improvement of a smoother frametime curve.
---
---   BUT on OLED/VA panels VRR flickers dark scenes whenever FPS fluctuates (the refresh rate follows it).
---   So games default to VRR off (fixed refresh, still no tearing), see below; SUPER+ALT+V toggles it.
+-- VRR is preferred over tearing (smoother frametimes, ~no extra latency), but on OLED/VA panels it
+-- flickers dark scenes when FPS fluctuates, so games default to VRR off; SUPER+ALT+V toggles it.
 
 hl.config({
 	general = {
-		-- Master switch to allow screen tearing.
-		-- This only enables the capability of tearing. Windows will NOT tear unless:
-		--   - they in fullscreen
-		--   - are the only visible element on screen (no notifications, no bars, no volume control)
-		--   - have an 'immediate = yes' windowrule (rules.lua) dedicated to them
+		-- Capability switch only: a window must also be fullscreen with an 'immediate' rule to tear
 		allow_tearing = false,
 	},
 
 	cursor = {
-		-- Keep hardware cursors ON (required for direct scanout). Hardware cursors make the GPU generate a
-		-- second layer dedicated to the cursor, which theoretically reduces latency, as the software doesn't
-		-- have to artificially remove pixels where the cursor is sitting -- however, in practice this creates
-		-- issues with tearing (due to experimentality of such feature)
-		-- 0 - use hw cursors if possible, 1 - don't use hw cursors, 2 - auto (disable when tearing)
+		-- 0 = keep hardware cursors on, required for direct scanout
 		no_hardware_cursors = 0,
 
-		-- Makes hardware cursors use a CPU buffer. Required on Nvidia to have HW cursors.
-		-- 0 - off, 1 - on, 2 - auto (nvidia only)
+		-- Hardware cursors on Nvidia need a CPU buffer (2 = auto)
 		use_cpu_buffer = 2,
 
-		-- Disables scheduling new frames on cursor movement for fullscreen apps with VRR enabled
-		-- to avoid framerate spikes (may require no_hardware_cursors = true)
-		-- 0 - off, 1 - on, 2 - auto (on with content type 'game')
+		-- Avoids framerate spikes on cursor movement in VRR fullscreen (2 = auto, on for 'game')
 		no_break_fs_vrr = 2,
 	},
 
 	render = {
-		-- Direct scanout attempts to reduce lag when there is only one fullscreen
-		-- application on a screen (e.g. game).
-		-- This only works if hardware cursor is enabled (no_hardware_cursors = 0)
-		-- It is also recommended to set this to false if the fullscreen application shows
-		-- graphical glitches --- A known issue consists in games on native Wayland presenting a
-		-- black screen (e.g Overwatch) when direct_scanout is enabled. In such cases use
-		-- XWayland (don't set PROTON_ENABLE_WAYLAND=1), among the two (losing Wayland native v. losing
-		-- direct_scanout) losing direct_scanout is much worse. Overwatch on XWayland + direct scanout works.
-		-- 0 - off, 1 - on, 2 - auto (on with content type 'game')
+		-- 2 = auto (on for content type 'game'). A native-Wayland game with a black screen (e.g. Overwatch)
+		-- should run on XWayland instead: losing direct scanout is worse.
 		direct_scanout = 2,
 	},
 
 	misc = {
-		-- Controls the VRR (Adaptive Sync) of your monitors.
-		-- Video/games only; gaming monitors set the same in monitors.lua. Games default to no_vrr
-		-- (below) because of OLED VRR flicker, toggle it per game with SUPER+ALT+V.
-		-- 0 - off, 1 - on, 2 - fullscreen only, 3 - fullscreen with video or game content type
+		-- 3 = fullscreen video/games only; monitors.lua sets the same per monitor
 		vrr = 3,
 	},
 })
@@ -97,17 +51,13 @@ hl.window_rule({
 		class = "^(steam_app_.*|.*\\.exe|wine|Wine|lutris_.*|heroic_.*|love|[Mm]inecraft(\\\\*.*| .*)?|net\\.minecraft\\.client\\.main\\.Main)$", -- love is VRRTest
 	},
 	workspace = C.GAMES_WORKSPACE,
-	-- VRR off by default: fluctuating FPS swings the refresh rate, which flickers dark scenes on OLED.
-	-- Fixed 240Hz, no tearing. SUPER+ALT+V re-enables it per game (best with a steady FPS cap).
-	no_vrr = true,
+	no_vrr = true, -- OLED flicker, see PERFORMANCE; SUPER+ALT+V re-enables it per game
 	idle_inhibit = "always", -- Do not sleep
-	content = "game", -- Force it: many games never self-report via the content-type protocol,
-	-- which is what drives the "auto" direct_scanout/vrr/no_break_fs_vrr settings above, and game mode
+	content = "game", -- many games never self-report it, and direct_scanout/vrr/game mode key off it
 	confine_pointer = true, -- Keep the cursor on this monitor -- this is a multi-monitor rig
 })
 
--- Competitive games: VRR on by default (cap FPS in-game below what the GPU always holds).
--- Done via set_prop, not a window rule: a second rule can't reliably override no_vrr = true above.
+-- Competitive games get VRR on (cap FPS in-game). set_prop, not a rule: a second rule can't override no_vrr above.
 local COMPETITIVE_GAMES = {
 	steam_app_2357570 = true, -- Overwatch
 }
@@ -118,11 +68,8 @@ hl.on("window.open", function(window)
 end)
 
 -- 9. GAMING
--- Game mode (mutes OSD and notifications, switches to dwindle to prevent focus/pointer loss in games).
--- Any layer surface mapping (toast, OSD, launcher) makes a hidden *scrolling* workspace drop the
--- game's pointer lock: https://github.com/hyprwm/Hyprland/issues/16326, so no scrolling while gaming.
--- Turns on by itself when a game window (content type "game", see rules.lua) opens, and off when the
--- last one closes -- unless it was already on (e.g. toggled by hand), then it's left alone.
+-- Game mode mutes OSD/notifications and forces dwindle: a layer surface mapping drops the pointer lock
+-- on a hidden scrolling workspace (hyprwm/Hyprland#16326). Auto on/off with the first/last game window.
 local function dnd_on()
 	local handle = io.popen(ipc("notification-dnd-status"))
 	local status = handle and handle:read("*l")
@@ -137,14 +84,14 @@ local layout_before_game_mode
 
 local function set_game_mode(on)
 	if on then
-		io.popen(ipc("osd-disable")):close()
-		io.popen(ipc("notification-dnd-set true")):close()
+		hl.exec_cmd(ipc("osd-disable"))
+		hl.exec_cmd(ipc("notification-dnd-set true"))
 		layout_before_game_mode = hl.get_config("general.layout")
 		hl.config({ general = { layout = "dwindle" } })
 		hl.notification.create({ text = "🎮 Game Mode: ON (OSD & Notifications disabled, dwindle)", timeout = 2500 })
 	else
-		io.popen(ipc("osd-enable")):close()
-		io.popen(ipc("notification-dnd-set false")):close()
+		hl.exec_cmd(ipc("osd-enable"))
+		hl.exec_cmd(ipc("notification-dnd-set false"))
 		if layout_before_game_mode then -- nil after a reload, which already restored the configured layout
 			hl.config({ general = { layout = layout_before_game_mode } })
 		end
@@ -167,7 +114,8 @@ local function game_running(except)
 end
 
 hl.on("window.open", function(window)
-	if window.content_type == "game" and not dnd_on() then
+	-- game_mode_auto first: dnd is set asynchronously, so a second game window could still read it as off
+	if window.content_type == "game" and not game_mode_auto and not dnd_on() then
 		game_mode_auto = true
 		set_game_mode(true)
 	end
@@ -200,31 +148,17 @@ hl.bind(
 -- GAME LAUNCHERS
 hl.window_rule({
 	name = "games-launchers-workspace-class",
-	match = {
-		class = "^(steam|lutris|com\\.heroicgameslauncher\\.hgl|heroic|org\\.prismlauncher\\.PrismLauncher|PrismLauncher|com\\.modrinth\\.theseus|ModrinthApp|com\\.atlauncher\\.ATLauncher|ATLauncher|minecraft-launcher)$",
-	}, -- keep in sync with the SUPER+G matcher below
+	match = { class = special.regex(C.APP_CLASSES.GAMES) },
 	workspace = "special:" .. C.SPECIAL_WORKSPACE.GAMES,
 })
 
 hl.bind(
 	C.MODKEY .. "+G",
-	toggle_app_special_workspace(C.SPECIAL_WORKSPACE.GAMES, {
-		-- keep in sync with the games-launchers-workspace-class rule above
-		class = {
-			"^steam$",
-			"^lutris$",
-			"^com%.heroicgameslauncher%.hgl$",
-			"^heroic$",
-			"^org%.prismlauncher%.PrismLauncher$",
-			"^PrismLauncher$",
-			"^com%.modrinth%.theseus$",
-			"^ModrinthApp$",
-			"^com%.atlauncher%.ATLauncher$",
-			"^ATLauncher$",
-			"^minecraft%-launcher$",
-		},
-		title = { "^Steam$" },
-	}, "steam"),
+	special.toggle_app_special_workspace(
+		C.SPECIAL_WORKSPACE.GAMES,
+		{ class = C.APP_CLASSES.GAMES, title = C.GAMES_TITLES },
+		"steam"
+	),
 	{ description = "Toggle game launchers workspace (Steam)" }
 )
 

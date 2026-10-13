@@ -141,20 +141,17 @@ Two things that decide whether this is worth anything:
   source for the contract, mirror *both* branches when behaviour is context-sensitive, and assert the
   negative (`dispatch` never receives `nil`).
 
-### Checking cross-file matcher drift
+### Special-workspace app classes
 
-An app's class is spelled twice: as a Hyprland regex in `rules.lua` (which places the window) and as
-a Lua pattern in `keybindings.lua` (which finds it again). Editing one and not the other gives an app
-that lands on a special workspace its keybind cannot find. After touching either list, compare them:
+An app's class must be matched twice: as a Hyprland regex in `rules.lua` (places the window) and as a
+Lua pattern in `keybindings.lua`/`gaming.lua` (finds it again). Both are generated from the single plain
+list in `constants.lua` (`C.APP_CLASSES`, `C.MUSIC_TITLES`, `C.GAMES_TITLES`) by `special.regex` /
+`special.patterns`, so they cannot drift. Add or remove an app **only** there; a trailing `*` means
+"starts with" (the `chrome-<host>` webapp ids). Names are literals, so write `Spotify` and `spotify`,
+not `[Ss]potify`.
 
-```bash
-grep -oE '"\^[^"]+"' dot_config/hypr/lua/keybindings.lua | tr -d '"' | sed 's/%//g'
-grep -oE 'class = "[^"]+"' dot_config/hypr/lua/rules.lua
-```
-
-Real instance: the password workspace listed ten apps in `rules.lua` but six in `keybindings.lua`, so
-Enpass/KWalletManager/Seahorse/Secrets would open there and `SUPER+P` would spawn a second KeePassXC
-instead of revealing them.
+Real instance of the drift this replaced: the password workspace listed ten apps in `rules.lua` but six
+in `keybindings.lua`, so `SUPER+P` spawned a second KeePassXC instead of revealing the others.
 
 ---
 

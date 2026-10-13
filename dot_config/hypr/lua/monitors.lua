@@ -26,11 +26,8 @@ hl.monitor({
 hl.monitor({ output = "desc:AOC 27B36X 2RRRAHA013122", mode = "1920x1080@144.00", position = "auto-up", scale = 1 })
 hl.monitor({ output = "desc:AOC 27B36X 2RRRAHA013116", mode = "1920x1080@144.00", position = "auto-up", scale = 1 })
 
--- NOTE: gaming monitors use vrr = 3 (fullscreen game/video only). Always-on VRR lets the desktop
--- refresh rate swing with idle/redraw, which on OLED/VA panels shows as flicker in dark areas.
--- Hyprland doesn't compare vrr when reloading a monitor rule: changing only vrr needs a restart
--- (or a change in any other field) to take effect.
--- 10 bit does NOT block direct scanout: the game's 8 bit buffer is scanned out as-is (tested).
+-- Gaming monitors: vrr = 3 (fullscreen game/video only), always-on VRR flickers dark areas on OLED/VA.
+-- A vrr-only change needs a restart to apply. 10 bit doesn't block direct scanout (tested).
 hl.monitor({
 	output = "desc:ASUSTek COMPUTER INC XG27AQDMGR T9LMTF126923",
 	mode = "2560x1440@240.00",
@@ -61,25 +58,13 @@ hl.monitor({ output = "", mode = "highrr", position = "auto-up", scale = "auto" 
 
 -- See https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/
 
--- Workspaces are distributed over the connected monitors at runtime rather than
--- pinned to specific outputs, because this machine is sometimes a laptop and
--- sometimes a desktop:
---
---   1 monitor   -> nothing pinned, nothing persistent, i.e. plain Hyprland, so
---                  the bar only lists workspaces actually in use
---   2 monitors  -> 1-5 on the physically larger screen, 6-10 on the smaller,
---                  both persistent so each bar shows its own full set
---   3+ monitors -> as above for the two largest; the rest stay unpinned
---
--- Workspace 12 and up are deliberately left unmanaged.
+-- Workspaces follow the connected monitors at runtime (laptop or desktop): with 1 monitor all sit on it,
+-- with 2+ workspaces 1-5 go to the largest and 6-10 to the second, persistent. 12 and up stay unmanaged.
 
 local WORKSPACE_GROUPS = { { 1, 2, 3, 4, 5 }, { 6, 7, 8, 9, 10 } }
 local GAMES_WORKSPACE = C.GAMES_WORKSPACE
 
--- Physical size from EDID is the honest measure of "bigger", but some displays
--- report nonsense for it, so the metric is picked once for the whole set:
--- millimetres only when every monitor reports something plausible, otherwise
--- pixels. Mixing mm against pixels in one comparison would be meaningless.
+-- "Bigger" is EDID millimetres only when every monitor reports a plausible size, else pixels (never mixed).
 local function ranked_monitors()
 	local monitors = hl.get_monitors()
 

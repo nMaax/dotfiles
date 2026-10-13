@@ -2,6 +2,7 @@
 -- See https://wiki.hypr.land/Configuring/Basics/Window-Rules/
 
 local C = require("lua.constants")
+local special = require("lua.special")
 
 -- Ignore maximize requests from all apps. You'll probably like this.
 hl.window_rule({
@@ -103,51 +104,45 @@ hl.layer_rule({
 -- System Monitor workspace
 hl.window_rule({
 	name = "sysmon-workspace-class",
-	match = { class = "^sysmon\\.btop$" }, -- C.SYSMON_CLASS, Hyprland-regex escaped
+	match = { class = special.regex(C.APP_CLASSES.SYSMON) },
 	workspace = "special:" .. C.SPECIAL_WORKSPACE.SYSMON,
 })
 
 -- Discord and Telegram get their own workspaces
 hl.window_rule({
 	name = "discord-workspace-class",
-	match = { class = "^(discord|equibop|vesktop)$" }, -- keep in sync with keybindings.lua's SUPER+D matcher
+	match = { class = special.regex(C.APP_CLASSES.DISCORD) },
 	workspace = "special:" .. C.SPECIAL_WORKSPACE.DISCORD,
 })
 hl.window_rule({
 	name = "telegram-workspace-class",
-	match = { class = "^(org\\.telegram\\.desktop|TelegramDesktop)$" }, -- keep in sync with keybindings.lua's SUPER+T matcher
+	match = { class = special.regex(C.APP_CLASSES.TELEGRAM) },
 	workspace = "special:" .. C.SPECIAL_WORKSPACE.TELEGRAM,
 })
 
 -- Password managers workspace.
 hl.window_rule({
 	name = "password-workspace-class",
-	match = {
-		-- keep in sync with keybindings.lua's SUPER+P matcher
-		class = "^(org\\.keepassxc\\.KeePassXC|keepassxc|KeePass2|[Bb]itwarden|1[Pp]assword|Enpass|proton-pass|org\\.kde\\.kwalletmanager5|org\\.gnome\\.Seahorse|org\\.gnome\\.World\\.Secrets)$",
-	},
+	match = { class = special.regex(C.APP_CLASSES.PASSWORD) },
 	workspace = "special:" .. C.SPECIAL_WORKSPACE.PASSWORD,
 })
 
 -- AI workspace
 hl.window_rule({
 	name = "ai-workspace-class",
-	match = {
-		-- keep in sync with keybindings.lua's SUPER+A matcher
-		class = "^(chrome-(gemini\\.google\\.com|github\\.com__copilot|chatgpt\\.com|claude\\.ai).*|Claude)$",
-	},
+	match = { class = special.regex(C.APP_CLASSES.AI) },
 	workspace = "special:" .. C.SPECIAL_WORKSPACE.AI,
 })
 
 -- Music workspace
 hl.window_rule({
 	name = "music-workspace-class",
-	match = { class = "^([Ss]potify|feishin|Supersonic|Cider|com\\.github\\.th_ch\\.youtube_music|Plexamp)$" }, -- keep in sync with keybindings.lua's SUPER+M matcher
+	match = { class = special.regex(C.APP_CLASSES.MUSIC) },
 	workspace = "special:" .. C.SPECIAL_WORKSPACE.MUSIC,
 })
 hl.window_rule({
 	name = "music-workspace-title",
-	match = { initial_title = "^Spotify( (Premium|Free))?$" },
+	match = { initial_title = special.regex(C.MUSIC_TITLES) },
 	workspace = "special:" .. C.SPECIAL_WORKSPACE.MUSIC,
 })
 
