@@ -9,9 +9,13 @@ require("lua.lookandfeel")
 require("lua.input")
 require("lua.keybindings")
 require("lua.rules")
-{{ if .plugins }}require("lua.plugins")
-{{ end -}}
-{{ if .gaming }}require("lua.gaming")
-{{ end -}}
 require("lua.misc")
 
+{{ if .gaming }}require("lua.gaming")
+{{ end -}}
+
+{{ if .plugins }}require("lua.plugins")
+{{ end -}}
+
+{{ with index . "aq_drm_devices" }}hl.env("AQ_DRM_DEVICES", "{{ . }}")
+{{ end -}}
