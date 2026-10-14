@@ -6,7 +6,7 @@ return {
 {{ if .plugins }}{{ $src = print $src "\n" (include "dot_config/hypr/lua/plugins.lua") }}{{ end -}}
 {{ range ($src | splitList "\n") -}}
 {{ if regexMatch "^-- [0-9]+\\. " . }}{{ . }}
-{{ else if regexMatch "description = \"" . }}{ {{ regexFind "description = \"[^\"]*\"" . }} },
+{{ else if regexMatch "description = [^\"]*\"" . }}{ description = {{ regexReplaceAll ".*description = [^\"]*(\"[^\"]*\").*" . "${1}" }} },
 {{ end -}}
 {{ end -}}
 }

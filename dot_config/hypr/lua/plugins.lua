@@ -47,27 +47,16 @@ hl.bind(C.MODKEY .. "+TAB", scrolloverview("overview", "toggle"), { description 
 
 -- Submap for scrolloverview navigation
 hl.define_submap("scrolloverview", function()
-	local navigation = {
-		left = "left",
-		H = "left",
-		right = "right",
-		L = "right",
-		up = "up",
-		K = "up",
-		down = "down",
-		J = "down",
-	}
-	local vim_keys = { H = true, J = true, K = true, L = true }
+	local navigation = { left = "left", right = "right", up = "up", down = "down" }
 	for key, direction in pairs(navigation) do
-		hl.bind(key, scrolloverview("navigate", direction), {
-			description = vim_keys[key] and ("Move overview selection " .. direction .. " (vim, or arrows)") or nil,
-		})
+		hl.bind(key, scrolloverview("navigate", direction))
 	end
-	for _, key in ipairs({ C.MODKEY .. "+TAB", "TAB", "RETURN", "Escape" }) do
-		hl.bind(
-			key,
-			scrolloverview("overview", "off"),
-			{ description = key == "Escape" and "Close the overview" or nil }
-		)
+	hl.bind("H", scrolloverview("navigate", "left"), { description = "Move overview selection left (vim, or arrows)" })
+	hl.bind("L", scrolloverview("navigate", "right"), { description = "Move overview selection right (vim, or arrows)" })
+	hl.bind("K", scrolloverview("navigate", "up"), { description = "Move overview selection up (vim, or arrows)" })
+	hl.bind("J", scrolloverview("navigate", "down"), { description = "Move overview selection down (vim, or arrows)" })
+	for _, key in ipairs({ C.MODKEY .. "+TAB", "TAB", "RETURN" }) do
+		hl.bind(key, scrolloverview("overview", "off"))
 	end
+	hl.bind("Escape", scrolloverview("overview", "off"), { description = "Close the overview" })
 end)
