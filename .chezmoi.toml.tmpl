@@ -1,0 +1,32 @@
+{{- $data := dict
+	"name" (promptStringOnce . "name" "Name")
+	"email" (promptStringOnce . "email" "Email") -}}
+
+{{- range list
+	(list "gaming" "gaming stack (Steam/OpenRGB/…)")
+	(list "coding" "dev tooling (Neovim/VS Code/lazygit/…)")
+	(list "ai_dev" "AI dev tools (CUDA/ROCm/Ollama/…)")
+	(list "agents" "AI agents (Claude Code/OpenCode/Codex/…)")
+	(list "media" "media apps (kdenlive/OBS/Spotify/…)")
+	(list "office" "office apps (LibreOffice/KeePassXC/printing/…)")
+	(list "communication" "chat apps (Telegram/Signal/Discord/…)")
+	(list "plugins" "Hyprland plugins (hyprpm/scrolloverview)") -}}
+{{-   $_ := set $data (index . 0) (promptBoolOnce $ (index . 0) (printf "Install %s" (index . 1)) true) -}}
+{{- end -}}
+
+{{/* <service>_authkey: false skips, "" installs without login, else the key */}}
+{{- range list
+	(list "tailscale" "Tailscale" "auth key")
+	(list "nordvpn" "NordVPN" "token")
+	(list "mega" "MEGA" "session id (from mega-session)") -}}
+{{-   $key := printf "%s_authkey" (index . 0) -}}
+{{-   $val := false -}}
+{{-   if hasKey $ $key -}}
+{{-     $val = get $ $key -}}
+{{-   else if promptBool (printf "Install %s" (index . 1)) false -}}
+{{-     $val = promptString (printf "%s %s (empty for no auto-login)" (index . 1) (index . 2)) "" -}}
+{{-   end -}}
+{{-   $_ := set $data $key $val -}}
+{{- end -}}
+
+{{ toToml (dict "data" $data) }}
