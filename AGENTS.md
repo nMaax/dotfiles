@@ -495,7 +495,8 @@ SDDM is intentionally left alone as a fallback, not force-removed.
   `community`/`custom` palettes too, not just built-ins — confirmed with the `Heartbox` community
   palette), and `[output] scales`/`transforms`. It is **not** a live watcher — re-run `greeter-sync`
   by hand after any desktop theme change; nothing pushes it automatically.
-  **`greeter.toml`** is declarative and never touched by sync/UI. This is where per-machine
+  **`greeter.toml`** is declarative and never touched by sync/UI. The greeter script only adds
+  `[appearance] hide_logo = true` to it, never overwrites it. This is where per-machine
   overrides go — most importantly `[output] name/width/height`, since `greeter-sync` does **not**
   carry the actual monitor mode (only scale/transform), so a greeter left on its default output
   config renders at 1080p regardless of the monitor's native resolution.

@@ -27,6 +27,18 @@ user = "greeter"
 EOF
 fi
 
+GREETER_CONFIG="/var/lib/noctalia-greeter/greeter.toml"
+if sudo grep -q "^hide_logo" "$GREETER_CONFIG" 2>/dev/null; then
+  success "$GREETER_CONFIG already sets hide_logo. Skipping."
+else
+  info "Hiding the Noctalia logo on the greeter..."
+  if sudo grep -q "^\[appearance\]" "$GREETER_CONFIG" 2>/dev/null; then
+    sudo sed -i '/^\[appearance\]/a hide_logo = true' "$GREETER_CONFIG"
+  else
+    printf '\n[appearance]\nhide_logo = true\n' | sudo tee -a "$GREETER_CONFIG" >/dev/null
+  fi
+fi
+
 if systemctl is-enabled --quiet greetd.service 2>/dev/null; then
   success "greetd.service is already the enabled display manager. Skipping."
 else
