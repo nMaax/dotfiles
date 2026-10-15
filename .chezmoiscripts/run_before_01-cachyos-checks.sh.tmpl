@@ -26,11 +26,6 @@ if ! ask "Have you run a full system update before starting this execution?"; th
   exit 1
 fi
 
-if ! ask "Did you place the chezmoi.toml at ~/.config/chezmoi/?"; then
-  error "Please place the chezmoi.toml in its proper location before proceeding. Closing, come back later."
-  exit 1
-fi
-
 echo ""
 success "✅ [Interactive Checks] Done."
 echo ""
