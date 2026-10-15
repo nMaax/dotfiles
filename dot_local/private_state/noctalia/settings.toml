@@ -109,7 +109,7 @@ hyprland_parser = "lua"
 show_undescribed = false
 
 [plugins]
-enabled = [ "noctalia/kaomoji", "noctalia/mpvpaper", "tadomika_ari/w-engine", "kenn/keybind-cheatsheet" ]
+enabled = [ "noctalia/kaomoji", "noctalia/mpvpaper", "kenn/keybind-cheatsheet", "tadomika_ari/w-engine" ]
 
 [shell]
 button_borders = false
@@ -153,7 +153,7 @@ source = "community"
 wallpaper_scheme = "m3-content"
 
     [theme.templates]
-    builtin_ids = [ "btop", "cava", "gtk3", "gtk4", "ghostty", "hyprland", "kcolorscheme", "qt", "starship" ]
+    builtin_ids = [ "btop", "cava", "foot", "gtk3", "gtk4", "ghostty", "hyprland", "kcolorscheme", "qt", "starship" ]
     community_ids = [ "spicetify", "neovim", "heroiclauncher", "prismlauncher", "yazi" ]
 
 [wallpaper]
@@ -162,16 +162,13 @@ transition = [ "disc", "honeycomb", "stripes", "wipe" ]
 transition_on_startup = true
 
     [wallpaper.default]
-    path = "/home/massimiliano/Pictures/Wallpapers/red1.png"
+    path = "/home/massimiliano/Pictures/Wallpapers/wallhack-carnage-sora.jpg"
 
     [wallpaper.last]
-    path = "/home/massimiliano/Pictures/Wallpapers/red1.png"
+    path = "/home/massimiliano/Pictures/Wallpapers/wallhack-carnage-sora.jpg"
 
     [wallpaper.monitors.DP-1]
-    path = "/home/massimiliano/Pictures/Wallpapers/sora-drive.jpg"
-
-    [wallpaper.monitors.eDP-1]
-    path = "/home/massimiliano/Pictures/Wallpapers/red1.png"
+    path = "/home/massimiliano/Pictures/Wallpapers/wallhack-carnage-sora.jpg"
 
     [[wallpaper.favorite]]
     path = "/home/massimiliano/Pictures/Wallpapers/hokusai2.jpg"
@@ -229,6 +226,30 @@ transition_on_startup = true
     community_palette = "Paradise"
     palette_source = "community"
     path = "/home/massimiliano/Pictures/Wallpapers/rei2.png"
+    theme_mode = "dark"
+
+    [[wallpaper.favorite]]
+    builtin_palette = "Kanagawa"
+    palette_source = "builtin"
+    path = "/home/massimiliano/Pictures/Wallpapers/neaben1.jpg"
+    theme_mode = "dark"
+
+    [[wallpaper.favorite]]
+    community_palette = "Cyberpunk"
+    palette_source = "community"
+    path = "/home/massimiliano/Pictures/Wallpapers/wanna-stay-at-your-house.png"
+    theme_mode = "dark"
+
+    [[wallpaper.favorite]]
+    community_palette = "Heartbox"
+    palette_source = "community"
+    path = "/home/massimiliano/Pictures/Wallpapers/wallhack-carnage-sora.jpg"
+    theme_mode = "dark"
+
+    [[wallpaper.favorite]]
+    community_palette = "Heartbox"
+    palette_source = "community"
+    path = "/home/massimiliano/Pictures/Wallpapers/wallhack-drift-sora.jpg"
     theme_mode = "dark"
 
 [widget.control-center]
