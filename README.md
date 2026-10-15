@@ -4,9 +4,26 @@ Personal dotfiles and system configurations, just the way I like it.
 
 These dotfiles are heavily based on **CachyOS** (not just Arch), specifically the various packages that Cachy ships with its own base installation (fish, various KDE bloat, etc.).
 
-Ideally, you should have installed CachyOS selecting Hyprland during the Calamares installation. If you didn't, 🥮 will install everything needed, but some manual changes could be necessary (e.g., enabling noctalia-greetr)
+Ideally, you should have installed CachyOS selecting Hyprland during the Calamares installation. If you didn't, 🥮 will install everything needed, but some manual changes could be necessary (e.g., enabling noctalia-greeter).
 
 > Managed using [chezmoi](https://www.chezmoi.io/). Code written with the help of Gemini, Claude, and Copilot.
+
+## Table of Contents
+
+- [Installation](#installation)
+  - [Missing polkit agent in CachyOS Hello](#handling-missing-polkit-agent-password-prompt-in-cachyos-hello)
+- [Post-Installation](#post-installation)
+  - [Keyring (KWallet)](#keyring-kwallet)
+  - [Theming](#theming)
+- [Guides](#guides)
+  - [SSH](#ssh)
+  - [GRUB](#grub)
+  - [Gaming](#gaming)
+  - [Low-latency game streaming](#low-latency-game-streaming)
+- [Recommendations](#recommendations)
+  - [Browser](#browser)
+  - [Spicetify](#spicetify)
+- [TODOs](#-todos)
 
 ## Installation
 
@@ -19,20 +36,41 @@ Ideally, you should have installed CachyOS selecting Hyprland during the Calamar
 [data]
   name = "uname"
   email = "you@example.com"
-  tailscale_authkey = "tskey-auth-XXXXXXXXXXXXX" # "" installs Tailscale without logging in; false skips it entirely
-  nordvpn_authkey = "nvpnkey-auth-XXXXXXXXXXXXX" # "" installs NordVPN without logging in; false skips it entirely
-  mega_authkey = "megakey-auth-XXXXXXXXXXXXX" # "" installs MEGA without logging in; false skips it entirely
-  gaming = true # false to avoid installing Steam, Mango, OpenRGB, etc.
-  coding = true # false to skip dev tooling: Neovim, VS Code, lazygit, nodejs, etc.
-  ai_dev = true # false to skip AI dev tools: CUDA, ROCm, Ollama, etc.
-  agents = true # false to skip AI agents: Claude Code, Antigravity, OpenCode, Codex, etc.
-  media = true # false to skip kdenlive, OBS, EasyEffects, Spotify, etc.
-  office = true # false to skip LibreOffice, KeePassXC, qBittorrent, CUPS printing, etc.
-  communication = true # false to skip Telegram, Signal, Discord, Element, etc.
-  plugins = true # false to skip Hyprland plugins (hyprpm, scrolloverview)
+  tailscale_authkey = "tskey-auth-XXXXXXXXXXXXX"
+  nordvpn_authkey = "nvpnkey-auth-XXXXXXXXXXXXX"
+  mega_authkey = "megakey-auth-XXXXXXXXXXXXX"
+  gaming = true
+  coding = true
+  ai_dev = true
+  agents = true
+  media = true
+  office = true
+  communication = true
+  plugins = true
 ```
 
-During install, you will have the option to automatically wipe `tailscale_authkey` / `nordvpn_authkey` / `mega_authkey` from `~/.config/chezmoi/chezmoi.toml` right after their use. Leaving any of them as `""` still installs and enables that integration, just without an auto-login; set it to `false` to skip installing it altogether.
+Every key must be present. Each feature flag set to `false` skips its whole category:
+
+| Key | Installs when `true` |
+| --- | --- |
+| `gaming` | Steam, Mango, OpenRGB, gaming tweaks, etc. |
+| `coding` | Neovim, VS Code, lazygit, nodejs, etc. |
+| `ai_dev` | CUDA, ROCm, Ollama, etc. |
+| `agents` | Claude Code, Antigravity, OpenCode, Codex, etc. |
+| `media` | kdenlive, OBS, EasyEffects, Spotify, etc. |
+| `office` | LibreOffice, KeePassXC, qBittorrent, CUPS printing, etc. |
+| `communication` | Telegram, Signal, Discord, Element, etc. |
+| `plugins` | Hyprland plugins (hyprpm, scrolloverview) |
+
+The three auth keys accept one of three values:
+
+| Value | Effect |
+| --- | --- |
+| `"<key>"` | Installs the integration and logs in with that key |
+| `""` | Installs and enables it, without auto-login |
+| `false` | Skips it entirely |
+
+`tailscale_authkey` and `nordvpn_authkey` take the service's auth key; `mega_authkey` takes a MEGA **session id** (`mega-login <email>`, then `mega-session`), not your password. During install you can have these keys wiped from `chezmoi.toml` right after use.
 
 2. Install chezmoi and apply the dotfiles
 
@@ -67,6 +105,8 @@ To fix, do the following:
 
 ## Post-Installation
 
+A few steps 🥮 can't automate.
+
 ### Keyring (KWallet)
 
 KWallet is the password manager of choice in 🥮, due to the already wide presence of KDE ecosystem tools by CachyOS itself. The install scripts pull in the `kwallet`/`kwalletmanager`/`kwallet-pam` packages automatically, but **PAM auto-unlock at login is not configured out of the box** for the Noctalia greeter (`greetd`) — KWallet stays locked at session start, and unlocks via a one-time manual password prompt the first time an app needs a secret each session. Electron apps relying on the Electron safe-storage feature may still show their own separate prompts regardless.
@@ -78,6 +118,47 @@ If you'd rather have KWallet auto-unlock at login, you'll need to patch `/etc/pa
 - **Password:** your current **user login password** (PAM unlocks the wallet by matching it against the login password)
 
 Further information can be found at [Arch Wiki: KDE Wallet](https://wiki.archlinux.org/title/KDE_Wallet) and [Electron Safe Storage Info](https://www.electronjs.org/docs/latest/api/safe-storage).
+
+### Theming
+
+Noctalia presents a standard approach to sync apps colorschemes with its own theme, each app requires its own procedure, part of it can be automated via code, and some other not. Further information can be found in [official Noctalia documentation](https://docs.noctalia.dev/v5/theming/app-theming/).
+
+You can retrieve the list of apps on which automatic theming is set in the Noctalia settings themselves. Note, however, that some of those may still require some in-app manual intervention; below are some steps you shall take to complete the theming:
+
+#### GTK and Qt
+
+- **qt5ct** (`qt5ct` command): Set **Color scheme** to `noctalia`, **General font** to `SF Pro`, **Fixed-width font** to `CaskaydiaCove Nerd Font Mono`
+- **qt6ct** (`qt6ct` command): Same as above.
+  - Qt theming via `qt6ct` with `QT_QPA_PLATFORMTHEME` has already been set in Hyprland config files for environment variables (`~/.config/hypr/lua/env.lua`).
+- **GTK** (`nwg-look`): Set the general font to `SF Pro Regular`, then ensure Preferences > .config/gtk-4.0 is disabled; eventually, clear it if you found it enabled.
+  - `adw-gtk3` + `prefer-dark` was already applied via `gsettings` during the install script.
+- GTK apps will automatically fetch the color scheme from the above, while Qt apps must be configured separately by going into app settings and finding the colorscheme item.
+
+#### Specific apps
+
+- **Zen Browser:** Open `about:config` → set `toolkit.legacyUserProfileCustomizations.stylesheets` to `true`; then open Settings → General → set Website Appearance to Auto; finally, restart Zen Browser.
+- **Discord:** Open Equibop → Settings → Themes → enable one of the two Noctalia themes.
+- **VSCode:** Install the `NoctaliaTheme` extension from the marketplace, then select it via `Ctrl+Shift+P` → *Preferences: Color Theme*.
+- **Telegram:** Open Settings → Chat Settings → scroll to the bottom and enable the custom color theme.
+- **Steam**: Install [Material-Theme](https://steambrew.app/theme?id=ipYjqODds05KMcvh7QJn) and add it in Millennium Settings > Theme, then click the three dots > configure > style > colors > select *Matugen* in the theme color dropdown.
+- **Heroic Games Launcher:** Settings → Advanced → set **Custom Themes Path** to `~/.config/heroic/themes`, then select **matugen** from the theme dropdown. One-time; the generated CSS updates in place on further theme changes.
+- **Prism Launcher:** Settings → Appearance → Theme → select **Matugen**. One-time; the generated theme JSON updates in place on further theme changes.
+- All other enabled apps (`btop`, `cava`, `ghostty`, `starship`, `hyprland`, `kcolorscheme`, `neovim`, `yazi`) apply fully automatically; no action needed.
+
+> [!NOTE]
+> If some apps do not properly fetch the color scheme even after having followed the noctalia guidelines, try to disable and re-enable them, as well as changing the color scheme as a whole.
+
+Furthermore, you can install other themes for apps yourself; have a look at:
+
+- [ZenZero](https://sameerasw.com/zen)
+- [BetterDiscord](https://betterdiscord.app/themes)
+- [Millennium for Steam](https://steambrew.app/themes)
+
+🥮 also supports [linux-wallpaperengine](https://github.com/Almamu/linux-wallpaperengine)! If you installed Steam you can see how to set it up and the [related plugin](https://noctalia.dev/plugins/linux-wallpaperengine-controller/)
+
+## Guides
+
+Optional how-tos for common setups.
 
 ### SSH
 
@@ -108,8 +189,7 @@ Accept the default path (`~/.ssh/id_ed25519`) and optionally choose a passphrase
 
    You should see: `Hi <username>! You've successfully authenticated…`
 
-> [!NOTE]
-> You could be prompted to either create a new wallet, or to unlock the current one, refer to the above section for details.
+   You may be prompted to create or unlock a KWallet; see [Keyring (KWallet)](#keyring-kwallet).
 
 4. Tell Git to use SSH for GitHub remotes (optional, but recommended):
 
@@ -147,93 +227,6 @@ sudo sed -i 's|^GRUB_THEME=|#GRUB_THEME=|' /etc/default/grub
 sudo sed -i 's|^#GRUB_TERMINAL_OUTPUT=console|GRUB_TERMINAL_OUTPUT=console|' /etc/default/grub
 sudo grub-mkconfig -o /boot/grub/grub.cfg
 ```
-
-### Theming
-
-Noctalia presents a standard approach to sync apps colorschemes with its own theme, each app requires its own procedure, part of it can be automated via code, and some other not. Further information can be found in [official Noctalia documentation](https://docs.noctalia.dev/v5/theming/app-theming/).
-
-You can retrieve the list of apps on which automatic theming is set in the Noctalia settings themselves. Note, however, that some of those may still require some in-app manual intervention; below are some steps you shall take to complete the theming:
-
-#### GTK and Qt
-
-- **qt5ct** (`qt5ct` command): Set **Color scheme** to `noctalia`, **General font** to `SF Pro`, **Fixed-width font** to `CaskaydiaCove Nerd Font Mono`
-- **qt6ct** (`qt6ct` command): Same as above.
-  - Qt theming via `qt6ct` with `QT_QPA_PLATFORMTHEME` has already been set in Hyprland config files for environment variables (`~/.config/hypr/lua/env.lua`).
-- **GTK** (`nwg-look`): Set the general font to `SF Pro Regular`, then ensure Preferences > .config/gtk-4.0 is disabled; eventually, clear it if you found it enabled.
-  - `adw-gtk3` + `prefer-dark` was already applied via `gsettings` during the install script.
-- GTK apps will automatically fetch the color scheme from the above, while Qt apps must be configured separately by going into app settings and finding the colorscheme item.
-
-#### Specific apps
-
-- **Zen Browser:** Open `about: config` → set `toolkit.legacyUserProfileCustomizations.stylesheets` to `true`; then open Settings → General → set Website Appearance to Auto; finally, restart Zen Browser.
-- **Discord:** Open Equibop → Settings → Themes → enable one of the two Noctalia themes.
-- **VSCode:** Install the `NoctaliaTheme` extension from the marketplace, then select it via `Ctrl+Shift+P` → *Preferences: Color Theme*.
-- **Telegram:** Open Settings → Chat Settings → scroll to the bottom and enable the custom color theme.
-- **Steam**: Install [Material-Theme](https://steambrew.app/theme?id=ipYjqODds05KMcvh7QJn) and add it in Millenium Settings > Theme, then click the three dots > configure > style > colors > select *Matugen* in the theme color dropdown.
-- **Heroic Games Launcher:** Settings → Advanced → set **Custom Themes Path** to `~/.config/heroic/themes`, then select **matugen** from the theme dropdown. One-time; the generated CSS updates in place on further theme changes.
-- **Prism Launcher:** Settings → Appearance → Theme → select **Matugen**. One-time; the generated theme JSON updates in place on further theme changes.
-- All other enabled apps (`btop`, `cava`, `ghostty`, `starship`, `hyprland`, `kcolorscheme`, `neovim`, `yazi`) apply fully automatically; no action needed.
-
-> [!NOTE]
-> If some apps do not properly fetch the color scheme even after having followed the noctalia guidelines, try to disable and re-enable them, as well as changing the color scheme as a whole.
-
-Furthermore, you can install other themes for apps yourself; have a look at:
-
-- [ZenZero](https://sameerasw.com/zen)
-- [BetterDiscord](https://betterdiscord.app/themes)
-- [Millenium for Steam](https://steambrew.app/themes)
-
-🥮 also supports [linux-wallpaperengine](https://github.com/Almamu/linux-wallpaperengine)! If you installed Steam you can see how to set it up and the [related plugin](https://noctalia.dev/plugins/linux-wallpaperengine-controller/)
-
-### Browsing
-
-The stuff that I usually use during my browsing experience is completely optional and up to your preference; do what you want with them:
-
-- **Extensions**:
-  - [uBlock Origin](https://ublockorigin.com/) – content & ad blocker
-  - [ClearURLs](https://github.com/ClearURLs/Addon) – strips tracking parameters from URLs
-  - [Tridactyl](https://github.com/tridactyl/tridactyl) – Vim-style keyboard navigation (Firefox/Zen)
-  - [MarkDownload](https://github.com/deathau/markdownload) – download pages as Markdown
-  - [DarkReader](https://darkreader.org/help/en/) - automatic dark theming
-- **Zen Mods**:
-  - [Transparent Zen](https://zen-browser.app/mods/642854b5-88b4-4c40-b256-e035532109df) – make zen look transparent, needed for [ZenZero](https://sameerasw.com/zen)
-
-Eventually consider also
-
-- [Volume Control](https://github.com/Chaython/volumecontrol)
-- [Web Archives](https://github.com/dessant/web-archives)
-- [YouTube Improved](https://github.com/code-charity/youtube)
-
-Furthermore, here is a list of some good misc websites for assets in case you wanted to customize 🥮:
-
-- [Pinterest](https://it.pinterest.com/): for propics
-- [Wallhaven](https://wallhaven.cc/): for static backgrounds
-- [MotionBGs](https://motionbgs.com/): for animated wallpapers
-- Guide on how to convert Wallpaper Engine backgrounds into video files: from [Wallpaper Engine itself](https://help.wallpaperengine.io/en/functionality/export.html), from [Steam community](https://steamcommunity.com/sharedfiles/filedetails/?id=2277828676)
-
-### Spicetify extensions
-
-Other stuff I use on Spicetify, I warmly advice is to use the marketplace as much as possible to install them! Spicetify and the Spicetify marketplace are automatically installed with 🥮.
-
-If you want to re-run just the Spicetify setup without `chezmoi apply`, run:
-
-```bash
-~/.local/bin/spicetify-setup.sh
-```
-
-- [Spicy Lyrics](https://github.com/Spikerko/spicy-lyrics) (instead of Beautiful Lyrics, which seems to be deprecated!)
-- Global Stats for songs, to fetch info on different songs.
-- Shuffle+ for a Fisher-Yates randomization with zero bias.
-- [Lucid Theme](https://github.com/sanoojes/spicetify-lucid) (instead of the Confy default one, tho this one looks quite heavy, bloated, and dirty, ngl.)
-
-> [!WARNING]
-> Disable Comfy theme via spicetify cli if you want to install a different one!
-> Run the following:
->
-> ```bash
-> spicetify config current_theme " "
-> spicetify apply
-> ```
 
 ### Gaming
 
@@ -292,7 +285,7 @@ To revert to stock handheld behavior (always boot to Big Picture), run:
 steamos-session-select oneshot
 ```
 
-### Streaming (P2P)
+### Low-latency game streaming
 
 If you are not satisfied with the Wayland screenshare when streaming games on your Electron app (e.g., Discord), then 🥮 brings some plugins to stream your games with low latency and low added input latency on the game. Namely using `obs-vkcapture`, `lib32-obs-vkcapture`, and `obs-pipewire-audio-capture`.
 
@@ -353,13 +346,68 @@ Now you can copy the **Watch Page Link** provided by the Meshcast interface (e.g
 
 Hit **Start Streaming** in OBS. That's it :)
 
+## Recommendations
+
+What I personally use on top of 🥮; entirely optional.
+
+### Browser
+
+The stuff that I usually use during my browsing experience is completely optional and up to your preference; do what you want with them:
+
+- **Extensions**:
+  - [uBlock Origin](https://ublockorigin.com/) – content & ad blocker
+  - [ClearURLs](https://github.com/ClearURLs/Addon) – strips tracking parameters from URLs
+  - [Tridactyl](https://github.com/tridactyl/tridactyl) – Vim-style keyboard navigation (Firefox/Zen)
+  - [MarkDownload](https://github.com/deathau/markdownload) – download pages as Markdown
+  - [DarkReader](https://darkreader.org/help/en/) - automatic dark theming
+- **Zen Mods**:
+  - [Transparent Zen](https://zen-browser.app/mods/642854b5-88b4-4c40-b256-e035532109df) – make zen look transparent, needed for [ZenZero](https://sameerasw.com/zen)
+
+Eventually consider also
+
+- [Volume Control](https://github.com/Chaython/volumecontrol)
+- [Web Archives](https://github.com/dessant/web-archives)
+- [YouTube Improved](https://github.com/code-charity/youtube)
+
+Furthermore, here is a list of some good misc websites for assets in case you wanted to customize 🥮:
+
+- [Pinterest](https://it.pinterest.com/): for propics
+- [Wallhaven](https://wallhaven.cc/): for static backgrounds
+- [MotionBGs](https://motionbgs.com/): for animated wallpapers
+- Guide on how to convert Wallpaper Engine backgrounds into video files: from [Wallpaper Engine itself](https://help.wallpaperengine.io/en/functionality/export.html), from [Steam community](https://steamcommunity.com/sharedfiles/filedetails/?id=2277828676)
+
+### Spicetify
+
+Other stuff I use on Spicetify, I warmly advise using the marketplace as much as possible to install them! Spicetify and the Spicetify marketplace are automatically installed with 🥮.
+
+If you want to re-run just the Spicetify setup without `chezmoi apply`, run:
+
+```bash
+~/.local/bin/spicetify-setup.sh
+```
+
+- [Spicy Lyrics](https://github.com/Spikerko/spicy-lyrics) (instead of Beautiful Lyrics, which seems to be deprecated!)
+- Global Stats for songs, to fetch info on different songs.
+- Shuffle+ for a Fisher-Yates randomization with zero bias.
+- [Lucid Theme](https://github.com/sanoojes/spicetify-lucid) (instead of the Comfy default one, tho this one looks quite heavy, bloated, and dirty, ngl.)
+
+> [!WARNING]
+> Disable Comfy theme via spicetify cli if you want to install a different one!
+> Run the following:
+>
+> ```bash
+> spicetify config current_theme " "
+> spicetify apply
+> ```
+
 ---
 
 ## 📝 TODOs
 
-- [ ] Add table of content for this readme, and move the description of each flag for the chezmoi.toml out of the block. Also, can we deliver a default toml for users?
+- [x] Add table of content for this readme, and move the description of each flag for the chezmoi.toml out of the block
+- [ ] Deliver a default `chezmoi.toml` for users
 - [ ] Add Artcraft suite, and other good replacement for video editing, image editing etc.
-- [ ] Prepare 2K-4K WALLHACK Wallpapers -> Make a release for dotfiles-assets if files are too large
+- [x] Prepare 2K-4K WALLHACK Wallpapers -> 2K in `wallpapers/`, full sets in the [`wallhack-v1` release](https://github.com/nMaax/dotfiles-assets/releases/tag/wallhack-v1)
 - [ ] Once everything is finished, add screenshots and videos in this README
 
 ### New features to try
