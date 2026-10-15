@@ -23,3 +23,6 @@ custom-shader = shaders/cursor_warp.glsl
 # Sync theme with noctalia
 theme = noctalia
 
+
+# Free Ctrl+Enter for TUIs; SUPER+F handles fullscreen
+keybind = ctrl+enter=unbind
