@@ -56,7 +56,7 @@ Each feature category can be skipped:
 | `coding` | Neovim, VS Code, lazygit, nodejs, etc. |
 | `ai_dev` | CUDA, ROCm, Ollama, etc. |
 | `agents` | Claude Code, Antigravity, OpenCode, Codex, etc. |
-| `media` | kdenlive, OBS, EasyEffects, Spotify, etc. |
+| `media` | kdenlive, OBS, EasyEffects, Spotify, Artcraft, Storytold, etc. |
 | `office` | LibreOffice, KeePassXC, qBittorrent, CUPS printing, etc. |
 | `communication` | Telegram, Signal, Discord, Element, etc. |
 | `plugins` | Hyprland plugins (hyprpm, scrolloverview) |
