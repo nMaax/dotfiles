@@ -38,7 +38,7 @@ pacman -S chezmoi
 chezmoi init --apply nMaax
 ```
 
-On first run, chezmoi asks a few questions and saves your answers to `~/.config/chezmoi/chezmoi.toml`. Re-running `chezmoi init` keeps them and only asks about options added since.
+On first run, chezmoi asks what to install (see [Configuration](#configuration)).
 
 > [!WARNING]
 > `ddcutil` will be installed, which may cause instability with certain monitors. You can remove it via `sudo pacman -Rns ddcutil` if you encounter any issues.
@@ -48,30 +48,54 @@ On first run, chezmoi asks a few questions and saves your answers to `~/.config/
 
 ### Configuration
 
-The first question is a `profile` (`full`, `laptop`, `gaming`, `minimal`) that presets the default answer for each category below; every answer can still be overridden. Each feature category can be skipped:
+On the first `chezmoi init`, you answer a few questions. Your answers are saved to `~/.config/chezmoi/chezmoi.toml`, and every later `chezmoi apply` reads them from there.
 
-| Key | Installs when `true` |
+**1. Pick a profile.** It only pre-fills the answers to the next questions, so you can press Enter through them:
+
+| Profile | Pre-selects |
 | --- | --- |
-| `gaming` | Steam, Mango, OpenRGB, gaming tweaks, etc. |
-| `coding` | VS Code, lazygit, nodejs, AI agents (Claude Code, OpenCode, Codex), etc. |
-| `local_llm` | CUDA, ROCm, Ollama, etc. |
-| `media` | kdenlive, OBS + capture plugins, EasyEffects, Spotify, Artcraft, Storytold, etc. |
-| `office` | LibreOffice, Xournal++, qBittorrent, etc. |
+| `full` | everything |
+| `laptop` | coding, media, office, printing, communication |
+| `gaming` | gaming, media, communication, plugins |
+| `minimal` | nothing, only the base desktop |
+
+**2. Confirm or change each category.** Answer `y` or `n` for each one:
+
+| Key | Installs |
+| --- | --- |
+| `gaming` | Steam, MangoHud, OpenRGB, MCHOSE peripherals, gaming tweaks |
+| `coding` | VS Code, lazygit, Node.js, AI agents (Claude Code, OpenCode, Codex, …) |
+| `local_llm` | CUDA/ROCm and Ollama, to run models on your GPU |
+| `media` | Spotify, OBS (+ capture plugins), kdenlive, EasyEffects, ArtCraft |
+| `office` | LibreOffice, Xournal++, qBittorrent |
 | `printing` | CUPS, printer drivers, network printer discovery |
-| `communication` | Telegram, Signal, Discord, Element, etc. |
+| `communication` | Telegram, Signal, Discord, Element, LocalSend, WhatsApp |
 | `plugins` | Hyprland plugins (hyprpm, scrolloverview) |
 
-Tailscale, NordVPN and MEGA are optional. Each one's `*_authkey` holds one of three values:
+Browsers, terminals, Neovim, KeePassXC and the rest of the desktop are always installed.
 
-| Value | Effect |
-| --- | --- |
-| `"<key>"` | Installs the integration and logs in with that key |
-| `""` | Installs and enables it, without auto-login |
-| `false` | Skips it entirely |
+**3. Optional services: Tailscale, NordVPN, MEGA.** Say no to skip one. Say yes and you're asked for a login key; leave it empty to install the service without logging in. MEGA wants a **session id** (`mega-login <email>`, then `mega-session`), not your password. The installer offers to wipe each key from `chezmoi.toml` once it has been used.
 
-`tailscale_authkey` and `nordvpn_authkey` take the service's auth key; `mega_authkey` takes a MEGA **session id** (`mega-login <email>`, then `mega-session`), not your password. During install you can have these keys wiped from `chezmoi.toml` right after use.
+#### Changing your choices later
 
-To change an answer later, edit `~/.config/chezmoi/chezmoi.toml`, or delete the key and run `chezmoi init` to be asked again.
+You can edit any answer by hand. Open `~/.config/chezmoi/chezmoi.toml`:
+
+```toml
+[data]
+  profile = "laptop"
+  gaming = false
+  coding = true
+  printing = true
+  # ...
+  tailscale_authkey = false   # false = skip, "" = install without login, "<key>" = log in
+```
+
+Change a value, then run `chezmoi apply`. Things to know:
+
+- Turning a category **on** installs it on the next apply.
+- Turning one **off** stops managing it, but does **not** uninstall what is already there.
+- Changing `profile` here does nothing; it is only read while the questions are asked. Edit the individual flags instead.
+- To be asked about one key again, delete its line and run `chezmoi init`.
 
 ### Handling missing polkit agent password prompt in CachyOS Hello
 
