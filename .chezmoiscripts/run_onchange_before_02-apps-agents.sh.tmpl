@@ -30,6 +30,12 @@ sudo pacman -S --needed --noconfirm opencode
 info "🧠 Installing Codex CLI..."
 sudo pacman -S --needed --noconfirm openai-codex # Available directly in the cachyos repo
 
+info "⚕️ Installing Hermes Agent..."
+sudo pacman -S --needed --noconfirm hermes-agent # Available directly in the cachyos repo
+
+info "🥧 Installing Pi coding agent..."
+paru -S --needed --noconfirm pi-coding-agent-bin
+
 echo ""
 success "✅ [Installing Apps: Agents] Done."
 echo ""
