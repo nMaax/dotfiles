@@ -13,8 +13,8 @@ hl.env("HYPRCURSOR_SIZE", "24")
 -- XDG menu prefix for desktop menus
 hl.env("XDG_MENU_PREFIX", "arch-")
 
--- Use qt6ct for Qt platform theming and disable decorations
-hl.env("QT_QPA_PLATFORMTHEME", "qt6ct")
+-- Use the KDE platform theme (reads Noctalia's kdeglobals; qt6ct hides Dolphin filenames in dark mode) and disable decorations
+hl.env("QT_QPA_PLATFORMTHEME", "kde")
 hl.env("QT_WAYLAND_DISABLE_WINDOWDECORATION", "1")
 
 -- Wayland first, XWayland fallback for Qt apps that misbehave under pure Wayland
