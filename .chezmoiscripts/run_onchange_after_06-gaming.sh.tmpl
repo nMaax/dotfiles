@@ -30,10 +30,6 @@ sudo pacman -S --needed --noconfirm mangohud mangojuice
 info "💓 Installing vrrtest..."
 paru -S --needed --noconfirm vrrtest
 
-info "📹 Installing OBS Plugins for game capture and streaming..."
-sudo pacman -S --needed --noconfirm obs-vkcapture lib32-obs-vkcapture
-paru -S --needed --noconfirm obs-pipewire-audio-capture-bin
-
 detect_gpu_vendor
 if [ "$GPU_VENDOR" = "amd" ]; then
   info "🔺 Installing Mesa implicit Vulkan layers (anti-lag)..."

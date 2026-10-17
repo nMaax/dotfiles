@@ -205,8 +205,8 @@ Understanding this requires reading `.chezmoiscripts/`, `.chezmoitemplates/` and
 chezmoi runs `before_` scripts, then applies regular files, then runs `after_` scripts. The numeric
 prefixes order scripts *within* each phase, and the two sequences are independent:
 
-- `before`: `01-cachyos-checks` (interactive prompts, every apply) → `01b-cachyos-packages` (prerequisites & base apps, once) → `02-apps-core` → `02-apps-coding` → `02-apps-ai-dev` → `02-apps-agents` → `02-apps-media` →
-  `02-apps-office` → `02-apps-communication` → `03-fonts-emoji` → `04-hyprland-noctalia`. Order
+- `before`: `01-cachyos-checks` (interactive prompts, every apply) → `01b-cachyos-packages` (prerequisites & base apps, once) → `02-apps-core` → `02-apps-coding` → `02-apps-local-llm` → `02-apps-media` →
+  `02-apps-office` → `02-apps-printing` → `02-apps-communication` → `03-fonts-emoji` → `04-hyprland-noctalia`. Order
   *within* the `02-apps-*` group doesn't matter — none of the categories depend on packages installed
   by another, and `paru`/`pacman -S --needed` are idempotent regardless of run order.
   CachyOS stopped shipping `paru` in June 2026, so `01b` installs it from the `cachyos` repo before any script calls it.
@@ -246,7 +246,7 @@ Follow that pattern; don't redefine what's already provided:
   Enter = yes), `reset_chezmoi_data_secret <key> <reminder>` (blanks a secret out of the user's
   `chezmoi.toml` after use), and `detect_gpu_vendor` which sets `GPU_VENDOR` to `nvidia`/`amd`/`""`.
   `detect_gpu_vendor` is a **pure vendor check** — it doesn't know if the card is ROCm-supported.
-  `run_onchange_before_02-apps-ai-dev.sh.tmpl` therefore `ask`s before installing `rocm-hip-sdk` on
+  `run_onchange_before_02-apps-local-llm.sh.tmpl` therefore `ask`s before installing `rocm-hip-sdk` on
   AMD, defaulting to skip (CPU-only Ollama): ROCm on unsupported cards (e.g. Polaris/gfx803) has
   caused total display-output loss.
 - `external_links.sh.tmpl` — **all** external download URLs, versions and SHA256 hashes, as shell
@@ -256,12 +256,12 @@ Follow that pattern; don't redefine what's already provided:
 ### Template data
 
 Scripts gate on the user's `~/.config/chezmoi/chezmoi.toml` `[data]` block: `.name`, `.email`,
-`.gaming` (skip Steam/OpenRGB/etc.), `.coding` (skip dev tooling), `.ai_dev` (skip CUDA/ROCm/Ollama),
-`.agents` (skip Claude Code/Antigravity CLI/OpenCode), `.media` (skip
-kdenlive/OBS/EasyEffects/Spotify/yt-dlp/image-upscaler), `.office` (skip
-LibreOffice/KeePassXC/qBittorrent/CUPS printing etc.), `.communication` (skip
-Telegram/Signal/Discord/Element/LocalSend) — each one gates its own `02-apps-*` script (§3
-Ordering). `.plugins` gates `12-hyprland-plugins`, `require("lua.plugins")` and `hyprpm-rebuild`.
+`.gaming` (skip Steam/OpenRGB/MCHOSE/etc.), `.coding` (skip dev tooling and AI agents), `.local_llm`
+(skip CUDA/ROCm/Ollama), `.media` (skip kdenlive/OBS/EasyEffects/Spotify/yt-dlp/image-upscaler),
+`.office` (skip LibreOffice/Xournal++/qBittorrent/sc-im), `.printing` (skip CUPS/drivers/Avahi),
+`.communication` (skip Telegram/Signal/Discord/Element/LocalSend) — each one gates its own `02-apps-*`
+script (§3 Ordering), plus a few gated blocks in `05-misc`/`07-webapps`. `.profile` only presets the
+prompt defaults in `.chezmoi.toml.tmpl`; scripts never read it. `.plugins` gates `12-hyprland-plugins`, `require("lua.plugins")` and `hyprpm-rebuild`.
 `.tailscale_authkey` / `.nordvpn_authkey` / `.mega_authkey` are three-state: boolean `false`
 (or the string `"false"`) skips installing that integration entirely; `""` installs and enables it
 but skips auto-login; any other string is used as the actual key/token to log in with. The

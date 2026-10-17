@@ -48,16 +48,16 @@ On first run, chezmoi asks a few questions and saves your answers to `~/.config/
 
 ### Configuration
 
-Each feature category can be skipped:
+The first question is a `profile` (`full`, `laptop`, `gaming`, `minimal`) that presets the default answer for each category below; every answer can still be overridden. Each feature category can be skipped:
 
 | Key | Installs when `true` |
 | --- | --- |
 | `gaming` | Steam, Mango, OpenRGB, gaming tweaks, etc. |
-| `coding` | Neovim, VS Code, lazygit, nodejs, etc. |
-| `ai_dev` | CUDA, ROCm, Ollama, etc. |
-| `agents` | Claude Code, Antigravity, OpenCode, Codex, etc. |
-| `media` | kdenlive, OBS, EasyEffects, Spotify, Artcraft, Storytold, etc. |
-| `office` | LibreOffice, KeePassXC, qBittorrent, CUPS printing, etc. |
+| `coding` | VS Code, lazygit, nodejs, AI agents (Claude Code, OpenCode, Codex), etc. |
+| `local_llm` | CUDA, ROCm, Ollama, etc. |
+| `media` | kdenlive, OBS + capture plugins, EasyEffects, Spotify, Artcraft, Storytold, etc. |
+| `office` | LibreOffice, Xournal++, qBittorrent, etc. |
+| `printing` | CUPS, printer drivers, network printer discovery |
 | `communication` | Telegram, Signal, Discord, Element, etc. |
 | `plugins` | Hyprland plugins (hyprpm, scrolloverview) |
 

@@ -20,8 +20,10 @@ info "💬 Installing ChatGPT Webapp..."
 info "🦁 Installing Brave AI..."
 ~/.local/bin/install-webapp "Ask Brave" "$BRAVE_ASK_URL"
 
-info "🖱️ Installing MCHOOSE HUB Webapp..."
+{{ if .gaming -}}
+info "🖱️ Installing MCHOSE HUB Webapp..."
 ~/.local/bin/install-webapp "MCHOSE HUB" "$MCHOSE_HUB_URL"
+{{- end }}
 
 info "📝 Installing ddocs webapp..."
 ~/.local/bin/install-webapp "ddocs" "$DDOCS_URL"
@@ -29,8 +31,10 @@ info "📝 Installing ddocs webapp..."
 info "⬇️ Installing cobalt webapp..."
 ~/.local/bin/install-webapp "cobalt" "$COBALT_URL"
 
+{{ if .communication -}}
 info "📞 Installing WhatsApp webapp..."
 ~/.local/bin/install-webapp "WhatsApp" "$WHATSAPP_URL"
+{{- end }}
 
 echo ""
 success "✅ [Installing Webapps] Done."

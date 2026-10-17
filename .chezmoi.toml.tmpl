@@ -1,17 +1,24 @@
 {{- $data := dict
 	"name" (promptStringOnce . "name" "Name")
-	"email" (promptStringOnce . "email" "Email") -}}
+	"email" (promptStringOnce . "email" "Email")
+	"profile" (promptChoiceOnce . "profile" "Profile (presets the answers below)" (list "full" "laptop" "gaming" "minimal") "full") -}}
+
+{{- $on := get (dict
+	"full" (list "coding" "local_llm" "gaming" "media" "office" "printing" "communication" "plugins")
+	"laptop" (list "coding" "media" "office" "printing" "communication")
+	"gaming" (list "gaming" "media" "communication" "plugins")
+	"minimal" (list)) $data.profile -}}
 
 {{- range list
 	(list "gaming" "gaming stack (Steam/OpenRGB/…)")
-	(list "coding" "dev tooling (Neovim/VS Code/lazygit/…)")
-	(list "ai_dev" "AI dev tools (CUDA/ROCm/Ollama/…)")
-	(list "agents" "AI agents (Claude Code/OpenCode/Codex/…)")
+	(list "coding" "dev tooling and AI agents (VS Code/lazygit/Claude Code/…)")
+	(list "local_llm" "local LLMs (CUDA/ROCm/Ollama)")
 	(list "media" "media apps (kdenlive/OBS/Spotify/…)")
-	(list "office" "office apps (LibreOffice/KeePassXC/printing/…)")
+	(list "office" "office apps (LibreOffice/Xournal++/qBittorrent/…)")
+	(list "printing" "printing (CUPS + drivers)")
 	(list "communication" "chat apps (Telegram/Signal/Discord/…)")
 	(list "plugins" "Hyprland plugins (hyprpm/scrolloverview)") -}}
-{{-   $_ := set $data (index . 0) (promptBoolOnce $ (index . 0) (printf "Install %s" (index . 1)) true) -}}
+{{-   $_ := set $data (index . 0) (promptBoolOnce $ (index . 0) (printf "Install %s" (index . 1)) (has (index . 0) $on)) -}}
 {{- end -}}
 
 {{/* <service>_authkey: false skips, "" installs without login, else the key */}}

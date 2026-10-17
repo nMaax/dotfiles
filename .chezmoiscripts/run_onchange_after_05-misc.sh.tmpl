@@ -13,6 +13,7 @@ sudo ln -sf /etc/xdg/menus/arch-applications.menu /etc/xdg/menus/applications.me
 rm -rf ~/.cache/ksycoca6*
 kbuildsycoca6 --noincremental
 
+{{ if .gaming -}}
 info "🖱️ Setting up MCHOSE udev rules..."
 UDEV_RULE_PATH="/etc/udev/rules.d/99-mchose.rules"
 UDEV_RULE_TMP="$(mktemp)"
@@ -40,13 +41,16 @@ else
 fi
 
 rm -f "$UDEV_RULE_TMP"
+{{- end }}
 
+{{ if .media -}}
 info "Downloading EasyEffects Community Presets... (⚠️ not really the Arch way, but it doesnt touch anything outside home/)"
 if [ -z "$(ls -A "$HOME/.config/easyeffects/db/" 2>/dev/null)" ]; then
   bash <(curl -fsSL "$EASYEFFECTS_PRESETS_INSTALL_URL")
 else
   success "EasyEffects Presets already installed, skipping."
 fi
+{{- end }}
 
 info "🍚 Installing ricing commands..."
 sudo pacman -S --needed --noconfirm cowsay lolcat cmatrix cava figlet fortune-mod nyancat tty-clock

@@ -15,11 +15,38 @@ info "🐍 Installing tools for coding.."
 # plain nodejs. `pacman -T` checks whether the dependency is already satisfied by anything.
 if pacman -T nodejs &>/dev/null; then
   info "Node.js requirement already satisfied (e.g. by an installed nodejs-lts-* variant). Skipping the 'nodejs' package to avoid a pacman conflict."
-  sudo pacman -S --needed --noconfirm uv lazygit neovim tmux npm jdk-openjdk github-cli gcc-fortran make python python-lsp-server pyright direnv
+  sudo pacman -S --needed --noconfirm lazygit tmux npm jdk-openjdk github-cli gcc-fortran make python python-lsp-server pyright direnv
 else
-  sudo pacman -S --needed --noconfirm uv lazygit neovim tmux nodejs npm jdk-openjdk github-cli gcc-fortran make python python-lsp-server pyright direnv
+  sudo pacman -S --needed --noconfirm lazygit tmux nodejs npm jdk-openjdk github-cli gcc-fortran make python python-lsp-server pyright direnv
 fi
 paru -S --needed --noconfirm visual-studio-code-bin
+
+info "🤖 Installing AI agents..."
+
+info "🦀 Installing Claude Code..."
+sudo pacman -S --needed --noconfirm claude-code # Available directly in the cachyos repo
+
+info "🖥️ Installing Claude Desktop..."
+sudo pacman -S --needed --noconfirm claude-desktop # Available directly in the cachyos repo
+
+info "💎 Installing Antigravity CLI..."
+if [ -x "$HOME/.local/bin/agy" ]; then
+  success "Antigravity CLI is already installed (it self-updates). Skipping."
+else
+  curl -fsSL "$ANTIGRAVITY_INSTALL_URL" | bash
+fi
+
+info "🔳 Installing OpenCode..."
+sudo pacman -S --needed --noconfirm opencode
+
+info "🧠 Installing Codex CLI..."
+sudo pacman -S --needed --noconfirm openai-codex # Available directly in the cachyos repo
+
+info "⚕️ Installing Hermes Agent..."
+sudo pacman -S --needed --noconfirm hermes-agent # Available directly in the cachyos repo
+
+info "🥧 Installing Pi coding agent..."
+paru -S --needed --noconfirm pi-coding-agent-bin
 
 echo ""
 success "✅ [Installing Apps: Coding] Done."

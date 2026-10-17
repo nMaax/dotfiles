@@ -18,6 +18,10 @@ sudo pacman -S --needed --noconfirm yt-dlp
 info "🎬 Installing KDenlive and OBS Studio..."
 sudo pacman -S --needed --noconfirm kdenlive obs-studio
 
+info "📹 Installing OBS Plugins for game capture and streaming..."
+sudo pacman -S --needed --noconfirm obs-vkcapture lib32-obs-vkcapture
+paru -S --needed --noconfirm obs-pipewire-audio-capture-bin
+
 info "🎨 Installing ArtCraft suite..."
 paru -S --needed --noconfirm {design,effect,film,light,pdf,photo,vector}craft-bin
 
