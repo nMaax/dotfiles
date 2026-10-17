@@ -1,13 +1,13 @@
 {{- $data := dict
 	"name" (promptStringOnce . "name" "Name")
 	"email" (promptStringOnce . "email" "Email")
-	"profile" (promptChoiceOnce . "profile" "Profile (presets the answers below)" (list "full" "laptop" "gaming" "minimal") "full") -}}
+	"profile" (promptChoiceOnce . "profile" "Profile (custom asks per category)" (list "full" "laptop" "gaming" "minimal" "custom") "full") -}}
 
-{{- $on := get (dict
+{{- $on := dict
 	"full" (list "coding" "local_llm" "gaming" "media" "office" "printing" "communication" "plugins")
 	"laptop" (list "coding" "media" "office" "printing" "communication")
 	"gaming" (list "gaming" "media" "communication" "plugins")
-	"minimal" (list)) $data.profile -}}
+	"minimal" (list) -}}
 
 {{- range list
 	(list "gaming" "gaming stack (Steam/OpenRGB/…)")
@@ -18,7 +18,14 @@
 	(list "printing" "printing (CUPS + drivers)")
 	(list "communication" "chat apps (Telegram/Signal/Discord/…)")
 	(list "plugins" "Hyprland plugins (hyprpm/scrolloverview)") -}}
-{{-   $_ := set $data (index . 0) (promptBoolOnce $ (index . 0) (printf "Install %s" (index . 1)) (has (index . 0) $on)) -}}
+{{-   $key := index . 0 -}}
+{{-   if hasKey $ $key -}}
+{{-     $_ := set $data $key (get $ $key) -}}
+{{-   else if eq $data.profile "custom" -}}
+{{-     $_ := set $data $key (promptBool (printf "Install %s" (index . 1)) true) -}}
+{{-   else -}}
+{{-     $_ := set $data $key (has $key (get $on $data.profile)) -}}
+{{-   end -}}
 {{- end -}}
 
 {{/* <service>_authkey: false skips, "" installs without login, else the key */}}

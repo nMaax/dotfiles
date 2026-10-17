@@ -50,16 +50,7 @@ On first run, chezmoi asks what to install (see [Configuration](#configuration))
 
 On the first `chezmoi init`, you answer a few questions. Your answers are saved to `~/.config/chezmoi/chezmoi.toml`, and every later `chezmoi apply` reads them from there.
 
-**1. Pick a profile.** It only pre-fills the answers to the next questions, so you can press Enter through them:
-
-| Profile | Pre-selects |
-| --- | --- |
-| `full` | everything |
-| `laptop` | coding, media, office, printing, communication |
-| `gaming` | gaming, media, communication, plugins |
-| `minimal` | nothing, only the base desktop |
-
-**2. Confirm or change each category.** Answer `y` or `n` for each one:
+**1. Pick a profile:** `full` (the default), `laptop`, `gaming`, `minimal` or `custom`. The first four decide every category below for you. `custom` asks about each one instead.
 
 | Key | Installs |
 | --- | --- |
@@ -74,7 +65,7 @@ On the first `chezmoi init`, you answer a few questions. Your answers are saved 
 
 Browsers, terminals, Neovim, KeePassXC and the rest of the desktop are always installed.
 
-**3. Optional services: Tailscale, NordVPN, MEGA.** Say no to skip one. Say yes and you're asked for a login key; leave it empty to install the service without logging in. MEGA wants a **session id** (`mega-login <email>`, then `mega-session`), not your password. The installer offers to wipe each key from `chezmoi.toml` once it has been used.
+**2. Optional services: Tailscale, NordVPN, MEGA.** Say no to skip one. Say yes and you're asked for a login key; leave it empty to install the service without logging in. MEGA wants a **session id** (`mega-login <email>`, then `mega-session`), not your password. The installer offers to wipe each key from `chezmoi.toml` once it has been used.
 
 #### Changing your choices later
 
@@ -94,8 +85,8 @@ Change a value, then run `chezmoi apply`. Things to know:
 
 - Turning a category **on** installs it on the next apply.
 - Turning one **off** stops managing it, but does **not** uninstall what is already there.
-- Changing `profile` here does nothing; it is only read while the questions are asked. Edit the individual flags instead.
-- To be asked about one key again, delete its line and run `chezmoi init`.
+- Changing `profile` here does nothing to flags that are already set. Edit the individual flags instead.
+- Delete a flag's line and run `chezmoi init` to reset it from your profile (or be asked again, with `custom`).
 
 ### Handling missing polkit agent password prompt in CachyOS Hello
 
