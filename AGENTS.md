@@ -277,7 +277,9 @@ missing from it (`prompt*Once`, or `hasKey` for the three-state authkeys). **Add
 there**: chezmoi errors out, rather than defaulting to empty, on a missing key, and existing users
 pick it up by re-running `chezmoi init`. Keep `,` and `=` out of prompt text — they break the
 `--promptBool`/`--promptString` flags. Test with `chezmoi --config <empty file> execute-template
---init --promptBool '<prompt>=<value>,…' < .chezmoi.toml.tmpl`.
+--init --promptChoice $'\n🧭 Profile=custom' --promptBool '<prompt>=<value>' < .chezmoi.toml.tmpl`.
+Prompts carry emojis and a leading `\n` for spacing: pass one flag per prompt, since a `\n` breaks the
+comma-separated form, and an unmatched prompt silently returns its own text as the value.
 
 `.mega_authkey` is a MEGA **session id** (`mega-login <email>` then `mega-session`), not a password,
 so no plaintext password sits in chezmoi.toml. MEGA follows the tailscale/nordvpn pattern and is

@@ -1,7 +1,7 @@
 {{- $data := dict
-	"name" (promptStringOnce . "name" "Name")
-	"email" (promptStringOnce . "email" "Email")
-	"profile" (promptChoiceOnce . "profile" "Profile (custom asks per category)" (list "full" "laptop" "gaming" "minimal" "custom") "full") -}}
+	"name" (promptStringOnce . "name" "\n👤 Git author name (shown on commits)")
+	"email" (promptStringOnce . "email" "📧 Git email (shown on commits)")
+	"profile" (promptChoiceOnce . "profile" "\n🧭 Profile" (list "full" "laptop" "gaming" "minimal" "custom") "full") -}}
 
 {{- $on := dict
 	"full" (list "coding" "local_llm" "gaming" "media" "office" "printing" "communication" "plugins")
@@ -10,19 +10,19 @@
 	"minimal" (list) -}}
 
 {{- range list
-	(list "gaming" "gaming stack (Steam/OpenRGB/…)")
-	(list "coding" "dev tooling and AI agents (VS Code/lazygit/Claude Code/…)")
-	(list "local_llm" "local LLMs (CUDA/ROCm/Ollama)")
-	(list "media" "media apps (kdenlive/OBS/Spotify/…)")
-	(list "office" "office apps (LibreOffice/Xournal++/qBittorrent/…)")
-	(list "printing" "printing (CUPS + drivers)")
-	(list "communication" "chat apps (Telegram/Signal/Discord/…)")
-	(list "plugins" "Hyprland plugins (hyprpm/scrolloverview)") -}}
+	(list "gaming" "\n🎮 Install gaming stack (Steam/OpenRGB/…)")
+	(list "coding" "💻 Install dev tooling and AI agents (VS Code/lazygit/Claude Code/…)")
+	(list "local_llm" "🧠 Install local LLMs (CUDA/ROCm/Ollama)")
+	(list "media" "🎬 Install media apps (kdenlive/OBS/Spotify/…)")
+	(list "office" "📄 Install office apps (LibreOffice/Xournal++/qBittorrent/…)")
+	(list "printing" "🖨️ Install printing (CUPS + drivers)")
+	(list "communication" "💬 Install chat apps (Telegram/Signal/Discord/…)")
+	(list "plugins" "🧩 Install Hyprland plugins (hyprpm/scrolloverview)") -}}
 {{-   $key := index . 0 -}}
 {{-   if hasKey $ $key -}}
 {{-     $_ := set $data $key (get $ $key) -}}
 {{-   else if eq $data.profile "custom" -}}
-{{-     $_ := set $data $key (promptBool (printf "Install %s" (index . 1)) true) -}}
+{{-     $_ := set $data $key (promptBool (index . 1) true) -}}
 {{-   else -}}
 {{-     $_ := set $data $key (has $key (get $on $data.profile)) -}}
 {{-   end -}}
@@ -30,15 +30,15 @@
 
 {{/* <service>_authkey: false skips, "" installs without login, else the key */}}
 {{- range list
-	(list "tailscale" "Tailscale" "auth key")
-	(list "nordvpn" "NordVPN" "token")
-	(list "mega" "MEGA" "session id (from mega-session)") -}}
+	(list "tailscale" "Tailscale" "auth key" "\n🔗")
+	(list "nordvpn" "NordVPN" "token" "🛡️")
+	(list "mega" "MEGA" "session id (from mega-session)" "☁️") -}}
 {{-   $key := printf "%s_authkey" (index . 0) -}}
 {{-   $val := false -}}
 {{-   if hasKey $ $key -}}
 {{-     $val = get $ $key -}}
-{{-   else if promptBool (printf "Install %s" (index . 1)) false -}}
-{{-     $val = promptString (printf "%s %s (empty for no auto-login)" (index . 1) (index . 2)) "" -}}
+{{-   else if promptBool (printf "%s Install %s" (index . 3) (index . 1)) false -}}
+{{-     $val = promptString (printf "   🔑 %s %s (empty for no auto-login)" (index . 1) (index . 2)) "" -}}
 {{-   end -}}
 {{-   $_ := set $data $key $val -}}
 {{- end -}}
