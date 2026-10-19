@@ -321,6 +321,14 @@ request, and `--noconfirm` doesn't cover conflict removals, so the whole script 
 For any package with alternative providers, check `pacman -T <pkg>` first: it exits 0 if anything
 satisfies the dependency. See the guarded `nodejs` install in `run_onchange_before_02-apps-coding.sh.tmpl`.
 
+### Always audit PKGBUILDs before adding AUR packages
+
+Before adding any new AUR package (`paru -S ...`) to `.chezmoiscripts/`:
+- **Audit the `PKGBUILD` and repository tree**: Inspect the `PKGBUILD` via `curl -s "https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=<pkg>"` and check `tree/?h=<pkg>` to ensure there are no rogue `.install` scripts, patches, or post-install hooks.
+- **Verify upstream sources and checksums**: Ensure `source` URLs resolve to official upstream repositories/releases and that sha256 checksums match upstream-published sums (e.g., release `SHA256SUMS.txt`).
+- **Inspect packaging actions**: Ensure `prepare()`, `build()`, and `package()` only perform standard, clean file extraction and installation without obfuscated shell code, unexpected external network calls, or telemetry injection.
+- **Prefer `-bin` variants** for compiled applications (Rust, Go, C++, Electron) to avoid lengthy local compilations during `chezmoi apply`.
+
 ### Setup facts that affect config code
 
 - Login must launch **systemd-owned Hyprland (UWSM)** — session name `Hyprland (uwsm-managed)` in
