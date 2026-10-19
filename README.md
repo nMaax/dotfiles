@@ -59,7 +59,7 @@ On the first `chezmoi init`, you answer a few questions. Your answers are saved 
 | `coding` | VS Code, lazygit, Node.js, AI agents (Claude Code, OpenCode, Codex, …) |
 | `local_llm` | CUDA/ROCm and Ollama, to run models on your GPU |
 | `media` | Spotify, OBS (+ capture plugins), kdenlive, EasyEffects, ArtCraft |
-| `office` | LibreOffice, Xournal++, qBittorrent |
+| `office` | LibreOffice, Xournal++, qBittorrent, WordCraft, GridCraft, DeckCraft |
 | `printing` | CUPS, printer drivers, network printer discovery |
 | `communication` | Telegram, Signal, Discord, Element, LocalSend, WhatsApp |
 | `plugins` | Hyprland plugins (hyprpm, scrolloverview) |
