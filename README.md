@@ -15,6 +15,7 @@ Ideally, you should have installed CachyOS selecting Hyprland during the Calamar
   - [Missing polkit agent in CachyOS Hello](#handling-missing-polkit-agent-password-prompt-in-cachyos-hello)
 - [Post-Installation](#post-installation)
   - [Keyring (KWallet)](#keyring-kwallet)
+  - [Login screen (Noctalia Greeter)](#login-screen-noctalia-greeter)
   - [Theming](#theming)
 - [Guides](#guides)
   - [SSH](#ssh)
@@ -121,6 +122,16 @@ If you'd rather have KWallet auto-unlock at login, you'll need to patch `/etc/pa
 - **Password:** your current **user login password** (PAM unlocks the wallet by matching it against the login password)
 
 Further information can be found at [Arch Wiki: KDE Wallet](https://wiki.archlinux.org/title/KDE_Wallet) and [Electron Safe Storage Info](https://www.electronjs.org/docs/latest/api/safe-storage).
+
+### Login screen (Noctalia Greeter)
+
+Noctalia Greeter (`greetd`) does not automatically follow desktop wallpaper or theme changes in real time. To sync your active wallpaper, color palette, and monitor scaling to the login screen, run:
+
+```bash
+noctalia msg greeter-sync
+```
+
+*(or click **Sync Now** under **Noctalia Settings → Security → Noctalia Greeter**)*.
 
 ### Theming
 
