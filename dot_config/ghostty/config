@@ -26,3 +26,8 @@ theme = noctalia
 
 # Free Ctrl+Enter for TUIs; SUPER+F handles fullscreen
 keybind = ctrl+enter=unbind
+
+# Fonts: text, then a text-symbol fallback, then Apple emoji
+font-family = "JetBrainsMono Nerd Font"
+font-family = "DejaVu Sans Mono"
+font-family = "Apple Color Emoji"

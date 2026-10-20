@@ -17,6 +17,7 @@ Ideally, you should have installed CachyOS selecting Hyprland during the Calamar
   - [Keyring (KWallet)](#keyring-kwallet)
   - [Login screen (Noctalia Greeter)](#login-screen-noctalia-greeter)
   - [Theming](#theming)
+    - [Fonts and emoji](#fonts-and-emoji)
 - [Guides](#guides)
   - [SSH](#ssh)
   - [GRUB](#grub)
@@ -141,7 +142,7 @@ You can retrieve the list of apps on which automatic theming is set in the Nocta
 
 #### GTK and Qt
 
-- **qt5ct** (`qt5ct` command): Set **Color scheme** to `noctalia`, **General font** to `SF Pro`, **Fixed-width font** to `CaskaydiaCove Nerd Font Mono`
+- **qt5ct** (`qt5ct` command): Set **Color scheme** to `noctalia`, **General font** to `SF Pro`, **Fixed-width font** to `JetBrainsMono Nerd Font Mono`
 - **qt6ct** (`qt6ct` command): Same as above.
   - Qt theming via `qt6ct` with `QT_QPA_PLATFORMTHEME` has already been set in Hyprland config files for environment variables (`~/.config/hypr/lua/env.lua`).
 - **GTK** (`nwg-look`): Set the general font to `SF Pro Regular`, then ensure Preferences > .config/gtk-4.0 is disabled; eventually, clear it if you found it enabled.
@@ -158,6 +159,14 @@ You can retrieve the list of apps on which automatic theming is set in the Nocta
 - **Heroic Games Launcher:** Settings → Advanced → set **Custom Themes Path** to `~/.config/heroic/themes`, then select **matugen** from the theme dropdown. One-time; the generated CSS updates in place on further theme changes.
 - **Prism Launcher:** Settings → Appearance → Theme → select **Matugen**. One-time; the generated theme JSON updates in place on further theme changes.
 - All other enabled apps (`btop`, `cava`, `ghostty`, `starship`, `hyprland`, `kcolorscheme`, `neovim`, `yazi`) apply fully automatically; no action needed.
+
+#### Fonts and emoji
+
+🥮 uses `SF Pro` for UI text, `JetBrainsMono Nerd Font` as the monospace font and `Apple Color Emoji` for emoji, all set system-wide in `~/.config/fontconfig/fonts.conf`. Noctalia follows it automatically: its mono text uses the `monospace` alias. Some apps ship their own fonts and ignore fontconfig, though:
+
+- **Zen Browser:** bundles Twemoji. Open `about:config` → set `font.name-list.emoji` to `Apple Color Emoji`, then restart. Test it on the *Browser* column of the [Unicode emoji list](https://unicode.org/emoji/charts/full-emoji-list.html).
+- **Ghostty:** bundles JetBrains Mono and Noto emoji, so `~/.config/ghostty/config` lists its fonts explicitly: JetBrains Mono for text, `DejaVu Sans Mono` for symbols JetBrains lacks (otherwise e.g. Claude Code's `✳` spinner flashes as a green Apple emoji), then Apple emoji. Font changes apply to new tabs after a reload (`Ctrl+Shift+,`).
+- **Discord:** draws emoji as Twemoji images, not with a font, so no font setting changes them.
 
 > [!NOTE]
 > If some apps do not properly fetch the color scheme even after having followed the noctalia guidelines, try to disable and re-enable them, as well as changing the color scheme as a whole.
