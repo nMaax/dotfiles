@@ -427,6 +427,7 @@ If you want to re-run just the Spicetify setup without `chezmoi apply`, run:
 
 ## 📝 TODOs
 - [ ] Add screenshots and videos in this README
+- [ ] New papers from pinterest
 
 ### New features to try
 
