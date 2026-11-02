@@ -62,7 +62,7 @@ On the first `chezmoi init`, you answer a few questions. Your answers are saved 
 | `media` | Spotify, OBS (+ capture plugins), kdenlive, EasyEffects, ArtCraft |
 | `office` | LibreOffice, Xournal++, qBittorrent, WordCraft, GridCraft, DeckCraft |
 | `printing` | CUPS, printer drivers, network printer discovery |
-| `communication` | Telegram, Signal, Discord, Element, LocalSend, WhatsApp |
+| `communication` | Telegram, Signal, Discord, Element, WeChat, LocalSend, WhatsApp |
 | `plugins` | Hyprland plugins (hyprpm, scrolloverview) |
 
 Browsers, terminals, Neovim, KeePassXC and the rest of the desktop are always installed.

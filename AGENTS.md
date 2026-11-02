@@ -259,7 +259,7 @@ Scripts gate on the user's `~/.config/chezmoi/chezmoi.toml` `[data]` block: `.na
 `.gaming` (skip Steam/OpenRGB/MCHOSE/etc.), `.coding` (skip dev tooling and AI agents), `.local_llm`
 (skip CUDA/ROCm/Ollama), `.media` (skip kdenlive/OBS/EasyEffects/Spotify/yt-dlp/image-upscaler),
 `.office` (skip LibreOffice/Xournal++/qBittorrent/sc-im/WordCraft/GridCraft/DeckCraft), `.printing` (skip CUPS/drivers/Avahi),
-`.communication` (skip Telegram/Signal/Discord/Element/LocalSend) — each one gates its own `02-apps-*`
+`.communication` (skip Telegram/Signal/Discord/Element/WeChat/LocalSend) — each one gates its own `02-apps-*`
 script (§3 Ordering), plus a few gated blocks in `05-misc`/`07-webapps`. `.profile` only fills in unset flags at
 `chezmoi init` (`custom` prompts per flag instead); scripts never read it. `.plugins` gates `12-hyprland-plugins`, `require("lua.plugins")` and `hyprpm-rebuild`.
 `.tailscale_authkey` / `.nordvpn_authkey` / `.mega_authkey` are three-state: boolean `false`
