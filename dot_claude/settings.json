@@ -5,7 +5,11 @@
     "i-have-adhd@i-have-adhd": true,
     "arxiv-mcp-server@arxiv-mcp": true,
     "claude-md-management@claude-plugins-official": true,
-    "ponytail@ponytail": true
+    "ponytail@ponytail": true,
+    "mattpocock-skills@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "humanizer@humanizer": true,
+    "asd-ste100@asd-ste100-skill": true
   },
   "extraKnownMarketplaces": {
     "i-have-adhd": {
@@ -24,6 +28,18 @@
       "source": {
         "source": "github",
         "repo": "DietrichGebert/ponytail"
+      }
+    },
+    "humanizer": {
+      "source": {
+        "source": "github",
+        "repo": "blader/humanizer"
+      }
+    },
+    "asd-ste100-skill": {
+      "source": {
+        "source": "github",
+        "repo": "danyuchn/asd-ste100-skill"
       }
     }
   },
