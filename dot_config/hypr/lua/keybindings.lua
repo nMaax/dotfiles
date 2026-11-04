@@ -29,7 +29,7 @@ hl.bind(
 hl.bind(C.MODKEY .. "+C", hl.dsp.group.toggle(), { description = "Toggle window group" })
 hl.bind(C.MODKEY .. "+bracketleft", hl.dsp.group.prev(), { description = "Cycle to previous window in group" })
 hl.bind(C.MODKEY .. "+bracketright", hl.dsp.group.next(), { description = "Cycle to next window in group" })
-hl.bind(C.MODKEY .. "+ALT+C", hl.dsp.group.lock_active(), { description = "Lock/unlock current group" })
+hl.bind(C.MODKEY .. "+ALT+C", hl.dsp.group.lock(), { description = "Lock/unlock current group" })
 
 local function toggle_layout()
 	local current = hl.get_config("general.layout")
