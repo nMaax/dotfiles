@@ -3,7 +3,7 @@ config_version = 16
 [bar.default]
 center = [ "media" ]
 contact_shadow = true
-end = [ "tray", "volume", "brightness", "battery", "control-center" ]
+end = [ "tray", "volume", "brightness", "battery", "control-center", "bar" ]
 font_family = "SF Pro"
 margin_ends = 0
 position = "left"
@@ -139,7 +139,13 @@ hyprland_parser = "lua"
 show_undescribed = false
 
 [plugins]
-enabled = [ "noctalia/kaomoji", "noctalia/mpvpaper", "kenn/keybind-cheatsheet", "tadomika_ari/w-engine" ]
+enabled = [
+    "noctalia/kaomoji",
+    "noctalia/mpvpaper",
+    "kenn/keybind-cheatsheet",
+    "tadomika_ari/w-engine",
+    "felipeartur/ai-usagebar"
+]
 
 [shell]
 button_borders = false
@@ -302,6 +308,9 @@ transition_on_startup = true
     palette_source = "community"
     path = "/home/massimiliano/Pictures/Wallpapers/wallhack-drift-sora.jpg"
     theme_mode = "dark"
+
+[widget.bar]
+type = "felipeartur/ai-usagebar:bar"
 
 [widget.control-center]
 custom_image = "/usr/share/icons/cachyos.svg"
