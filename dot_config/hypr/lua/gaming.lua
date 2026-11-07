@@ -156,7 +156,7 @@ hl.bind(
 	C.MODKEY .. "+G",
 	special.toggle_app_special_workspace(
 		C.SPECIAL_WORKSPACE.GAMES,
-		{ class = C.APP_CLASSES.GAMES, title = C.GAMES_TITLES },
+		{ class = C.STEAM_CLASSES, title = C.STEAM_TITLES },
 		"steam"
 	),
 	{ description = "Toggle game launchers workspace (Steam)" }
@@ -174,4 +174,8 @@ hl.bind(
 	{ description = "Move window to game launchers workspace" }
 )
 
-hl.bind(C.MODKEY .. "+ALT+G", hl.dsp.exec_cmd("heroic"), { description = "Open Heroic" })
+hl.bind(
+	C.MODKEY .. "+ALT+G",
+	special.toggle_app_special_workspace(C.SPECIAL_WORKSPACE.GAMES, { class = C.HEROIC_CLASSES }, "heroic"),
+	{ description = "Toggle Heroic" }
+)

@@ -145,7 +145,7 @@ Two things that decide whether this is worth anything:
 
 An app's class must be matched twice: as a Hyprland regex in `rules.lua` (places the window) and as a
 Lua pattern in `keybindings.lua`/`gaming.lua` (finds it again). Both are generated from the single plain
-list in `constants.lua` (`C.APP_CLASSES`, `C.MUSIC_TITLES`, `C.GAMES_TITLES`) by `special.regex` /
+list in `constants.lua` (`C.APP_CLASSES`, `C.MUSIC_TITLES`, plus `C.STEAM_*`/`C.HEROIC_CLASSES` for the per-launcher game keys) by `special.regex` /
 `special.patterns`, so they cannot drift. Add or remove an app **only** there; a trailing `*` means
 "starts with" (the `chrome-<host>` webapp ids). Names are literals, so write `Spotify` and `spotify`,
 not `[Ss]potify`.

@@ -10,6 +10,9 @@ M.BROWSER = "zen-browser"
 
 M.SYSMON_CLASS = "sysmon.btop"
 M.PASSWORD_APP = "keepassxc"
+M.STEAM_CLASSES = { "steam" }
+M.STEAM_TITLES = { "Steam" }
+M.HEROIC_CLASSES = { "com.heroicgameslauncher.hgl", "heroic" }
 
 M.GAMES_WORKSPACE = "11"
 
@@ -47,10 +50,10 @@ M.APP_CLASSES = {
 		"org.gnome.World.Secrets",
 	},
 	GAMES = {
-		"steam",
+		M.STEAM_CLASSES[1],
 		"lutris",
-		"com.heroicgameslauncher.hgl",
-		"heroic",
+		M.HEROIC_CLASSES[1],
+		M.HEROIC_CLASSES[2],
 		"org.prismlauncher.PrismLauncher",
 		"PrismLauncher",
 		"com.modrinth.theseus",
@@ -61,7 +64,6 @@ M.APP_CLASSES = {
 	},
 }
 M.MUSIC_TITLES = { "Spotify", "Spotify Premium", "Spotify Free" }
-M.GAMES_TITLES = { "Steam" }
 
 M.SHADOW_HEX = "1a1a1a"
 
