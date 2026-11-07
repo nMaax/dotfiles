@@ -3,7 +3,7 @@ config_version = 16
 [bar.default]
 center = [ "media" ]
 contact_shadow = true
-end = [ "tray", "volume", "brightness", "battery", "control-center", "bar" ]
+end = [ "tray", "bar", "volume", "brightness", "battery", "control-center" ]
 font_family = "SF Pro"
 margin_ends = 0
 position = "left"
@@ -310,6 +310,9 @@ transition_on_startup = true
     theme_mode = "dark"
 
 [widget.bar]
+provider_limit = 2
+show_glyph = false
+show_value = false
 type = "felipeartur/ai-usagebar:bar"
 
 [widget.control-center]
