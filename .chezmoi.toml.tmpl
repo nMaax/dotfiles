@@ -4,7 +4,7 @@
 	"profile" (promptChoiceOnce . "profile" "\n🧭 Profile" (list "full" "laptop" "gaming" "minimal" "custom") "full") -}}
 
 {{- $on := dict
-	"full" (list "coding" "local_llm" "gaming" "media" "office" "printing" "communication" "plugins")
+	"full" (list "coding" "local_llm" "gaming" "media" "design" "office" "printing" "communication" "plugins")
 	"laptop" (list "coding" "media" "office" "printing" "communication")
 	"gaming" (list "gaming" "media" "communication" "plugins")
 	"minimal" (list) -}}
@@ -14,6 +14,7 @@
 	(list "coding" "💻 Install dev tooling and AI agents (VS Code/lazygit/Claude Code/…)")
 	(list "local_llm" "🧠 Install local LLMs (CUDA/ROCm/Ollama)")
 	(list "media" "🎬 Install media apps (kdenlive/OBS/Spotify/…)")
+	(list "design" "🎨 Install design apps (ArtCraft suite)")
 	(list "office" "📄 Install office apps (LibreOffice/Xournal++/qBittorrent/…)")
 	(list "printing" "🖨️ Install printing (CUPS + drivers)")
 	(list "communication" "💬 Install chat apps (Telegram/Signal/Discord/…)")

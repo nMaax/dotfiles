@@ -205,7 +205,7 @@ Understanding this requires reading `.chezmoiscripts/`, `.chezmoitemplates/` and
 chezmoi runs `before_` scripts, then applies regular files, then runs `after_` scripts. The numeric
 prefixes order scripts *within* each phase, and the two sequences are independent:
 
-- `before`: `01-cachyos-checks` (interactive prompts, every apply) → `01b-cachyos-packages` (prerequisites & base apps, once) → `02-apps-core` → `02-apps-coding` → `02-apps-local-llm` → `02-apps-media` →
+- `before`: `01-cachyos-checks` (interactive prompts, every apply) → `01b-cachyos-packages` (prerequisites & base apps, once) → `02-apps-core` → `02-apps-coding` → `02-apps-local-llm` → `02-apps-media` → `02-apps-design` →
   `02-apps-office` → `02-apps-printing` → `02-apps-communication` → `03-fonts-emoji` → `04-hyprland-noctalia`. Order
   *within* the `02-apps-*` group doesn't matter — none of the categories depend on packages installed
   by another, and `paru`/`pacman -S --needed` are idempotent regardless of run order.
@@ -258,7 +258,7 @@ Follow that pattern; don't redefine what's already provided:
 Scripts gate on the user's `~/.config/chezmoi/chezmoi.toml` `[data]` block: `.name`, `.email`,
 `.gaming` (skip Steam/OpenRGB/MCHOSE/etc.), `.coding` (skip dev tooling and AI agents), `.local_llm`
 (skip CUDA/ROCm/Ollama), `.media` (skip kdenlive/OBS/EasyEffects/Spotify/yt-dlp/image-upscaler),
-`.office` (skip LibreOffice/Xournal++/qBittorrent/sc-im/WordCraft/GridCraft/DeckCraft/Notion), `.printing` (skip CUPS/drivers/Avahi),
+`.office` (skip LibreOffice/Xournal++/qBittorrent/sc-im/WordCraft/GridCraft/DeckCraft/PDFCraft/Notion), `.design` (skip the ArtCraft suite), `.printing` (skip CUPS/drivers/Avahi),
 `.communication` (skip Telegram/Signal/Discord/Element/WeChat/LocalSend) — each one gates its own `02-apps-*`
 script (§3 Ordering), plus a few gated blocks in `05-misc`/`07-webapps`. `.profile` only fills in unset flags at
 `chezmoi init` (`custom` prompts per flag instead); scripts never read it. `.plugins` gates `12-hyprland-plugins`, `require("lua.plugins")` and `hyprpm-rebuild`.
