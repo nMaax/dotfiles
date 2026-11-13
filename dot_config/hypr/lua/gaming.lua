@@ -156,7 +156,7 @@ hl.bind(
 	C.MODKEY .. "+G",
 	special.toggle_app_special_workspace(
 		C.SPECIAL_WORKSPACE.GAMES,
-		{ class = C.STEAM_CLASSES, title = C.STEAM_TITLES },
+		{ class = C.APP_CLASSES.GAMES, title = C.GAMES_TITLES },
 		"steam"
 	),
 	{ description = "Toggle game launchers workspace (Steam)" }
