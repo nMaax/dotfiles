@@ -295,10 +295,22 @@ hl.bind(C.MODKEY .. "+H", hl.dsp.focus({ direction = "left" }), { description = 
 hl.bind(C.MODKEY .. "+right", hl.dsp.focus({ direction = "right" }), {})
 hl.bind(C.MODKEY .. "+L", hl.dsp.focus({ direction = "right" }), { description = "Move focus right (vim, or arrows)" })
 
+local function focus_workspace(id)
+	return function()
+		local monitor = hl.get_active_monitor()
+		local special_ws = monitor and monitor.active_special_workspace
+		if special_ws then
+			local name = special_ws.name:match("^special:(.+)$") or ""
+			hl.dispatch(hl.dsp.workspace.toggle_special(name))
+		end
+		hl.dispatch(hl.dsp.focus({ workspace = tostring(id) }))
+	end
+end
+
 -- Move focus around workspaces with numbers
 for key = 0, 9 do
 	local id = key == 0 and 10 or key
-	hl.bind(C.MODKEY .. "+" .. key, hl.dsp.focus({ workspace = tostring(id) }), {
+	hl.bind(C.MODKEY .. "+" .. key, focus_workspace(id), {
 		description = key == 0 and "Access workspace [0-9]" or nil,
 	})
 end
