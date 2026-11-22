@@ -57,6 +57,28 @@ hl.window_rule({
 	persistent_size = true,
 })
 
+-- Steam: keep XWayland dropdowns/context menus (empty title) focused, visible, and uncentered
+hl.window_rule({
+	name = "steam-popups",
+	match = {
+		class = "^(steam)$",
+		title = "^$",
+	},
+	stay_focused = true,
+	min_size = { 1, 1 },
+	center = false,
+})
+
+-- Steam: float secondary windows (Settings, Friends List, etc.) without affecting the main client
+hl.window_rule({
+	name = "steam-subwindows",
+	match = {
+		class = "^(steam)$",
+		title = "negative:^(Steam)$",
+	},
+	float = true,
+})
+
 -- Float common file/auth dialogs regardless of which app spawns them
 local modalMatches = {
 	{ title = "^(Open|Save As|Authentication Required|Choose Files|File Upload|Confirm to replace files)(.*)$" },
