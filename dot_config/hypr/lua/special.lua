@@ -80,4 +80,16 @@ function M.toggle_app_special_workspace(name, matchers, command)
 	end
 end
 
+function M.focus_workspace(id)
+	return function()
+		local monitor = hl.get_active_monitor()
+		local special_ws = monitor and monitor.active_special_workspace
+		if special_ws then
+			local name = special_ws.name:match("^special:(.+)$") or ""
+			hl.dispatch(hl.dsp.workspace.toggle_special(name))
+		end
+		hl.dispatch(hl.dsp.focus({ workspace = tostring(id) }))
+	end
+end
+
 return M

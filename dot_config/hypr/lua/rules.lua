@@ -41,10 +41,25 @@ hl.window_rule({
 })
 
 -- Float small utility apps
+local utilityClasses = {
+	-- confirmed live: pavucontrol's real class is org.pulseaudio.pavucontrol, not "pavucontrol"
+	"org\\.pulseaudio\\.pavucontrol",
+	"nm-connection-editor",
+	"blueman-manager",
+	"file-roller",
+	"(org\\.cachyos\\.)?scx-manager",
+	"org\\.cachyos\\.hello",
+	"cachyos-hello",
+	"org\\.cachyos\\.KernelManager",
+	"cachyos-kernel-manager",
+	"cachyos-pi",
+	"nwg-look",
+	"qt5ct",
+	"qt6ct",
+}
 hl.window_rule({
 	name = "float-transient-utilities",
-	-- confirmed live: pavucontrol's real class is org.pulseaudio.pavucontrol, not "pavucontrol"
-	match = { class = "^(org\\.pulseaudio\\.pavucontrol|nm-connection-editor|blueman-manager|file-roller)$" },
+	match = { class = "^(" .. table.concat(utilityClasses, "|") .. ")$" },
 	float = true,
 })
 

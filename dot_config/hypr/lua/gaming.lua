@@ -164,7 +164,7 @@ hl.bind(
 
 hl.bind(
 	C.MODKEY .. "+CTRL+G",
-	hl.dsp.focus({ workspace = C.GAMES_WORKSPACE }),
+	special.focus_workspace(C.GAMES_WORKSPACE),
 	{ description = "Go to games workspace" }
 )
 
