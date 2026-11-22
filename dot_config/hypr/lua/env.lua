@@ -6,8 +6,7 @@ hl.env("SSH_AUTH_SOCK", (os.getenv("XDG_RUNTIME_DIR") or "") .. "/ssh-agent.sock
 hl.env("SSH_ASKPASS", "/usr/bin/ksshaskpass")
 -- hl.env("SSH_ASKPASS_REQUIRE", "prefer")
 
--- Cursor theme and size
-hl.env("HYPRCURSOR_THEME", "Bibata-Modern-Classic")
+-- Cursor size
 hl.env("HYPRCURSOR_SIZE", "24")
 
 -- XDG menu prefix for desktop menus

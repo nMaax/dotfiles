@@ -51,36 +51,61 @@ On first run, chezmoi asks what to install (see [Configuration](#configuration))
 
 On the first `chezmoi init`, you answer a few questions. Your answers are saved to `~/.config/chezmoi/chezmoi.toml`, and every later `chezmoi apply` reads them from there.
 
-**1. Pick a profile:** `full` (the default), `laptop`, `gaming`, `minimal` or `custom`. The first four decide every category below for you. `custom` asks about each one instead.
+**1. Pick a profile** (`full` by default): `full`, `laptop`, `gaming`, `minimal`, or `custom`.
+A profile is just a preset that fills in the boolean feature flags below on `chezmoi init` (`custom` prompts for each flag individually). Note that `gaming` exists as both a **profile** (a gaming-focused preset) and a **flag** (`gaming = true`/`false` for the gaming stack itself).
 
-| Key | Installs |
+| Flag | `full` | `laptop` | `gaming` | `minimal` |
+| --- | :---: | :---: | :---: | :---: |
+| `ai_agents` | ✅ | ✅ | ✅ | ❌ |
+| `coding` | ✅ | ✅ | ❌ | ❌ |
+| `local_llm` | ✅ | ❌ | ❌ | ❌ |
+| `gaming` | ✅ | ❌ | ✅ | ❌ |
+| `media` | ✅ | ✅ | ✅ | ❌ |
+| `design` | ✅ | ❌ | ❌ | ❌ |
+| `office` | ✅ | ✅ | ❌ | ❌ |
+| `printing` | ✅ | ✅ | ❌ | ❌ |
+| `communication` | ✅ | ✅ | ✅ | ❌ |
+| `plugins` | ✅ | ❌ | ❌ | ❌ |
+
+What each flag installs:
+
+| Flag | Installs |
 | --- | --- |
-| `gaming` | Steam, MangoHud, OpenRGB, MCHOSE peripherals, gaming tweaks |
-| `coding` | VS Code, lazygit, Node.js, AI agents (Claude Code, OpenCode, Codex, …) |
-| `local_llm` | CUDA/ROCm and Ollama, to run models on your GPU |
-| `media` | Spotify, OBS (+ capture plugins), kdenlive, EasyEffects |
+| `ai_agents` | Claude Code, Claude Desktop, Antigravity CLI (`agy`), OpenCode, Codex CLI, Hermes Agent, Pi coding agent, `ai-usagebar` |
+| `coding` | VS Code, `lazygit`, `tmux`, Node.js, `npm`, OpenJDK, `gh`, `gcc-fortran`, `make`, Python + LSP/Pyright, `direnv` |
+| `local_llm` | CUDA / ROCm (GPU-dependent) and Ollama |
+| `gaming` | Steam, MangoHud, OpenRGB, MCHOSE peripherals, `linux-wallpaperengine`, gaming tweaks |
+| `media` | Spotify (+ Spicetify), OBS (+ capture plugins), kdenlive, EasyEffects, `yt-dlp`, image upscaler |
 | `design` | ArtCraft suite (DesignCraft, EffectCraft, FilmCraft, LightCraft, PhotoCraft, VectorCraft) |
-| `office` | LibreOffice, Xournal++, qBittorrent, WordCraft, GridCraft, DeckCraft, PDFCraft, Notion |
-| `printing` | CUPS, printer drivers, network printer discovery |
-| `communication` | Telegram, Signal, Discord, Element, WeChat, LocalSend, WhatsApp |
-| `plugins` | Hyprland plugins (hyprpm, scrolloverview) |
+| `office` | LibreOffice, Xournal++, qBittorrent, `sc-im`, WordCraft, GridCraft, DeckCraft, PDFCraft, Notion |
+| `printing` | CUPS, printer drivers, Avahi network printer discovery |
+| `communication` | Telegram, Signal, Discord (Equibop), Element, WeChat, LocalSend, WhatsApp |
+| `plugins` | Hyprland plugins (`hyprpm`, `scrolloverview`) |
 
-Browsers, terminals, Neovim, KeePassXC and the rest of the desktop are always installed.
+Browsers (`chromium`, `zen-browser-bin`), terminals (`ghostty`, `kitty`), Neovim, `yazi`, `starship`, KeePassXC, and the rest of the core desktop are always installed regardless of profile.
 
 **2. Optional services: Tailscale, NordVPN, MEGA.** Say no to skip one. Say yes and you're asked for a login key; leave it empty to install the service without logging in. MEGA wants a **session id** (`mega-login <email>`, then `mega-session`), not your password. The installer offers to wipe each key from `chezmoi.toml` once it has been used.
 
 #### Changing your choices later
 
-You can edit any answer by hand. Open `~/.config/chezmoi/chezmoi.toml`:
+You can edit any answer by hand in `~/.config/chezmoi/chezmoi.toml`:
 
 ```toml
 [data]
+  # Git identity
+  name = "Your Name"
+  email = "you@example.com"
+
+  # Profile preset (used at chezmoi init to populate unset flags below)
   profile = "laptop"
-  gaming = false
+
+  # Feature flags
+  ai_agents = true
   coding = true
-  printing = true
   # ...
-  tailscale_authkey = false   # false = skip, "" = install without login, "<key>" = log in
+
+  # Optional services (false = skip, "" = install without login, "<key>" = log in)
+  tailscale_authkey = false
 ```
 
 Change a value, then run `chezmoi apply`. Things to know:

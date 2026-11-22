@@ -1,18 +1,25 @@
+{{- $profile := promptStringOnce . "profile" "\n🧭 Profile (full / laptop / gaming / minimal / custom)" "full" | lower | trim -}}
+
+{{- $on := dict
+	"full" (list "ai_agents" "coding" "local_llm" "gaming" "media" "design" "office" "printing" "communication" "plugins")
+	"laptop" (list "ai_agents" "coding" "media" "office" "printing" "communication")
+	"gaming" (list "ai_agents" "gaming" "media" "communication")
+	"minimal" (list) -}}
+
+{{- if and (ne $profile "custom") (not (hasKey $on $profile)) -}}
+{{-   fail (printf "Unknown profile %q: expected one of full, laptop, gaming, minimal, custom" $profile) -}}
+{{- end -}}
+
 {{- $data := dict
 	"name" (promptStringOnce . "name" "\n👤 Git author name (shown on commits)")
 	"email" (promptStringOnce . "email" "📧 Git email (shown on commits)")
-	"profile" (promptChoiceOnce . "profile" "\n🧭 Profile" (list "full" "laptop" "gaming" "minimal" "custom") "full") -}}
-
-{{- $on := dict
-	"full" (list "coding" "local_llm" "gaming" "media" "design" "office" "printing" "communication" "plugins")
-	"laptop" (list "coding" "media" "office" "printing" "communication")
-	"gaming" (list "gaming" "media" "communication" "plugins")
-	"minimal" (list) -}}
+	"profile" $profile -}}
 
 {{- range list
-	(list "gaming" "\n🎮 Install gaming stack (Steam/OpenRGB/…)")
-	(list "coding" "💻 Install dev tooling and AI agents (VS Code/lazygit/Claude Code/…)")
+	(list "ai_agents" "\n🤖 Install AI agents (Claude Code/Antigravity/OpenCode/Codex/Hermes/…)")
+	(list "coding" "💻 Install dev tooling (VS Code/lazygit/Node.js/Python/…)")
 	(list "local_llm" "🧠 Install local LLMs (CUDA/ROCm/Ollama)")
+	(list "gaming" "🎮 Install gaming stack (Steam/OpenRGB/…)")
 	(list "media" "🎬 Install media apps (kdenlive/OBS/Spotify/…)")
 	(list "design" "🎨 Install design apps (ArtCraft suite)")
 	(list "office" "📄 Install office apps (LibreOffice/Xournal++/qBittorrent/…)")
@@ -44,4 +51,27 @@
 {{-   $_ := set $data $key $val -}}
 {{- end -}}
 
-{{ toToml (dict "data" $data) }}
+[data]
+  # Git identity
+  name = {{ $data.name | quote }}
+  email = {{ $data.email | quote }}
+
+  # Profile preset (used at chezmoi init to populate unset flags below)
+  profile = {{ $data.profile | quote }}
+
+  # Feature flags
+  ai_agents = {{ $data.ai_agents }}
+  coding = {{ $data.coding }}
+  local_llm = {{ $data.local_llm }}
+  gaming = {{ $data.gaming }}
+  media = {{ $data.media }}
+  design = {{ $data.design }}
+  office = {{ $data.office }}
+  printing = {{ $data.printing }}
+  communication = {{ $data.communication }}
+  plugins = {{ $data.plugins }}
+
+  # Optional services (false = skip, "" = install without login, "<key>" = log in)
+  tailscale_authkey = {{ if kindIs "bool" $data.tailscale_authkey }}{{ $data.tailscale_authkey }}{{ else }}{{ $data.tailscale_authkey | quote }}{{ end }}
+  nordvpn_authkey = {{ if kindIs "bool" $data.nordvpn_authkey }}{{ $data.nordvpn_authkey }}{{ else }}{{ $data.nordvpn_authkey | quote }}{{ end }}
+  mega_authkey = {{ if kindIs "bool" $data.mega_authkey }}{{ $data.mega_authkey }}{{ else }}{{ $data.mega_authkey | quote }}{{ end }}
