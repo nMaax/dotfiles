@@ -1,13 +1,14 @@
-{{- $profile := promptStringOnce . "profile" "\n🧭 Profile (full / laptop / gaming / minimal / custom)" "full" | lower | trim -}}
+{{- $profile := promptStringOnce . "profile" "\n🧭 Profile (full / laptop / gaming / design / minimal / custom)" "full" | lower | trim -}}
 
 {{- $on := dict
 	"full" (list "ai_agents" "coding" "local_llm" "gaming" "media" "design" "office" "printing" "communication" "plugins")
 	"laptop" (list "ai_agents" "coding" "media" "office" "printing" "communication")
 	"gaming" (list "ai_agents" "gaming" "media" "communication")
+	"design" (list "ai_agents" "design" "media" "communication")
 	"minimal" (list) -}}
 
 {{- if and (ne $profile "custom") (not (hasKey $on $profile)) -}}
-{{-   fail (printf "Unknown profile %q: expected one of full, laptop, gaming, minimal, custom" $profile) -}}
+{{-   fail (printf "Unknown profile %q: expected one of full, laptop, gaming, design, minimal, custom" $profile) -}}
 {{- end -}}
 
 {{- $data := dict
@@ -51,6 +52,12 @@
 {{- end -}}
 {{- $_ := set $data "office_suite" $officeSuite -}}
 
+{{- $designApps := list -}}
+{{- if $data.design -}}
+{{-   $designApps = promptMultichoiceOnce . "design_apps" "\n🎨 Favorite Design apps" (list "designcraft" "effectcraft" "filmcraft" "lightcraft" "photocraft" "vectorcraft" "blender" "gimp") (list "filmcraft" "lightcraft" "photocraft") -}}
+{{- end -}}
+{{- $_ := set $data "design_apps" $designApps -}}
+
 {{/* <service>_authkey: false skips, "" installs without login, else the key */}}
 {{- range list
 	(list "tailscale" "Tailscale" "auth key" "\n🔗")
@@ -88,6 +95,7 @@
 
   # App selections
   agents = {{ $data.agents | toJson }}
+  design_apps = {{ $data.design_apps | toJson }}
   office_suite = {{ $data.office_suite | quote }}
 
   # Optional services (false = skip, "" = install without login, "<key>" = log in)

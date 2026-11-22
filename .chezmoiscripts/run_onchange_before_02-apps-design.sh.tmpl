@@ -4,13 +4,30 @@ set -euo pipefail
 {{ template "utils.sh.tmpl" . }}
 {{ template "external_links.sh.tmpl" . }}
 
-{{ if .design -}}
+{{ if and .design (gt (len .design_apps) 0) -}}
 echo ""
 info "🚀 [Installing Apps: Design] Starting..."
 echo ""
 
-info "🎨 Installing ArtCraft suite..."
-paru -S --needed --noconfirm {design,effect,film,light,photo,vector}craft-bin
+{{- $repo := list }}
+{{- $aur := list }}
+{{- range .design_apps }}
+{{-   if or (eq . "blender") (eq . "gimp") }}
+{{-     $repo = append $repo . }}
+{{-   else }}
+{{-     $aur = append $aur (printf "%s-bin" .) }}
+{{-   end }}
+{{- end }}
+
+{{- if gt (len $repo) 0 }}
+info "🎨 Installing design tools ({{ join ", " $repo }})..."
+sudo pacman -S --needed --noconfirm{{ range $repo }} {{ . }}{{ end }}
+{{- end }}
+
+{{- if gt (len $aur) 0 }}
+info "🎨 Installing ArtCraft apps ({{ join ", " $aur }})..."
+paru -S --needed --noconfirm{{ range $aur }} {{ . }}{{ end }}
+{{- end }}
 
 echo ""
 success "✅ [Installing Apps: Design] Done."

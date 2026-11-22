@@ -51,21 +51,21 @@ On first run, chezmoi asks what to install (see [Configuration](#configuration))
 
 On the first `chezmoi init`, you answer a few questions. Your answers are saved to `~/.config/chezmoi/chezmoi.toml`, and every later `chezmoi apply` reads them from there.
 
-**1. Pick a profile** (`full` by default): `full`, `laptop`, `gaming`, `minimal`, or `custom`.
-A profile is just a preset that fills in the boolean feature flags below on `chezmoi init` (`custom` prompts for each flag individually). Note that `gaming` exists as both a **profile** (a gaming-focused preset) and a **flag** (`gaming = true`/`false` for the gaming stack itself).
+**1. Pick a profile** (`full` by default): `full`, `laptop`, `gaming`, `design`, `minimal`, or `custom`.
+A profile is just a preset that fills in the boolean feature flags below on `chezmoi init` (`custom` prompts for each flag individually). Note that `gaming` and `design` each exist as both a **profile** (a preset) and a **flag** (`true`/`false` for that category).
 
-| Flag | `full` | `laptop` | `gaming` | `minimal` |
-| --- | :---: | :---: | :---: | :---: |
-| `ai_agents` | ✅ | ✅ | ✅ | ❌ |
-| `coding` | ✅ | ✅ | ❌ | ❌ |
-| `local_llm` | ✅ | ❌ | ❌ | ❌ |
-| `gaming` | ✅ | ❌ | ✅ | ❌ |
-| `media` | ✅ | ✅ | ✅ | ❌ |
-| `design` | ✅ | ❌ | ❌ | ❌ |
-| `office` | ✅ | ✅ | ❌ | ❌ |
-| `printing` | ✅ | ✅ | ❌ | ❌ |
-| `communication` | ✅ | ✅ | ✅ | ❌ |
-| `plugins` | ✅ | ❌ | ❌ | ❌ |
+| Flag | `full` | `laptop` | `gaming` | `design` | `minimal` |
+| --- | :---: | :---: | :---: | :---: | :---: |
+| `ai_agents` | ✅ | ✅ | ✅ | ✅ | ❌ |
+| `coding` | ✅ | ✅ | ❌ | ❌ | ❌ |
+| `local_llm` | ✅ | ❌ | ❌ | ❌ | ❌ |
+| `gaming` | ✅ | ❌ | ✅ | ❌ | ❌ |
+| `media` | ✅ | ✅ | ✅ | ✅ | ❌ |
+| `design` | ✅ | ❌ | ❌ | ✅ | ❌ |
+| `office` | ✅ | ✅ | ❌ | ❌ | ❌ |
+| `printing` | ✅ | ✅ | ❌ | ❌ | ❌ |
+| `communication` | ✅ | ✅ | ✅ | ✅ | ❌ |
+| `plugins` | ✅ | ❌ | ❌ | ❌ | ❌ |
 
 What each flag installs:
 
@@ -76,7 +76,7 @@ What each flag installs:
 | `local_llm` | CUDA / ROCm (GPU-dependent) and Ollama |
 | `gaming` | Steam, MangoHud, OpenRGB, MCHOSE peripherals, `linux-wallpaperengine`, gaming tweaks |
 | `media` | Spotify (+ Spicetify), OBS (+ capture plugins), kdenlive, EasyEffects, `yt-dlp`, image upscaler |
-| `design` | ArtCraft suite (DesignCraft, EffectCraft, FilmCraft, LightCraft, PhotoCraft, VectorCraft) |
+| `design` | Selected design apps (`design_apps`: ArtCraft suite, `blender`, `gimp`; default: `filmcraft`, `lightcraft`, `photocraft`) |
 | `office` | Selected office suite (`office_suite`: `artcraft`, `libreoffice`, or `onlyoffice`), Xournal++, qBittorrent, `sc-im`, Notion |
 | `printing` | CUPS, printer drivers, Avahi network printer discovery |
 | `communication` | Telegram, Signal, Discord (Equibop), Element, WeChat, LocalSend, WhatsApp |
