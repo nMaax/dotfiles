@@ -43,6 +43,7 @@ Pictures/*
 !.config/noctalia/
 !.config/nvim/
 !.config/pipewire/
+!.config/uwsm/
 !.config/starship.toml
 !.config/mimeapps.list
 !.config/user-dirs.dirs

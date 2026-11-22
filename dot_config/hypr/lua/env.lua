@@ -1,26 +1,5 @@
 -- ENVIRONMENT VARIABLES
--- See https://wiki.hypr.land/Configuring/Advanced-and-Cool/Environment-variables/
-
--- SSH settings
-hl.env("SSH_AUTH_SOCK", (os.getenv("XDG_RUNTIME_DIR") or "") .. "/ssh-agent.socket")
-hl.env("SSH_ASKPASS", "/usr/bin/ksshaskpass")
--- hl.env("SSH_ASKPASS_REQUIRE", "prefer")
-
--- Cursor size
-hl.env("HYPRCURSOR_SIZE", "24")
-
--- XDG menu prefix for desktop menus
-hl.env("XDG_MENU_PREFIX", "arch-")
-
--- Use the KDE platform theme (reads Noctalia's kdeglobals; qt6ct hides Dolphin filenames in dark mode) and disable decorations
-hl.env("QT_QPA_PLATFORMTHEME", "kde")
-hl.env("QT_WAYLAND_DISABLE_WINDOWDECORATION", "1")
-
--- Wayland first, XWayland fallback for Qt apps that misbehave under pure Wayland
-hl.env("QT_QPA_PLATFORM", "wayland;xcb")
-
--- For electron apps
-hl.env("ELECTRON_OZONE_PLATFORM_HINT", "auto")
+-- Static session variables live in ~/.config/uwsm/env (sourced by UWSM before Hyprland).
 
 -- NVIDIA settings for hardware acceleration
 -- See https://wiki.hypr.land/Nvidia/
