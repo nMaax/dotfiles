@@ -78,7 +78,7 @@ What each flag installs:
 | `gaming` | Steam, MangoHud, OpenRGB, MCHOSE peripherals, `linux-wallpaperengine`, gaming tweaks |
 | `media` | Spotify (+ Spicetify), OBS (+ capture plugins), kdenlive, EasyEffects, `yt-dlp`, image upscaler |
 | `design` | Selected design apps (`design_apps`: ArtCraft suite, `blender`, `gimp`; default: `filmcraft`, `lightcraft`, `photocraft`) |
-| `office` | Selected office suite (`office_suite`: `artcraft`, `libreoffice`, or `onlyoffice`), Xournal++, qBittorrent, `sc-im`, Notion |
+| `office` | Selected office suites (`office_suites`: `artcraft`, `libreoffice`, `onlyoffice`; default: `artcraft`), Xournal++, qBittorrent, `sc-im`, Notion |
 | `printing` | CUPS, printer drivers, Avahi network printer discovery |
 | `communication` | Selected chat apps (`communication_apps`: `telegram`, `signal`, `element`, `discord`, `wechat`, `localsend`, `whatsapp`) |
 | `plugins` | Hyprland plugins (`hyprpm`, `scrolloverview`) |

@@ -18,13 +18,17 @@ paru -S --needed --noconfirm sc-im
 info "📄 Installing Xournal++..."
 sudo pacman -S --needed --noconfirm xournalpp
 
-{{- if eq .office_suite "libreoffice" }}
+{{- if has "libreoffice" .office_suites }}
 info "📄 Installing LibreOffice..."
 sudo pacman -S --needed --noconfirm libreoffice-fresh
-{{- else if eq .office_suite "onlyoffice" }}
+{{- end }}
+
+{{- if has "onlyoffice" .office_suites }}
 info "📄 Installing ONLYOFFICE..."
 paru -S --needed --noconfirm onlyoffice-bin
-{{- else if eq .office_suite "artcraft" }}
+{{- end }}
+
+{{- if has "artcraft" .office_suites }}
 info "✍️ Installing WordCraft, GridCraft, DeckCraft and PDFCraft..."
 paru -S --needed --noconfirm {word,grid,deck,pdf}craft-bin
 {{- end }}

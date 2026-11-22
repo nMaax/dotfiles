@@ -43,14 +43,11 @@
 {{- end -}}
 {{- $_ := set $data "agents" $agents -}}
 
-{{- $officeSuite := "" -}}
+{{- $officeSuites := list -}}
 {{- if $data.office -}}
-{{-   $officeSuite = promptStringOnce . "office_suite" "\n📄 Favorite Office suite (artcraft / libreoffice / onlyoffice)" "artcraft" | lower | trim -}}
-{{-   if not (has $officeSuite (list "artcraft" "libreoffice" "onlyoffice")) -}}
-{{-     fail (printf "Unknown office_suite %q: expected one of artcraft, libreoffice, onlyoffice" $officeSuite) -}}
-{{-   end -}}
+{{-   $officeSuites = promptMultichoiceOnce . "office_suites" "\n📄 Favorite Office suites" (list "artcraft" "libreoffice" "onlyoffice") (list "artcraft") -}}
 {{- end -}}
-{{- $_ := set $data "office_suite" $officeSuite -}}
+{{- $_ := set $data "office_suites" $officeSuites -}}
 
 {{- $designApps := list -}}
 {{- if $data.design -}}
@@ -103,7 +100,7 @@
   agents = {{ $data.agents | toJson }}
   communication_apps = {{ $data.communication_apps | toJson }}
   design_apps = {{ $data.design_apps | toJson }}
-  office_suite = {{ $data.office_suite | quote }}
+  office_suites = {{ $data.office_suites | toJson }}
 
   # Optional services (false = skip, "" = install without login, "<key>" = log in)
   tailscale_authkey = {{ if kindIs "bool" $data.tailscale_authkey }}{{ $data.tailscale_authkey }}{{ else }}{{ $data.tailscale_authkey | quote }}{{ end }}
