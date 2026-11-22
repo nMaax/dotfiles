@@ -3,13 +3,26 @@ set -euo pipefail
 
 COMFY_REPO="${1:-https://github.com/Comfy-Themes/Spicetify.git}"
 MARKETPLACE_INSTALL_URL="${2:-https://raw.githubusercontent.com/spicetify/marketplace/main/resources/install.sh}"
+SPICETIFY_INSTALL_URL="${3:-https://raw.githubusercontent.com/spicetify/cli/main/install.sh}"
 
-echo "Installing Spotify (spicetify) from AUR..."
+echo "Setting up Spicetify..."
 echo "By default we will wipe anything related to spicetify first, to make a clean installation"
 
 rm -rf "$HOME/.config/spicetify"
 
-paru -S --noconfirm spotify spicetify-cli
+if ! pacman -Q spotify &>/dev/null; then
+  paru -S --needed spotify
+fi
+
+echo "Installing Spicetify CLI..."
+export PATH="$HOME/.spicetify:$PATH"
+if ! command -v spicetify &>/dev/null; then
+  curl -fsSL "$SPICETIFY_INSTALL_URL" | sh
+fi
+if [ -x "$HOME/.spicetify/spicetify" ]; then
+  mkdir -p "$HOME/.local/bin"
+  ln -sf "$HOME/.spicetify/spicetify" "$HOME/.local/bin/spicetify"
+fi
 
 echo "Setting up Spicetify permissions..."
 sudo chmod a+wr /opt/spotify

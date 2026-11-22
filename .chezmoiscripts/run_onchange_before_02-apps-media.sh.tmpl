@@ -25,13 +25,17 @@ paru -S --needed --noconfirm obs-pipewire-audio-capture-bin
 info "🎵 Installing EasyEffects and audio effect plugins..."
 sudo pacman -S --needed --noconfirm easyeffects lsp-plugins zam-plugins calf mda.lv2
 
-info "🎧 Installing Spotify & Spicetify..."
-SPICETIFY_SETUP="$(mktemp)"
-trap 'rm -f "$SPICETIFY_SETUP"' EXIT
-cat >"$SPICETIFY_SETUP" <<'SPICETIFY_SETUP_EOF'
+info "🎧 Installing Spotify..."
+paru -S --needed spotify
+
+if ask "🎨 Install Spicetify (Comfy theme + Marketplace)?"; then
+  SPICETIFY_SETUP="$(mktemp)"
+  trap 'rm -f "$SPICETIFY_SETUP"' EXIT
+  cat >"$SPICETIFY_SETUP" <<'SPICETIFY_SETUP_EOF'
 {{ include "dot_local/bin/executable_spicetify-setup.sh" }}
 SPICETIFY_SETUP_EOF
-bash "$SPICETIFY_SETUP" "$SPICETIFY_COMFY_REPO_URL" "$SPICETIFY_MARKETPLACE_INSTALL_URL"
+  bash "$SPICETIFY_SETUP" "$SPICETIFY_COMFY_REPO_URL" "$SPICETIFY_MARKETPLACE_INSTALL_URL" "$SPICETIFY_INSTALL_URL" || warn "Spicetify setup failed — skipping."
+fi
 
 echo ""
 success "✅ [Installing Apps: Media] Done."

@@ -35,7 +35,18 @@ if [ "$GPU_VENDOR" = "amd" ]; then
 fi
 
 info "🖥️ Installing KDE suite, Qt, GTK and utility apps..."
-paru -S --needed --noconfirm qt6ct-kde qt5ct-kde
+if pacman -Q qt6ct-kde &>/dev/null; then
+  success "qt6ct-kde is already installed. Skipping."
+elif pacman -Q qt6ct &>/dev/null; then
+  warn "qt6ct is pre-installed; installing qt6ct-kde (recommended by Noctalia) will remove qt6ct."
+  if ask "Replace qt6ct with qt6ct-kde?"; then
+    paru -S --needed qt6ct-kde qt5ct-kde
+  else
+    warn "Skipped qt6ct-kde / qt5ct-kde."
+  fi
+else
+  paru -S --needed --noconfirm qt6ct-kde qt5ct-kde
+fi
 sudo pacman -S --needed --noconfirm \
   adw-gtk-theme nwg-look \
   qt6-multimedia archlinux-xdg-menu ark dolphin-plugins filelight \
