@@ -22,7 +22,6 @@ Ideally, you should have installed CachyOS selecting Hyprland during the Calamar
   - [SSH](#ssh)
   - [GRUB](#grub)
   - [Gaming](#gaming)
-  - [Low-latency game streaming](#low-latency-game-streaming)
 - [Recommendations](#recommendations)
   - [Browser](#browser)
   - [Spicetify](#spicetify)
@@ -309,7 +308,7 @@ To revert to stock handheld behavior (always boot to Big Picture), run:
 steamos-session-select oneshot
 ```
 
-### Low-latency game streaming
+#### Low-latency game streaming
 
 If you are not satisfied with the Wayland screenshare when streaming games on your Electron app (e.g., Discord), then 🥮 brings some plugins to stream your games with low latency and low added input latency on the game. Namely using `obs-vkcapture`, `lib32-obs-vkcapture`, and `obs-pipewire-audio-capture`.
 
