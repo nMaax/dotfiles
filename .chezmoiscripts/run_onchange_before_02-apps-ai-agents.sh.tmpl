@@ -11,7 +11,11 @@ echo ""
 
 {{- if has "claude-code" .agents }}
 info "🦀 Installing Claude Code..."
-sudo pacman -S --needed --noconfirm claude-code # Available directly in the cachyos repo
+if command -v claude &>/dev/null; then
+  success "Claude Code is already installed (it self-updates). Skipping."
+else
+  curl -fsSL "$CLAUDE_INSTALL_URL" | bash
+fi
 {{- end }}
 
 {{- if has "claude-desktop" .agents }}
@@ -35,7 +39,11 @@ sudo pacman -S --needed --noconfirm opencode
 
 {{- if has "codex" .agents }}
 info "🧠 Installing Codex CLI..."
-sudo pacman -S --needed --noconfirm openai-codex # Available directly in the cachyos repo
+if command -v codex &>/dev/null; then
+  success "Codex CLI is already installed (it self-updates). Skipping."
+else
+  curl -fsSL "$CODEX_INSTALL_URL" | sh
+fi
 {{- end }}
 
 {{- if has "hermes" .agents }}

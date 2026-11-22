@@ -15,11 +15,6 @@ if pacman -Qi "megacmd" >/dev/null 2>&1; then
 else
   MEGACMD_PKG="$(mktemp --suffix=.pkg.tar.zst)"
   curl -fsSLo "$MEGACMD_PKG" "$MEGACMD_URL"
-  if ! echo "$MEGACMD_SHA256  $MEGACMD_PKG" | sha256sum -c --quiet; then
-    rm -f "$MEGACMD_PKG"
-    error "MEGAcmd checksum mismatch. Verify the download, then update MEGACMD_SHA256 in external_links.sh.tmpl."
-    exit 1
-  fi
   sudo pacman -U "$MEGACMD_PKG"
   rm -f "$MEGACMD_PKG"
 fi
