@@ -698,8 +698,9 @@ EDID-missing fallbacks. Use the stubbed-`hl` harness (§1) for geometry a headle
 - **No backward compatibility or migration code for renamed/removed paths.** When a directory, file or
   setting changes (e.g. `Work` → `Projects`), update the source only: no scripts that move user data,
   no compat symlinks. Existing users migrate their own files by hand.
-- This file is `AGENTS.md`; `CLAUDE.md` is only a symlink to it. Keep it agent-neutral: never retitle it
-  `CLAUDE.md` or add Claude-specific boilerplate (e.g. from `/init`).
+- **Match the existing style and tone when writing natural language** (e.g., `README.md` and comments):
+  keep the same direct, practical voice rather than introducing verbose or generic prose.
+- Keep `AGENTS.md` agent-neutral: never add tool-specific boilerplate (e.g. from `/init`).
 
 ---
 

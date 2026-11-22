@@ -21,6 +21,7 @@ Ideally, you should have installed CachyOS selecting Hyprland during the Calamar
 - [Guides](#guides)
   - [SSH](#ssh)
   - [GRUB](#grub)
+  - [Secondary & USB drives](#secondary--usb-drives)
   - [Gaming](#gaming)
 - [Recommendations](#recommendations)
   - [Browser](#browser)
@@ -275,6 +276,35 @@ sudo sed -i 's|^GRUB_THEME=|#GRUB_THEME=|' /etc/default/grub
 sudo sed -i 's|^#GRUB_TERMINAL_OUTPUT=console|GRUB_TERMINAL_OUTPUT=console|' /etc/default/grub
 sudo grub-mkconfig -o /boot/grub/grub.cfg
 ```
+
+### Secondary & USB drives
+
+MoBo-attached secondary drives (SATA/NVMe) belong in `/etc/fstab` by UUID so they mount reliably without touching USB drives; USB sticks and USB HDDs are left to `udisks2` (click to mount/eject in Dolphin, or install `udiskie` if you want them mounted automatically on plug-in).
+
+1. Find the partition's `UUID` and `FSTYPE` (check `TRAN` so you don't pick a `usb` drive):
+
+   ```fish
+   lsblk -o NAME,SIZE,FSTYPE,TRAN,UUID,MOUNTPOINT
+   ```
+
+2. Create the mountpoint and add it to `/etc/fstab`:
+
+   ```fish
+   sudo mkdir -p /mnt/data
+   ```
+
+   ```text
+   UUID=<your-uuid>  /mnt/data  ext4  defaults,nofail,x-systemd.automount  0  2
+   ```
+
+   `nofail` keeps the system booting if the drive is ever disconnected, and `x-systemd.automount` mounts it on first access. *(For NTFS, use `ntfs3` with `uid=1000,gid=1000`.)*
+
+3. Apply without rebooting:
+
+   ```fish
+   sudo systemctl daemon-reload
+   sudo systemctl restart local-fs.target
+   ```
 
 ### Gaming
 
