@@ -19,7 +19,7 @@ info "📝 Installing ddocs webapp..."
 info "⬇️ Installing cobalt webapp..."
 ~/.local/bin/install-webapp "cobalt" "$COBALT_URL"
 
-{{ if .communication -}}
+{{ if and .communication (has "whatsapp" .communication_apps) -}}
 info "📞 Installing WhatsApp webapp..."
 ~/.local/bin/install-webapp "WhatsApp" "$WHATSAPP_URL"
 {{- end }}

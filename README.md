@@ -79,7 +79,7 @@ What each flag installs:
 | `design` | Selected design apps (`design_apps`: ArtCraft suite, `blender`, `gimp`; default: `filmcraft`, `lightcraft`, `photocraft`) |
 | `office` | Selected office suite (`office_suite`: `artcraft`, `libreoffice`, or `onlyoffice`), Xournal++, qBittorrent, `sc-im`, Notion |
 | `printing` | CUPS, printer drivers, Avahi network printer discovery |
-| `communication` | Telegram, Signal, Discord (Equibop), Element, WeChat, LocalSend, WhatsApp |
+| `communication` | Selected chat apps (`communication_apps`: `telegram`, `signal`, `element`, `discord`, `wechat`, `localsend`, `whatsapp`) |
 | `plugins` | Hyprland plugins (`hyprpm`, `scrolloverview`) |
 
 Browsers (`chromium`, `zen-browser-bin`), terminals (`ghostty`, `kitty`), Neovim, `yazi`, `starship`, KeePassXC, and the rest of the core desktop are always installed regardless of profile.

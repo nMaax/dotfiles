@@ -58,6 +58,12 @@
 {{- end -}}
 {{- $_ := set $data "design_apps" $designApps -}}
 
+{{- $commApps := list -}}
+{{- if $data.communication -}}
+{{-   $commApps = promptMultichoiceOnce . "communication_apps" "\n💬 Favorite Communication apps" (list "telegram" "signal" "element" "discord" "wechat" "localsend" "whatsapp") (list "telegram" "discord" "localsend" "whatsapp") -}}
+{{- end -}}
+{{- $_ := set $data "communication_apps" $commApps -}}
+
 {{/* <service>_authkey: false skips, "" installs without login, else the key */}}
 {{- range list
 	(list "tailscale" "Tailscale" "auth key" "\n🔗")
@@ -95,6 +101,7 @@
 
   # App selections
   agents = {{ $data.agents | toJson }}
+  communication_apps = {{ $data.communication_apps | toJson }}
   design_apps = {{ $data.design_apps | toJson }}
   office_suite = {{ $data.office_suite | quote }}
 

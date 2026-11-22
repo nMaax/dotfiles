@@ -4,25 +4,27 @@ set -euo pipefail
 {{ template "utils.sh.tmpl" . }}
 {{ template "external_links.sh.tmpl" . }}
 
-{{ if .communication -}}
+{{ if and .communication (gt (len .communication_apps) 0) -}}
 echo ""
 info "🚀 [Installing Apps: Communication] Starting..."
 echo ""
 
-info "🔗 Installing Telegram and Signal"
-sudo pacman -S --needed --noconfirm telegram-desktop signal-desktop
+{{- $repo := list }}
+{{- if has "telegram" .communication_apps }}{{ $repo = append $repo "telegram-desktop" }}{{ end }}
+{{- if has "signal" .communication_apps }}{{ $repo = append $repo "signal-desktop" }}{{ end }}
+{{- if has "element" .communication_apps }}{{ $repo = append $repo "element-desktop" }}{{ end }}
+{{- if has "discord" .communication_apps }}{{ $repo = append $repo "discord" }}{{ end }}
+{{- if has "localsend" .communication_apps }}{{ $repo = append $repo "localsend" }}{{ end }}
 
-info "🔬 Installing Element..."
-sudo pacman -S --needed --noconfirm element-desktop
+{{- if gt (len $repo) 0 }}
+info "🔗 Installing {{ join ", " $repo }}..."
+sudo pacman -S --needed --noconfirm{{ range $repo }} {{ . }}{{ end }}
+{{- end }}
 
-info "👾 Installing Discord..."
-sudo pacman -S --needed --noconfirm discord
-
+{{- if has "wechat" .communication_apps }}
 info "💬 Installing WeChat..."
 paru -S --needed --noconfirm wechat-bin
-
-info "📤 Installing LocalSend..."
-sudo pacman -S --needed --noconfirm localsend
+{{- end }}
 
 echo ""
 success "✅ [Installing Apps: Communication] Done."
