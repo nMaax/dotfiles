@@ -33,8 +33,17 @@ info "✍️ Installing WordCraft, GridCraft, DeckCraft and PDFCraft..."
 paru -S --needed --noconfirm {word,grid,deck,pdf}craft-bin
 {{- end }}
 
-info "🗒️ Installing Notion..."
-paru -S --needed --noconfirm notion-app-electron-bin
+INSTALL_NOTION=true
+warn "The notion-app-electron-bin AUR package is currently faulty (upstream AUR issue)."
+if ask "Skip installing Notion until the package is fixed? (recommended)"; then
+  INSTALL_NOTION=false
+fi
+if [ "$INSTALL_NOTION" = "true" ]; then
+  info "🗒️ Installing Notion..."
+  paru -S --needed --noconfirm notion-app-electron-bin
+else
+  warn "Skipped Notion install."
+fi
 
 echo ""
 success "✅ [Installing Apps: Office] Done."
