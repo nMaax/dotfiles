@@ -8,18 +8,6 @@ echo ""
 info "🌐 [Installing Webapps] Starting..."
 echo ""
 
-info "♊ Installing Gemini Webapp..."
-~/.local/bin/install-webapp "Gemini" "$GEMINI_URL"
-
-info "🤖 Installing Copilot Webapp..."
-~/.local/bin/install-webapp "Copilot" "$COPILOT_URL" "$COPILOT_ICON_URL"
-
-info "💬 Installing ChatGPT Webapp..."
-~/.local/bin/install-webapp "ChatGPT" "$CHATGPT_URL" "$CHATGPT_ICON_URL"
-
-info "🦁 Installing Brave AI..."
-~/.local/bin/install-webapp "Ask Brave" "$BRAVE_ASK_URL"
-
 {{ if .gaming -}}
 info "🖱️ Installing MCHOSE HUB Webapp..."
 ~/.local/bin/install-webapp "MCHOSE HUB" "$MCHOSE_HUB_URL"
