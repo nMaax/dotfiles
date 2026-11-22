@@ -1,5 +1,3 @@
-config_version = 16
-
 [bar.default]
 center = [ "media" ]
 contact_shadow = true
@@ -219,12 +217,6 @@ transition = [ "disc", "honeycomb", "stripes", "wipe" ]
 transition_on_startup = true
 
     [wallpaper.default]
-    path = "/home/massimiliano/Pictures/Wallpapers/wallhack-carnage-sora.jpg"
-
-    [wallpaper.last]
-    path = "/home/massimiliano/Pictures/Wallpapers/wallhack-carnage-sora.jpg"
-
-    [wallpaper.monitors.DP-1]
     path = "/home/massimiliano/Pictures/Wallpapers/wallhack-carnage-sora.jpg"
 
     [[wallpaper.favorite]]
