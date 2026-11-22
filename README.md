@@ -181,7 +181,7 @@ You can retrieve the list of apps on which automatic theming is set in the Nocta
 - **Discord:** Open Equibop → Settings → Themes → enable one of the two Noctalia themes.
 - **VSCode:** Install the `NoctaliaTheme` extension from the marketplace, then select it via `Ctrl+Shift+P` → *Preferences: Color Theme*.
 - **Telegram:** Open Settings → Chat Settings → scroll to the bottom and enable the custom color theme.
-- **Steam**: Install [Material-Theme](https://steambrew.app/theme?id=ipYjqODds05KMcvh7QJn) and add it in Millennium Settings > Theme, then click the three dots > configure > style > colors > select *Matugen* in the theme color dropdown.
+- **Steam**: Launch Steam at least once first (so it creates its `~/.steam/steam` symlink), then install [Material-Theme](https://steambrew.app/theme?id=ipYjqODds05KMcvh7QJn) in Millennium Settings → Themes, click **Use**, open its configure menu → style → colors → select *Matugen*, then enable **Steam** in **Noctalia Settings → Color Scheme → Templates**, regenerate the palette, and fully restart Steam (**Steam → Exit**). *(Kept disabled in the default Noctalia `config.toml` so it doesn't create `~/.steam/steam` as a real directory before Steam's first launch.)*
 - **Heroic Games Launcher:** Settings → Advanced → set **Custom Themes Path** to `~/.config/heroic/themes`, then select **matugen** from the theme dropdown. One-time; the generated CSS updates in place on further theme changes.
 - **Prism Launcher:** Settings → Appearance → Theme → select **Matugen**. One-time; the generated theme JSON updates in place on further theme changes.
 - All other enabled apps (`btop`, `cava`, `ghostty`, `starship`, `hyprland`, `kcolorscheme`, `neovim`, `yazi`) apply fully automatically; no action needed.
