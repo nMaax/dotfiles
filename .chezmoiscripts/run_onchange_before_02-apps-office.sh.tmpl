@@ -15,11 +15,19 @@ sudo pacman -S --needed --noconfirm qbittorrent
 info "📊 Installing sc-im spreadsheet..."
 paru -S --needed --noconfirm sc-im
 
-info "📄 Installing LibreOffice and Xournal++..."
-sudo pacman -S --needed --noconfirm libreoffice-fresh xournalpp
+info "📄 Installing Xournal++..."
+sudo pacman -S --needed --noconfirm xournalpp
 
+{{- if eq .office_suite "libreoffice" }}
+info "📄 Installing LibreOffice..."
+sudo pacman -S --needed --noconfirm libreoffice-fresh
+{{- else if eq .office_suite "onlyoffice" }}
+info "📄 Installing ONLYOFFICE..."
+paru -S --needed --noconfirm onlyoffice-bin
+{{- else if eq .office_suite "artcraft" }}
 info "✍️ Installing WordCraft, GridCraft, DeckCraft and PDFCraft..."
 paru -S --needed --noconfirm {word,grid,deck,pdf}craft-bin
+{{- end }}
 
 info "🗒️ Installing Notion..."
 paru -S --needed --noconfirm notion-app-electron-bin

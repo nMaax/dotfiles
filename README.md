@@ -71,13 +71,13 @@ What each flag installs:
 
 | Flag | Installs |
 | --- | --- |
-| `ai_agents` | Claude Code, Claude Desktop, Antigravity CLI (`agy`), OpenCode, Codex CLI, Hermes Agent, Pi coding agent, `ai-usagebar` |
+| `ai_agents` | Selected agents (`agents`, default: `claude-code`, `agy`) + `ai-usagebar` |
 | `coding` | VS Code, `lazygit`, `tmux`, Node.js, `npm`, OpenJDK, `gh`, `gcc-fortran`, `make`, Python + LSP/Pyright, `direnv` |
 | `local_llm` | CUDA / ROCm (GPU-dependent) and Ollama |
 | `gaming` | Steam, MangoHud, OpenRGB, MCHOSE peripherals, `linux-wallpaperengine`, gaming tweaks |
 | `media` | Spotify (+ Spicetify), OBS (+ capture plugins), kdenlive, EasyEffects, `yt-dlp`, image upscaler |
 | `design` | ArtCraft suite (DesignCraft, EffectCraft, FilmCraft, LightCraft, PhotoCraft, VectorCraft) |
-| `office` | LibreOffice, Xournal++, qBittorrent, `sc-im`, WordCraft, GridCraft, DeckCraft, PDFCraft, Notion |
+| `office` | Selected office suite (`office_suite`: `artcraft`, `libreoffice`, or `onlyoffice`), Xournal++, qBittorrent, `sc-im`, Notion |
 | `printing` | CUPS, printer drivers, Avahi network printer discovery |
 | `communication` | Telegram, Signal, Discord (Equibop), Element, WeChat, LocalSend, WhatsApp |
 | `plugins` | Hyprland plugins (`hyprpm`, `scrolloverview`) |

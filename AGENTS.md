@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Guidance for coding agents working in this repository. `CLAUDE.md` is a symlink to this file.
+Guidance for coding agents working in this repository.
 
 Personal dotfiles for a **CachyOS + Hyprland + Noctalia** desktop, managed with
 [chezmoi](https://www.chezmoi.io/). There is no build system, no test suite and no CI — the
@@ -62,6 +62,10 @@ chezmoi execute-template < .chezmoiscripts/<script>.tmpl | bash -n
 
 # Fish functions
 fish -n dot_config/fish/functions/<name>.fish
+
+# Noctalia v5 -- validate config (source or applied)
+noctalia config validate dot_config/noctalia/config.toml
+noctalia config validate
 ```
 
 ### The Hyprland change loop
@@ -425,13 +429,17 @@ Queries (all verified live): `hl.get_config(key)`, `hl.get_windows(filters)` —
 
 **Invariant: Hyprland Lua ⟺ Noctalia v5; Hyprland `.conf` ⟺ Noctalia v4.** We use Lua + v5. Do not
 mix. v4 (`noctalia-shell`, JSON at `~/.config/noctalia/`, run as `qs -c noctalia-shell`) is removed;
-`paru -S noctalia-shell` brings it back. v5 is the `noctalia` binary, TOML at `~/.local/state/noctalia/`.
+`paru -S noctalia-shell` brings it back. v5 is the `noctalia` binary, using TOML at
+`~/.config/noctalia/` (declarative) and `~/.local/state/noctalia/settings.toml` (GUI overrides).
 
 - IPC is `noctalia msg <command>`, and **`noctalia msg --help` is authoritative** — prefer it over
   the docs. `keybindings.lua` wraps it in a local `ipc()` helper.
-- **v5 settings: only `settings.toml` is tracked**, at `dot_local/private_state/noctalia/settings.toml`
-  (`private_` because `~/.local/state` is 0700). Everything else there — history, usage stats,
-  downloaded caches, plugin build output — stays untracked via `.chezmoiignore`.
+- **v5 settings: `dot_config/noctalia/config.toml` is tracked** (alongside `user-templates.toml`)
+  and overwrites CachyOS's `/etc/skel/.config/noctalia/config.toml`. `~/.local/state/noctalia/settings.toml`
+  and everything else under `~/.local/state/noctalia/` (history, usage stats, caches, plugin build
+  output) stay untracked via `.chezmoiignore` as machine-local GUI/runtime state.
+  Validate changes with `noctalia config validate dot_config/noctalia/config.toml` (and
+  `noctalia config validate` after `chezmoi apply`).
 - **Plugin IDs are `<author>/<plugin>:<entry>`.** Panels: `panel-toggle noctalia/mpvpaper:picker`.
   Events: `plugin <author/plugin:entry> <target[:bar]> <event> [payload]`, target `all` for singleton
   services. Enumerate what's installed with `noctalia msg plugins list` — the v4 directory names

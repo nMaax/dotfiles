@@ -16,13 +16,13 @@
 	"profile" $profile -}}
 
 {{- range list
-	(list "ai_agents" "\n🤖 Install AI agents (Claude Code/Antigravity/OpenCode/Codex/Hermes/…)")
+	(list "ai_agents" "\n🤖 Install AI agents (Claude Code/Antigravity/Codex/…)")
 	(list "coding" "💻 Install dev tooling (VS Code/lazygit/Node.js/Python/…)")
 	(list "local_llm" "🧠 Install local LLMs (CUDA/ROCm/Ollama)")
 	(list "gaming" "🎮 Install gaming stack (Steam/OpenRGB/…)")
 	(list "media" "🎬 Install media apps (kdenlive/OBS/Spotify/…)")
 	(list "design" "🎨 Install design apps (ArtCraft suite)")
-	(list "office" "📄 Install office apps (LibreOffice/Xournal++/qBittorrent/…)")
+	(list "office" "📄 Install office apps (Office suite/Xournal++/qBittorrent/…)")
 	(list "printing" "🖨️ Install printing (CUPS + drivers)")
 	(list "communication" "💬 Install chat apps (Telegram/Signal/Discord/…)")
 	(list "plugins" "🧩 Install Hyprland plugins (hyprpm/scrolloverview)") -}}
@@ -35,6 +35,21 @@
 {{-     $_ := set $data $key (has $key (get $on $data.profile)) -}}
 {{-   end -}}
 {{- end -}}
+
+{{- $agents := list -}}
+{{- if $data.ai_agents -}}
+{{-   $agents = promptMultichoiceOnce . "agents" "\n🤖 Favorite Agents" (list "claude-code" "claude-desktop" "agy" "codex" "opencode" "hermes" "pi") (list "claude-code" "agy") -}}
+{{- end -}}
+{{- $_ := set $data "agents" $agents -}}
+
+{{- $officeSuite := "" -}}
+{{- if $data.office -}}
+{{-   $officeSuite = promptStringOnce . "office_suite" "\n📄 Favorite Office suite (artcraft / libreoffice / onlyoffice)" "artcraft" | lower | trim -}}
+{{-   if not (has $officeSuite (list "artcraft" "libreoffice" "onlyoffice")) -}}
+{{-     fail (printf "Unknown office_suite %q: expected one of artcraft, libreoffice, onlyoffice" $officeSuite) -}}
+{{-   end -}}
+{{- end -}}
+{{- $_ := set $data "office_suite" $officeSuite -}}
 
 {{/* <service>_authkey: false skips, "" installs without login, else the key */}}
 {{- range list
@@ -70,6 +85,10 @@
   printing = {{ $data.printing }}
   communication = {{ $data.communication }}
   plugins = {{ $data.plugins }}
+
+  # App selections
+  agents = {{ $data.agents | toJson }}
+  office_suite = {{ $data.office_suite | quote }}
 
   # Optional services (false = skip, "" = install without login, "<key>" = log in)
   tailscale_authkey = {{ if kindIs "bool" $data.tailscale_authkey }}{{ $data.tailscale_authkey }}{{ else }}{{ $data.tailscale_authkey | quote }}{{ end }}
