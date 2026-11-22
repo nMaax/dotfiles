@@ -1,4 +1,4 @@
-{{- $profile := promptStringOnce . "profile" "\n🧭 Profile (full / laptop / gaming / design / minimal / custom)" "full" | lower | trim -}}
+{{- $profile := promptStringOnce . "profile" "\n🧭 Profile (full / laptop / gaming / design / minimal / custom)" "gaming" | lower | trim -}}
 
 {{- $on := dict
 	"full" (list "ai_agents" "coding" "local_llm" "gaming" "media" "design" "office" "printing" "communication" "plugins")

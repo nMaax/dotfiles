@@ -51,7 +51,7 @@ On first run, chezmoi asks what to install (see [Configuration](#configuration))
 
 On the first `chezmoi init`, you answer a few questions. Your answers are saved to `~/.config/chezmoi/chezmoi.toml`, and every later `chezmoi apply` reads them from there.
 
-**1. Pick a profile** (`full` by default): `full`, `laptop`, `gaming`, `design`, `minimal`, or `custom`.
+**1. Pick a profile** (`gaming` by default): `full`, `laptop`, `gaming`, `design`, `minimal`, or `custom`.
 A profile is just a preset that fills in the boolean feature flags below on `chezmoi init` (`custom` prompts for each flag individually). Note that `gaming` and `design` each exist as both a **profile** (a preset) and a **flag** (`true`/`false` for that category).
 
 | Flag | `full` | `laptop` | `gaming` | `design` | `minimal` |
