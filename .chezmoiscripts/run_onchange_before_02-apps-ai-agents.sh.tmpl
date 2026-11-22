@@ -51,6 +51,11 @@ info "⚕️ Installing Hermes Agent..."
 sudo pacman -S --needed --noconfirm hermes-agent # Available directly in the cachyos repo
 {{- end }}
 
+{{- if has "omp" .agents }}
+info "🥧 Installing Oh My Pi (omp)..."
+paru -S --needed --noconfirm oh-my-pi-bin
+{{- end }}
+
 {{- if has "pi" .agents }}
 info "🥧 Installing Pi coding agent..."
 paru -S --needed --noconfirm pi-coding-agent-bin

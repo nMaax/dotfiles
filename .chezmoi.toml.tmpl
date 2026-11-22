@@ -39,7 +39,7 @@
 
 {{- $agents := list -}}
 {{- if $data.ai_agents -}}
-{{-   $agents = promptMultichoiceOnce . "agents" "\n🤖 Favorite Agents" (list "claude-code" "claude-desktop" "agy" "codex" "opencode" "hermes" "pi") (list "claude-code" "agy") -}}
+{{-   $agents = promptMultichoiceOnce . "agents" "\n🤖 Favorite Agents" (list "claude-code" "claude-desktop" "agy" "codex" "opencode" "hermes" "omp" "pi") (list "claude-code" "agy") -}}
 {{- end -}}
 {{- $_ := set $data "agents" $agents -}}
 
