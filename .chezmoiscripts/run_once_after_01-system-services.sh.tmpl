@@ -25,6 +25,16 @@ info "🔐 Enable SSH daemon and agent"
 sudo systemctl enable --now sshd
 systemctl --user enable --now ssh-agent
 
+info "🚀 Applying CachyOS Hello tweaks..."
+for tweak in cachy-update bpftune ananicy oomd; do
+  cachyos-hello tweak enable "$tweak"
+done
+
+info "🌐 Setting Quad9 DNS (DoT) on active NetworkManager connections..."
+while IFS= read -r conn; do
+  cachyos-hello dns set --connection "$conn" --server quad9 --dot
+done < <(nmcli -t -f NAME,TYPE connection show --active | awk -F: '$2 == "802-3-ethernet" || $2 == "802-11-wireless" { print $1 }')
+
 echo ""
 success "✅ [System Services] Done."
 echo ""

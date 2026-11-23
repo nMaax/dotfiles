@@ -30,6 +30,9 @@ paru -S --needed --noconfirm amethyst-mod-manager
 info "🥭 Installing mango and mangojuice..."
 sudo pacman -S --needed --noconfirm mangohud mangojuice
 
+info "🧠 Enabling Hyprland foreground VRAM booster..."
+systemctl --user enable --now hyprland-focused-booster.service
+
 info "💓 Installing vrrtest..."
 paru -S --needed --noconfirm vrrtest
 
