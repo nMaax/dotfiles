@@ -92,8 +92,8 @@ local function set_game_mode(on)
 	else
 		hl.exec_cmd(ipc("osd-enable"))
 		hl.exec_cmd(ipc("notification-dnd-set false"))
-		if layout_before_game_mode then -- nil after a reload, which already restored the configured layout
-			hl.config({ general = { layout = layout_before_game_mode } })
+		if layout_before_game_mode or C.LAYOUT then -- fallback to C.LAYOUT after a reload
+			hl.config({ general = { layout = layout_before_game_mode or C.LAYOUT } })
 		end
 		hl.notification.create({ text = "🎮 Game Mode: OFF (OSD & Notifications enabled)", timeout = 2500 })
 	end

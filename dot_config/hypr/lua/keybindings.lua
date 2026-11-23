@@ -76,95 +76,18 @@ hl.bind(C.MODKEY .. "+SHIFT+E", hl.dsp.exec_cmd(C.term("yazi")), { description =
 local special = require("lua.special")
 local toggle_app_special_workspace = special.toggle_app_special_workspace
 
--- Toggle a special workspace
-hl.bind(
-	C.MODKEY .. "+Delete",
-	toggle_app_special_workspace(C.SPECIAL_WORKSPACE.SYSMON, {
-		class = C.APP_CLASSES.SYSMON,
-	}, C.term("btop", C.SYSMON_CLASS)),
-	{ description = "Toggle system monitors workspace (btop)" }
-)
-hl.bind(
-	C.MODKEY .. "+D",
-	toggle_app_special_workspace(C.SPECIAL_WORKSPACE.DISCORD, {
-		class = C.APP_CLASSES.DISCORD,
-	}, "discord"),
-	{ description = "Toggle Discord workspace" }
-)
-hl.bind(
-	C.MODKEY .. "+T",
-	toggle_app_special_workspace(C.SPECIAL_WORKSPACE.TELEGRAM, {
-		class = C.APP_CLASSES.TELEGRAM,
-	}, "Telegram"),
-	{ description = "Toggle Telegram workspace" }
-)
-hl.bind(
-	C.MODKEY .. "+M",
-	toggle_app_special_workspace(C.SPECIAL_WORKSPACE.MUSIC, {
-		class = C.APP_CLASSES.MUSIC,
-		title = C.MUSIC_TITLES,
-	}, "spotify"),
-	{ description = "Toggle music workspace (Spotify)" }
-)
-hl.bind(
-	C.MODKEY .. "+A",
-	toggle_app_special_workspace(C.SPECIAL_WORKSPACE.AI, {
-		class = C.APP_CLASSES.AI,
-	}, "claude-desktop"),
-	{ description = "Toggle AI workspace (Claude desktop)" }
-)
-hl.bind(
-	C.MODKEY .. "+P",
-	toggle_app_special_workspace(C.SPECIAL_WORKSPACE.PASSWORD, {
-		class = C.APP_CLASSES.PASSWORD,
-	}, C.PASSWORD_APP),
-	{ description = "Toggle password workspace" }
-)
-hl.bind(
-	C.MODKEY .. "+S",
-	hl.dsp.workspace.toggle_special(C.SPECIAL_WORKSPACE.MAGIC),
-	{ description = "Toggle scratchpad" }
-)
-
-local function throw_to_special_workspace(name)
-	return hl.dsp.window.move({ workspace = "special:" .. name })
+-- Toggle and move to special workspaces
+for i, ws in ipairs(C.SPECIAL_WORKSPACES) do
+	local toggle_action = (ws.class or ws.title)
+			and toggle_app_special_workspace(ws.name, { class = ws.class, title = ws.title }, ws.cmd)
+		or hl.dsp.workspace.toggle_special(ws.name)
+	hl.bind(C.MODKEY .. "+" .. ws.key, toggle_action, {
+		description = i == 1 and "Toggle special workspace (Delete/D/T/M/A/P/S)" or nil,
+	})
+	hl.bind(C.MODKEY .. "+SHIFT+" .. ws.key, hl.dsp.window.move({ workspace = "special:" .. ws.name }), {
+		description = i == 1 and "Move window to special workspace (Shift+Delete/D/T/M/A/P/S)" or nil,
+	})
 end
-
-hl.bind(
-	C.MODKEY .. "+SHIFT+Delete",
-	throw_to_special_workspace(C.SPECIAL_WORKSPACE.SYSMON),
-	{ description = "Move window to system monitors workspace" }
-)
-hl.bind(
-	C.MODKEY .. "+SHIFT+D",
-	throw_to_special_workspace(C.SPECIAL_WORKSPACE.DISCORD),
-	{ description = "Move window to Discord workspace" }
-)
-hl.bind(
-	C.MODKEY .. "+SHIFT+T",
-	throw_to_special_workspace(C.SPECIAL_WORKSPACE.TELEGRAM),
-	{ description = "Move window to Telegram workspace" }
-)
-hl.bind(
-	C.MODKEY .. "+SHIFT+M",
-	throw_to_special_workspace(C.SPECIAL_WORKSPACE.MUSIC),
-	{ description = "Move window to music workspace" }
-)
-hl.bind(
-	C.MODKEY .. "+SHIFT+A",
-	throw_to_special_workspace(C.SPECIAL_WORKSPACE.AI),
-	{ description = "Move window to AI workspace" }
-)
-hl.bind(
-	C.MODKEY .. "+SHIFT+P",
-	throw_to_special_workspace(C.SPECIAL_WORKSPACE.PASSWORD),
-	{ description = "Move window to password workspace" }
-)
-hl.bind(
-	C.MODKEY .. "+SHIFT+S",
-	hl.dsp.window.move({ workspace = "special:" .. C.SPECIAL_WORKSPACE.MAGIC }),
-	{ description = "Move window to scratchpad" }
-)
 
 -- 4. SYSTEM PANELS AND UTILITIES
 
@@ -179,8 +102,14 @@ hl.bind(C.MODKEY .. "+Escape", hl.dsp.exec_cmd(ipc("panel-toggle session")), { d
 
 -- Power profile
 local function toggle_power_profile()
-	io.popen(ipc("power-cycle")):close() -- block until the cycle actually lands, so the read below isn't stale
-	local handle = assert(io.popen("powerprofilesctl get"))
+	local cycle = io.popen(ipc("power-cycle"))
+	if cycle then
+		cycle:close() -- block until the cycle actually lands, so the read below isn't stale
+	end
+	local handle = io.popen("powerprofilesctl get")
+	if not handle then
+		return
+	end
 	local profile = handle:read("*l")
 	handle:close()
 	local low_power = profile == "power-saver"
@@ -278,13 +207,13 @@ local focus_up = smart_focus("up", "-1")
 local focus_down = smart_focus("down", "+1")
 
 --- Move focus around windows
-hl.bind(C.MODKEY .. "+up", hl.dsp.focus({ direction = "up" }), { description = "Move focus up" })
+hl.bind(C.MODKEY .. "+up", focus_up, { repeating = true })
 hl.bind(
 	C.MODKEY .. "+K",
 	focus_up,
 	{ repeating = true, description = "Move focus up, or scroll workspaces up at the edge (vim, or arrows)" }
 )
-hl.bind(C.MODKEY .. "+down", hl.dsp.focus({ direction = "down" }), { description = "Move focus down" })
+hl.bind(C.MODKEY .. "+down", focus_down, { repeating = true })
 hl.bind(
 	C.MODKEY .. "+J",
 	focus_down,
@@ -304,30 +233,18 @@ for key = 0, 9 do
 end
 
 -- Move focus around external monitors
-hl.bind(
-	C.MODKEY .. "+ALT+K",
-	hl.dsp.focus({ monitor = "u" }),
-	{ description = "Move focus on monitor up (vim, or arrows)" }
-)
-hl.bind(C.MODKEY .. "+ALT+up", hl.dsp.focus({ monitor = "u" }), {})
-hl.bind(
-	C.MODKEY .. "+ALT+J",
-	hl.dsp.focus({ monitor = "d" }),
-	{ description = "Move focus on monitor down (vim, or arrows)" }
-)
-hl.bind(C.MODKEY .. "+ALT+down", hl.dsp.focus({ monitor = "d" }), {})
-hl.bind(
-	C.MODKEY .. "+ALT+H",
-	hl.dsp.focus({ monitor = "l" }),
-	{ description = "Move focus on monitor left (vim, or arrows)" }
-)
-hl.bind(C.MODKEY .. "+ALT+left", hl.dsp.focus({ monitor = "l" }), {})
-hl.bind(
-	C.MODKEY .. "+ALT+L",
-	hl.dsp.focus({ monitor = "r" }),
-	{ description = "Move focus on monitor right (vim, or arrows)" }
-)
-hl.bind(C.MODKEY .. "+ALT+right", hl.dsp.focus({ monitor = "r" }), {})
+local DIRECTIONS = {
+	{ vim = "K", arrow = "up", dir = "u" },
+	{ vim = "J", arrow = "down", dir = "d" },
+	{ vim = "H", arrow = "left", dir = "l" },
+	{ vim = "L", arrow = "right", dir = "r" },
+}
+for i, d in ipairs(DIRECTIONS) do
+	hl.bind(C.MODKEY .. "+ALT+" .. d.vim, hl.dsp.focus({ monitor = d.dir }), {
+		description = i == 1 and "Move focus to another monitor (vim, or arrows)" or nil,
+	})
+	hl.bind(C.MODKEY .. "+ALT+" .. d.arrow, hl.dsp.focus({ monitor = d.dir }), {})
+end
 
 -- Cycle window focus with mouse side buttons (M4/M5)
 hl.bind(
@@ -379,13 +296,13 @@ hl.bind(
 	move_up,
 	{ repeating = true, description = "Move window up, or to previous workspace at the edge (vim, or arrows)" }
 )
-hl.bind(C.MODKEY .. "+SHIFT+CTRL+up", move_up, { repeating = true })
+hl.bind(C.MODKEY .. "+SHIFT+up", move_up, { repeating = true })
 hl.bind(
 	C.MODKEY .. "+SHIFT+J",
 	move_down,
 	{ repeating = true, description = "Move window down, or to next workspace at the edge (vim, or arrows)" }
 )
-hl.bind(C.MODKEY .. "+SHIFT+CTRL+down", move_down, { repeating = true })
+hl.bind(C.MODKEY .. "+SHIFT+down", move_down, { repeating = true })
 
 -- Move window to workspaces with numbers
 for key = 0, 9 do
@@ -422,29 +339,15 @@ for key = 0, 9 do
 	)
 end
 
--- Re-arrange windows with arrows
-hl.bind(
-	C.MODKEY .. "+SHIFT+up",
-	hl.dsp.window.move({ direction = "u" }),
-	{ description = "Move window up (vim, or arrows)" }
-)
-hl.bind(
-	C.MODKEY .. "+SHIFT+down",
-	hl.dsp.window.move({ direction = "d" }),
-	{ description = "Move window down (vim, or arrows)" }
-)
-hl.bind(C.MODKEY .. "+SHIFT+left", hl.dsp.window.move({ direction = "l" }), {})
-hl.bind(
-	C.MODKEY .. "+SHIFT+H",
-	hl.dsp.window.move({ direction = "l" }),
-	{ description = "Move window left (vim, or arrows)" }
-)
-hl.bind(C.MODKEY .. "+SHIFT+right", hl.dsp.window.move({ direction = "r" }), {})
-hl.bind(
-	C.MODKEY .. "+SHIFT+L",
-	hl.dsp.window.move({ direction = "r" }),
-	{ description = "Move window right (vim, or arrows)" }
-)
+-- Re-arrange windows left/right
+for _, d in ipairs({ { vim = "H", arrow = "left", dir = "l" }, { vim = "L", arrow = "right", dir = "r" } }) do
+	hl.bind(C.MODKEY .. "+SHIFT+" .. d.arrow, hl.dsp.window.move({ direction = d.dir }), {})
+	hl.bind(
+		C.MODKEY .. "+SHIFT+" .. d.vim,
+		hl.dsp.window.move({ direction = d.dir }),
+		{ description = d.dir == "l" and "Move window left/right (vim, or arrows)" or nil }
+	)
+end
 
 -- Resize windows
 hl.bind(

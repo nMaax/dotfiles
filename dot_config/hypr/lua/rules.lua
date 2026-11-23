@@ -138,50 +138,22 @@ hl.layer_rule({
 
 --- CUSTOM WORKSPACES
 
--- System Monitor workspace
-hl.window_rule({
-	name = "sysmon-workspace-class",
-	match = { class = special.regex(C.APP_CLASSES.SYSMON) },
-	workspace = "special:" .. C.SPECIAL_WORKSPACE.SYSMON,
-})
-
--- Discord and Telegram get their own workspaces
-hl.window_rule({
-	name = "discord-workspace-class",
-	match = { class = special.regex(C.APP_CLASSES.DISCORD) },
-	workspace = "special:" .. C.SPECIAL_WORKSPACE.DISCORD,
-})
-hl.window_rule({
-	name = "telegram-workspace-class",
-	match = { class = special.regex(C.APP_CLASSES.TELEGRAM) },
-	workspace = "special:" .. C.SPECIAL_WORKSPACE.TELEGRAM,
-})
-
--- Password managers workspace.
-hl.window_rule({
-	name = "password-workspace-class",
-	match = { class = special.regex(C.APP_CLASSES.PASSWORD) },
-	workspace = "special:" .. C.SPECIAL_WORKSPACE.PASSWORD,
-})
-
--- AI workspace
-hl.window_rule({
-	name = "ai-workspace-class",
-	match = { class = special.regex(C.APP_CLASSES.AI) },
-	workspace = "special:" .. C.SPECIAL_WORKSPACE.AI,
-})
-
--- Music workspace
-hl.window_rule({
-	name = "music-workspace-class",
-	match = { class = special.regex(C.APP_CLASSES.MUSIC) },
-	workspace = "special:" .. C.SPECIAL_WORKSPACE.MUSIC,
-})
-hl.window_rule({
-	name = "music-workspace-title",
-	match = { initial_title = special.regex(C.MUSIC_TITLES) },
-	workspace = "special:" .. C.SPECIAL_WORKSPACE.MUSIC,
-})
+for _, ws in ipairs(C.SPECIAL_WORKSPACES) do
+	if ws.class then
+		hl.window_rule({
+			name = ws.name .. "-workspace-class",
+			match = { class = special.regex(ws.class) },
+			workspace = "special:" .. ws.name,
+		})
+	end
+	if ws.title then
+		hl.window_rule({
+			name = ws.name .. "-workspace-title",
+			match = { initial_title = special.regex(ws.title) },
+			workspace = "special:" .. ws.name,
+		})
+	end
+end
 
 -- Small utilities (only calculator for now)
 hl.window_rule({

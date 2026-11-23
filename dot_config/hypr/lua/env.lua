@@ -4,8 +4,11 @@
 -- NVIDIA settings for hardware acceleration
 -- See https://wiki.hypr.land/Nvidia/
 local function is_nvidia_gpu()
-	local handle = assert(io.popen("lspci | grep -iE 'vga|3d|display'"))
-	local output = handle:read("*a")
+	local handle = io.popen("lspci | grep -iE 'vga|3d|display'")
+	if not handle then
+		return false
+	end
+	local output = handle:read("*a") or ""
 	handle:close()
 	return output:lower():find("nvidia") ~= nil
 end
