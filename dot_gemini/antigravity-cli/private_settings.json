@@ -1,5 +1,5 @@
 {
-  "enableTelemetry": false,
+  "model": "Gemini 4 Hydrogen (Medium)",
   "toolPermission": "always-proceed",
   "trustedWorkspaces": [
     "/home/massimiliano/.local/share/chezmoi"
