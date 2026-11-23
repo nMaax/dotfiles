@@ -100,7 +100,7 @@ M.SPECIAL_WORKSPACES = {
 	{ key = "Delete", name = M.SPECIAL_WORKSPACE.SYSMON, class = M.APP_CLASSES.SYSMON, cmd = M.term("btop", M.SYSMON_CLASS) },
 	{ key = "D", name = M.SPECIAL_WORKSPACE.DISCORD, class = M.APP_CLASSES.DISCORD, cmd = "discord" },
 	{ key = "T", name = M.SPECIAL_WORKSPACE.TELEGRAM, class = M.APP_CLASSES.TELEGRAM, cmd = "Telegram" },
-	{ key = "M", name = M.SPECIAL_WORKSPACE.MUSIC, class = M.APP_CLASSES.MUSIC, title = M.MUSIC_TITLES, cmd = "spotify" },
+	{ key = "M", name = M.SPECIAL_WORKSPACE.MUSIC, class = M.APP_CLASSES.MUSIC, title = M.MUSIC_TITLES, cmd = "spotify-launcher" },
 	{ key = "A", name = M.SPECIAL_WORKSPACE.AI, class = M.APP_CLASSES.AI, cmd = "claude-desktop" },
 	{ key = "P", name = M.SPECIAL_WORKSPACE.PASSWORD, class = M.APP_CLASSES.PASSWORD, cmd = M.PASSWORD_APP },
 	{ key = "S", name = M.SPECIAL_WORKSPACE.MAGIC },
