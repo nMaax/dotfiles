@@ -1,28 +1,36 @@
+<div align="center">
+
 # 🥮 dotfiles
 
-Personal dotfiles and system configurations, just the way I like it.
+**Personal dotfiles and system configurations for CachyOS + Hyprland + Noctalia, just the way I like it.**
 
-These dotfiles are heavily based on **CachyOS** (not just Arch), specifically the various packages that Cachy ships with its own base installation (fish, various KDE bloat, etc.).
+</div>
 
-Ideally, you should have installed CachyOS selecting Hyprland during the Calamares installation. If you didn't, 🥮 will install everything needed, but some manual changes could be necessary (e.g., enabling noctalia-greeter).
+These dotfiles are heavily based on **CachyOS** (not just Arch), specifically the various packages that Cachy ships with its own base installation (`fish`, KDE utilities, etc.).
 
+Ideally, you should have installed CachyOS selecting **Hyprland** during the Calamares installation. If you didn't, 🥮 will install everything needed, but some manual changes could be necessary (e.g., enabling `noctalia-greeter`).
+
+> [!NOTE]
 > Managed using [chezmoi](https://www.chezmoi.io/). Code written with the help of Gemini, Claude, and Copilot.
 
 ## Table of Contents
 
 - [Installation](#installation)
   - [Configuration](#configuration)
-  - [Missing polkit agent in CachyOS Hello](#handling-missing-polkit-agent-password-prompt-in-cachyos-hello)
 - [Post-Installation](#post-installation)
   - [Keyring (KWallet)](#keyring-kwallet)
   - [Login screen (Noctalia Greeter)](#login-screen-noctalia-greeter)
   - [Theming](#theming)
+    - [GTK and Qt](#gtk-and-qt)
+    - [Community-themed apps](#community-themed-apps)
     - [Fonts and emoji](#fonts-and-emoji)
 - [Guides](#guides)
   - [SSH](#ssh)
   - [GRUB](#grub)
   - [Secondary & USB drives](#secondary--usb-drives)
   - [Gaming](#gaming)
+- [Troubleshooting](#troubleshooting)
+  - [Missing polkit agent password prompt in CachyOS Hello](#missing-polkit-agent-password-prompt-in-cachyos-hello)
 - [Recommendations](#recommendations)
   - [Browser](#browser)
   - [Spicetify](#spicetify)
@@ -116,24 +124,6 @@ Change a value, then run `chezmoi apply`. Things to know:
 - Changing `profile` here does nothing to flags that are already set. Edit the individual flags instead.
 - Delete a flag's line and run `chezmoi init` to reset it from your profile (or be asked again, with `custom`).
 
-### Handling missing polkit agent password prompt in CachyOS Hello
-
-If you would like to tweak CachyOS before running 🥮, but CachyOS Hello won't accept your password on a Hyprland-only installation (i.e., no Plasma), no polkit agent is likely running. You must ensure one is running so CachyOS Hello can trigger the authentication pop-up required to apply your changes.
-
-To fix, do the following:
-
-1. Open your autostart config: `vim ~/.config/hypr/lua/autostart.lua`.
-2. Add this line inside your `hl.on("hyprland.start", function() ... end)` block (or anywhere at the bottom):
-
-   ```lua
-   hl.exec_cmd("/usr/lib/polkit-kde-authentication-agent-1")
-   ```
-
-   🥮 itself uses `hyprpolkitagent` (`/usr/lib/hyprpolkitagent/hyprpolkitagent`), installed during the apply, so this is only a stopgap for the first run.
-
-3. Save and restart Hyprland (Super + M or just log out and log back in).
-4. Now you should be able to tweak cachy as you like, and proceed with 🥮 installation.
-
 ## Post-Installation
 
 A few steps 🥮 can't automate.
@@ -162,29 +152,39 @@ noctalia msg greeter-sync
 
 ### Theming
 
-Noctalia presents a standard approach to sync apps colorschemes with its own theme, each app requires its own procedure, part of it can be automated via code, and some other not. Further information can be found in [official Noctalia documentation](https://docs.noctalia.dev/v5/theming/app-theming/).
+🥮 does **not** pre-configure or enforce app theming for you — each user themes their own system by opting into the templates they want in Noctalia.
 
-You can retrieve the list of apps on which automatic theming is set in the Noctalia settings themselves. Note, however, that some of those may still require some in-app manual intervention; below are some steps you shall take to complete the theming:
+Noctalia v5 renders your active palette into external app configs via two template catalogs, both managed in **Noctalia Settings → Templates** (or under `[theme.templates]` in `~/.config/noctalia/config.toml`):
+
+- **Built-in templates** — shipped with Noctalia (e.g., GTK 3/4, Qt, KColorScheme, Hyprland, etc.). Run `noctalia theme --list-templates` to list all available IDs.
+- **Community templates** — maintained in [`noctalia-dev/community-templates`](https://github.com/noctalia-dev/community-templates) and fetched dynamically by Noctalia. Each entry in **Settings → Templates** has an external-link button that opens its setup guide.
+
+See the official [Noctalia App Theming docs](https://docs.noctalia.dev/noctalia/theming/app-theming/) for full details.
 
 #### GTK and Qt
 
-- **qt5ct** (`qt5ct` command): Set **Color scheme** to `noctalia`, **General font** to `SF Pro`, **Fixed-width font** to `JetBrainsMono Nerd Font Mono`
-- **qt6ct** (`qt6ct` command): Same as above.
-  - Qt theming via `qt6ct` with `QT_QPA_PLATFORMTHEME` has already been set in Hyprland config files for environment variables (`~/.config/hypr/lua/env.lua`).
-- **GTK** (`nwg-look`): Set the general font to `SF Pro Regular`, then ensure Preferences > .config/gtk-4.0 is disabled; eventually, clear it if you found it enabled.
-  - `adw-gtk3` + `prefer-dark` was already applied via `gsettings` during the install script.
-- GTK apps will automatically fetch the color scheme from the above, while Qt apps must be configured separately by going into app settings and finding the colorscheme item.
+Follow the official [Noctalia GTK & Qt guide](https://docs.noctalia.dev/noctalia/templates/official/gtk-qt/):
 
-#### Specific apps
+- **GTK 3 / GTK 4:** Enable **GTK 3** and/or **GTK 4** in **Noctalia Settings → Templates**. Noctalia writes `noctalia.css` and runs its shipped `apply.sh` hook to import it into `gtk.css` and select `adw-gtk3` / `adw-gtk3-dark`.
+  - `adw-gtk3` + `prefer-dark` is already applied via `gsettings` during installation.
+  - If you use `nwg-look` to set the general font (`SF Pro Regular`), ensure **Preferences → `.config/gtk-4.0`** is disabled (and clear it if it was enabled).
+- **Qt (`qt6ct` / `qt5ct`):** `QT_QPA_PLATFORMTHEME=qt6ct` is already set in `~/.config/hypr/lua/env.lua`.
+  1. Install `qt6ct-kde` (recommended for KDE apps like Dolphin) or `qt6ct`.
+  2. Enable **KColorScheme** (preferred for KDE app compatibility) or **Qt** in **Noctalia Settings → Templates**.
+  3. Run `qt6ct` (and `qt5ct` if needed), set **Color scheme** to `noctalia (KColorScheme)` (or `noctalia`), **General font** to `SF Pro`, and **Fixed-width font** to `JetBrainsMono Nerd Font Mono`.
 
-- **Zen Browser:** Open `about:config` → set `toolkit.legacyUserProfileCustomizations.stylesheets` to `true`; then open Settings → General → set Website Appearance to Auto; finally, restart Zen Browser.
-- **Discord:** Open Equibop → Settings → Themes → enable one of the two Noctalia themes.
-- **VSCode:** Install the `NoctaliaTheme` extension from the marketplace, then select it via `Ctrl+Shift+P` → *Preferences: Color Theme*.
-- **Telegram:** Open Settings → Chat Settings → scroll to the bottom and enable the custom color theme.
-- **Steam**: Launch Steam at least once first (so it creates its `~/.steam/steam` symlink), then install [Material-Theme](https://steambrew.app/theme?id=ipYjqODds05KMcvh7QJn) in Millennium Settings → Themes, click **Use**, open its configure menu → style → colors → select *Matugen*, then enable **Steam** in **Noctalia Settings → Color Scheme → Templates**, regenerate the palette, and fully restart Steam (**Steam → Exit**). *(Kept disabled in the default Noctalia `config.toml` so it doesn't create `~/.steam/steam` as a real directory before Steam's first launch.)*
-- **Heroic Games Launcher:** Settings → Advanced → set **Custom Themes Path** to `~/.config/heroic/themes`, then select **matugen** from the theme dropdown. One-time; the generated CSS updates in place on further theme changes.
-- **Prism Launcher:** Settings → Appearance → Theme → select **Matugen**. One-time; the generated theme JSON updates in place on further theme changes.
-- All other enabled apps (`btop`, `cava`, `ghostty`, `starship`, `hyprland`, `kcolorscheme`, `neovim`, `yazi`) apply fully automatically; no action needed.
+#### Community-themed apps
+
+Many third-party apps are themed through [`noctalia-dev/community-templates`](https://github.com/noctalia-dev/community-templates) and still require a one-time in-app step after enabling their template in **Noctalia Settings → Templates**:
+
+- **Zen Browser** ([template](https://github.com/noctalia-dev/community-templates/tree/main/zen-browser)): Launch Zen at least once to create a profile, enable **Zen Browser** in **Settings → Templates**, then in Zen open **Settings → Appearance** and set **Website Appearance** to **Auto**, and restart Zen.
+- **Discord** ([template](https://github.com/noctalia-dev/community-templates/tree/main/discord)): Enable the desired client/style entry in **Settings → Templates**, then in Equibop/Vesktop open **Settings → Themes** and enable one of the generated Noctalia themes.
+- **VS Code / Antigravity** ([template](https://github.com/noctalia-dev/community-templates/tree/main/vscode)): Install the `NoctaliaTheme` extension (`noctalia.noctaliatheme`), select it via `Ctrl+Shift+P` → *Preferences: Color Theme*, and enable **VSCode** in **Settings → Templates**.
+- **Telegram** ([template](https://github.com/noctalia-dev/community-templates/tree/main/telegram)): Enable **Telegram** in **Settings → Templates**, then import and apply `~/.config/telegram-desktop/themes/noctalia.tdesktop-theme` in Telegram's **Settings → Chat Settings**.
+- **Steam** ([template](https://github.com/noctalia-dev/community-templates/tree/main/steam)): Launch Steam at least once first (so `~/.steam/steam` exists), install [Material-Theme](https://steambrew.app/theme?id=ipYjqODds05KMcvh7QJn) in Millennium Settings → Themes, click **Use**, open its configure drop-down → **Color** → select **Matugen**, then enable **Steam** in **Settings → Templates**, regenerate the palette, and fully restart Steam (**Steam → Exit**).
+- **Heroic Games Launcher** ([template](https://github.com/noctalia-dev/community-templates/tree/main/heroiclauncher)): Enable **Heroic Games Launcher** in **Settings → Templates**, then in Heroic go to **Settings → Accessibility → Custom Themes Path**, set it to `~/.config/heroic/themes`, and select `matugen.css` from the theme dropdown.
+- **Prism Launcher** ([template](https://github.com/noctalia-dev/community-templates/tree/main/prismlauncher)): Enable **Prism Launcher** in **Settings → Templates**, then in Prism go to **Settings → Appearance → Theme** and select **Matugen**.
+- **Other apps** (terminals, Neovim, `starship`, `yazi`, `spicetify`, etc.): Check **Settings → Templates** or [`noctalia-dev/community-templates`](https://github.com/noctalia-dev/community-templates) and toggle the ones you use.
 
 #### Fonts and emoji
 
@@ -194,16 +194,16 @@ You can retrieve the list of apps on which automatic theming is set in the Nocta
 - **Ghostty:** bundles JetBrains Mono and Noto emoji, so `~/.config/ghostty/config` lists its fonts explicitly: JetBrains Mono for text, `DejaVu Sans Mono` for symbols JetBrains lacks (otherwise e.g. Claude Code's `✳` spinner flashes as a green Apple emoji), then Apple emoji. Font changes apply to new tabs after a reload (`Ctrl+Shift+,`).
 - **Discord:** draws emoji as Twemoji images, not with a font, so no font setting changes them.
 
-> [!NOTE]
-> If some apps do not properly fetch the color scheme even after having followed the noctalia guidelines, try to disable and re-enable them, as well as changing the color scheme as a whole.
+> [!TIP]
+> If an app does not pick up the color scheme after following its template guide, try disabling and re-enabling the template in **Settings → Templates**, or switching the color scheme to force a re-render.
 
-Furthermore, you can install other themes for apps yourself; have a look at:
+You can also install standalone themes yourself:
 
 - [ZenZero](https://sameerasw.com/zen)
 - [BetterDiscord](https://betterdiscord.app/themes)
 - [Millennium for Steam](https://steambrew.app/themes)
 
-🥮 also supports [linux-wallpaperengine](https://github.com/Almamu/linux-wallpaperengine)! If you installed Steam you can see how to set it up and the [related plugin](https://noctalia.dev/plugins/linux-wallpaperengine-controller/)
+🥮 also supports [linux-wallpaperengine](https://github.com/Almamu/linux-wallpaperengine)! If you installed Steam, see its docs and the [Noctalia controller plugin](https://noctalia.dev/plugins/linux-wallpaperengine-controller/).
 
 ## Guides
 
@@ -423,6 +423,26 @@ Now we are ready to run the Meshcast Stream.
 Now you can copy the **Watch Page Link** provided by the Meshcast interface (e.g., `https://meshcast.io/view.html?geo=cae2&id=MadaMada1234`) and send it over to your friends.
 
 Hit **Start Streaming** in OBS. That's it :)
+
+## Troubleshooting
+
+Common fixes for issues you may run into before or after installation.
+
+### Missing polkit agent password prompt in CachyOS Hello
+
+If you would like to tweak CachyOS before running 🥮, but CachyOS Hello won't accept your password on a Hyprland-only installation (i.e., no Plasma), no polkit agent is likely running. You must ensure one is running so CachyOS Hello can trigger the authentication pop-up required to apply your changes.
+
+1. Open your autostart config: `vim ~/.config/hypr/lua/autostart.lua`.
+2. Add this line inside your `hl.on("hyprland.start", function() ... end)` block (or anywhere at the bottom):
+
+   ```lua
+   hl.exec_cmd("/usr/lib/polkit-kde-authentication-agent-1")
+   ```
+
+   🥮 itself uses `hyprpolkitagent` (`/usr/lib/hyprpolkitagent/hyprpolkitagent`), installed during the apply, so this is only a stopgap for the first run.
+
+3. Save and restart Hyprland (`Super + M` or log out and log back in).
+4. Tweak CachyOS as needed, then proceed with the 🥮 installation.
 
 ## Recommendations
 
