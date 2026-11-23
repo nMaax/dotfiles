@@ -1,4 +1,4 @@
-function icat -d "Display an image inline in the terminal via kitty's icat kitten"
+function icat -d "Display an image inline in the terminal"
     if contains -- -h $argv; or contains -- --help $argv
         echo "Usage: icat <image_path>"
         return 0
@@ -9,8 +9,14 @@ function icat -d "Display an image inline in the terminal via kitty's icat kitte
         return 1
     end
 
-    # Use kitty's builtin icat kitten
-    # --hold keeps the image visible after the process finishes
-    # --align left ensures standard terminal behavior
-    kitty +kitten icat --hold --align left $argv
+    switch "$TERM"
+        case 'xterm-kitty' 'xterm-ghostty'
+            # --hold keeps the image visible after the process finishes
+            # --align left ensures standard terminal behavior
+            kitty +kitten icat --hold --align left $argv
+        case 'foot*'
+            chafa -f sixels $argv
+        case '*'
+            chafa $argv
+    end
 end
