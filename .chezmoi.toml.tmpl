@@ -11,11 +11,14 @@
 {{-   fail (printf "Unknown profile %q: expected one of full, laptop, gaming, design, minimal, custom" $profile) -}}
 {{- end -}}
 
+{{- $suggestedName := output "sh" "-c" "n=$(git config --get user.name 2>/dev/null || true); [ -n \"$n\" ] || n=$(getent passwd \"${USER:-$(id -un)}\" 2>/dev/null | cut -d: -f5 | cut -d, -f1 || true); printf '%s' \"$n\"" | trim -}}
+{{- $suggestedEmail := output "sh" "-c" "git config --get user.email 2>/dev/null || true" | trim -}}
 {{- $data := dict
-	"name" (promptStringOnce . "name" "\n👤 Git author name (shown on commits)")
-	"email" (promptStringOnce . "email" "📧 Git email (shown on commits)")
+	"name" (promptStringOnce . "name" "\n👤 Git author name (shown on commits)" $suggestedName)
+	"email" (promptStringOnce . "email" "📧 Git email (shown on commits)" $suggestedEmail)
 	"profile" $profile -}}
 
+{{- $profileChanged := ne $data.profile (get $ "profile" | default "") -}}
 {{- range list
 	(list "ai_agents" "\n🤖 Install AI agents (Claude Code/Antigravity/Codex/…)")
 	(list "coding" "💻 Install dev tooling (VS Code/lazygit/Node.js/Python/…)")
@@ -28,10 +31,11 @@
 	(list "communication" "💬 Install chat apps (Telegram/Signal/Discord/…)")
 	(list "plugins" "🧩 Install Hyprland plugins (hyprpm/scrolloverview)") -}}
 {{-   $key := index . 0 -}}
-{{-   if hasKey $ $key -}}
+{{-   if eq $data.profile "custom" -}}
+{{-     $default := ternary (get $ $key) true (hasKey $ $key) -}}
+{{-     $_ := set $data $key (promptBoolOnce $ $key (index . 1) $default) -}}
+{{-   else if and (not $profileChanged) (hasKey $ $key) -}}
 {{-     $_ := set $data $key (get $ $key) -}}
-{{-   else if eq $data.profile "custom" -}}
-{{-     $_ := set $data $key (promptBool (index . 1) true) -}}
 {{-   else -}}
 {{-     $_ := set $data $key (has $key (get $on $data.profile)) -}}
 {{-   end -}}
@@ -39,12 +43,15 @@
 
 {{- $terminals := promptMultichoiceOnce . "terminals" "\n🖥️ Terminals" (list "ghostty" "kitty" "alacritty" "foot") (list "ghostty" "foot") -}}
 {{- if eq (len $terminals) 0 -}}
-{{-   $terminals = list "ghostty" -}}
+{{-   $terminals = list "foot" -}}
 {{- end -}}
 {{- $defaultTerminal := index $terminals 0 -}}
 {{- if gt (len $terminals) 1 -}}
-{{-   $fallbackTerminal := ternary "ghostty" (index $terminals 0) (has "ghostty" $terminals) -}}
-{{-   $defaultTerminal = promptChoiceOnce . "default_terminal" "🖥️ Default terminal" $terminals $fallbackTerminal -}}
+{{-   $fallbackTerminal := ternary "foot" (index $terminals 0) (has "foot" $terminals) -}}
+{{-   $defaultTerminal = promptStringOnce . "default_terminal" (printf "🖥️ Default terminal (%s)" (join " / " $terminals)) $fallbackTerminal | lower | trim -}}
+{{-   if not (has $defaultTerminal $terminals) -}}
+{{-     fail (printf "Unknown default_terminal %q: expected one of %s" $defaultTerminal (join ", " $terminals)) -}}
+{{-   end -}}
 {{- end -}}
 
 {{- $agents := list -}}
