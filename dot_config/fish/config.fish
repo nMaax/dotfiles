@@ -5,7 +5,7 @@ source /usr/share/cachyos-fish-config/cachyos-config.fish
 # conf.d/fastfetch-resize-clear.fish) gets clobbered by this source line; the
 # override has to live here, after it, to actually win.
 function fish_greeting
-    if test "$COLUMNS" -gt $__fastfetch_min_cols; and test "$LINES" -gt $__fastfetch_min_lines
+    if test "$COLUMNS" -ge $__fastfetch_min_cols; and test "$LINES" -ge $__fastfetch_min_lines
         set -g __fastfetch_shown 1
         set -g __fastfetch_is_narrow 0
         fastfetch
