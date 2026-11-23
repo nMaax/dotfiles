@@ -186,30 +186,6 @@ pure_black_dark = true
 source = "community"
 wallpaper_scheme = "m3-content"
 
-    [theme.templates]
-    builtin_ids = [ "btop", "cava", "foot", "gtk3", "gtk4", "ghostty", "hyprland", "kcolorscheme", "qt" ]
-    community_ids = [
-        "antigravity",
-        "claude-code",
-        "spicetify",
-        "spicetify-noctalia",
-        "brave-origin",
-        "zen-browser",
-        "telegram",
-        "gimp",
-        "lazyvim",
-        "libreoffice",
-        "neovim",
-        "obsidian",
-        "vscode",
-        "heroiclauncher",
-        "prismlauncher",
-        "obs",
-        "starship",
-        "tmux",
-        "yazi"
-    ]
-
 [wallpaper]
 directory = "/home/massimiliano/Pictures/Wallpapers"
 transition = [ "disc", "honeycomb", "stripes", "wipe" ]
