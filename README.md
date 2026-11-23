@@ -489,6 +489,7 @@ If you want to re-run just the Spicetify setup without `chezmoi apply`, run:
 - [ ] Try [Hyprglass](https://github.com/hyprnux/hyprglass) (add it to `HYPRPM_PLUGINS`)
 - [ ] Try [HyprMon](https://github.com/erans/hyprmon) (`hyprmon-bin`) for multi-monitor layout and profiles, alongside a slimmed-down `monitors.lua`
 - [ ] Try [GUM](https://github.com/charmbracelet/gum) for the installation interface
+- [ ] Try wallpiper in place of `linux-wallpaperengine`
 
 ### For the future
 
