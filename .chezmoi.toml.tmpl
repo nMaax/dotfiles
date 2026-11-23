@@ -37,7 +37,7 @@
 {{-   end -}}
 {{- end -}}
 
-{{- $terminals := promptMultichoiceOnce . "terminals" "\n🖥️ Terminals" (list "ghostty" "kitty" "alacritty" "foot") (list "ghostty") -}}
+{{- $terminals := promptMultichoiceOnce . "terminals" "\n🖥️ Terminals" (list "ghostty" "kitty" "alacritty" "foot") (list "ghostty" "foot") -}}
 {{- if eq (len $terminals) 0 -}}
 {{-   $terminals = list "ghostty" -}}
 {{- end -}}

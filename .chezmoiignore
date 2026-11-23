@@ -38,6 +38,7 @@ Pictures/*
 !.config/fastfetch/
 !.config/fish/
 !.config/fontconfig/
+!.config/foot/
 !.config/ghostty/
 !.config/hypr/
 !.config/noctalia/
@@ -57,6 +58,9 @@ Pictures/*
 
 # --- FISH: Exclude shell state ---
 .config/fish/fish_variables
+
+# --- FOOT: Exclude noctalia-managed theme ---
+.config/foot/themes/**
 
 # --- GHOSTTY: Exclude noctalia-managed theme and unused shaders ---
 .config/ghostty/themes/**
