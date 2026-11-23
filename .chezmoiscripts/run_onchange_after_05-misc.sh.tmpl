@@ -56,6 +56,10 @@ info "🍚 Installing ricing commands..."
 sudo pacman -S --needed --noconfirm cowsay lolcat cmatrix cava figlet fortune-mod nyancat tty-clock
 paru -S --needed --noconfirm pipes.sh cbonsai
 
+info "🖥️ Setting default terminal ({{ .default_terminal }})..."
+mkdir -p "${XDG_CONFIG_HOME:-$HOME/.config}"
+printf '%s\n' {{ .default_terminal | quote }} > "${XDG_CONFIG_HOME:-$HOME/.config}/default-terminal"
+
 echo ""
 success "✅ [Miscellaneous Tweaks] Done."
 echo ""

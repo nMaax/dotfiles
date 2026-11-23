@@ -63,13 +63,13 @@ hl.bind(
 )
 
 -- 2. QUICK LAUNCHES
-hl.bind(C.MODKEY .. "+RETURN", hl.dsp.exec_cmd(C.TERMINAL), { description = "Open terminal" })
+hl.bind(C.MODKEY .. "+RETURN", hl.dsp.exec_cmd(C.term()), { description = "Open terminal" })
 hl.bind(C.MODKEY .. "+B", hl.dsp.exec_cmd(C.BROWSER), { description = "Open browser" })
-hl.bind(C.MODKEY .. "+N", hl.dsp.exec_cmd(C.TERMINAL .. " -e nvim"), { description = "Open neovim" })
+hl.bind(C.MODKEY .. "+N", hl.dsp.exec_cmd(C.term("nvim")), { description = "Open neovim" })
 hl.bind(C.MODKEY .. "+SHIFT+N", hl.dsp.exec_cmd("code"), { description = "Open VSCode" })
 hl.bind(C.MODKEY .. "+ALT+N", hl.dsp.exec_cmd("gnome-text-editor"), { description = "Open Text Editor" })
 hl.bind(C.MODKEY .. "+E", hl.dsp.exec_cmd(C.FILE_MANAGER), { description = "Open file manager" })
-hl.bind(C.MODKEY .. "+SHIFT+E", hl.dsp.exec_cmd(C.TERMINAL .. " -e yazi"), { description = "Open yazi file manager" })
+hl.bind(C.MODKEY .. "+SHIFT+E", hl.dsp.exec_cmd(C.term("yazi")), { description = "Open yazi file manager" })
 
 -- 3. SPECIAL WORKSPACES
 
@@ -81,7 +81,7 @@ hl.bind(
 	C.MODKEY .. "+Delete",
 	toggle_app_special_workspace(C.SPECIAL_WORKSPACE.SYSMON, {
 		class = C.APP_CLASSES.SYSMON,
-	}, C.TERMINAL .. " --class=" .. C.SYSMON_CLASS .. " -e btop"),
+	}, C.term("btop", C.SYSMON_CLASS)),
 	{ description = "Toggle system monitors workspace (btop)" }
 )
 hl.bind(

@@ -11,11 +11,10 @@ echo ""
 info "🌊 Installing browsers..."
 sudo pacman -S --needed --noconfirm chromium zen-browser-bin
 
-info "👻 Install Ghostty..."
-sudo pacman -S --noconfirm --needed ghostty
-
-info "🐈 Install Kitty..."
-sudo pacman -S --noconfirm --needed kitty
+{{- if gt (len .terminals) 0 }}
+info "🖥️ Installing terminals ({{ .terminals | join ", " }})..."
+sudo pacman -S --needed --noconfirm {{ .terminals | join " " }}
+{{- end }}
 
 info "🪐 Installing Starship..."
 sudo pacman -S --needed --noconfirm starship

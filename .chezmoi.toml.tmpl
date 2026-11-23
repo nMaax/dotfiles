@@ -37,6 +37,16 @@
 {{-   end -}}
 {{- end -}}
 
+{{- $terminals := promptMultichoiceOnce . "terminals" "\n🖥️ Terminals" (list "ghostty" "kitty" "alacritty" "foot") (list "ghostty") -}}
+{{- if eq (len $terminals) 0 -}}
+{{-   $terminals = list "ghostty" -}}
+{{- end -}}
+{{- $defaultTerminal := index $terminals 0 -}}
+{{- if gt (len $terminals) 1 -}}
+{{-   $fallbackTerminal := ternary "ghostty" (index $terminals 0) (has "ghostty" $terminals) -}}
+{{-   $defaultTerminal = promptChoiceOnce . "default_terminal" "🖥️ Default terminal" $terminals $fallbackTerminal -}}
+{{- end -}}
+
 {{- $agents := list -}}
 {{- if $data.ai_agents -}}
 {{-   $agents = promptMultichoiceOnce . "agents" "\n🤖 Favorite Agents" (list "claude-code" "claude-desktop" "agy" "codex" "opencode" "hermes" "omp" "pi") (list "claude-code" "agy") -}}
@@ -97,6 +107,8 @@
   plugins = {{ $data.plugins }}
 
   # App selections
+  terminals = {{ $terminals | toJson }}
+  default_terminal = {{ $defaultTerminal | quote }}
   agents = {{ $data.agents | toJson }}
   communication_apps = {{ $data.communication_apps | toJson }}
   design_apps = {{ $data.design_apps | toJson }}

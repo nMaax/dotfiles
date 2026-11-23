@@ -1,7 +1,8 @@
 # Session environment — sourced by UWSM before Hyprland starts.
 
 export BROWSER=zen-browser
-export TERMINAL=ghostty
+[ -r "${XDG_CONFIG_HOME:-$HOME/.config}/default-terminal" ] && read -r TERMINAL < "${XDG_CONFIG_HOME:-$HOME/.config}/default-terminal"
+export TERMINAL="${TERMINAL:-ghostty}"
 
 export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/ssh-agent.socket"
 export SSH_ASKPASS=/usr/bin/ksshaskpass

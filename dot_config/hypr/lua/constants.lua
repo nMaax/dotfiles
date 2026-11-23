@@ -2,9 +2,22 @@
 
 local M = {}
 
+local function read_default_terminal()
+	local path = (os.getenv("XDG_CONFIG_HOME") or (os.getenv("HOME") .. "/.config")) .. "/default-terminal"
+	local f = io.open(path, "r")
+	if f then
+		local term = f:read("*l")
+		f:close()
+		if term and term ~= "" then
+			return term
+		end
+	end
+	return os.getenv("TERMINAL") or "ghostty"
+end
+
 M.MODKEY = "SUPER"
 
-M.TERMINAL = "ghostty"
+M.TERMINAL = read_default_terminal()
 M.FILE_MANAGER = "dolphin"
 M.BROWSER = "zen-browser"
 
@@ -68,6 +81,18 @@ M.SHADOW_HEX = "1a1a1a"
 
 function M.ipc(args)
 	return "noctalia msg " .. args
+end
+
+function M.term(cmd, class)
+	local parts = { M.TERMINAL }
+	if class then
+		local flag = M.TERMINAL == "foot" and "--app-id=" or "--class="
+		parts[#parts + 1] = flag .. class
+	end
+	if cmd then
+		parts[#parts + 1] = "-e " .. cmd
+	end
+	return table.concat(parts, " ")
 end
 
 return M

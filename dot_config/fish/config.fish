@@ -16,7 +16,15 @@ function fish_greeting
 end
 
 # Some useful variables
-set -gx TERMINAL ghostty
+if not set -q TERMINAL
+    set -l _cfg_dir "$HOME/.config"
+    set -q XDG_CONFIG_HOME; and test -n "$XDG_CONFIG_HOME"; and set _cfg_dir "$XDG_CONFIG_HOME"
+    if test -r "$_cfg_dir/default-terminal"; and read -l _term < "$_cfg_dir/default-terminal"; and test -n "$_term"
+        set -gx TERMINAL $_term
+    else
+        set -gx TERMINAL ghostty
+    end
+end
 set -gx EDITOR vim
 set -gx SUDO_EDITOR vim
 set -gx BROWSER zen-browser
