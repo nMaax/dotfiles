@@ -2,22 +2,23 @@
 
 local M = {}
 
-local function read_default_terminal()
-	local path = (os.getenv("XDG_CONFIG_HOME") or (os.getenv("HOME") .. "/.config")) .. "/default-terminal"
+local function read_config_line(rel_path, fallback)
+	local path = (os.getenv("XDG_CONFIG_HOME") or (os.getenv("HOME") .. "/.config")) .. "/" .. rel_path
 	local f = io.open(path, "r")
 	if f then
-		local term = f:read("*l")
+		local val = f:read("*l")
 		f:close()
-		if term and term ~= "" then
-			return term
+		if val and val ~= "" then
+			return val
 		end
 	end
-	return os.getenv("TERMINAL") or "ghostty"
+	return fallback
 end
 
 M.MODKEY = "SUPER"
 
-M.TERMINAL = read_default_terminal()
+M.TERMINAL = read_config_line("default-terminal", os.getenv("TERMINAL") or "ghostty")
+M.LAYOUT = read_config_line("hypr/default-layout", "scrolling")
 M.FILE_MANAGER = "dolphin"
 M.BROWSER = "zen-browser"
 
@@ -94,5 +95,15 @@ function M.term(cmd, class)
 	end
 	return table.concat(parts, " ")
 end
+
+M.SPECIAL_WORKSPACES = {
+	{ key = "Delete", name = M.SPECIAL_WORKSPACE.SYSMON, class = M.APP_CLASSES.SYSMON, cmd = M.term("btop", M.SYSMON_CLASS) },
+	{ key = "D", name = M.SPECIAL_WORKSPACE.DISCORD, class = M.APP_CLASSES.DISCORD, cmd = "discord" },
+	{ key = "T", name = M.SPECIAL_WORKSPACE.TELEGRAM, class = M.APP_CLASSES.TELEGRAM, cmd = "Telegram" },
+	{ key = "M", name = M.SPECIAL_WORKSPACE.MUSIC, class = M.APP_CLASSES.MUSIC, title = M.MUSIC_TITLES, cmd = "spotify" },
+	{ key = "A", name = M.SPECIAL_WORKSPACE.AI, class = M.APP_CLASSES.AI, cmd = "claude-desktop" },
+	{ key = "P", name = M.SPECIAL_WORKSPACE.PASSWORD, class = M.APP_CLASSES.PASSWORD, cmd = M.PASSWORD_APP },
+	{ key = "S", name = M.SPECIAL_WORKSPACE.MAGIC },
+}
 
 return M

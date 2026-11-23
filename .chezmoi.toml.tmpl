@@ -54,6 +54,8 @@
 {{-   end -}}
 {{- end -}}
 
+{{- $hyprlandLayout := promptChoiceOnce . "hyprland_layout" "\n🪟 Hyprland layout" (list "scrolling" "dwindle") "scrolling" -}}
+
 {{- $agents := list -}}
 {{- if $data.ai_agents -}}
 {{-   $agents = promptMultichoiceOnce . "agents" "\n🤖 Favorite Agents" (list "claude-code" "claude-desktop" "agy" "codex" "opencode" "hermes" "omp" "pi") (list "claude-code" "agy") -}}
@@ -116,6 +118,7 @@
   # App selections
   terminals = {{ $terminals | toJson }}
   default_terminal = {{ $defaultTerminal | quote }}
+  hyprland_layout = {{ $hyprlandLayout | quote }}
   agents = {{ $data.agents | toJson }}
   communication_apps = {{ $data.communication_apps | toJson }}
   design_apps = {{ $data.design_apps | toJson }}

@@ -60,6 +60,10 @@ info "🖥️ Setting default terminal ({{ .default_terminal }})..."
 mkdir -p "${XDG_CONFIG_HOME:-$HOME/.config}"
 printf '%s\n' {{ .default_terminal | quote }} > "${XDG_CONFIG_HOME:-$HOME/.config}/default-terminal"
 
+info "🪟 Setting default Hyprland layout ({{ .hyprland_layout }})..."
+mkdir -p "${XDG_CONFIG_HOME:-$HOME/.config}/hypr"
+printf '%s\n' {{ .hyprland_layout | quote }} > "${XDG_CONFIG_HOME:-$HOME/.config}/hypr/default-layout"
+
 echo ""
 success "✅ [Miscellaneous Tweaks] Done."
 echo ""
