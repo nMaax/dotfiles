@@ -194,8 +194,7 @@ in `.chezmoiignore`, so they stay repo-only. New root files need no ignore entry
     `.chezmoiignore`, do not add it to git
   - `dot_config/hypr/xdph.conf` — `xdg-desktop-portal-hyprland`'s config, unrelated program
   - `dot_config/nvim/lua/matugen.lua`, `dot_config/ghostty/themes/` — same pattern, theme output
-- **`dot_config/noctalia/user-templates.toml` is shared between Noctalia v4 and v5.** It generates
-  the Hyprland border colours, so it must survive any v4 purge.
+- **`dot_config/noctalia/user-templates.toml`** generates the Hyprland border colours; keep it intact.
 
 ---
 
@@ -209,15 +208,14 @@ Understanding this requires reading `.chezmoiscripts/`, `.chezmoitemplates/` and
 chezmoi runs `before_` scripts, then applies regular files, then runs `after_` scripts. The numeric
 prefixes order scripts *within* each phase, and the two sequences are independent:
 
-- `before`: `01-cachyos-checks` (interactive prompts, every apply) → `01b-cachyos-packages` (prerequisites & base apps, once) → `02-apps-core` → `02-apps-coding` → `02-apps-local-llm` → `02-apps-media` → `02-apps-design` →
+- `before`: `01-cachyos-checks` (interactive prompts, every apply) → `01b-cachyos-packages` (prerequisites & base apps, once) → `02-apps-core` → `02-apps-ai-agents` → `02-apps-coding` → `02-apps-local-llm` → `02-apps-media` → `02-apps-design` →
   `02-apps-office` → `02-apps-printing` → `02-apps-communication` → `03-fonts-emoji` → `04-hyprland-noctalia`. Order
   *within* the `02-apps-*` group doesn't matter — none of the categories depend on packages installed
   by another, and `paru`/`pacman -S --needed` are idempotent regardless of run order.
   CachyOS stopped shipping `paru` in June 2026, so `01b` installs it from the `cachyos` repo before any script calls it.
 - `after`: `01-system-services` → `04-noctalia-greeter` → `05-misc` →
   `06-gaming` → `07-webapps` → `08-tailscale` → `09-nordvpn` → `10-mega` → `11-finalize` →
-  `12-hyprland-plugins`. The `02-*`/`03-*` gap is deliberate (a retired GRUB script, now a README
-  recipe); numbers were not reshuffled.
+  `12-hyprland-plugins`.
 
 The `run_once_` / `run_onchange_` / bare `run_` prefix decides *when*: once ever, on content change,
 or every apply. **Renaming a script or editing an `onchange` one re-triggers it** — that is the
@@ -260,12 +258,13 @@ Follow that pattern; don't redefine what's already provided:
 ### Template data
 
 Scripts gate on the user's `~/.config/chezmoi/chezmoi.toml` `[data]` block: `.name`, `.email`,
-`.gaming` (skip Steam/OpenRGB/MCHOSE/etc.), `.coding` (skip dev tooling and AI agents), `.local_llm`
-(skip CUDA/ROCm/Ollama), `.media` (skip kdenlive/OBS/EasyEffects/Spotify/yt-dlp/image-upscaler),
-`.office` (skip LibreOffice/Xournal++/qBittorrent/sc-im/WordCraft/GridCraft/DeckCraft/PDFCraft/Notion), `.design` (skip the ArtCraft suite), `.printing` (skip CUPS/drivers/Avahi),
-`.communication` (skip Telegram/Signal/Discord/Element/WeChat/LocalSend) — each one gates its own `02-apps-*`
-script (§3 Ordering), plus a few gated blocks in `05-misc`/`07-webapps`. `.profile` only fills in unset flags at
-`chezmoi init` (`custom` prompts per flag instead); scripts never read it. `.plugins` gates `12-hyprland-plugins`, `require("lua.plugins")` and `hyprpm-rebuild`.
+`.ai_agents`, `.coding`, `.local_llm`, `.gaming`, `.media`, `.design`, `.office`, `.printing`,
+`.communication` — each one gates its own `02-apps-*` script (§3 Ordering), plus a few gated
+blocks in `05-misc`/`07-webapps`. `.profile` only fills in unset flags at `chezmoi init` (`custom`
+prompts per flag instead); scripts never read it. `.plugins` gates `12-hyprland-plugins`,
+`require("lua.plugins")` and `hyprpm-rebuild`. App-selection lists (`.terminals`, `.default_terminal`,
+`.agents`, `.communication_apps`, `.design_apps`, `.office_suites`) narrow which apps each category
+installs; `aq_drm_devices` optionally sets `AQ_DRM_DEVICES` in `hyprland.lua.tmpl`.
 `.tailscale_authkey` / `.nordvpn_authkey` / `.mega_authkey` are three-state: boolean `false`
 (or the string `"false"`) skips installing that integration entirely; `""` installs and enables it
 but skips auto-login; any other string is used as the actual key/token to log in with. The
@@ -290,18 +289,16 @@ so no plaintext password sits in chezmoi.toml. MEGA follows the tailscale/nordvp
 **not** gated by `.office`.
 
 The polkit agent is `hyprpolkitagent` (`autostart.lua` execs `/usr/lib/hyprpolkitagent/hyprpolkitagent`,
-installed by `run_onchange_before_02-apps-core.sh.tmpl`). Scripts never reference `polkit-kde-agent`
-— no uninstall, no assumption it's present. An existing machine that still has it installed must
-drop it by hand; confirm no duplicate agent runs.
+installed by `run_onchange_before_02-apps-core.sh.tmpl`).
 
 ### Externals
 
-`.chezmoiexternal.toml` pulls wallpapers, propics (`~/.face`, `~/.logo`) and the Bibata hyprcursor
-from the user's `nMaax/dotfiles-assets` repo, with a 168h `refreshPeriod`. Large binary assets live
-there, **not** in this repo.
+`.chezmoiexternal.toml` pulls wallpapers and propics (`~/.face`, `~/.logo`, `Pictures/Wallpapers`,
+`Pictures/Propics`) from the user's `nMaax/dotfiles-assets` repo, with a 168h `refreshPeriod`. Large
+binary assets live there, **not** in this repo.
 
 **Always `chezmoi add --exclude=externals`, never a bare `chezmoi add .`/`chezmoi add .config
-.local`.** These five targets are fetched content, not meant to be duplicated as literal source
+.local`.** These four targets are fetched content, not meant to be duplicated as literal source
 files, and a plain recursive `add` that walks into one of their directories hits a real chezmoi
 bug (upstream issue #1574: `add` crashes with `stat ...: no such file or directory` when it
 recurses into a directory an external created) instead of cleanly skipping it. `--exclude=externals`
@@ -311,10 +308,10 @@ independent of `.chezmoiignore`.
 `.chezmoiignore`'s root-level `*` blanket-excludes everything except `.config/` and `.local/` by
 default (§2 has the full mangling table) — every external target outside those two trees needs an
 explicit `!` exception plus, if it's a directory, an immediate re-narrowing back down to just that
-target (mirroring the existing `.local/share/applications` / `.config/OpenRGB/...` pattern), or it
-silently never gets fetched. This bit real: `.face`/`.logo` were missing from `$HOME` entirely
-because they'd never been un-ignored, which is also why fastfetch fell back to the CachyOS ASCII
-logo instead of `~/.logo`.
+target (mirroring the existing `.local/share/applications` pattern), or it silently never gets
+fetched. This bit real: `.face`/`.logo` were missing from `$HOME` entirely because they'd never
+been un-ignored, which is also why fastfetch fell back to the CachyOS ASCII logo instead of
+`~/.logo`.
 
 ### `--needed` doesn't know about package providers — use `pacman -T` before forcing a name
 
@@ -391,13 +388,10 @@ follows the same grouping/comment conventions at smaller scale.
 
 ## 4. Hyprland Lua config
 
-`hyprland.lua` is loaded **instead of** `hyprland.conf` when it exists — checked once at startup, not
-merged. There is no `.conf` fallback anymore.
-
-`require("lua.foo")` replaces `source =`, resolved relative to `~/.config/hypr/`. Module order in
-`hyprland.lua` mirrors the old source chain. It is a template (`hyprland.lua.tmpl`) only to drop
-`require("lua.gaming")` / `require("lua.plugins")` when `gaming` / `plugins` is `false` (both files are
-always deployed).
+`hyprland.lua` is the entry point, and `require("lua.foo")` resolves relative to `~/.config/hypr/`.
+It is a template (`hyprland.lua.tmpl`) to conditionally `require("lua.gaming")` /
+`require("lua.plugins")` when `gaming` / `plugins` is `true` (both files are always deployed) and
+optionally set `AQ_DRM_DEVICES`.
 
 | Module | Holds |
 |---|---|
@@ -425,16 +419,14 @@ Queries (all verified live): `hl.get_config(key)`, `hl.get_windows(filters)` —
 
 ---
 
-## 5. Noctalia v5
+## 5. Noctalia
 
-**Invariant: Hyprland Lua ⟺ Noctalia v5; Hyprland `.conf` ⟺ Noctalia v4.** We use Lua + v5. Do not
-mix. v4 (`noctalia-shell`, JSON at `~/.config/noctalia/`, run as `qs -c noctalia-shell`) is removed;
-`paru -S noctalia-shell` brings it back. v5 is the `noctalia` binary, using TOML at
-`~/.config/noctalia/` (declarative) and `~/.local/state/noctalia/settings.toml` (GUI overrides).
+Noctalia v5 (`noctalia` binary) uses declarative TOML at `~/.config/noctalia/` and GUI overrides at
+`~/.local/state/noctalia/settings.toml`.
 
 - IPC is `noctalia msg <command>`, and **`noctalia msg --help` is authoritative** — prefer it over
   the docs. `keybindings.lua` wraps it in a local `ipc()` helper.
-- **v5 settings: `dot_config/noctalia/config.toml` is tracked** (alongside `user-templates.toml`)
+- **Settings: `dot_config/noctalia/config.toml` is tracked** (alongside `user-templates.toml`)
   and overwrites CachyOS's `/etc/skel/.config/noctalia/config.toml`. `~/.local/state/noctalia/settings.toml`
   and everything else under `~/.local/state/noctalia/` (history, usage stats, caches, plugin build
   output) stay untracked via `.chezmoiignore` as machine-local GUI/runtime state.
@@ -442,8 +434,8 @@ mix. v4 (`noctalia-shell`, JSON at `~/.config/noctalia/`, run as `qs -c noctalia
   `noctalia config validate` after `chezmoi apply`).
 - **Plugin IDs are `<author>/<plugin>:<entry>`.** Panels: `panel-toggle noctalia/mpvpaper:picker`.
   Events: `plugin <author/plugin:entry> <target[:bar]> <event> [payload]`, target `all` for singleton
-  services. Enumerate what's installed with `noctalia msg plugins list` — the v4 directory names
-  under `~/.config/noctalia/plugins/` are **not** valid v5 IDs (no `:entry` half).
+  services. Enumerate what's installed with `noctalia msg plugins list` (directory names under
+  `~/.config/noctalia/plugins/` are missing the `:entry` half).
 - **Not every plugin is a panel.** Kaomoji is a *launcher provider*, reached as
   `panel-toggle launcher "/kao"`. Bongo Cat has no panel at all. Providers use the
   `shell.launcher.provider_prefix` char: `/emo`, `/kao`, `/calc`, `/wall`, `/session`, `/win`.
@@ -463,7 +455,7 @@ mix. v4 (`noctalia-shell`, JSON at `~/.config/noctalia/`, run as `qs -c noctalia
   `hyprctl binds` callback slower, and it has overrun before.
 - Screenshots use Noctalia native (`screenshot-region`,
   `screenshot-fullscreen [pick|monitor|all]`). There is **no per-window** mode — `pick` picks a
-  monitor. `hyprshot` was removed, so per-window capture is gone.
+  monitor.
 
 ### Webapps
 
@@ -479,28 +471,22 @@ config key as a CLI flag), far more robust than matching volatile terminal title
 uses this pattern — class `sysmon.btop`, matched in both `keybindings.lua` and `rules.lua` — because
 ghostty's title updates only after the window maps, too late for an open-time workspace rule.
 
-### Greeter (noctalia-greeter + greetd, replaces SDDM)
+### Greeter (noctalia-greeter + greetd)
 
-Login manager of choice is **greetd** running **noctalia-greeter**, not SDDM — see
-`run_onchange_after_04-noctalia-greeter.sh.tmpl`. Both packages come from CachyOS's own repos
-(`cachyos`/`cachyos-extra-v3`) via plain `pacman`, not the AUR, despite `noctalia-greeter`'s upstream
-docs describing a from-source build. A fresh CachyOS install with Hyprland selected in Calamares
-already ships `greetd`/`noctalia-greeter` by default (confirmed via the CachyOS `cachyos-hypr-noctalia`
-rootfs-overlay repo), so there this script is a no-op.
+Login manager is **greetd** running **noctalia-greeter** — see `run_onchange_after_04-noctalia-greeter.sh.tmpl`.
+Both packages come from CachyOS's own repos (`cachyos`/`cachyos-extra-v3`) via plain `pacman`, not
+the AUR. A fresh CachyOS install with Hyprland selected in Calamares already ships
+`greetd`/`noctalia-greeter` by default, so there this script is a no-op.
 
-**The script only adds — it never assumes or removes anything.** It installs the two packages
+**The script only adds — it never swaps the active display manager.** It installs the two packages
 (`--needed`, safe to rerun) and points `/etc/greetd/config.toml` at `noctalia-greeter-session`, but
-deliberately does **not** uninstall SDDM/`sddm-silent-theme`, disable whatever display manager is
-currently enabled, or enable `greetd.service` itself — flipping the live login manager is exactly
-the kind of thing that shouldn't happen silently on some future unattended `chezmoi apply`. Existing
-dotfiles users migrating from SDDM (or Plasma's login, or anything else) get the packages/config
-staged, then do the actual switch by hand:
+deliberately does **not** disable another display manager or enable `greetd.service` itself. On a
+non-greetd machine, switch by hand:
 ```
 sudo systemctl disable <current-display-manager>.service
 sudo systemctl enable greetd.service
 sudo reboot
 ```
-SDDM is intentionally left alone as a fallback, not force-removed.
 
 - The package's own `post_install`/`post_upgrade` scriptlet runs `setup_greeter_system.sh`
   automatically on every `pacman -S`/`-U` — it creates the `greeter` system user, chowns
@@ -519,12 +505,9 @@ SDDM is intentionally left alone as a fallback, not force-removed.
   carry the actual monitor mode (only scale/transform), so a greeter left on its default output
   config renders at 1080p regardless of the monitor's native resolution.
 - `/etc/greetd/config.toml`'s `default_session.command` must point at
-  `/usr/bin/noctalia-greeter-session`, not the stock `agreety` (greetd's bundled bare-tty fallback,
-  pulled in as a hard dependency of the `greetd` package itself — harmless to leave installed, just
-  not what boots by default once this is set).
+  `/usr/bin/noctalia-greeter-session`, not the stock `agreety` (greetd's bundled bare-tty fallback).
 - **KWallet auto-unlock is deliberately not configured for greetd** — no `pam_kwallet5.so` lines in
-  `/etc/pam.d/greetd` (unlike the old `/etc/pam.d/sddm`), a conscious choice to keep the migration
-  "vanilla" rather than re-adding the SDDM-era LUKS/autologin PAM patching. See "Setup facts" above.
+  `/etc/pam.d/greetd`. See "Setup facts" above.
 - No autologin.
 - LUKS is unrelated here: root is plain btrfs despite a non-empty `/etc/crypttab` (inactive entry).
   Decryption happens in the initramfs before any greeter runs.
@@ -682,9 +665,28 @@ EDID-missing fallbacks. Use the stubbed-`hl` harness (§1) for geometry a headle
 > [!IMPORTANT]
 > Avoid commenting obvious lines, this should be 80% of times, for that 20% where comments
 > are needed **DO NOT BE VERBOSE**.
-> No mechanism narration, no listing every file/case it touches. If a comment runs past 2 lines,
-> cut it, don't wrap it. This applies to every file type in this repo: Lua, bash, TOML, everywhere.
+> Comment only the *why* the code cannot show — no mechanism narration, no listing every file/case it
+> touches. If a comment runs past 2 lines, cut it, don't wrap it. A shortcut with a known limit gets
+> `shortcut: <the limit>, <when to upgrade>`. This applies to every file type in this repo: Lua, bash,
+> TOML, everywhere.
 
+- **Smallest complete change (ponytail style).** Solve the whole task with the least new code;
+  deletion beats addition, and the shortest readable diff wins.
+  - *Before editing*: trace every caller, config, or script the change must reach, and check what it
+    could break or destroy. For bug fixes, grep every caller first and fix the root cause once in
+    shared code.
+  - *Reuse order*: existing repo helper/pattern → platform/stdlib feature → installed dependency
+    (never add a dependency for a few lines) → minimum new code. Keep values in the form the
+    platform gives you and preserve existing structure.
+  - *No unrequested bloat*: skip unasked-for options, wrappers, abstractions, type conversions, or
+    "for later" hooks. When moving or merging code, keep its error handling and validation; between
+    equal-size options, pick the one right on edge cases.
+  - *Never cut*: trust-boundary validation, data-loss error handling, security, hardware calibration,
+    or anything explicitly requested. Non-trivial new logic (a branch, loop, parser, or new script)
+    gets a small self-check (e.g. `luac5.4`, `bash -n`, `hyprctl eval`, or an `assert`); trivial
+    edits need none.
+  - *Replies*: keep them direct and readable in one pass; end with 1–2 lines noting anything skipped
+    or not checked and any risk the user must know.
 - Tabs for indentation in the Hyprland Lua files. (`dot_config/nvim/stylua.toml` specifies 2 spaces,
   but it governs the *nvim* tree only — don't apply it here.)
 - Shell scripts: `#!/bin/bash`, `set -euo pipefail`, shared templates included, user-facing output
