@@ -15,6 +15,7 @@ if ! sudo pacman -S --needed --noconfirm cachyos-gaming-meta cachyos-gaming-appl
   exit 1
 fi
 cachyos-hello fix install-vram-management
+if pacman -Q plasma-desktop &>/dev/null; then sudo pacman -S --needed --noconfirm plasma-foreground-booster; fi
 success "✅ CachyOS gaming packages are now installed."
 {{- end }}
 
