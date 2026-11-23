@@ -10,8 +10,14 @@ echo "By default we will wipe anything related to spicetify first, to make a cle
 
 rm -rf "$HOME/.config/spicetify"
 
-if ! pacman -Q spotify &>/dev/null; then
-  paru -S --needed spotify
+if ! pacman -Q spotify-launcher &>/dev/null; then
+  sudo pacman -S --needed --noconfirm spotify-launcher
+fi
+
+SPOTIFY_PATH="$HOME/.local/share/spotify-launcher/install/usr/share/spotify"
+if [ ! -d "$SPOTIFY_PATH" ]; then
+  echo "Downloading Spotify via spotify-launcher..."
+  spotify-launcher --no-exec
 fi
 
 echo "Installing Spicetify CLI..."
@@ -24,13 +30,10 @@ if [ -x "$HOME/.spicetify/spicetify" ]; then
   ln -sf "$HOME/.spicetify/spicetify" "$HOME/.local/bin/spicetify"
 fi
 
-echo "Setting up Spicetify permissions..."
-sudo chmod a+wr /opt/spotify
-sudo chmod a+wr /opt/spotify/Apps -R
-
 mkdir -p "$HOME/.config/spotify"
 touch "$HOME/.config/spotify/prefs"
 
+spicetify config spotify_path "$SPOTIFY_PATH"
 spicetify config prefs_path "$HOME/.config/spotify/prefs"
 
 spicetify backup apply --no-restart
