@@ -8,7 +8,14 @@ function fish_greeting
     if test "$COLUMNS" -ge $__fastfetch_min_cols; and test "$LINES" -ge $__fastfetch_min_lines
         set -g __fastfetch_shown 1
         set -g __fastfetch_is_narrow 0
-        fastfetch
+        switch "$TERM"
+            case 'xterm-kitty' 'xterm-ghostty'
+                fastfetch --logo-type kitty
+            case 'foot*'
+                fastfetch --logo-type sixel
+            case '*'
+                fastfetch --logo-type chafa
+        end
     else
         set -g __fastfetch_shown 0
         set -g __fastfetch_is_narrow 1
