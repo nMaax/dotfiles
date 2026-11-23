@@ -83,7 +83,7 @@ What each flag installs:
 | `communication` | Selected chat apps (`communication_apps`: `telegram`, `signal`, `element`, `discord`, `wechat`, `localsend`, `whatsapp`) |
 | `plugins` | Hyprland plugins (`hyprpm`, `scrolloverview`) |
 
-Browsers (`chromium`, `zen-browser-bin`), terminals (`ghostty`, `kitty`), Neovim, `yazi`, `starship`, KeePassXC, and the rest of the core desktop are always installed regardless of profile.
+Browsers (`chromium`, `zen-browser-bin`), terminals (`ghostty`, `foot`), Neovim, `yazi`, `starship`, KeePassXC, and the rest of the core desktop are always installed regardless of profile.
 
 **2. Optional services: Tailscale, NordVPN, MEGA.** Say no to skip one. Say yes and you're asked for a login key; leave it empty to install the service without logging in. MEGA wants a **session id** (`mega-login <email>`, then `mega-session`), not your password. The installer offers to wipe each key from `chezmoi.toml` once it has been used.
 
