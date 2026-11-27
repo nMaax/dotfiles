@@ -1,0 +1,36 @@
+#!/bin/bash
+set -euo pipefail
+
+{{ template "utils.sh.tmpl" . }}
+{{ template "external_links.sh.tmpl" . }}
+
+# Collection of temporary, idempotent patches for existing machines.
+# Add one-off cleanups/migrations here and prune them once no longer needed.
+
+echo ""
+info "🩹 [Patches] Applying temporary patches..."
+echo ""
+
+# --- Remove VRAM / focused booster services & packages (2026-11-27) ---
+if systemctl --user is-enabled hyprland-focused-booster.service &>/dev/null || \
+   systemctl --user is-active hyprland-focused-booster.service &>/dev/null; then
+  info "🧹 Disabling hyprland-focused-booster.service..."
+  systemctl --user disable --now hyprland-focused-booster.service || true
+fi
+
+if systemctl is-enabled dmemcg-booster-system.service &>/dev/null || \
+   systemctl is-active dmemcg-booster-system.service &>/dev/null; then
+  info "🧹 Disabling dmemcg-booster-system.service..."
+  sudo systemctl disable --now dmemcg-booster-system.service || true
+fi
+
+for pkg in hyprland-focused-booster plasma-foreground-booster dmemcg-booster; do
+  if pacman -Q "$pkg" &>/dev/null; then
+    info "🧹 Removing $pkg..."
+    sudo pacman -Rns --noconfirm "$pkg"
+  fi
+done
+
+echo ""
+success "✅ [Patches] Done."
+echo ""

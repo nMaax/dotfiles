@@ -14,8 +14,6 @@ if ! sudo pacman -S --needed --noconfirm cachyos-gaming-meta cachyos-gaming-appl
   error "Failed to install CachyOS gaming packages. Please resolve the pacman issue and re-run. Closing."
   exit 1
 fi
-cachyos-hello fix install-vram-management
-if pacman -Q plasma-desktop &>/dev/null; then sudo pacman -S --needed --noconfirm plasma-foreground-booster; fi
 success "✅ CachyOS gaming packages are now installed."
 {{- end }}
 
@@ -29,9 +27,6 @@ sudo pacman -S --needed --noconfirm binutils base-devel git vim cmake cpio appme
 info "🔧 Installing other utilities..."
 sudo pacman -S --needed --noconfirm paru curl zip 7zip sshfs caligula smartmontools grim slurp wl-clipboard ffmpeg resvg imagemagick perl-image-exiftool gifski zbar jq tesseract tesseract-data-eng tesseract-data-ita texlive-latex glow dust bat ripgrep fd htop btop fastfetch chafa nvtop trash-cli transmission-cli ghostscript poppler qpdf ufw tealdeer ksshaskpass fzf zoxide direnv translate-shell
 paru -S --needed --noconfirm pdfcpu-bin ocrmypdf pandoc-bin
-{{ if .gaming -}}
-paru -S --needed --noconfirm hyprland-focused-booster
-{{- end }}
 
 # rocm-smi-lib is btop/nvtop's optional dep for showing AMD GPU stats
 detect_gpu_vendor
